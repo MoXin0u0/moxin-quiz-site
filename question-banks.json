@@ -1,10 +1,146 @@
 [
   {
-    "id": "sample",
-    "title": "範例題庫",
-    "description": "示範單選、複選、是非與填空題的基本格式",
-    "file": "questions/sample.json",
-    "category": "範例",
+    "id": "erp-planner-all",
+    "title": "全部章節",
+    "description": "ERP規劃師試題指南2025.09 V06，全 441 題",
+    "file": "questions/erp-planner/all.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "全部",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch01",
+    "title": "第一章 企業資源規劃簡介",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第一章 企業資源規劃簡介，共 5 題。",
+    "file": "questions/erp-planner/ch01.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch02",
+    "title": "第二章 企業流程管理與 ERP",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第二章 企業流程管理與 ERP，共 5 題。",
+    "file": "questions/erp-planner/ch02.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch03",
+    "title": "第三章 銷售與配銷模組",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第三章 銷售與配銷模組，共 66 題。",
+    "file": "questions/erp-planner/ch03.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch04",
+    "title": "第四章 生產規劃與控制",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第四章 生產規劃與控制，共 55 題。",
+    "file": "questions/erp-planner/ch04.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch05",
+    "title": "第五章 企業之採購管理",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第五章 企業之採購管理，共 48 題。",
+    "file": "questions/erp-planner/ch05.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch06",
+    "title": "第六章 庫存管理系統",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第六章 庫存管理系統，共 76 題。",
+    "file": "questions/erp-planner/ch06.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch07",
+    "title": "第七章 財會作業流程",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第七章 財會作業流程，共 41 題。",
+    "file": "questions/erp-planner/ch07.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch08",
+    "title": "第八章 成本控制模組",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第八章 成本控制模組，共 49 題。",
+    "file": "questions/erp-planner/ch08.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch09",
+    "title": "第九章 人力資源模組",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第九章 人力資源模組，共 32 題。",
+    "file": "questions/erp-planner/ch09.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch10",
+    "title": "第十章 系統評選",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第十章 系統評選，共 5 題。",
+    "file": "questions/erp-planner/ch10.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch11",
+    "title": "第十一章 系統導入",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第十一章 系統導入，共 5 題。",
+    "file": "questions/erp-planner/ch11.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch12",
+    "title": "第十二章 ERP 系統導入的兩個案例",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第十二章 ERP 系統導入的兩個案例，共 5 題。",
+    "file": "questions/erp-planner/ch12.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch13",
+    "title": "第十三章 從 ERP 到企業 E 化",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第十三章 從 ERP 到企業 E 化，共 5 題。",
+    "file": "questions/erp-planner/ch13.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-ch14",
+    "title": "第十四章 電腦網路與 ERP 系統",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，第十四章 電腦網路與 ERP 系統，共 25 題。",
+    "file": "questions/erp-planner/ch14.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "章節題庫",
+    "enabled": true
+  },
+  {
+    "id": "erp-planner-cross",
+    "title": "跨章節",
+    "description": "依ERP規劃師試題指南2025.09 V06整理，跨章節，共 19 題。",
+    "file": "questions/erp-planner/cross.json",
+    "folder": "ERP 規劃師試題指南",
+    "category": "跨章節",
     "enabled": true
   }
 ]
