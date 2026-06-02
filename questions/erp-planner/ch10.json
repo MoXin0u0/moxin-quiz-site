@@ -1,0 +1,109 @@
+{
+  "bankId": "erp-planner-ch10",
+  "title": "第十章 系統評選",
+  "description": "依ERP規劃師試題指南2025.09 V06整理，第十章 系統評選，共 5 題。",
+  "version": "2025.09 V06",
+  "source": "ERP規劃師_參考題型202509_V06.pdf",
+  "questions": [
+    {
+      "id": "ERPQ378",
+      "type": "single_choice",
+      "question": "一般而言就ERP 系統功能面來看，其彈性主要可來自於",
+      "options": {
+        "A": "功能模組選擇",
+        "B": "系統參數設定",
+        "C": "客製化程式",
+        "D": "以上皆可，視情況在其中作選擇。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「以上皆可，視情況在其中作選擇。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第十章 系統評選",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 378
+    },
+    {
+      "id": "ERPQ379",
+      "type": "single_choice",
+      "question": "系統導入成本中占總成本比例最高的通常是",
+      "options": {
+        "A": "軟體費用",
+        "B": "顧問費用",
+        "C": "硬體費用",
+        "D": "訓練費用。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「顧問費用」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第十章 系統評選",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 379
+    },
+    {
+      "id": "ERPQ380",
+      "type": "single_choice",
+      "question": "下列選項中哪一個不是善用 ERP 系統內建的最佳化實務範例的好處",
+      "options": {
+        "A": "降低導入成本",
+        "B": "避免客製化",
+        "C": "避免系統升級時的困擾",
+        "D": "可以免費獲得許多 ERP 客製程式撰寫時間。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「可以免費獲得許多 ERP 客製程式撰寫時間。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十章 系統評選",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 380
+    },
+    {
+      "id": "ERPQ381",
+      "type": "single_choice",
+      "question": "對於ERP 系統的獲得成本中，其變動最大、較不易掌握的部份是那一個",
+      "options": {
+        "A": "系統軟體本",
+        "B": "硬體成本",
+        "C": "建置顧問費用",
+        "D": "其他無形成本。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「其他無形成本。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第十章 系統評選",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 381
+    },
+    {
+      "id": "ERPQ382",
+      "type": "single_choice",
+      "question": "從系統功能完整性的角度來看，一個 ERP 產品至少應該包含企業的",
+      "options": {
+        "A": "八大循環",
+        "B": "產銷循環",
+        "C": "融資循環",
+        "D": "品管循環。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「產銷循環」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第十章 系統評選",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 382
+    }
+  ]
+}

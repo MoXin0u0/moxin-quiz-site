@@ -1,0 +1,109 @@
+{
+  "bankId": "erp-planner-ch01",
+  "title": "第一章 企業資源規劃簡介",
+  "description": "依ERP規劃師試題指南2025.09 V06整理，第一章 企業資源規劃簡介，共 5 題。",
+  "version": "2025.09 V06",
+  "source": "ERP規劃師_參考題型202509_V06.pdf",
+  "questions": [
+    {
+      "id": "ERPQ001",
+      "type": "single_choice",
+      "question": "ERP 系統最新的主流趨勢是採用下列哪一種基本技術架構",
+      "options": {
+        "A": "集中式架構",
+        "B": "分散式架構",
+        "C": "同儕計算架構",
+        "D": "多層式(Multi-tier)主從架構。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「多層式(Multi-tier)主從架構。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第一章 企業資源規劃簡介",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 1
+    },
+    {
+      "id": "ERPQ002",
+      "type": "single_choice",
+      "question": "ERP 系統能即時整合各流程資料的原因為",
+      "options": {
+        "A": "各流程資料儲存於同一資料庫中",
+        "B": "快速的電腦運算",
+        "C": "電子商務的盛行",
+        "D": "政府鼓勵。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「各流程資料儲存於同一資料庫中」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第一章 企業資源規劃簡介",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 2
+    },
+    {
+      "id": "ERPQ003",
+      "type": "single_choice",
+      "question": "對ERP 系統而言 ，下列敘述何者為非",
+      "options": {
+        "A": "ERP 強調的是資料的整合，而即時性並不重要",
+        "B": "ERP 系統採主從式(Client-Server)架構",
+        "C": "ERP 系統為企業e 化核心",
+        "D": "ERP 乃是一財務會計導向的資訊系統。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「ERP 強調的是資料的整合，而即時性並不重要」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第一章 企業資源規劃簡介",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 3
+    },
+    {
+      "id": "ERPQ004",
+      "type": "single_choice",
+      "question": "以下何種模組所負責的業務部份較不屬於 ERP 的範籌",
+      "options": {
+        "A": "倉儲管理",
+        "B": "財務模組",
+        "C": "製造現場控制(SFC)",
+        "D": "銷售/配送模組。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「製造現場控制(SFC)」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第一章 企業資源規劃簡介",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 4
+    },
+    {
+      "id": "ERPQ005",
+      "type": "single_choice",
+      "question": "一個能夠整合企業所有經營管理的資訊系統應該具備有 (1) 提供整合且即時的資訊 (2) 支援企業運作及決策制定 (3) 系統之間能夠共享資訊 (4) 提升產品設計效率與績效 (5) 能夠累積眾多的備份資料與密碼金鑰檔案",
+      "options": {
+        "A": "123",
+        "B": "234",
+        "C": "145",
+        "D": "134。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「123」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第一章 企業資源規劃簡介",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 5
+    }
+  ]
+}

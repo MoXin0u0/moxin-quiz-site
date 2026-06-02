@@ -1,0 +1,389 @@
+{
+  "bankId": "erp-planner-cross",
+  "title": "跨章節",
+  "description": "依ERP規劃師試題指南2025.09 V06整理，跨章節，共 19 題。",
+  "version": "2025.09 V06",
+  "source": "ERP規劃師_參考題型202509_V06.pdf",
+  "questions": [
+    {
+      "id": "ERPQ423",
+      "type": "single_choice",
+      "question": "ERP 系統必須建置在一套穩定的資料庫系統之上，下列何者不是資料庫軟體",
+      "options": {
+        "A": "DB2",
+        "B": "AS/400",
+        "C": "SQL Server",
+        "D": "Oracle。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「AS/400」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 423
+    },
+    {
+      "id": "ERPQ424",
+      "type": "single_choice",
+      "question": "由初始評估階段到持續改善階段，ERP 系統的導入通常會經過七個階段，企業經常沒有評估到系統維護成本，此成本每年大約佔原始授權費用的多少比例",
+      "options": {
+        "A": "1-3%",
+        "B": "3-5%",
+        "C": "10-25%",
+        "D": "25-50%。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「10-25%」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 424
+    },
+    {
+      "id": "ERPQ425",
+      "type": "single_choice",
+      "question": "在旺宏電子個案中，實施公司整合系統(CIS)計劃時分為幾階段實施，第一階段，企業流程再造；第二階段，ERP 導入；第三階段，ERP 上的加值整合。請問旺宏電子個案公司將此計劃視為何種性質的專案",
+      "options": {
+        "A": "資訊科技(IT)性質專案",
+        "B": "Business 性質專案",
+        "C": "一次性的固定資產採購專案",
+        "D": "以上皆非。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「Business 性質專案」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 425
+    },
+    {
+      "id": "ERPQ426",
+      "type": "single_choice",
+      "question": "針對操作面比較而言，資料庫具備查詢、新增、修改及刪除特性，而資料倉儲一般只具備查詢與新增特性，一些著名的ERP 供應廠商，在概念上也都會將企業資料倉儲的功能整合在一起。下列 ERP 大廠中，何者原是專長於關聯式資料庫管理系統，而後才發展ERP 軟體",
+      "options": {
+        "A": "SAP",
+        "B": "Baan",
+        "C": "Oracle",
+        "D": "Peoplesoft。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「Oracle」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 426
+    },
+    {
+      "id": "ERPQ427",
+      "type": "single_choice",
+      "question": "下列敘述何者錯誤",
+      "options": {
+        "A": "ABC 分析法是存貨分類的管制方法",
+        "B": "ABC 作業成本制是一種成本管理的方法",
+        "C": "ABC 作業成本制屬於成本控制(CO)模組",
+        "D": "ABC 存貨分析與作業成本制(ABC)是相同的理論。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「ABC 存貨分析與作業成本制(ABC)是相同的理論。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 427
+    },
+    {
+      "id": "ERPQ428",
+      "type": "single_choice",
+      "question": "在當今重視國際化競爭與建立完整企業 e 化環境的氛圍下，什麼系統已經成為每家企業在追求競爭優勢與營運效率過程中不可或缺的基石",
+      "options": {
+        "A": "ERP",
+        "B": "SCM",
+        "C": "CRM",
+        "D": "MIS。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「ERP」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 428
+    },
+    {
+      "id": "ERPQ429",
+      "type": "single_choice",
+      "question": "在大型的ERP 系統中，此整合的資料庫通常會包含有大約2 萬張的資料表(Tables)，這一套完整的資料庫(包含這些數萬張的資料表)在導入 ERP 系統時，是如何建置完成",
+      "options": {
+        "A": "不需要同時",
+        "B": "同時",
+        "C": "過幾年後",
+        "D": "邊使用便建置。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「同時」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 429
+    },
+    {
+      "id": "ERPQ430",
+      "type": "single_choice",
+      "question": "ERP 導入過程中，當資料庫綱要內容都已經確定下來後，接下來由 ERP 團隊的顧問規劃完整轉檔計畫，交由公司的哪一部門負責將舊系統(Legacy System)的資料轉入 ERP 系統的資料庫中",
+      "options": {
+        "A": "倉儲",
+        "B": "業務",
+        "C": "MIS",
+        "D": "會計。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「MIS」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 430
+    },
+    {
+      "id": "ERPQ431",
+      "type": "single_choice",
+      "question": "資料庫管理系統是指",
+      "options": {
+        "A": "DBS",
+        "B": "DBMS",
+        "C": "DB",
+        "D": "DD。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「DBMS」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 431
+    },
+    {
+      "id": "ERPQ432",
+      "type": "single_choice",
+      "question": "下列哪一個選項不是資料庫系統(DBS)的組成",
+      "options": {
+        "A": "軟體",
+        "B": "硬體",
+        "C": "資料",
+        "D": "TCP/IP。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「TCP/IP。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 432
+    },
+    {
+      "id": "ERPQ433",
+      "type": "single_choice",
+      "question": "下列哪一個選項不是資料庫系統(DBS)的使用者組成",
+      "options": {
+        "A": "DBA",
+        "B": "DC",
+        "C": "End User",
+        "D": "程式設計師。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「DC」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 433
+    },
+    {
+      "id": "ERPQ434",
+      "type": "single_choice",
+      "question": "資料庫中與ERP 人員溝通時最常用的觀念為",
+      "options": {
+        "A": "主鍵欄位",
+        "B": "候選鍵欄位",
+        "C": "超鍵欄位",
+        "D": "替代鍵欄位。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「主鍵欄位」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 434
+    },
+    {
+      "id": "ERPQ435",
+      "type": "single_choice",
+      "question": "資料庫中與ERP 系統人員溝通時除了主鍵欄位外，另一個重要的欄位是",
+      "options": {
+        "A": "候選鍵欄位",
+        "B": "外來鍵欄位",
+        "C": "超鍵欄位",
+        "D": "替代鍵欄位。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「外來鍵欄位」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 435
+    },
+    {
+      "id": "ERPQ436",
+      "type": "single_choice",
+      "question": "在資料庫個案中 A 公司是因為什麼原因需要導入 ERP 系統",
+      "options": {
+        "A": "與外國公司接單",
+        "B": "雲端運算環境盛行",
+        "C": "網際網路傳輸問題",
+        "D": "穿戴式行動設備盛行。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「與外國公司接單」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 436
+    },
+    {
+      "id": "ERPQ437",
+      "type": "single_choice",
+      "question": "在資料庫個案中A 公司進入系統設計階段經常發生爭議必須釐清，譬如銷售業務與採購業務的價格欄位是具有不同的管理意涵，此即",
+      "options": {
+        "A": "業務人員抗拒問題",
+        "B": "同名異義的問題",
+        "C": "網際網路傳輸問題",
+        "D": "異名同義問題。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「同名異義的問題」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 437
+    },
+    {
+      "id": "ERPQ438",
+      "type": "single_choice",
+      "question": "在資料庫個案中 A 公司 ERP 專案導入結束時有一個專有名詞 Go-Live 是指什麼活動",
+      "options": {
+        "A": "ERP 系統上線活動",
+        "B": "程式測試工作",
+        "C": "需求分析工作",
+        "D": "系統設計工作。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「ERP 系統上線活動」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 438
+    },
+    {
+      "id": "ERPQ439",
+      "type": "single_choice",
+      "question": "在資料庫個案中 A 公司業務單位使用者將來工作的 ERP 系統軟體希望的需求畫面(Screen)是由誰來完成設計",
+      "options": {
+        "A": "軟體公司老闆",
+        "B": "使用 ERP 的業務單位使用者自己",
+        "C": "軟體測試人員",
+        "D": "資訊技術(IT)人員。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「資訊技術(IT)人員。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 439
+    },
+    {
+      "id": "ERPQ440",
+      "type": "single_choice",
+      "question": "在資料庫個案中，A 公司的 ERP 系統為量身訂做方式導入，系統設計階段中有一份很重要的資料字典(Data Dictionary)文件簡稱為",
+      "options": {
+        "A": "DA",
+        "B": "DB",
+        "C": "DC",
+        "D": "DD。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「DD。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 440
+    },
+    {
+      "id": "ERPQ441",
+      "type": "single_choice",
+      "question": "在資料庫個案中，A 公司的 ERP 系統為量身訂做方式導入，當ERP 導入過程時專案組織中有一個很重要的單位督導委員會(Steering Committee)，此單位的角色是",
+      "options": {
+        "A": "出錢單位",
+        "B": "虛設單位",
+        "C": "有問題或衝突時的仲裁單位",
+        "D": "稽核單位。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「有問題或衝突時的仲裁單位」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "跨章節",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 441
+    }
+  ]
+}

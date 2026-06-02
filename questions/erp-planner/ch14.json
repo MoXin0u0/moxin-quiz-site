@@ -1,0 +1,509 @@
+{
+  "bankId": "erp-planner-ch14",
+  "title": "第十四章 電腦網路與 ERP 系統",
+  "description": "依ERP規劃師試題指南2025.09 V06整理，第十四章 電腦網路與 ERP 系統，共 25 題。",
+  "version": "2025.09 V06",
+  "source": "ERP規劃師_參考題型202509_V06.pdf",
+  "questions": [
+    {
+      "id": "ERPQ398",
+      "type": "single_choice",
+      "question": "下列何者是雲端運算具有的基本特性 (1) 隨選即用的自助服務(Self-Services) (2) 無所不在的網路存取(Ubiquitous Network Access) (3) 資源共用(Resource Pooling) (4) 快速彈性(Rapid Elasticity) (5) 不可測量的服務(Un-measured Services)",
+      "options": {
+        "A": "1234",
+        "B": "15",
+        "C": "25",
+        "D": "35。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「1234」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 398
+    },
+    {
+      "id": "ERPQ399",
+      "type": "single_choice",
+      "question": "下列何者是雲端運算的服務模型 (1) 基礎設施即服務(Infrastructure as a Service, IaaS) (2) 資料即服務(Data as a Service, DaaS) (3) 平台即服務(Platform as a Service, PaaS) (4) 軟體即服務 (Software as a Service, SaaS) (5) 硬體即服務 (Hardware as a Service, HaaS)",
+      "options": {
+        "A": "135",
+        "B": "234",
+        "C": "134",
+        "D": "345。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「134」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 399
+    },
+    {
+      "id": "ERPQ400",
+      "type": "single_choice",
+      "question": "下列何者是雲端運算的部署模型 (1) 私有雲 (Private cloud) (2) 社群雲 (Community cloud) (3) 公有雲 (Public cloud) (4) 混合雲 (Hybrid cloud) (5) 公司雲 (Company Cloud)",
+      "options": {
+        "A": "1234",
+        "B": "1235",
+        "C": "1245",
+        "D": "2345。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「1234」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 400
+    },
+    {
+      "id": "ERPQ401",
+      "type": "single_choice",
+      "question": "整體擁有成本 (Total Cost of Ownership, TCO)，包含下列哪幾項 (1) 整體獲得成本(Total Cost of Acquisition, TCA) (2) 機會成本(Opportunity Cost) (3) 營運成本 (Operating Cost) (4) 銷貨成本 (Cost of Goods Sold)",
+      "options": {
+        "A": "13",
+        "B": "24",
+        "C": "14",
+        "D": "23。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「13」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 401
+    },
+    {
+      "id": "ERPQ402",
+      "type": "single_choice",
+      "question": "企業要著手規劃一個雲端架構時，通常會考慮使用以下準則來評估，下列哪一個選項不是考量的評估準則",
+      "options": {
+        "A": "延展性(Scalability)",
+        "B": "租用型態",
+        "C": "可靠度(Reliability)以及整體擁有成本",
+        "D": "國際創新創業。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「國際創新創業。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 402
+    },
+    {
+      "id": "ERPQ403",
+      "type": "single_choice",
+      "question": "企業欲規劃良好的雲端架構，請選擇評估一個企業雲端架構可使用下列哪些準則 (1) 延展性 (2) 租用型態 (3) 可靠度 (4) 整體擁有成本 (5) 可攜性 (Portability) (6) 資訊安全及隱私 (7) 轉換成本 (Switching Cost) (8) 風險",
+      "options": {
+        "A": "123457",
+        "B": "13456",
+        "C": "12345678",
+        "D": "12568。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「12345678」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 403
+    },
+    {
+      "id": "ERPQ404",
+      "type": "single_choice",
+      "question": "服務導向架構(Service-Oriented Architecture, SOA)中包含下列哪些角色 (1) 服務要求者 (2) 服務登錄 (3) 服務提供者 (4) 服務代理者",
+      "options": {
+        "A": "123",
+        "B": "124",
+        "C": "234",
+        "D": "1234。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「123」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 404
+    },
+    {
+      "id": "ERPQ405",
+      "type": "single_choice",
+      "question": "下列何種核心技術最能描述雲端運算 (1) 伺服器虛擬化(Server Virtualization) (2) 軟體即服務 (Software as a Service) (3) 網格運算(Grid Computing) (4) 服務導向架構(Service-Oriented Architecture)",
+      "options": {
+        "A": "12",
+        "B": "24",
+        "C": "124",
+        "D": "1234。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「124」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 405
+    },
+    {
+      "id": "ERPQ406",
+      "type": "single_choice",
+      "question": "下列何者是伺服器虛擬化(Server Virtualization)的效益 (1) 提高伺服器的有效利用率 (2) 減少回應時間 (3) 降低伺服器成本 (4) 提升新系統的建置效率",
+      "options": {
+        "A": "124",
+        "B": "234",
+        "C": "134",
+        "D": "1234。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「1234。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 406
+    },
+    {
+      "id": "ERPQ407",
+      "type": "single_choice",
+      "question": "下列何者非軟體即服務(Software as a Service)的效益",
+      "options": {
+        "A": "節省軟體購置成本",
+        "B": "節省軟體使用成本",
+        "C": "節省軟體與資料之轉換成本(Switching Cost)",
+        "D": "若提供軟體租賃方式，只需視使用多少來支付使用費。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「節省軟體與資料之轉換成本(Switching Cost)」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 407
+    },
+    {
+      "id": "ERPQ408",
+      "type": "single_choice",
+      "question": "下列有關雲端運算的敘述何者正確",
+      "options": {
+        "A": "在網際網路應用中，將共用軟體元件製作成網路服務(Web Service)，即是軟體即服務(Software as a Service, SaaS)",
+        "B": "將伺服器虛擬化即是雲端運算",
+        "C": "雲端運算融合伺服器虛擬化(Server Virtualization)、軟體即服務(Software as a Service)及服務導向架構(Service-Oriented Architecture)等核心技術",
+        "D": "分散式儲存即是雲端運算的一種應用。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「雲端運算融合伺服器虛擬化(Server Virtualization)、軟體即服務(Software as a Service)及服務導向架構(Service-Oriented Architecture)等核心技術」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 408
+    },
+    {
+      "id": "ERPQ409",
+      "type": "single_choice",
+      "question": "下列有關評估雲端架構的敘述何者正確 (1) 萬一雲端系統損害事件或災難發生，如同將雞蛋 (應用與資料)放在同一籃子中，將會增加企業的經營風險 (2) 在轉換到雲端架構未取得顯著的投資報酬率前，加上目前的雲端企業應用系統不能被方便地遷移(Migration)，對於心存疑慮的使用者上缺乏成本優勢的誘因 (3) 使用者的行為、習慣、偏好及隱私等資料可能被揭露在網路上，為了保護用戶的資料，身份鑑定管理議題必須先被解決與信任 (4) 租用雲端架構的型態包含單租戶 (Single-tenant)與多租戶(Multi-te",
+      "options": {
+        "A": "1245",
+        "B": "2345",
+        "C": "1234",
+        "D": "12345。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「1234」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 409
+    },
+    {
+      "id": "ERPQ410",
+      "type": "single_choice",
+      "question": "從過去到現在，下列何者為 ERP 系統的網路架構型態 (1) 集中式系統架構 (2) 主從架構 (3) 服務導向架構 (4) 雲端架構",
+      "options": {
+        "A": "123",
+        "B": "124",
+        "C": "234",
+        "D": "1234。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「1234。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 410
+    },
+    {
+      "id": "ERPQ411",
+      "type": "single_choice",
+      "question": "下列有關雲端 ERP(Cloud ERP)系統的敘述何者錯誤",
+      "options": {
+        "A": "基於雲端運算的網路架構所發展出來的 ERP 資訊系統",
+        "B": "它基於集中式專屬主機架構，用戶須採取終端機模式登入",
+        "C": "它是一種軟體即服務(Software as a Service, SaaS)為基礎的 ERP",
+        "D": "或稱之為隨選ERP(on-demand ERP)。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「它基於集中式專屬主機架構，用戶須採取終端機模式登入」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 411
+    },
+    {
+      "id": "ERPQ412",
+      "type": "single_choice",
+      "question": "下列有關私有雲的敘述何者正確 (1) 雲端基礎設施提供給單一組織專用，該組織包含多個消費者 (2) 基礎設施可以由單一組織專、第三方或它們的某種組合來擁有、管理及操作 (3) 雲端基礎設施開放地提供給一般大眾使用 (4) 雲端基礎設施提供給有共同利益關注的特定社群組織專用",
+      "options": {
+        "A": "12",
+        "B": "23",
+        "C": "13",
+        "D": "24。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「12」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 412
+    },
+    {
+      "id": "ERPQ413",
+      "type": "single_choice",
+      "question": "Gartner Group 於 2012 年定義巨量資料(Big Data)具備 3V 的特性，但是不包含下列哪一項",
+      "options": {
+        "A": "超大容量(V olume)",
+        "B": "高流速(Velocity)",
+        "C": "多樣化(Variety)",
+        "D": "視覺化(Visualization)。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「視覺化(Visualization)。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 413
+    },
+    {
+      "id": "ERPQ414",
+      "type": "single_choice",
+      "question": "下列何者不是雲端運算的基本特性",
+      "options": {
+        "A": "隨選即用的自助服務(Self-Services)",
+        "B": "無所不在(Ubiquitous)的網路存取",
+        "C": "資源共用(Resource Pooling)以及快速彈性(Rapid Elasticity)",
+        "D": "集中式的處理(Centrally Processing)。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「集中式的處理(Centrally Processing)。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 414
+    },
+    {
+      "id": "ERPQ415",
+      "type": "single_choice",
+      "question": "雲端運算是一項革命性的 IT 管理工具，就企業用戶觀點，下列敘述何者錯誤",
+      "options": {
+        "A": "它有別於傳統資訊設施的投資，它強調較低的整體擁有成本",
+        "B": "僅需視使用了甚麼來支付 IT 的擁有成本(pay-as-you-go)",
+        "C": "整體擁有成本包含整體獲得成本與折舊成本",
+        "D": "可減少能源的消耗。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「整體擁有成本包含整體獲得成本與折舊成本」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 415
+    },
+    {
+      "id": "ERPQ416",
+      "type": "single_choice",
+      "question": "下列有關社群雲的敘述何者正確 (1) 雲端基礎設施提供給有共同利益關注的特定社群組織專用 (2) 雲端基礎設施由兩個或多個不同的雲端基礎設施所組成 (3) 基礎設施可以由一個或一個以上的社群成員組織、第三方或它們的某種組合來擁有、管理及操作 (4) 由於社群雲較私有雲容易達到使用者間分享及整合資料與企業流程，傾向被應用到產業供應鏈與需求鏈 (5) 目前較著名的社群雲有台灣的健康雲",
+      "options": {
+        "A": "1245",
+        "B": "2345",
+        "C": "1234",
+        "D": "1345。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「1345。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 416
+    },
+    {
+      "id": "ERPQ417",
+      "type": "single_choice",
+      "question": "巨量資料分析之雲端架構，不包含下列哪一項",
+      "options": {
+        "A": "巨量資料分析軟體即服務",
+        "B": "巨量資料平台即服務",
+        "C": "巨量資料基礎設施即服務",
+        "D": "巨量資料教材即服務。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「巨量資料教材即服務。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 417
+    },
+    {
+      "id": "ERPQ418",
+      "type": "single_choice",
+      "question": "根據美國國家標準與技術研究院(NIST)的雲端運算定義，下列何者是雲端運算所具有的基本特性 (1) 隨選即用的自助服務(Self-Services) (2) 無所不在的網路存取(Ubiquitous Network Access) (3) 資源共用(Resource Pooling) (4) 快速彈性(Rapid Elasticity) (5) 可測量的服務(Measured Services) (6) 視覺化(Visualization)",
+      "options": {
+        "A": "12345",
+        "B": "156",
+        "C": "2356",
+        "D": "345。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「12345」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 418
+    },
+    {
+      "id": "ERPQ419",
+      "type": "single_choice",
+      "question": "根據美國國家標準與技術研究院(NIST)的雲端運算定義，下列何者是雲端運算的服務模型 (1) 基礎設施即服務(Infrastructure as a Service, IaaS) (2) 資料即服務(Data as a Service, DaaS) (3) 平台即服務(Platform as a Service, PaaS) (4) 軟體即服務(Software as a Service, SaaS) (5) 硬體即服務 (Hardware as a Service, HaaS) (6) 程式即服務(Cod",
+      "options": {
+        "A": "136",
+        "B": "234",
+        "C": "134",
+        "D": "246。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「134」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 419
+    },
+    {
+      "id": "ERPQ420",
+      "type": "single_choice",
+      "question": "根據美國國家標準與技術研究院(NIST)的雲端運算定義，下列何者是雲端運算的部署模型 (1) 私有雲(Private Cloud) (2) 社群雲(Community Cloud) (3) 公有雲(Public Cloud) (4) 混合雲(Hybrid Cloud) (5) 公司雲(Company Cloud) (6) 工業雲(Industrial Cloud)",
+      "options": {
+        "A": "1234",
+        "B": "1236",
+        "C": "2345",
+        "D": "2456。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「1234」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 420
+    },
+    {
+      "id": "ERPQ421",
+      "type": "single_choice",
+      "question": "整體擁有成本(Total Cost of Ownership, TCO)，包含下列哪幾項 (1) 整體獲得成本(Total Cost of Acquisition, TCA) (2) 機會成本(Opportunity Cost) (3) 營運成本(Operating Cost) (4) 銷貨成本(Cost of Goods Sold) (6) 品質成本(Quality Cost)",
+      "options": {
+        "A": "13",
+        "B": "246",
+        "C": "14",
+        "D": "26。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「13」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 421
+    },
+    {
+      "id": "ERPQ422",
+      "type": "single_choice",
+      "question": "企業欲規劃良好的雲端架構，請選擇評估一個企業雲端架構可使用下列哪些準則 (1) 延展性 (2) 租用型態 (3) 營運與維修 (4) 整體擁有成本 (5) 可攜性與可靠度 (6) 資訊安全及隱私 (7) 轉換成本(Switching Cost) (8) 風險 (9) 標竿技術",
+      "options": {
+        "A": "123459",
+        "B": "13456",
+        "C": "1245678",
+        "D": "125689。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「1245678」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 422
+    }
+  ]
+}

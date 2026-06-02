@@ -1,0 +1,1329 @@
+{
+  "bankId": "erp-planner-ch03",
+  "title": "第三章 銷售與配銷模組",
+  "description": "依ERP規劃師試題指南2025.09 V06整理，第三章 銷售與配銷模組，共 66 題。",
+  "version": "2025.09 V06",
+  "source": "ERP規劃師_參考題型202509_V06.pdf",
+  "questions": [
+    {
+      "id": "ERPQ011",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，下列何者為企業從事行銷作業(Marketing Activity)時，最常用而且為最有效的方式",
+      "options": {
+        "A": "直效郵遞 (Direct Mailing, DM)",
+        "B": "研討會",
+        "C": "銷售電話",
+        "D": "銷售講座。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「直效郵遞 (Direct Mailing, DM)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 11
+    },
+    {
+      "id": "ERPQ012",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，下列何者意謂著我們以事先預測市場需求來安排生產，且當我們接受銷售訂單時直接以存貨來滿足銷售訂單的需求",
+      "options": {
+        "A": "Make to Order",
+        "B": "Make to Stock",
+        "C": "Configure to Order",
+        "D": "Assembly to Order。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「Make to Stock」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 12
+    },
+    {
+      "id": "ERPQ013",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，有關銷售訂單和交貨文件之間的關係，下列何者錯誤",
+      "options": {
+        "A": "一張銷售訂單可以對應多張交貨文件",
+        "B": "一張銷售訂單可以對應一張交貨文件",
+        "C": "多張銷售訂單可以對應一張交貨文件",
+        "D": "一張銷售訂單不可以對應多張交貨文件。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「一張銷售訂單不可以對應多張交貨文件。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 13
+    },
+    {
+      "id": "ERPQ014",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，有關退款(Rebate)的敘述，下列何者正確",
+      "options": {
+        "A": "當顧客符合某一特定條件時，給予訂價上的折扣",
+        "B": "當顧客在某一特定的時間內，購買超過特定數量或金額的產品時，退還某一部分的金額給顧客的購物回饋",
+        "C": "當企業採購超過某一特定金額時，給予採購人員特殊的待遇",
+        "D": "當供應商與企業合作超過某段時間之後，給予企業的優待。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「當顧客在某一特定的時間內，購買超過特定數量或金額的產品時，退還某一部分的金額給顧客的購物回饋」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 14
+    },
+    {
+      "id": "ERPQ015",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中， 「生產的成品是少量多樣，除了能快速回應顧客的需求外，並且使供應商的成品存貨降至最低」 ，具有此優點的需求反應策略是",
+      "options": {
+        "A": "存貨生產",
+        "B": "訂單生產",
+        "C": "訂單裝配",
+        "D": "訂單設計。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「訂單裝配」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 15
+    },
+    {
+      "id": "ERPQ016",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組之顧客主檔資料中，對於財務與會計部門相當重要的財會資料會記錄在哪一資料結構中",
+      "options": {
+        "A": "一般資料",
+        "B": "銷售與配銷資料",
+        "C": "公司代碼資料(Company Code Data)",
+        "D": "以上皆非。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「公司代碼資料(Company Code Data)」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 16
+    },
+    {
+      "id": "ERPQ017",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，下列有關銷售之物料主檔資料的敘述，何者錯誤",
+      "options": {
+        "A": "產品與服務在ERP 系統中皆以物料來概括",
+        "B": "一般而言，物料主檔資料是以功能部門來區分，提供系統在各類交易中所需的資料",
+        "C": "物料類型的選定會影響整個銷售的交易流程",
+        "D": "所有物料類型所產生的銷售訂單，其訂單處理方式皆相同。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「所有物料類型所產生的銷售訂單，其訂單處理方式皆相同。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 17
+    },
+    {
+      "id": "ERPQ018",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，有關顧客-產品資訊記錄、顧客資料主檔及物料資料主檔等三種資料的優先權狀況，下列敘述何者正確",
+      "options": {
+        "A": "三種資料中以顧客-產品資訊記錄的優先權最高",
+        "B": "三種資料中以顧客資料主檔的優先權最高",
+        "C": "三種資料中以物料資料主檔的優先權最高",
+        "D": "三者之優先權都一樣高。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「三種資料中以顧客-產品資訊記錄的優先權最高」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 18
+    },
+    {
+      "id": "ERPQ019",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，有關銷售支援的相關敘述，下列何者錯誤",
+      "options": {
+        "A": "銷售支援提供工具與功能讓行銷與銷售部門得以有效率地執行顧客關係服務與企業發展活動",
+        "B": "銷售支援可區分為促銷與銷售活動等兩類",
+        "C": "在銷售過程中，直效郵遞最為常用且有效的方式",
+        "D": "銷售支援(Sales Support)只對目前的顧客提供服務，開發新的潛在顧客並不包含在其中。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「銷售支援(Sales Support)只對目前的顧客提供服務，開發新的潛在顧客並不包含在其中。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 19
+    },
+    {
+      "id": "ERPQ020",
+      "type": "single_choice",
+      "question": "在 ERP 系統的銷售與配銷模組(SD)之出貨排程(Delivery Schedule)中，顧客所訂購的產品已經生產或購買完成，並準備開始執行挑料與包裝的期限，稱為",
+      "options": {
+        "A": "物料可用期限",
+        "B": "挑料/包裝期限",
+        "C": "裝載期限",
+        "D": "生產期限。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「物料可用期限」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 20
+    },
+    {
+      "id": "ERPQ021",
+      "type": "single_choice",
+      "question": "在 ERP 系統的銷售與配銷模組(SD)之出貨排程(Delivery Schedule)中，裝載時間是指裝載期限與下列哪一期限之時間間距",
+      "options": {
+        "A": "物料可用期限",
+        "B": "運輸規劃期限",
+        "C": "生產期限",
+        "D": "系統扣帳之時間。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「系統扣帳之時間。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 21
+    },
+    {
+      "id": "ERPQ022",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，交貨清單(Delivery Notes)之建立是以何者為基準",
+      "options": {
+        "A": "交貨文件(Delivery)",
+        "B": "出貨通知單",
+        "C": "顧客契約",
+        "D": "出貨協議。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「交貨文件(Delivery)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 22
+    },
+    {
+      "id": "ERPQ023",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，交貨文件與交貨清單之間的對應關係下列何者正確",
+      "options": {
+        "A": "每張交貨文件只會產生一張交貨清單",
+        "B": "每張交貨文件可產生多張交貨清單",
+        "C": "多張交貨文件可匯整產生一張交貨清單",
+        "D": "交貨文件不會產生任何交貨清單，基本上兩文件之間是無任何對應關係。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「每張交貨文件只會產生一張交貨清單」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 23
+    },
+    {
+      "id": "ERPQ024",
+      "type": "single_choice",
+      "question": "銷售與配銷模組的最後一項交易流程為",
+      "options": {
+        "A": "運輸規劃",
+        "B": "交貨",
+        "C": "扣帳",
+        "D": "請款(Billing)。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「請款(Billing)。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 24
+    },
+    {
+      "id": "ERPQ025",
+      "type": "single_choice",
+      "question": "在銷售配銷模組的企業情境需求反應策略中，採取沒有特定的成品規格限定於顧客訂單中，而是根據顧客的功能需求描述加以量身訂做(Tailor Made)，亦即強調收到顧客需求後，再設計產品以滿足顧客要求，此種方式稱為",
+      "options": {
+        "A": "訂單裝配",
+        "B": "訂單設計(Engineer to Order, ETO)",
+        "C": "訂單生產",
+        "D": "存貨生產。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「訂單設計(Engineer to Order, ETO)」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 25
+    },
+    {
+      "id": "ERPQ026",
+      "type": "single_choice",
+      "question": "在 ERP 系統中通常會以允諾可用量(ATP)來當作可用量查核的基礎，以確定能夠準時地依照顧客要求的交貨日，將該產品運送至顧客手中，而通常ATP 的計算公式為(存貨) + (計劃收料項目) - (計劃扣料項目)，假如 Ben 公司的產品 X 在某一規劃期間內的存貨為 64 件，計劃扣料項目有 53 件， 且無任何計劃收料項目件數，則 ATP 為多少件數",
+      "options": {
+        "A": "7",
+        "B": "11",
+        "C": "0",
+        "D": "9。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「11」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 26
+    },
+    {
+      "id": "ERPQ027",
+      "type": "single_choice",
+      "question": "根據 Leem(2002)之定義，所謂的企業情境是一種樣版(Template)，根據企業組織的需求，提供其在不同的企業事例之下，制定整企業流程之參考，也就是說，企業情境是制定企業流程根源之所在，而企業流程則能反應出企業組織在不同情境下之運作模式，在ERP 系統的銷售與配銷模組中所定義的企業情境不包括下列哪一選項",
+      "options": {
+        "A": "特殊顧客處理",
+        "B": "需求反應策略",
+        "C": "特殊訂單處理",
+        "D": "特殊物料處理。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「特殊顧客處理」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 27
+    },
+    {
+      "id": "ERPQ028",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，出貨排程(Delivery Schedule)規劃了所有訂購產品被運送至顧客手中的相關作業活動的期限，其中物料可用期限與裝載期限之時間間距被稱為",
+      "options": {
+        "A": "運送時間",
+        "B": "裝載時間",
+        "C": "運輸規劃前置時間",
+        "D": "挑料/包裝時間。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「挑料/包裝時間。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 28
+    },
+    {
+      "id": "ERPQ029",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，出貨排程(Delivery Schedule)規劃了所有訂購產品被運送至顧客手中的相關作業活動的期限，其中挑料/包裝時間是在什麼期限之後",
+      "options": {
+        "A": "系統扣帳",
+        "B": "裝載",
+        "C": "運輸規劃",
+        "D": "物料可用。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「物料可用。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 29
+    },
+    {
+      "id": "ERPQ030",
+      "type": "single_choice",
+      "question": "在 ERP 系統中，組織架構是區分各式主檔資料與文件類型的重要準則，並且可以據此執行嚴密的權限控制，因此系統上的組織架構必須詳細地分析與定義。在銷售與配銷模組中，下列何者不屬於主檔資料的銷售夥伴(Sales Partner)",
+      "options": {
+        "A": "銷售對象",
+        "B": "業務代表",
+        "C": "運輸代理商",
+        "D": "DaaS 業者。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「DaaS 業者。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 30
+    },
+    {
+      "id": "ERPQ031",
+      "type": "single_choice",
+      "question": "在銷售支援中，企業以各種型式的作業促銷產品，當促銷作業完成後，則有可能與顧客簽訂要項協議(Outline Agreement)，下列有關要項協議的敘述，何者正確",
+      "options": {
+        "A": "顧客會開出出貨排程來履行契約",
+        "B": "顧客會開出銷售訂單(Sales Orders)來履行契約",
+        "C": "顧客會以多張詢價單來履行契約",
+        "D": "顧客會根據企業的報價單來履行契約。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「顧客會開出銷售訂單(Sales Orders)來履行契約」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 31
+    },
+    {
+      "id": "ERPQ032",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，為了因應不同的出貨對象或不同的交期， 將一張訂單切分為數張不同的交貨文件，此為",
+      "options": {
+        "A": "局部交貨(Partial Delivery )",
+        "B": "完全交貨(Complete Delivery )",
+        "C": "訂單合併(Order Combination )",
+        "D": "訂單分割(Order Segment)。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「局部交貨(Partial Delivery )」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 32
+    },
+    {
+      "id": "ERPQ033",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，將一張交貨文件分割成多張顧客發票是下列哪一種ERP 系統提供的請款方式(Billing Methods)",
+      "options": {
+        "A": "匯集的顧客發票",
+        "B": "分離的顧客發票(Split Billing Documents)",
+        "C": "個別的顧客發票",
+        "D": "區隔的顧客發票。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「分離的顧客發票(Split Billing Documents)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 33
+    },
+    {
+      "id": "ERPQ034",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，以交貨文件為根據，每一張交貨文件產生一張顧客發票是下列哪一種 ERP 系統提供的請款方式(Billing Methods)",
+      "options": {
+        "A": "個別的顧客發票(Individual Billing Documents)",
+        "B": "匯集的顧客發票",
+        "C": "分離的顧客發票",
+        "D": "區隔的顧客發票。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「個別的顧客發票(Individual Billing Documents)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 34
+    },
+    {
+      "id": "ERPQ035",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，不論訂單多寡只要符合先前定義之準則即產生一張顧客發票是下列哪一種 ERP 系統提供的請款方式(Billing Methods)",
+      "options": {
+        "A": "個別的顧客發票",
+        "B": "匯集的顧客發票(Collective Billing Documents)",
+        "C": "分離的顧客發票",
+        "D": "區隔的顧客發票。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「匯集的顧客發票(Collective Billing Documents)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 35
+    },
+    {
+      "id": "ERPQ036",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，記載有對應的銷售訂單與交貨日期、顧客之名稱、地址與連絡方式、產品的品名、規格與交貨數量、負責交貨之組織與配送管道、出貨地點的文件是",
+      "options": {
+        "A": "交貨文件",
+        "B": "揀貨單",
+        "C": "出貨通知",
+        "D": "交貨清單(Delivery Notes)。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「交貨清單(Delivery Notes)。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 36
+    },
+    {
+      "id": "ERPQ037",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，當產品的計價過低時，用以在請款時，成為建立借方憑證之根據，此狀況下所產生的文件為",
+      "options": {
+        "A": "貸項憑證請求",
+        "B": "借項憑證請求(Dedit Memo Request)",
+        "C": "緊急訂單",
+        "D": "售回訂單。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「借項憑證請求(Dedit Memo Request)」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 37
+    },
+    {
+      "id": "ERPQ038",
+      "type": "single_choice",
+      "question": "銷售之組織架構若以銷售區域之觀點而言，典型的批發商、零售商與直銷商等都被定義為",
+      "options": {
+        "A": "銷售群組",
+        "B": "配銷管道(Distribution Channel)",
+        "C": "部門",
+        "D": "銷售組織。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「配銷管道(Distribution Channel)」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 38
+    },
+    {
+      "id": "ERPQ039",
+      "type": "single_choice",
+      "question": "銷售之組織架構若以銷售區域之觀點而言，在單一企業組織下，負責銷售各式不同產品線或是產品家族的組織單位為",
+      "options": {
+        "A": "銷售組織",
+        "B": "銷售群組",
+        "C": "部門(Division)",
+        "D": "配銷管道。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「部門(Division)」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 39
+    },
+    {
+      "id": "ERPQ040",
+      "type": "single_choice",
+      "question": "下列何者不是 ERP 的銷售與配銷模組的主要功能",
+      "options": {
+        "A": "允諾可用量(ATP)的自動查核",
+        "B": "詢價、報價和訂單的處理與監控",
+        "C": "出貨點和路線之安排",
+        "D": "庫存盤點作業。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「庫存盤點作業。」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 40
+    },
+    {
+      "id": "ERPQ041",
+      "type": "single_choice",
+      "question": "下列承(允)諾可用量(ATP)的公式計算，何者正確",
+      "options": {
+        "A": "存貨 + 計劃收料 - 實際扣料",
+        "B": "存貨 - 實際收料 + 實際扣料",
+        "C": "存貨 + 計劃收料項目(Planned Receipt Item) - 計劃扣料項目(Planned Issue Items)",
+        "D": "存貨 - 計劃進料數量 + 計劃出料數量。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「存貨 + 計劃收料項目(Planned Receipt Item) - 計劃扣料項目(Planned Issue Items)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 41
+    },
+    {
+      "id": "ERPQ042",
+      "type": "single_choice",
+      "question": "當系統建立銷售訂單或交貨文件時，經由系統相關的設定，可以自動地驅動物料管理(MM)模組中的什麼功能，使其他的交易不得再使用該項存貨",
+      "options": {
+        "A": "生產排程",
+        "B": "保留存貨(Reservation)",
+        "C": "進貨檢驗",
+        "D": "庫存盤點。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「保留存貨(Reservation)」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 42
+    },
+    {
+      "id": "ERPQ043",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組(SD)與成本控制模組(CO)的關係中，當顧客訂單產生時系統即可將預期營收及相關成本資料傳送至成本控制模組(CO)可以執行下列哪一選項",
+      "options": {
+        "A": "銷售需求與物料需求規劃",
+        "B": "工作分解結構與會計要素",
+        "C": "保留存貨與系統自動扣帳",
+        "D": "利潤能力分析(Profitability Analysis)與實際利潤評估。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「利潤能力分析(Profitability Analysis)與實際利潤評估。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 43
+    },
+    {
+      "id": "ERPQ044",
+      "type": "single_choice",
+      "question": "企業面對不同的商業環境時會使用採取相對應的需求反應策略做為回應，請問事先預測市場上成品的需求，是屬於需求反應策略的哪一種",
+      "options": {
+        "A": "存貨生產(Make to Stock)",
+        "B": "訂單生產(Make to Order)",
+        "C": "訂單裝配(Assembly to Order)",
+        "D": "訂單設計(Engineer to Order)。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「存貨生產(Make to Stock)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 44
+    },
+    {
+      "id": "ERPQ045",
+      "type": "single_choice",
+      "question": "企業面對不同的商業環境時會使用採取相對應的需求反應策略做為回應，請問直接裝配零組件以符合顧客需求是屬於需求反應策略的哪一種",
+      "options": {
+        "A": "訂單設計(Engineer to Order)",
+        "B": "訂單生產(Make to Order)",
+        "C": "訂單裝配(Assembly to Order)",
+        "D": "存貨生產(Make to Stock)。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「訂單裝配(Assembly to Order)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 45
+    },
+    {
+      "id": "ERPQ046",
+      "type": "single_choice",
+      "question": "企業面對不同的商業環境時會使用採取相對應的需求反應策略做為回應，請問根據顧客功能需求加以量身訂做(Tailor Made)是屬於需求反應策略的哪一種",
+      "options": {
+        "A": "存貨生產(Make to Stock)",
+        "B": "訂單裝配(Assembly to Order)",
+        "C": "訂單生產(Make to Order)",
+        "D": "訂單設計(Engineer to Order)。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「訂單設計(Engineer to Order)。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 46
+    },
+    {
+      "id": "ERPQ047",
+      "type": "single_choice",
+      "question": "企業面對不同的商業環境時會使用採取相對應的需求反應策略做為回應，請問根據訂單規格加以生產是屬於需求反應策略的哪一種",
+      "options": {
+        "A": "存貨生產(Make to Stock)",
+        "B": "訂單生產(Make to Order)",
+        "C": "訂單設計(Engineer to Order)",
+        "D": "訂單裝配(Assembly to Order)。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「訂單生產(Make to Order)」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 47
+    },
+    {
+      "id": "ERPQ048",
+      "type": "single_choice",
+      "question": "在 ERP 系統建立顧客訂單時，除了會直接轉契約文件或報價單中直接轉置資料以外，尚會參考一些儲存於其他主檔中的資料，而下列何者是不需要納入參考的其他主檔資料",
+      "options": {
+        "A": "從顧客主檔轉置而來",
+        "B": "從物料主檔轉置而來",
+        "C": "從庫存主檔轉置而來",
+        "D": "從產品-物料資訊主檔轉置而來。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「從庫存主檔轉置而來」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 48
+    },
+    {
+      "id": "ERPQ049",
+      "type": "single_choice",
+      "question": "企業面對不同的商業環境時會使用採取相對應的需求反應策略做為回應，而下列哪一項需求反應策略，產品的生產批量最小",
+      "options": {
+        "A": "存貨生產(MTS)",
+        "B": "訂單生產(MTO)",
+        "C": "訂單裝配(ATO)",
+        "D": "訂單設計(ETO)。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「訂單設計(ETO)。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 49
+    },
+    {
+      "id": "ERPQ050",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，當下列那些文件產生時，ERP 系統即自動地執行可用量之查核 (1) 顧客詢價單 (2) 顧客報價單(Quotation) (3) 銷售訂單(Sales Order) (4) 交貨文件(Delivery)",
+      "options": {
+        "A": "234",
+        "B": "23",
+        "C": "34",
+        "D": "1234。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「234」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 50
+    },
+    {
+      "id": "ERPQ051",
+      "type": "single_choice",
+      "question": "如果該企業所生產的成品是少量多樣，除了能快速回應顧客的需求外，並且使供應商的成品存貨降至最低，此為何種企業情境之特性",
+      "options": {
+        "A": "存貨生產",
+        "B": "訂單生產",
+        "C": "訂單裝配",
+        "D": "訂單設計。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「訂單裝配」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 51
+    },
+    {
+      "id": "ERPQ052",
+      "type": "single_choice",
+      "question": "當系統出貨扣帳完成後，下列那些功能會被自動執行 (1) 會計科目中的存貨價值同時減少 (2) MRP 中的需求量根據出貨數量而減少 (3) 保留存貨(Reservations)項目增加 (4) 成本會計文件同時產生 (5) 計劃訂單(Planned Orders)同時產生",
+      "options": {
+        "A": "123",
+        "B": "245",
+        "C": "345",
+        "D": "124。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「124。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 52
+    },
+    {
+      "id": "ERPQ053",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，交貨文件的來源可分為哪三種 (1) 從顧客契約轉置而來 (2) 從出貨協議轉置而來 (3) 從銷售訂單轉置而來 (4) 從顧客報價單轉置而來 (5) 手動產生交貨文件",
+      "options": {
+        "A": "123",
+        "B": "235",
+        "C": "124",
+        "D": "234。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「235」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 53
+    },
+    {
+      "id": "ERPQ054",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，而當交貨文件建立時，系統會自動地執行以下那些功能 (1) 計算出貨的工作量 (2) 決定運輸工具與設備 (3) 查核並調整出貨排程 (4) 再一次的查核可用量 (5) 定義最適的出貨期限",
+      "options": {
+        "A": "234",
+        "B": "245",
+        "C": "123",
+        "D": "134。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「134。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 54
+    },
+    {
+      "id": "ERPQ055",
+      "type": "single_choice",
+      "question": "根據運輸規劃的結果，系統會參考相關的資料，自動地決定最適合之裝載點。這些資料不包括",
+      "options": {
+        "A": "出貨點之所在",
+        "B": "出貨方式",
+        "C": "挑料方式",
+        "D": "裝載設備。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「挑料方式」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 55
+    },
+    {
+      "id": "ERPQ056",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組之主檔資料中，有關訂價主檔資料(Princing in Master Data)的定價條件包括了下列哪些變數 (1) 顧客 (2) 期間 (3) 數量 (4) 產品",
+      "options": {
+        "A": "4",
+        "B": "12",
+        "C": "1234",
+        "D": "134。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「1234」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 56
+    },
+    {
+      "id": "ERPQ057",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中 ，ERP 系統會參考哪些資料自動決定最適合之裝載點 (1) 產品價值 (2) 出貨方式 (3) 運輸工具 (4) 出貨點之所在 (5) 裝載設備",
+      "options": {
+        "A": "2345",
+        "B": "12345",
+        "C": "134",
+        "D": "345。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「2345」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 57
+    },
+    {
+      "id": "ERPQ058",
+      "type": "single_choice",
+      "question": "下列何者是銷售與配銷模組可帶來的利益 (1) 縮短訂單時間與成本 (2) 加強顧客服務 (3) 縮短訂單實現時間 (4) 改善即時交貨效率",
+      "options": {
+        "A": "12",
+        "B": "1234",
+        "C": "123",
+        "D": "124。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「1234」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 58
+    },
+    {
+      "id": "ERPQ059",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，當建立銷售訂單(Sales Order)時，會由哪些主檔資料轉置或參考資料 (1) 顧客主檔(Customer Master Data) (2) 物料主檔(Material Master Data) (3) 報價單(Quotation) (4) 詢價單 (5) 契約(Contract)文件",
+      "options": {
+        "A": "1245",
+        "B": "234",
+        "C": "1235",
+        "D": "345。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「1235」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 59
+    },
+    {
+      "id": "ERPQ060",
+      "type": "single_choice",
+      "question": "ERP 系統之出貨排程的順序為何 (1) 裝載 (2) 運輸規劃 (3) 物料可用 (4) 系統扣帳",
+      "options": {
+        "A": "1234",
+        "B": "2341",
+        "C": "4321",
+        "D": "3214。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「3214。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 60
+    },
+    {
+      "id": "ERPQ061",
+      "type": "single_choice",
+      "question": "銷售與配銷模組之企業情境可分為哪三類 (1) 需求反應策略 (2) 一般訂單處理 (3) 特殊訂單處理 (4) 一般物料處理 (5) 特殊物料處理",
+      "options": {
+        "A": "135",
+        "B": "123",
+        "C": "145",
+        "D": "124。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「135」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 61
+    },
+    {
+      "id": "ERPQ062",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，需求反應策略可以劃分為哪四種 (1) 存貨生產(MTS) (2) 訂單生產 (MTO) (3) 大量生產 (4) 重複性生產 (5) 訂單裝配(ATO) (6) 訂單設計(ETO)",
+      "options": {
+        "A": "1234",
+        "B": "1256",
+        "C": "3456",
+        "D": "1236。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「1256」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 62
+    },
+    {
+      "id": "ERPQ063",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，出貨組織的架構包含了 (1) 生產點 (2) 出貨點 (3) 裝載點 (4) 銷售點",
+      "options": {
+        "A": "1234",
+        "B": "123",
+        "C": "14",
+        "D": "23。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「23。」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 63
+    },
+    {
+      "id": "ERPQ064",
+      "type": "single_choice",
+      "question": "以資料之種類區分，銷售與配銷之主檔資料可以區分為 (1) 顧客主檔資料 (2) 產品主檔資料 (3) 定價主檔資料 (4) 顧客-產品主檔資料 (5) 顧客-定價主檔資料 (6) 產品-定價主檔資料",
+      "options": {
+        "A": "1234",
+        "B": "1235",
+        "C": "1236",
+        "D": "123456。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「1234」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 64
+    },
+    {
+      "id": "ERPQ065",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，根據詳細程度之不同，顧客主檔資料可以分成哪些不同的資料結構 (1) 一般資料 (2) 銷售與配銷資料 (3) 公司代碼資料",
+      "options": {
+        "A": "12",
+        "B": "13",
+        "C": "23",
+        "D": "123。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「123。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 65
+    },
+    {
+      "id": "ERPQ066",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，顧客-產品資訊資料包括 (1) 顧客產品品名與規格 (2) 特定的配送資料 (3) 對於產品的詳細描述 (4) 產品存貨資料",
+      "options": {
+        "A": "123",
+        "B": "1234",
+        "C": "134",
+        "D": "124。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「123」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 66
+    },
+    {
+      "id": "ERPQ067",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，從行銷與銷售兩種功能構面看，銷售支援可以分成哪幾類 (1) 促銷 (Promotion) (2) 銷售活動(Sales Activity) (3) 生產 (4) 配送",
+      "options": {
+        "A": "1234",
+        "B": "124",
+        "C": "12",
+        "D": "134。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「12」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 67
+    },
+    {
+      "id": "ERPQ068",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，下列哪些屬於售前文件 (1) 顧客契約 (2) 排程協議 (3) 顧客詢價單 (4) 報價",
+      "options": {
+        "A": "12",
+        "B": "123",
+        "C": "1234",
+        "D": "34。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「34。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 68
+    },
+    {
+      "id": "ERPQ069",
+      "type": "single_choice",
+      "question": "當顧客發票建立並釋出後，系統便將相關的請款資料傳送到財會模組，執行下列哪些功能 (1) 現金管理 (2) 利潤分析 (3) 顧客信用管理",
+      "options": {
+        "A": "12",
+        "B": "13",
+        "C": "23",
+        "D": "123。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「123。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 69
+    },
+    {
+      "id": "ERPQ070",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，下列哪些是銷售支援主檔資料(Sales Support Master Data)的組成成分 (1) 顧客資料 (2) 競爭產品資料 (3) 內部銷售人員資料 (4) 庫存盤點資料",
+      "options": {
+        "A": "123",
+        "B": "134",
+        "C": "234",
+        "D": "124。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「123」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 70
+    },
+    {
+      "id": "ERPQ071",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中 ， 哪些是交貨文件產生的來源 (1) 銷售訂單轉置而來 (2) 出貨協議轉置而來 (3) 品質檢驗通過單轉置而來 (4) 手動產生交貨文件 (5) 付款清單轉置而來",
+      "options": {
+        "A": "234",
+        "B": "145",
+        "C": "235",
+        "D": "124。"
+      },
+      "answer": "D",
+      "explanation": "正確答案為 D。重點在於「124。」。本題重點是辨認符合ERP觀念、流程或定義的標準說法。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 71
+    },
+    {
+      "id": "ERPQ072",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中 ，下列何者非為請款價格(Billing Price)決定之來源",
+      "options": {
+        "A": "直接轉置顧客詢價單(Inquiry)上的價格",
+        "B": "手動輸入價格",
+        "C": "再次參考相關資料執行訂價",
+        "D": "直接轉置銷售訂單上的價格。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「直接轉置顧客詢價單(Inquiry)上的價格」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 72
+    },
+    {
+      "id": "ERPQ073",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，有所謂的要項協議，是一種總括性的文件與長期性的約定，用來詳細而且具體的說明某些產品或服務將在某一特定的期間內，需交貨至顧客處。在ERP 系統中，要項協議可以再區分成那幾類 (1) 顧客契約(Customer Contract) (2) 出貨協議(Scheduling Agreements) (3) 售前文件",
+      "options": {
+        "A": "1",
+        "B": "2",
+        "C": "12",
+        "D": "123。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「12」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 73
+    },
+    {
+      "id": "ERPQ074",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組(SD)中，銷售區域是由那幾個元素結合而成",
+      "options": {
+        "A": "銷售組織、配送管道、部門",
+        "B": "客戶端、公司代碼、銷售組織",
+        "C": "公司代碼、銷售組織、配銷管道",
+        "D": "公司代碼、配銷管道、部門。"
+      },
+      "answer": "A",
+      "explanation": "正確答案為 A。重點在於「銷售組織、配送管道、部門」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 74
+    },
+    {
+      "id": "ERPQ075",
+      "type": "single_choice",
+      "question": "在銷售與配銷模組中，有著指定特別指定產品數量與價格的顧客契約及特別指明出貨數量與日期的出貨協議，而顧客契約與出貨協議又可統稱為",
+      "options": {
+        "A": "通訊協定",
+        "B": "要項協議(Outline Agreement)",
+        "C": "交易協定",
+        "D": "備忘錄。"
+      },
+      "answer": "B",
+      "explanation": "正確答案為 B。重點在於「要項協議(Outline Agreement)」。本題考查該章的核心名詞、流程或計算觀念。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 75
+    },
+    {
+      "id": "ERPQ076",
+      "type": "single_choice",
+      "question": "在 ERP 系統銷售與配銷模組(SD)中，關於銷售(Sales)之核心企業流程之描述，下列選項何者錯誤",
+      "options": {
+        "A": "收到顧客詢價要求後，啟動建立顧客詢價單(Inquiry)功能",
+        "B": "顧客詢價被接受後，啟動建立顧客報價單(Quotation)功能",
+        "C": "銷售訂單輸入完成後，啟動執行可用量查核，不會啟動執行出貨排程",
+        "D": "報價單被接受後，啟動建立銷售訂單(Sales Order)功能。"
+      },
+      "answer": "C",
+      "explanation": "正確答案為 C。重點在於「銷售訂單輸入完成後，啟動執行可用量查核，不會啟動執行出貨排程」。本題是反向題，需找出不符合ERP觀念、流程或定義的選項。",
+      "tags": [
+        "ERP規劃師",
+        "第三章 銷售與配銷模組",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 76
+    }
+  ]
+}
