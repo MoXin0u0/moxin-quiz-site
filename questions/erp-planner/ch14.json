@@ -1,0 +1,509 @@
+{
+  "bankId": "erp-planner-ch14",
+  "title": "第十四章 電腦網路與 ERP 系統",
+  "description": "依ERP規劃師試題指南2025.09 V06整理，第十四章 電腦網路與 ERP 系統，共 25 題。",
+  "version": "2025.09 V06",
+  "source": "ERP規劃師_參考題型202509_V06.pdf",
+  "questions": [
+    {
+      "id": "ERPQ398",
+      "type": "single_choice",
+      "question": "下列何者是雲端運算具有的基本特性 (1) 隨選即用的自助服務(Self-Services) (2) 無所不在的網路存取(Ubiquitous Network Access) (3) 資源共用(Resource Pooling) (4) 快速彈性(Rapid Elasticity) (5) 不可測量的服務(Un-measured Services)",
+      "options": {
+        "A": "1234",
+        "B": "15",
+        "C": "25",
+        "D": "35。"
+      },
+      "answer": "A",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 為什麼選 A：因為本題是組合題，需判斷哪些敘述符合題意；A「1234」代表的組合為「1=隨選即用的自助服務(Self-Services)；2=無所不在的網路存取(Ubiquitous Network Access)；3=資源共用(Resource Pooling)；4=快速彈性(Rapid Elasticity)」，最符合題幹要求，所以選 A。 A 是答案：此組合包含「1=隨選即用的自助服務(Self-Services)；2=無所不在的網路存取(Ubiquitous Network Access)；3=資源共用(Resource Pooling)；4=快速彈性(Rapid Elasticity)」，符合題意。 B 不選：此組合代表「1=隨選即用的自助服務(Self-Services)；5=不可測量的服務(Un-measured Services)」，漏掉 2=無所不在的網路存取(Ubiquitous Network Access)、3=資源共用(Resource Pooling)、4=快速彈性(Rapid Elasticity)；多列 5=不可測量的服務(Un-measured Services)。 C 不選：此組合代表「2=無所不在的網路存取(Ubiquitous Network Access)；5=不可測量的服務(Un-measured Services)」，漏掉 1=隨選即用的自助服務(Self-Services)、3=資源共用(Resource Pooling)、4=快速彈性(Rapid Elasticity)；多列 5=不可測量的服務(Un-measured Services)。 D 不選：此組合代表「3=資源共用(Resource Pooling)；5=不可測量的服務(Un-measured Services)」，漏掉 1=隨選即用的自助服務(Self-Services)、2=無所不在的網路存取(Ubiquitous Network Access)、4=快速彈性(Rapid Elasticity)；多列 5=不可測量的服務(Un-measured Services)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 398
+    },
+    {
+      "id": "ERPQ399",
+      "type": "single_choice",
+      "question": "下列何者是雲端運算的服務模型 (1) 基礎設施即服務(Infrastructure as a Service, IaaS) (2) 資料即服務(Data as a Service, DaaS) (3) 平台即服務(Platform as a Service, PaaS) (4) 軟體即服務 (Software as a Service, SaaS) (5) 硬體即服務 (Hardware as a Service, HaaS)",
+      "options": {
+        "A": "135",
+        "B": "234",
+        "C": "134",
+        "D": "345。"
+      },
+      "answer": "C",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 IaaS 是基礎設施即服務，提供運算、儲存、網路等基礎資源。 為什麼選 C：因為本題是組合題，需判斷哪些敘述符合題意；C「134」代表的組合為「1=基礎設施即服務(Infrastructure as a Service, IaaS)；3=平台即服務(Platform as a Service, PaaS)；4=軟體即服務 (Software as a Service, SaaS)」，最符合題幹要求，所以選 C。 A 不選：此組合代表「1=基礎設施即服務(Infrastructure as a Service, IaaS)；3=平台即服務(Platform as a Service, PaaS)；5=硬體即服務 (Hardware as a Service, HaaS)」，漏掉 4=軟體即服務 (Software as a Service, SaaS)；多列 5=硬體即服務 (Hardware as a Service, HaaS)。 B 不選：此組合代表「2=資料即服務(Data as a Service, DaaS)；3=平台即服務(Platform as a Service, PaaS)；4=軟體即服務 (Software as a Service, SaaS)」，漏掉 1=基礎設施即服務(Infrastructure as a Service, IaaS)；多列 2=資料即服務(Data as a Service, DaaS)。 C 是答案：此組合包含「1=基礎設施即服務(Infrastructure as a Service, IaaS)；3=平台即服務(Platform as a Service, PaaS)；4=軟體即服務 (Software as a Service, SaaS)」，符合題意。 D 不選：此組合代表「3=平台即服務(Platform as a Service, PaaS)；4=軟體即服務 (Software as a Service, SaaS)；5=硬體即服務 (Hardware as a Service, HaaS)」，漏掉 1=基礎設施即服務(Infrastructure as a Service, IaaS)；多列 5=硬體即服務 (Hardware as a Service, HaaS)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 399
+    },
+    {
+      "id": "ERPQ400",
+      "type": "single_choice",
+      "question": "下列何者是雲端運算的部署模型 (1) 私有雲 (Private cloud) (2) 社群雲 (Community cloud) (3) 公有雲 (Public cloud) (4) 混合雲 (Hybrid cloud) (5) 公司雲 (Company Cloud)",
+      "options": {
+        "A": "1234",
+        "B": "1235",
+        "C": "1245",
+        "D": "2345。"
+      },
+      "answer": "A",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 私有雲是由單一組織專用的雲端部署模型。 為什麼選 A：因為本題是組合題，需判斷哪些敘述符合題意；A「1234」代表的組合為「1=私有雲 (Private cloud)；2=社群雲 (Community cloud)；3=公有雲 (Public cloud)；4=混合雲 (Hybrid cloud)」，最符合題幹要求，所以選 A。 A 是答案：此組合包含「1=私有雲 (Private cloud)；2=社群雲 (Community cloud)；3=公有雲 (Public cloud)；4=混合雲 (Hybrid cloud)」，符合題意。 B 不選：此組合代表「1=私有雲 (Private cloud)；2=社群雲 (Community cloud)；3=公有雲 (Public cloud)；5=公司雲 (Company Cloud)」，漏掉 4=混合雲 (Hybrid cloud)；多列 5=公司雲 (Company Cloud)。 C 不選：此組合代表「1=私有雲 (Private cloud)；2=社群雲 (Community cloud)；4=混合雲 (Hybrid cloud)；5=公司雲 (Company Cloud)」，漏掉 3=公有雲 (Public cloud)；多列 5=公司雲 (Company Cloud)。 D 不選：此組合代表「2=社群雲 (Community cloud)；3=公有雲 (Public cloud)；4=混合雲 (Hybrid cloud)；5=公司雲 (Company Cloud)」，漏掉 1=私有雲 (Private cloud)；多列 5=公司雲 (Company Cloud)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 400
+    },
+    {
+      "id": "ERPQ401",
+      "type": "single_choice",
+      "question": "整體擁有成本 (Total Cost of Ownership, TCO)，包含下列哪幾項 (1) 整體獲得成本(Total Cost of Acquisition, TCA) (2) 機會成本(Opportunity Cost) (3) 營運成本 (Operating Cost) (4) 銷貨成本 (Cost of Goods Sold)",
+      "options": {
+        "A": "13",
+        "B": "24",
+        "C": "14",
+        "D": "23。"
+      },
+      "answer": "A",
+      "explanation": "知識點：整體擁有成本 TCO 包含獲得成本與營運成本，用於評估資訊系統長期成本。 為什麼選 A：因為本題是組合題，需判斷哪些敘述符合題意；A「13」代表的組合為「1=整體獲得成本(Total Cost of Acquisition, TCA)；3=營運成本 (Operating Cost)」，最符合題幹要求，所以選 A。 A 是答案：此組合包含「1=整體獲得成本(Total Cost of Acquisition, TCA)；3=營運成本 (Operating Cost)」，符合題意。 B 不選：此組合代表「2=機會成本(Opportunity Cost)；4=銷貨成本 (Cost of Goods Sold)」，漏掉 1=整體獲得成本(Total Cost of Acquisition, TCA)、3=營運成本 (Operating Cost)；多列 2=機會成本(Opportunity Cost)、4=銷貨成本 (Cost of Goods Sold)。 C 不選：此組合代表「1=整體獲得成本(Total Cost of Acquisition, TCA)；4=銷貨成本 (Cost of Goods Sold)」，漏掉 3=營運成本 (Operating Cost)；多列 4=銷貨成本 (Cost of Goods Sold)。 D 不選：此組合代表「2=機會成本(Opportunity Cost)；3=營運成本 (Operating Cost)」，漏掉 1=整體獲得成本(Total Cost of Acquisition, TCA)；多列 2=機會成本(Opportunity Cost)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 401
+    },
+    {
+      "id": "ERPQ402",
+      "type": "single_choice",
+      "question": "企業要著手規劃一個雲端架構時，通常會考慮使用以下準則來評估，下列哪一個選項不是考量的評估準則",
+      "options": {
+        "A": "延展性(Scalability)",
+        "B": "租用型態",
+        "C": "可靠度(Reliability)以及整體擁有成本",
+        "D": "國際創新創業。"
+      },
+      "answer": "D",
+      "explanation": "知識點：本題屬於「電腦網路、雲端運算與 ERP 技術架構」，重點是判斷題幹中的名詞、流程或模組功能是否符合 ERP 標準觀念。 為什麼選 D：因為題幹是反向題，要找「錯誤、不是、不屬於或不符合」的選項；D「國際創新創業。」違反本題的知識點，所以它才是答案。 A 不選：「延展性(Scalability)」不是本題最明確的錯誤或不屬於選項。 B 不選：「租用型態」不是本題最明確的錯誤或不屬於選項。 C 不選：「可靠度(Reliability)以及整體擁有成本」不是本題最明確的錯誤或不屬於選項。 D 是答案：「國際創新創業。」直接符合題目所問的概念或流程。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 402
+    },
+    {
+      "id": "ERPQ403",
+      "type": "single_choice",
+      "question": "企業欲規劃良好的雲端架構，請選擇評估一個企業雲端架構可使用下列哪些準則 (1) 延展性 (2) 租用型態 (3) 可靠度 (4) 整體擁有成本 (5) 可攜性 (Portability) (6) 資訊安全及隱私 (7) 轉換成本 (Switching Cost) (8) 風險",
+      "options": {
+        "A": "123457",
+        "B": "13456",
+        "C": "12345678",
+        "D": "12568。"
+      },
+      "answer": "C",
+      "explanation": "知識點：本題屬於「電腦網路、雲端運算與 ERP 技術架構」，重點是判斷題幹中的名詞、流程或模組功能是否符合 ERP 標準觀念。 為什麼選 C：因為本題是組合題，需判斷哪些敘述符合題意；C「12345678」代表的組合為「1=延展性；2=租用型態；3=可靠度；4=整體擁有成本；5=可攜性 (Portability)；6=資訊安全及隱私；7=轉換成本 (Switching Cost)；8=風險」，最符合題幹要求，所以選 C。 A 不選：此組合代表「1=延展性；2=租用型態；3=可靠度；4=整體擁有成本；5=可攜性 (Portability)；7=轉換成本 (Switching Cost)」，漏掉 6=資訊安全及隱私、8=風險。 B 不選：此組合代表「1=延展性；3=可靠度；4=整體擁有成本；5=可攜性 (Portability)；6=資訊安全及隱私」，漏掉 2=租用型態、7=轉換成本 (Switching Cost)、8=風險。 C 是答案：此組合包含「1=延展性；2=租用型態；3=可靠度；4=整體擁有成本；5=可攜性 (Portability)；6=資訊安全及隱私；7=轉換成本 (Switching Cost)；8=風險」，符合題意。 D 不選：此組合代表「1=延展性；2=租用型態；5=可攜性 (Portability)；6=資訊安全及隱私；8=風險」，漏掉 3=可靠度、4=整體擁有成本、7=轉換成本 (Switching Cost)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 403
+    },
+    {
+      "id": "ERPQ404",
+      "type": "single_choice",
+      "question": "服務導向架構(Service-Oriented Architecture, SOA)中包含下列哪些角色 (1) 服務要求者 (2) 服務登錄 (3) 服務提供者 (4) 服務代理者",
+      "options": {
+        "A": "123",
+        "B": "124",
+        "C": "234",
+        "D": "1234。"
+      },
+      "answer": "A",
+      "explanation": "知識點：服務導向架構 SOA 以服務提供者、服務登錄與服務要求者等角色協同，使系統功能可重用與整合。 為什麼選 A：因為本題是組合題，需判斷哪些敘述符合題意；A「123」代表的組合為「1=服務要求者；2=服務登錄；3=服務提供者」，最符合題幹要求，所以選 A。 A 是答案：此組合包含「1=服務要求者；2=服務登錄；3=服務提供者」，符合題意。 B 不選：此組合代表「1=服務要求者；2=服務登錄；4=服務代理者」，漏掉 3=服務提供者；多列 4=服務代理者。 C 不選：此組合代表「2=服務登錄；3=服務提供者；4=服務代理者」，漏掉 1=服務要求者；多列 4=服務代理者。 D 不選：此組合代表「1=服務要求者；2=服務登錄；3=服務提供者；4=服務代理者」，多列 4=服務代理者。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 404
+    },
+    {
+      "id": "ERPQ405",
+      "type": "single_choice",
+      "question": "下列何種核心技術最能描述雲端運算 (1) 伺服器虛擬化(Server Virtualization) (2) 軟體即服務 (Software as a Service) (3) 網格運算(Grid Computing) (4) 服務導向架構(Service-Oriented Architecture)",
+      "options": {
+        "A": "12",
+        "B": "24",
+        "C": "124",
+        "D": "1234。"
+      },
+      "answer": "C",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 為什麼選 C：因為本題是組合題，需判斷哪些敘述符合題意；C「124」代表的組合為「1=伺服器虛擬化(Server Virtualization)；2=軟體即服務 (Software as a Service)；4=服務導向架構(Service-Oriented Architecture)」，最符合題幹要求，所以選 C。 A 不選：此組合代表「1=伺服器虛擬化(Server Virtualization)；2=軟體即服務 (Software as a Service)」，漏掉 4=服務導向架構(Service-Oriented Architecture)。 B 不選：此組合代表「2=軟體即服務 (Software as a Service)；4=服務導向架構(Service-Oriented Architecture)」，漏掉 1=伺服器虛擬化(Server Virtualization)。 C 是答案：此組合包含「1=伺服器虛擬化(Server Virtualization)；2=軟體即服務 (Software as a Service)；4=服務導向架構(Service-Oriented Architecture)」，符合題意。 D 不選：此組合代表「1=伺服器虛擬化(Server Virtualization)；2=軟體即服務 (Software as a Service)；3=網格運算(Grid Computing)；4=服務導向架構(Service-Oriented Architecture)」，多列 3=網格運算(Grid Computing)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 405
+    },
+    {
+      "id": "ERPQ406",
+      "type": "single_choice",
+      "question": "下列何者是伺服器虛擬化(Server Virtualization)的效益 (1) 提高伺服器的有效利用率 (2) 減少回應時間 (3) 降低伺服器成本 (4) 提升新系統的建置效率",
+      "options": {
+        "A": "124",
+        "B": "234",
+        "C": "134",
+        "D": "1234。"
+      },
+      "answer": "D",
+      "explanation": "知識點：本題屬於「電腦網路、雲端運算與 ERP 技術架構」，重點是判斷題幹中的名詞、流程或模組功能是否符合 ERP 標準觀念。 為什麼選 D：因為本題是組合題，需判斷哪些敘述符合題意；D「1234。」代表的組合為「1=提高伺服器的有效利用率；2=減少回應時間；3=降低伺服器成本；4=提升新系統的建置效率」，最符合題幹要求，所以選 D。 A 不選：此組合代表「1=提高伺服器的有效利用率；2=減少回應時間；4=提升新系統的建置效率」，漏掉 3=降低伺服器成本。 B 不選：此組合代表「2=減少回應時間；3=降低伺服器成本；4=提升新系統的建置效率」，漏掉 1=提高伺服器的有效利用率。 C 不選：此組合代表「1=提高伺服器的有效利用率；3=降低伺服器成本；4=提升新系統的建置效率」，漏掉 2=減少回應時間。 D 是答案：此組合包含「1=提高伺服器的有效利用率；2=減少回應時間；3=降低伺服器成本；4=提升新系統的建置效率」，符合題意。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 406
+    },
+    {
+      "id": "ERPQ407",
+      "type": "single_choice",
+      "question": "下列何者非軟體即服務(Software as a Service)的效益",
+      "options": {
+        "A": "節省軟體購置成本",
+        "B": "節省軟體使用成本",
+        "C": "節省軟體與資料之轉換成本(Switching Cost)",
+        "D": "若提供軟體租賃方式，只需視使用多少來支付使用費。"
+      },
+      "answer": "C",
+      "explanation": "知識點：本題屬於「電腦網路、雲端運算與 ERP 技術架構」，重點是判斷題幹中的名詞、流程或模組功能是否符合 ERP 標準觀念。 為什麼選 C：因為題幹是反向題，要找「錯誤、不是、不屬於或不符合」的選項；C「節省軟體與資料之轉換成本(Switching Cost)」違反本題的知識點，所以它才是答案。 A 不選：「節省軟體購置成本」不是本題最明確的錯誤或不屬於選項。 B 不選：「節省軟體使用成本」不是本題最明確的錯誤或不屬於選項。 C 是答案：「節省軟體與資料之轉換成本(Switching Cost)」直接符合題目所問的概念或流程。 D 不選：「若提供軟體租賃方式，只需視使用多少來支付使用費。」不是本題最明確的錯誤或不屬於選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 407
+    },
+    {
+      "id": "ERPQ408",
+      "type": "single_choice",
+      "question": "下列有關雲端運算的敘述何者正確",
+      "options": {
+        "A": "在網際網路應用中，將共用軟體元件製作成網路服務(Web Service)，即是軟體即服務(Software as a Service, SaaS)",
+        "B": "將伺服器虛擬化即是雲端運算",
+        "C": "雲端運算融合伺服器虛擬化(Server Virtualization)、軟體即服務(Software as a Service)及服務導向架構(Service-Oriented Architecture)等核心技術",
+        "D": "分散式儲存即是雲端運算的一種應用。"
+      },
+      "answer": "C",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 SaaS 是軟體即服務，使用者透過網路使用應用程式。 為什麼選 C：因為 C「雲端運算融合伺服器虛擬化(Server Virtualization)、軟體即服務(Software as a Service)及服務導向架構(Service-Oriented Architecture)等核心技術」最能對應題幹所問的核心知識，與「電腦網路、雲端運算與 ERP 技術架構」的定義、流程或模組功能一致，所以選 C。 A 不選：SaaS 是軟體即服務，使用者透過網路使用應用程式。 但它不是本題題幹所指定的答案重點。 B 不選：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 但它不是本題題幹所指定的答案重點。 C 是答案：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 D 不選：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 但它不是本題題幹所指定的答案重點。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 408
+    },
+    {
+      "id": "ERPQ409",
+      "type": "single_choice",
+      "question": "下列有關評估雲端架構的敘述何者正確 (1) 萬一雲端系統損害事件或災難發生，如同將雞蛋 (應用與資料)放在同一籃子中，將會增加企業的經營風險 (2) 在轉換到雲端架構未取得顯著的投資報酬率前，加上目前的雲端企業應用系統不能被方便地遷移(Migration)，對於心存疑慮的使用者上缺乏成本優勢的誘因 (3) 使用者的行為、習慣、偏好及隱私等資料可能被揭露在網路上，為了保護用戶的資料，身份鑑定管理議題必須先被解決與信任 (4) 租用雲端架構的型態包含單租戶 (Single-tenant)與多租戶(Multi-te",
+      "options": {
+        "A": "1245",
+        "B": "2345",
+        "C": "1234",
+        "D": "12345。"
+      },
+      "answer": "C",
+      "explanation": "知識點：本題屬於「電腦網路、雲端運算與 ERP 技術架構」，重點是判斷題幹中的名詞、流程或模組功能是否符合 ERP 標準觀念。 為什麼選 C：因為本題是組合題，需判斷哪些敘述符合題意；C「1234」代表的組合為「1=萬一雲端系統損害事件或災難發生，如同將雞蛋 (應用與資料)放在同一籃子中，將會增加企業的經營風險；2=在轉換到雲端架構未取得顯著的投資報酬率前，加上目前的雲端企業應用系統不能被方便地遷移(Migra…；3=使用者的行為、習慣、偏好及隱私等資料可能被揭露在網路上，為了保護用戶的資料，身份鑑定管理議題必須…；4=租用雲端架構的型態包含單租戶 (Single-tenant)與多租戶(Multi-te」，最符合題幹要求，所以選 C。 A 不選：此組合代表「1=萬一雲端系統損害事件或災難發生，如同將雞蛋 (應用與資料)放在同一籃子中，將會增加企業的經營風險；2=在轉換到雲端架構未取得顯著的投資報酬率前，加上目前的雲端企業應用系統不能被方便地遷移(Migra…；4=租用雲端架構的型態包含單租戶 (Single-tenant)與多租戶(Multi-te；5=題幹第5項」，漏掉 3=使用者的行為、習慣、偏好及隱私等資料可能被揭露在網路上，為了保護用戶的資料，身份鑑定管理議題必須…；多列 5=第5項。 B 不選：此組合代表「2=在轉換到雲端架構未取得顯著的投資報酬率前，加上目前的雲端企業應用系統不能被方便地遷移(Migra…；3=使用者的行為、習慣、偏好及隱私等資料可能被揭露在網路上，為了保護用戶的資料，身份鑑定管理議題必須…；4=租用雲端架構的型態包含單租戶 (Single-tenant)與多租戶(Multi-te；5=題幹第5項」，漏掉 1=萬一雲端系統損害事件或災難發生，如同將雞蛋 (應用與資料)放在同一籃子中，將會增加企業的經營風險；多列 5=第5項。 C 是答案：此組合包含「1=萬一雲端系統損害事件或災難發生，如同將雞蛋 (應用與資料)放在同一籃子中，將會增加企業的經營風險；2=在轉換到雲端架構未取得顯著的投資報酬率前，加上目前的雲端企業應用系統不能被方便地遷移(Migra…；3=使用者的行為、習慣、偏好及隱私等資料可能被揭露在網路上，為了保護用戶的資料，身份鑑定管理議題必須…；4=租用雲端架構的型態包含單租戶 (Single-tenant)與多租戶(Multi-te」，符合題意。 D 不選：此組合代表「1=萬一雲端系統損害事件或災難發生，如同將雞蛋 (應用與資料)放在同一籃子中，將會增加企業的經營風險；2=在轉換到雲端架構未取得顯著的投資報酬率前，加上目前的雲端企業應用系統不能被方便地遷移(Migra…；3=使用者的行為、習慣、偏好及隱私等資料可能被揭露在網路上，為了保護用戶的資料，身份鑑定管理議題必須…；4=租用雲端架構的型態包含單租戶 (Single-tenant)與多租戶(Multi-te；5=題幹第5項」，多列 5=第5項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 409
+    },
+    {
+      "id": "ERPQ410",
+      "type": "single_choice",
+      "question": "從過去到現在，下列何者為 ERP 系統的網路架構型態 (1) 集中式系統架構 (2) 主從架構 (3) 服務導向架構 (4) 雲端架構",
+      "options": {
+        "A": "123",
+        "B": "124",
+        "C": "234",
+        "D": "1234。"
+      },
+      "answer": "D",
+      "explanation": "知識點：本題屬於「電腦網路、雲端運算與 ERP 技術架構」，重點是判斷題幹中的名詞、流程或模組功能是否符合 ERP 標準觀念。 為什麼選 D：因為本題是組合題，需判斷哪些敘述符合題意；D「1234。」代表的組合為「1=集中式系統架構；2=主從架構；3=服務導向架構；4=雲端架構」，最符合題幹要求，所以選 D。 A 不選：此組合代表「1=集中式系統架構；2=主從架構；3=服務導向架構」，漏掉 4=雲端架構。 B 不選：此組合代表「1=集中式系統架構；2=主從架構；4=雲端架構」，漏掉 3=服務導向架構。 C 不選：此組合代表「2=主從架構；3=服務導向架構；4=雲端架構」，漏掉 1=集中式系統架構。 D 是答案：此組合包含「1=集中式系統架構；2=主從架構；3=服務導向架構；4=雲端架構」，符合題意。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 410
+    },
+    {
+      "id": "ERPQ411",
+      "type": "single_choice",
+      "question": "下列有關雲端 ERP(Cloud ERP)系統的敘述何者錯誤",
+      "options": {
+        "A": "基於雲端運算的網路架構所發展出來的 ERP 資訊系統",
+        "B": "它基於集中式專屬主機架構，用戶須採取終端機模式登入",
+        "C": "它是一種軟體即服務(Software as a Service, SaaS)為基礎的 ERP",
+        "D": "或稱之為隨選ERP(on-demand ERP)。"
+      },
+      "answer": "B",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 SaaS 是軟體即服務，使用者透過網路使用應用程式。 為什麼選 B：因為題幹是反向題，要找「錯誤、不是、不屬於或不符合」的選項；B「它基於集中式專屬主機架構，用戶須採取終端機模式登入」違反本題的知識點，所以它才是答案。 A 不選：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 這個說法仍較符合題意；反向題要選的是不符合者。 B 是答案：「它基於集中式專屬主機架構，用戶須採取終端機模式登入」直接符合題目所問的概念或流程。 C 不選：SaaS 是軟體即服務，使用者透過網路使用應用程式。 這個說法仍較符合題意；反向題要選的是不符合者。 D 不選：「或稱之為隨選ERP(on-demand ERP)。」不是本題最明確的錯誤或不屬於選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 411
+    },
+    {
+      "id": "ERPQ412",
+      "type": "single_choice",
+      "question": "下列有關私有雲的敘述何者正確 (1) 雲端基礎設施提供給單一組織專用，該組織包含多個消費者 (2) 基礎設施可以由單一組織專、第三方或它們的某種組合來擁有、管理及操作 (3) 雲端基礎設施開放地提供給一般大眾使用 (4) 雲端基礎設施提供給有共同利益關注的特定社群組織專用",
+      "options": {
+        "A": "12",
+        "B": "23",
+        "C": "13",
+        "D": "24。"
+      },
+      "answer": "A",
+      "explanation": "知識點：私有雲是由單一組織專用的雲端部署模型。 為什麼選 A：因為本題是組合題，需判斷哪些敘述符合題意；A「12」代表的組合為「1=雲端基礎設施提供給單一組織專用，該組織包含多個消費者；2=基礎設施可以由單一組織專、第三方或它們的某種組合來擁有、管理及操作」，最符合題幹要求，所以選 A。 A 是答案：此組合包含「1=雲端基礎設施提供給單一組織專用，該組織包含多個消費者；2=基礎設施可以由單一組織專、第三方或它們的某種組合來擁有、管理及操作」，符合題意。 B 不選：此組合代表「2=基礎設施可以由單一組織專、第三方或它們的某種組合來擁有、管理及操作；3=雲端基礎設施開放地提供給一般大眾使用」，漏掉 1=雲端基礎設施提供給單一組織專用，該組織包含多個消費者；多列 3=雲端基礎設施開放地提供給一般大眾使用。 C 不選：此組合代表「1=雲端基礎設施提供給單一組織專用，該組織包含多個消費者；3=雲端基礎設施開放地提供給一般大眾使用」，漏掉 2=基礎設施可以由單一組織專、第三方或它們的某種組合來擁有、管理及操作；多列 3=雲端基礎設施開放地提供給一般大眾使用。 D 不選：此組合代表「2=基礎設施可以由單一組織專、第三方或它們的某種組合來擁有、管理及操作；4=雲端基礎設施提供給有共同利益關注的特定社群組織專用」，漏掉 1=雲端基礎設施提供給單一組織專用，該組織包含多個消費者；多列 4=雲端基礎設施提供給有共同利益關注的特定社群組織專用。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 412
+    },
+    {
+      "id": "ERPQ413",
+      "type": "single_choice",
+      "question": "Gartner Group 於 2012 年定義巨量資料(Big Data)具備 3V 的特性，但是不包含下列哪一項",
+      "options": {
+        "A": "超大容量(V olume)",
+        "B": "高流速(Velocity)",
+        "C": "多樣化(Variety)",
+        "D": "視覺化(Visualization)。"
+      },
+      "answer": "D",
+      "explanation": "知識點：本題屬於「電腦網路、雲端運算與 ERP 技術架構」，重點是判斷題幹中的名詞、流程或模組功能是否符合 ERP 標準觀念。 為什麼選 D：因為題幹是反向題，要找「錯誤、不是、不屬於或不符合」的選項；D「視覺化(Visualization)。」違反本題的知識點，所以它才是答案。 A 不選：「超大容量(V olume)」不是本題最明確的錯誤或不屬於選項。 B 不選：「高流速(Velocity)」不是本題最明確的錯誤或不屬於選項。 C 不選：「多樣化(Variety)」不是本題最明確的錯誤或不屬於選項。 D 是答案：「視覺化(Visualization)。」直接符合題目所問的概念或流程。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 413
+    },
+    {
+      "id": "ERPQ414",
+      "type": "single_choice",
+      "question": "下列何者不是雲端運算的基本特性",
+      "options": {
+        "A": "隨選即用的自助服務(Self-Services)",
+        "B": "無所不在(Ubiquitous)的網路存取",
+        "C": "資源共用(Resource Pooling)以及快速彈性(Rapid Elasticity)",
+        "D": "集中式的處理(Centrally Processing)。"
+      },
+      "answer": "D",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 為什麼選 D：因為題幹是反向題，要找「錯誤、不是、不屬於或不符合」的選項；D「集中式的處理(Centrally Processing)。」違反本題的知識點，所以它才是答案。 A 不選：「隨選即用的自助服務(Self-Services)」不是本題最明確的錯誤或不屬於選項。 B 不選：「無所不在(Ubiquitous)的網路存取」不是本題最明確的錯誤或不屬於選項。 C 不選：「資源共用(Resource Pooling)以及快速彈性(Rapid Elasticity)」不是本題最明確的錯誤或不屬於選項。 D 是答案：「集中式的處理(Centrally Processing)。」直接符合題目所問的概念或流程。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 414
+    },
+    {
+      "id": "ERPQ415",
+      "type": "single_choice",
+      "question": "雲端運算是一項革命性的 IT 管理工具，就企業用戶觀點，下列敘述何者錯誤",
+      "options": {
+        "A": "它有別於傳統資訊設施的投資，它強調較低的整體擁有成本",
+        "B": "僅需視使用了甚麼來支付 IT 的擁有成本(pay-as-you-go)",
+        "C": "整體擁有成本包含整體獲得成本與折舊成本",
+        "D": "可減少能源的消耗。"
+      },
+      "answer": "C",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 為什麼選 C：因為題幹是反向題，要找「錯誤、不是、不屬於或不符合」的選項；C「整體擁有成本包含整體獲得成本與折舊成本」違反本題的知識點，所以它才是答案。 A 不選：「它有別於傳統資訊設施的投資，它強調較低的整體擁有成本」不是本題最明確的錯誤或不屬於選項。 B 不選：「僅需視使用了甚麼來支付 IT 的擁有成本(pay-as-you-go)」不是本題最明確的錯誤或不屬於選項。 C 是答案：「整體擁有成本包含整體獲得成本與折舊成本」直接符合題目所問的概念或流程。 D 不選：「可減少能源的消耗。」不是本題最明確的錯誤或不屬於選項。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 415
+    },
+    {
+      "id": "ERPQ416",
+      "type": "single_choice",
+      "question": "下列有關社群雲的敘述何者正確 (1) 雲端基礎設施提供給有共同利益關注的特定社群組織專用 (2) 雲端基礎設施由兩個或多個不同的雲端基礎設施所組成 (3) 基礎設施可以由一個或一個以上的社群成員組織、第三方或它們的某種組合來擁有、管理及操作 (4) 由於社群雲較私有雲容易達到使用者間分享及整合資料與企業流程，傾向被應用到產業供應鏈與需求鏈 (5) 目前較著名的社群雲有台灣的健康雲",
+      "options": {
+        "A": "1245",
+        "B": "2345",
+        "C": "1234",
+        "D": "1345。"
+      },
+      "answer": "D",
+      "explanation": "知識點：企業流程是為達成特定營運目的，由事件驅動並串接多個加值活動的作業集合。 私有雲是由單一組織專用的雲端部署模型。 為什麼選 D：因為本題是組合題，需判斷哪些敘述符合題意；D「1345。」代表的組合為「1=雲端基礎設施提供給有共同利益關注的特定社群組織專用；3=基礎設施可以由一個或一個以上的社群成員組織、第三方或它們的某種組合來擁有、管理及操作；4=由於社群雲較私有雲容易達到使用者間分享及整合資料與企業流程，傾向被應用到產業供應鏈與需求鏈；5=目前較著名的社群雲有台灣的健康雲」，最符合題幹要求，所以選 D。 A 不選：此組合代表「1=雲端基礎設施提供給有共同利益關注的特定社群組織專用；2=雲端基礎設施由兩個或多個不同的雲端基礎設施所組成；4=由於社群雲較私有雲容易達到使用者間分享及整合資料與企業流程，傾向被應用到產業供應鏈與需求鏈；5=目前較著名的社群雲有台灣的健康雲」，漏掉 3=基礎設施可以由一個或一個以上的社群成員組織、第三方或它們的某種組合來擁有、管理及操作；多列 2=雲端基礎設施由兩個或多個不同的雲端基礎設施所組成。 B 不選：此組合代表「2=雲端基礎設施由兩個或多個不同的雲端基礎設施所組成；3=基礎設施可以由一個或一個以上的社群成員組織、第三方或它們的某種組合來擁有、管理及操作；4=由於社群雲較私有雲容易達到使用者間分享及整合資料與企業流程，傾向被應用到產業供應鏈與需求鏈；5=目前較著名的社群雲有台灣的健康雲」，漏掉 1=雲端基礎設施提供給有共同利益關注的特定社群組織專用；多列 2=雲端基礎設施由兩個或多個不同的雲端基礎設施所組成。 C 不選：此組合代表「1=雲端基礎設施提供給有共同利益關注的特定社群組織專用；2=雲端基礎設施由兩個或多個不同的雲端基礎設施所組成；3=基礎設施可以由一個或一個以上的社群成員組織、第三方或它們的某種組合來擁有、管理及操作；4=由於社群雲較私有雲容易達到使用者間分享及整合資料與企業流程，傾向被應用到產業供應鏈與需求鏈」，漏掉 5=目前較著名的社群雲有台灣的健康雲；多列 2=雲端基礎設施由兩個或多個不同的雲端基礎設施所組成。 D 是答案：此組合包含「1=雲端基礎設施提供給有共同利益關注的特定社群組織專用；3=基礎設施可以由一個或一個以上的社群成員組織、第三方或它們的某種組合來擁有、管理及操作；4=由於社群雲較私有雲容易達到使用者間分享及整合資料與企業流程，傾向被應用到產業供應鏈與需求鏈；5=目前較著名的社群雲有台灣的健康雲」，符合題意。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 416
+    },
+    {
+      "id": "ERPQ417",
+      "type": "single_choice",
+      "question": "巨量資料分析之雲端架構，不包含下列哪一項",
+      "options": {
+        "A": "巨量資料分析軟體即服務",
+        "B": "巨量資料平台即服務",
+        "C": "巨量資料基礎設施即服務",
+        "D": "巨量資料教材即服務。"
+      },
+      "answer": "D",
+      "explanation": "知識點：本題屬於「電腦網路、雲端運算與 ERP 技術架構」，重點是判斷題幹中的名詞、流程或模組功能是否符合 ERP 標準觀念。 為什麼選 D：因為題幹是反向題，要找「錯誤、不是、不屬於或不符合」的選項；D「巨量資料教材即服務。」違反本題的知識點，所以它才是答案。 A 不選：「巨量資料分析軟體即服務」不是本題最明確的錯誤或不屬於選項。 B 不選：「巨量資料平台即服務」不是本題最明確的錯誤或不屬於選項。 C 不選：「巨量資料基礎設施即服務」不是本題最明確的錯誤或不屬於選項。 D 是答案：「巨量資料教材即服務。」直接符合題目所問的概念或流程。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 417
+    },
+    {
+      "id": "ERPQ418",
+      "type": "single_choice",
+      "question": "根據美國國家標準與技術研究院(NIST)的雲端運算定義，下列何者是雲端運算所具有的基本特性 (1) 隨選即用的自助服務(Self-Services) (2) 無所不在的網路存取(Ubiquitous Network Access) (3) 資源共用(Resource Pooling) (4) 快速彈性(Rapid Elasticity) (5) 可測量的服務(Measured Services) (6) 視覺化(Visualization)",
+      "options": {
+        "A": "12345",
+        "B": "156",
+        "C": "2356",
+        "D": "345。"
+      },
+      "answer": "A",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 為什麼選 A：因為本題是組合題，需判斷哪些敘述符合題意；A「12345」代表的組合為「1=隨選即用的自助服務(Self-Services)；2=無所不在的網路存取(Ubiquitous Network Access)；3=資源共用(Resource Pooling)；4=快速彈性(Rapid Elasticity)；5=可測量的服務(Measured Services)」，最符合題幹要求，所以選 A。 A 是答案：此組合包含「1=隨選即用的自助服務(Self-Services)；2=無所不在的網路存取(Ubiquitous Network Access)；3=資源共用(Resource Pooling)；4=快速彈性(Rapid Elasticity)；5=可測量的服務(Measured Services)」，符合題意。 B 不選：此組合代表「1=隨選即用的自助服務(Self-Services)；5=可測量的服務(Measured Services)；6=視覺化(Visualization)」，漏掉 2=無所不在的網路存取(Ubiquitous Network Access)、3=資源共用(Resource Pooling)、4=快速彈性(Rapid Elasticity)；多列 6=視覺化(Visualization)。 C 不選：此組合代表「2=無所不在的網路存取(Ubiquitous Network Access)；3=資源共用(Resource Pooling)；5=可測量的服務(Measured Services)；6=視覺化(Visualization)」，漏掉 1=隨選即用的自助服務(Self-Services)、4=快速彈性(Rapid Elasticity)；多列 6=視覺化(Visualization)。 D 不選：此組合代表「3=資源共用(Resource Pooling)；4=快速彈性(Rapid Elasticity)；5=可測量的服務(Measured Services)」，漏掉 1=隨選即用的自助服務(Self-Services)、2=無所不在的網路存取(Ubiquitous Network Access)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 418
+    },
+    {
+      "id": "ERPQ419",
+      "type": "single_choice",
+      "question": "根據美國國家標準與技術研究院(NIST)的雲端運算定義，下列何者是雲端運算的服務模型 (1) 基礎設施即服務(Infrastructure as a Service, IaaS) (2) 資料即服務(Data as a Service, DaaS) (3) 平台即服務(Platform as a Service, PaaS) (4) 軟體即服務(Software as a Service, SaaS) (5) 硬體即服務 (Hardware as a Service, HaaS) (6) 程式即服務(Cod",
+      "options": {
+        "A": "136",
+        "B": "234",
+        "C": "134",
+        "D": "246。"
+      },
+      "answer": "C",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 IaaS 是基礎設施即服務，提供運算、儲存、網路等基礎資源。 為什麼選 C：因為本題是組合題，需判斷哪些敘述符合題意；C「134」代表的組合為「1=基礎設施即服務(Infrastructure as a Service, IaaS)；3=平台即服務(Platform as a Service, PaaS)；4=軟體即服務(Software as a Service, SaaS)」，最符合題幹要求，所以選 C。 A 不選：此組合代表「1=基礎設施即服務(Infrastructure as a Service, IaaS)；3=平台即服務(Platform as a Service, PaaS)；6=程式即服務(Cod」，漏掉 4=軟體即服務(Software as a Service, SaaS)；多列 6=程式即服務(Cod。 B 不選：此組合代表「2=資料即服務(Data as a Service, DaaS)；3=平台即服務(Platform as a Service, PaaS)；4=軟體即服務(Software as a Service, SaaS)」，漏掉 1=基礎設施即服務(Infrastructure as a Service, IaaS)；多列 2=資料即服務(Data as a Service, DaaS)。 C 是答案：此組合包含「1=基礎設施即服務(Infrastructure as a Service, IaaS)；3=平台即服務(Platform as a Service, PaaS)；4=軟體即服務(Software as a Service, SaaS)」，符合題意。 D 不選：此組合代表「2=資料即服務(Data as a Service, DaaS)；4=軟體即服務(Software as a Service, SaaS)；6=程式即服務(Cod」，漏掉 1=基礎設施即服務(Infrastructure as a Service, IaaS)、3=平台即服務(Platform as a Service, PaaS)；多列 2=資料即服務(Data as a Service, DaaS)、6=程式即服務(Cod。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 419
+    },
+    {
+      "id": "ERPQ420",
+      "type": "single_choice",
+      "question": "根據美國國家標準與技術研究院(NIST)的雲端運算定義，下列何者是雲端運算的部署模型 (1) 私有雲(Private Cloud) (2) 社群雲(Community Cloud) (3) 公有雲(Public Cloud) (4) 混合雲(Hybrid Cloud) (5) 公司雲(Company Cloud) (6) 工業雲(Industrial Cloud)",
+      "options": {
+        "A": "1234",
+        "B": "1236",
+        "C": "2345",
+        "D": "2456。"
+      },
+      "answer": "A",
+      "explanation": "知識點：雲端運算具隨選自助服務、廣泛網路存取、資源共用、快速彈性與可衡量服務等特性。 私有雲是由單一組織專用的雲端部署模型。 為什麼選 A：因為本題是組合題，需判斷哪些敘述符合題意；A「1234」代表的組合為「1=私有雲(Private Cloud)；2=社群雲(Community Cloud)；3=公有雲(Public Cloud)；4=混合雲(Hybrid Cloud)」，最符合題幹要求，所以選 A。 A 是答案：此組合包含「1=私有雲(Private Cloud)；2=社群雲(Community Cloud)；3=公有雲(Public Cloud)；4=混合雲(Hybrid Cloud)」，符合題意。 B 不選：此組合代表「1=私有雲(Private Cloud)；2=社群雲(Community Cloud)；3=公有雲(Public Cloud)；6=工業雲(Industrial Cloud)」，漏掉 4=混合雲(Hybrid Cloud)；多列 6=工業雲(Industrial Cloud)。 C 不選：此組合代表「2=社群雲(Community Cloud)；3=公有雲(Public Cloud)；4=混合雲(Hybrid Cloud)；5=公司雲(Company Cloud)」，漏掉 1=私有雲(Private Cloud)；多列 5=公司雲(Company Cloud)。 D 不選：此組合代表「2=社群雲(Community Cloud)；4=混合雲(Hybrid Cloud)；5=公司雲(Company Cloud)；6=工業雲(Industrial Cloud)」，漏掉 1=私有雲(Private Cloud)、3=公有雲(Public Cloud)；多列 5=公司雲(Company Cloud)、6=工業雲(Industrial Cloud)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 420
+    },
+    {
+      "id": "ERPQ421",
+      "type": "single_choice",
+      "question": "整體擁有成本(Total Cost of Ownership, TCO)，包含下列哪幾項 (1) 整體獲得成本(Total Cost of Acquisition, TCA) (2) 機會成本(Opportunity Cost) (3) 營運成本(Operating Cost) (4) 銷貨成本(Cost of Goods Sold) (6) 品質成本(Quality Cost)",
+      "options": {
+        "A": "13",
+        "B": "246",
+        "C": "14",
+        "D": "26。"
+      },
+      "answer": "A",
+      "explanation": "知識點：品質成本通常分為預防成本、評鑑成本、內部失敗成本與外部失敗成本。 整體擁有成本 TCO 包含獲得成本與營運成本，用於評估資訊系統長期成本。 為什麼選 A：因為本題是組合題，需判斷哪些敘述符合題意；A「13」代表的組合為「1=整體獲得成本(Total Cost of Acquisition, TCA)；3=營運成本(Operating Cost)」，最符合題幹要求，所以選 A。 A 是答案：此組合包含「1=整體獲得成本(Total Cost of Acquisition, TCA)；3=營運成本(Operating Cost)」，符合題意。 B 不選：此組合代表「2=機會成本(Opportunity Cost)；4=銷貨成本(Cost of Goods Sold)；6=品質成本(Quality Cost)」，漏掉 1=整體獲得成本(Total Cost of Acquisition, TCA)、3=營運成本(Operating Cost)；多列 2=機會成本(Opportunity Cost)、4=銷貨成本(Cost of Goods Sold)、6=品質成本(Quality Cost)。 C 不選：此組合代表「1=整體獲得成本(Total Cost of Acquisition, TCA)；4=銷貨成本(Cost of Goods Sold)」，漏掉 3=營運成本(Operating Cost)；多列 4=銷貨成本(Cost of Goods Sold)。 D 不選：此組合代表「2=機會成本(Opportunity Cost)；6=品質成本(Quality Cost)」，漏掉 1=整體獲得成本(Total Cost of Acquisition, TCA)、3=營運成本(Operating Cost)；多列 2=機會成本(Opportunity Cost)、6=品質成本(Quality Cost)。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 421
+    },
+    {
+      "id": "ERPQ422",
+      "type": "single_choice",
+      "question": "企業欲規劃良好的雲端架構，請選擇評估一個企業雲端架構可使用下列哪些準則 (1) 延展性 (2) 租用型態 (3) 營運與維修 (4) 整體擁有成本 (5) 可攜性與可靠度 (6) 資訊安全及隱私 (7) 轉換成本(Switching Cost) (8) 風險 (9) 標竿技術",
+      "options": {
+        "A": "123459",
+        "B": "13456",
+        "C": "1245678",
+        "D": "125689。"
+      },
+      "answer": "C",
+      "explanation": "知識點：標竿制度透過與優良企業比較來判斷績效差距。 為什麼選 C：因為本題是組合題，需判斷哪些敘述符合題意；C「1245678」代表的組合為「1=延展性；2=租用型態；4=整體擁有成本；5=可攜性與可靠度；6=資訊安全及隱私；7=轉換成本(Switching Cost)；8=風險」，最符合題幹要求，所以選 C。 A 不選：此組合代表「1=延展性；2=租用型態；3=營運與維修；4=整體擁有成本；5=可攜性與可靠度；9=標竿技術」，漏掉 6=資訊安全及隱私、7=轉換成本(Switching Cost)、8=風險；多列 3=營運與維修、9=標竿技術。 B 不選：此組合代表「1=延展性；3=營運與維修；4=整體擁有成本；5=可攜性與可靠度；6=資訊安全及隱私」，漏掉 2=租用型態、7=轉換成本(Switching Cost)、8=風險；多列 3=營運與維修。 C 是答案：此組合包含「1=延展性；2=租用型態；4=整體擁有成本；5=可攜性與可靠度；6=資訊安全及隱私；7=轉換成本(Switching Cost)；8=風險」，符合題意。 D 不選：此組合代表「1=延展性；2=租用型態；5=可攜性與可靠度；6=資訊安全及隱私；8=風險；9=標竿技術」，漏掉 4=整體擁有成本、7=轉換成本(Switching Cost)；多列 9=標竿技術。",
+      "tags": [
+        "ERP規劃師",
+        "第十四章 電腦網路與 ERP 系統",
+        "參考題型202509"
+      ],
+      "difficulty": "medium",
+      "sourceQuestionNo": 422
+    }
+  ]
+}
