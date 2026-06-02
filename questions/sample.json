@@ -1,0 +1,144 @@
+{
+  "bankId": "sample",
+  "title": "範例題庫",
+  "description": "示範單選、複選、是非與填空題的基本格式",
+  "version": "1.0",
+  "questions": [
+    {
+      "id": "S001",
+      "type": "single_choice",
+      "question": "下列哪一種題型只能選擇一個答案？",
+      "options": {
+        "A": "單選題",
+        "B": "複選題",
+        "C": "填空題",
+        "D": "申論題"
+      },
+      "answer": "A",
+      "explanation": "單選題只能選擇一個選項，複選題可以選擇多個選項。",
+      "tags": [
+        "題型",
+        "基本"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "S002",
+      "type": "single_choice",
+      "question": "本網站使用哪一種瀏覽器本機儲存技術保存錯題本？",
+      "options": {
+        "A": "SQL Server",
+        "B": "localStorage",
+        "C": "MongoDB",
+        "D": "Firebase"
+      },
+      "answer": "B",
+      "explanation": "本網站是純前端網站，使用 localStorage 將錯題本與進度儲存在目前瀏覽器。",
+      "tags": [
+        "儲存",
+        "localStorage"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "S003",
+      "type": "multiple_choice",
+      "question": "下列哪些技術可以直接在 GitHub Pages 靜態網站中使用？",
+      "options": {
+        "A": "HTML",
+        "B": "CSS",
+        "C": "JavaScript",
+        "D": "需要後端伺服器的資料庫連線"
+      },
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "explanation": "GitHub Pages 可提供靜態檔案，因此 HTML、CSS、JavaScript 可直接使用；後端資料庫連線不屬於純靜態功能。",
+      "tags": [
+        "GitHub Pages",
+        "前端"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "S004",
+      "type": "multiple_choice",
+      "question": "複選題的判分規則包含哪些條件？",
+      "options": {
+        "A": "必須完全選對",
+        "B": "少選算錯",
+        "C": "多選算錯",
+        "D": "只要選到其中一個正確答案就算對"
+      },
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "explanation": "本系統的複選題採完全比對，少選、多選或選錯都算錯。",
+      "tags": [
+        "複選",
+        "判分"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "S005",
+      "type": "true_false",
+      "question": "答錯的題目會在同一輪稍後重新出現。",
+      "answer": true,
+      "explanation": "答錯後該題會被重新放回本輪 queue 後方，直到答對才算完成。",
+      "tags": [
+        "錯題重做"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "S006",
+      "type": "true_false",
+      "question": "錯題答對後會自動從錯題本移除。",
+      "answer": false,
+      "explanation": "錯題答對後不會自動移除，使用者可在錯題本中手動移除。",
+      "tags": [
+        "錯題本"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "S007",
+      "type": "fill_blank",
+      "question": "請填入本機儲存技術名稱：瀏覽器的 ______ 可用於保存本機資料。",
+      "answer": [
+        "localStorage",
+        "LocalStorage",
+        "LOCALSTORAGE"
+      ],
+      "caseSensitive": false,
+      "explanation": "localStorage 是瀏覽器提供的本機 key-value 儲存機制。",
+      "tags": [
+        "填空",
+        "儲存"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "S008",
+      "type": "fill_blank",
+      "question": "GitHub Pages 適合部署 ______ 網站。",
+      "answer": [
+        "靜態",
+        "static",
+        "Static"
+      ],
+      "caseSensitive": false,
+      "explanation": "GitHub Pages 主要用於部署靜態網站，例如 HTML、CSS、JavaScript 組成的網站。",
+      "tags": [
+        "GitHub Pages",
+        "部署"
+      ],
+      "difficulty": "easy"
+    }
+  ]
+}
