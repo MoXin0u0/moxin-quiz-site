@@ -150,6 +150,7 @@
           description: bank.description || "",
           file: bank.file,
           category: bank.category || "未分類",
+          folder: bank.folder || bank.category || "未分類",
           enabled: true,
           imported: false,
           questionCount: null,
@@ -166,6 +167,7 @@
         description: bank.description || "使用者匯入題庫",
         file: "",
         category: bank.category || "自訂題庫",
+        folder: bank.folder || "自訂題庫",
         enabled: true,
         imported: true,
         questionCount: Array.isArray(bank.questions) ? bank.questions.length : 0,
@@ -197,7 +199,7 @@
     const keyword = (el.bankSearchInput.value || "").trim().toLowerCase();
 
     const filteredBanks = state.allBanks.filter((bank) => {
-      const target = `${bank.title} ${bank.description} ${bank.category}`.toLowerCase();
+      const target = `${bank.title} ${bank.description} ${bank.category} ${bank.folder || ""}`.toLowerCase();
       return !keyword || target.includes(keyword);
     });
 
@@ -206,7 +208,7 @@
       return;
     }
 
-    el.bankList.innerHTML = filteredBanks.map((bank) => {
+    const renderBankCard = (bank) => {
       const wrongCount = countWrongQuestions(bank.id);
       const sourceBadge = bank.imported ? `<span class="badge warning">自訂</span>` : `<span class="badge light">預設</span>`;
       const loadError = bank.loadError ? `<p class="notice error">題庫讀取錯誤：${escapeHtml(bank.loadError)}</p>` : "";
@@ -228,6 +230,28 @@
             ${bank.imported ? `<button class="btn danger-light" type="button" data-action="delete-imported" data-bank-id="${escapeAttr(bank.id)}">刪除匯入題庫</button>` : ""}
           </div>
         </article>
+      `;
+    };
+
+    const groups = filteredBanks.reduce((acc, bank) => {
+      const folder = bank.folder || bank.category || "未分類題庫";
+      if (!acc[folder]) acc[folder] = [];
+      acc[folder].push(bank);
+      return acc;
+    }, {});
+
+    el.bankList.innerHTML = Object.entries(groups).map(([folder, banks]) => {
+      const totalQuestions = banks.reduce((sum, bank) => sum + Number(bank.questionCount || 0), 0);
+      return `
+        <details class="bank-folder" open>
+          <summary>
+            <span class="folder-title">資料夾：${escapeHtml(folder)}</span>
+            <span class="folder-meta">${banks.length} 個題庫｜${totalQuestions} 題</span>
+          </summary>
+          <div class="folder-grid">
+            ${banks.map(renderBankCard).join("")}
+          </div>
+        </details>
       `;
     }).join("");
 
