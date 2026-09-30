@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="墨忻刷題網 v3 題庫管理與匯入介面" />
+  <meta name="description" content="墨忻刷題網 v3 題庫管理、篩選與練習介面" />
   <title>墨忻刷題網 v3</title>
   <link rel="stylesheet" href="styles/v3.css" />
+  <link rel="stylesheet" href="styles/v3-p3.css" />
 </head>
 <body>
   <header class="app-header">
@@ -17,7 +18,7 @@
       </div>
     </div>
     <nav class="main-nav" aria-label="主要導覽">
-      <button class="nav-item is-active" type="button" aria-current="page">我的題庫</button>
+      <button class="nav-item is-active" type="button" data-nav-library aria-current="page">我的題庫</button>
       <button class="nav-item" type="button" disabled>今日複習</button>
       <button class="nav-item" type="button" disabled>學習統計</button>
       <button class="nav-item" type="button" disabled>設定</button>
@@ -25,52 +26,62 @@
   </header>
 
   <main class="app-main">
-    <section class="hero-card">
-      <div>
-        <p class="eyebrow">Question Bank Package</p>
-        <h2>我的題庫</h2>
-        <p>題庫資料與圖片儲存在瀏覽器 IndexedDB。可匯入 ZIP、JSON，或直接選擇完整題庫資料夾。</p>
-      </div>
-      <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
+    <section id="libraryView" data-view="library">
+      <section class="hero-card">
+        <div>
+          <p class="eyebrow">Question Bank Package</p>
+          <h2>我的題庫</h2>
+          <p>題庫資料與圖片儲存在瀏覽器 IndexedDB。可匯入 ZIP、JSON，或直接選擇完整題庫資料夾。</p>
+        </div>
+        <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
+      </section>
+
+      <section class="panel import-panel" aria-labelledby="importTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">匯入中心</p>
+            <h2 id="importTitle">新增或更新題庫</h2>
+          </div>
+          <p class="section-note">匯入前先驗證；驗證未通過的題庫不會寫入資料庫。</p>
+        </div>
+
+        <div class="import-grid">
+          <label class="import-tile">
+            <span class="import-icon" aria-hidden="true">ZIP</span>
+            <strong>ZIP / JSON</strong>
+            <span>推薦使用 ZIP，可連同 assets 圖片一起匯入。</span>
+            <input id="bankFileInput" type="file" accept=".zip,.json,application/zip,application/json" />
+          </label>
+
+          <label class="import-tile">
+            <span class="import-icon" aria-hidden="true">DIR</span>
+            <strong>題庫資料夾</strong>
+            <span>選擇包含 manifest.json、questions.json 與 assets/ 的資料夾。</span>
+            <input id="bankFolderInput" type="file" webkitdirectory multiple />
+          </label>
+        </div>
+
+        <div id="inspectionArea" class="inspection-area" aria-live="polite"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="libraryTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Local Library</p>
+            <h2 id="libraryTitle">已匯入題庫</h2>
+          </div>
+          <button id="refreshBanksButton" type="button" class="button secondary">重新整理</button>
+        </div>
+        <div id="bankList" class="bank-grid" aria-live="polite"></div>
+      </section>
     </section>
 
-    <section class="panel import-panel" aria-labelledby="importTitle">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">匯入中心</p>
-          <h2 id="importTitle">新增或更新題庫</h2>
-        </div>
-        <p class="section-note">匯入前先驗證；驗證未通過的題庫不會寫入資料庫。</p>
-      </div>
-
-      <div class="import-grid">
-        <label class="import-tile">
-          <span class="import-icon" aria-hidden="true">ZIP</span>
-          <strong>ZIP / JSON</strong>
-          <span>推薦使用 ZIP，可連同 assets 圖片一起匯入。</span>
-          <input id="bankFileInput" type="file" accept=".zip,.json,application/zip,application/json" />
-        </label>
-
-        <label class="import-tile">
-          <span class="import-icon" aria-hidden="true">DIR</span>
-          <strong>題庫資料夾</strong>
-          <span>選擇包含 manifest.json、questions.json 與 assets/ 的資料夾。</span>
-          <input id="bankFolderInput" type="file" webkitdirectory multiple />
-        </label>
-      </div>
-
-      <div id="inspectionArea" class="inspection-area" aria-live="polite"></div>
+    <section id="bankDetailView" data-view="bank-detail" hidden>
+      <div id="bankDetailArea"></div>
     </section>
 
-    <section class="panel" aria-labelledby="libraryTitle">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Local Library</p>
-          <h2 id="libraryTitle">已匯入題庫</h2>
-        </div>
-        <button id="refreshBanksButton" type="button" class="button secondary">重新整理</button>
-      </div>
-      <div id="bankList" class="bank-grid" aria-live="polite"></div>
+    <section id="practiceView" data-view="practice" hidden>
+      <div id="practiceArea"></div>
     </section>
   </main>
 

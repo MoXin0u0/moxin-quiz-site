@@ -31,7 +31,7 @@ export function renderBankLibrary(container, banks) {
         <div><dt>更新</dt><dd>${escapeHtml(formatDate(bank.updatedAt || bank.storedAt || bank.importedAt))}</dd></div>
       </dl>
       <div class="card-actions">
-        <button class="button primary" type="button" disabled title="作答頁會在下一階段接上">開始練習</button>
+        <button class="button primary" type="button" data-open-bank="${escapeAttr(bank.id)}">查看題庫 / 開始練習</button>
         <button class="button danger-ghost" type="button" data-delete-bank="${escapeAttr(bank.id)}">刪除本機題庫</button>
       </div>
     </article>
