@@ -144,6 +144,7 @@ bootstrap().catch(error => {
 });
 
 async function bootstrap() {
+  cleanupLegacyAnswerQuery();
   bindEvents();
   await openDatabase();
   renderStorageStatus(elements.storageStatus, {
@@ -251,6 +252,12 @@ function bindEvents() {
     if (event.target.closest('input[name="exam-answer"]')) scheduleExamAnswerSave(0);
   });
 
+  elements.examArea.addEventListener('submit', async event => {
+    if (!event.target.closest('[data-exam-answer-form]')) return;
+    event.preventDefault();
+    await saveCurrentExamAnswer();
+  });
+
   elements.examArea.addEventListener('click', async event => {
     const go = event.target.closest('[data-exam-go]');
     if (go) {
@@ -322,6 +329,12 @@ function bindEvents() {
     if (event.target.closest('[data-start-practice]')) {
       await startPractice(state.filteredQuestions);
     }
+  });
+
+  elements.practiceArea.addEventListener('submit', async event => {
+    if (!event.target.closest('[data-answer-form]')) return;
+    event.preventDefault();
+    await submitPracticeAnswer();
   });
 
   elements.practiceArea.addEventListener('click', async event => {
@@ -1198,6 +1211,24 @@ function showView(name) {
   document.querySelector('[data-nav-exam]')?.classList.toggle('is-active', name === 'exam-center' || name === 'exam');
   document.querySelector('[data-nav-stats]')?.classList.toggle('is-active', name === 'stats');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cleanupLegacyAnswerQuery() {
+  const url = new URL(window.location.href);
+  let changed = false;
+
+  for (const key of ['answer', 'exam-answer']) {
+    if (url.searchParams.has(key)) {
+      url.searchParams.delete(key);
+      changed = true;
+    }
+  }
+
+  if (!changed) return;
+
+  const query = url.searchParams.toString();
+  const cleanUrl = `${url.pathname}${query ? `?${query}` : ''}${url.hash}`;
+  window.history.replaceState(window.history.state, '', cleanUrl);
 }
 
 function setBusy(isBusy, message = '') {

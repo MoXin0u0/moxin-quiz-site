@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v3-p7-1';
+const CACHE_VERSION = 'moxin-quiz-v3-rc1-1';
 const APP_SHELL = [
   './v3.html',
   './manifest.webmanifest',

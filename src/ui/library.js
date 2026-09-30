@@ -122,11 +122,26 @@ export function renderInspection(container, pkg, options = {}) {
 
 export function showToast(container, message, kind = 'info', options = {}) {
   if (!container) return;
+
+  const duplicate = [...container.querySelectorAll('.toast')].find(node =>
+    node.dataset.toastMessage === String(message) &&
+    node.dataset.toastKind === String(kind)
+  );
+  if (duplicate) duplicate.remove();
+
   const toast = document.createElement('div');
   toast.className = `toast ${kind}`;
   toast.textContent = message;
+  toast.dataset.toastMessage = String(message);
+  toast.dataset.toastKind = String(kind);
   if (options.sticky) toast.dataset.stickyToast = 'true';
   container.appendChild(toast);
+
+  const visibleNonSticky = [...container.querySelectorAll('.toast:not([data-sticky-toast])')];
+  while (visibleNonSticky.length > 4) {
+    visibleNonSticky.shift()?.remove();
+  }
+
   requestAnimationFrame(() => toast.classList.add('is-visible'));
 
   if (!options.sticky) {
