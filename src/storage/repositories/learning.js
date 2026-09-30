@@ -20,6 +20,29 @@ export function listFavorites(bankId) {
   return getAllByIndex('favorites', 'bankId', bankId);
 }
 
+export function setUnfamiliar(bankId, questionId, unfamiliar = true) {
+  const key = learningKey(bankId, questionId);
+  if (!unfamiliar) return deleteRecord('mastery', key);
+
+  return putRecord('mastery', {
+    key,
+    bankId,
+    questionId,
+    status: 'unfamiliar',
+    markedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+export function getUnfamiliar(bankId, questionId) {
+  return getRecord('mastery', learningKey(bankId, questionId));
+}
+
+export async function listUnfamiliar(bankId) {
+  const records = await getAllByIndex('mastery', 'bankId', bankId);
+  return records.filter(record => record?.status === 'unfamiliar');
+}
+
 export function saveNote(bankId, questionId, text) {
   const key = learningKey(bankId, questionId);
   const normalized = String(text ?? '');

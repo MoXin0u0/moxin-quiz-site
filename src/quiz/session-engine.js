@@ -67,5 +67,52 @@ export function getSessionStats(session) {
 }
 
 export function isSessionFinished(session) {
-  return Boolean(session && session.queue.length === 0 && session.completedIds.length >= session.sourceQuestionIds.length);
+  return Boolean(
+    session &&
+    session.queue.length === 0 &&
+    session.completedIds.length >= session.sourceQuestionIds.length
+  );
+}
+
+export function normalizeResumedSession(session, validQuestionIds) {
+  const valid = new Set(validQuestionIds || []);
+  const completed = unique((session.completedIds || []).filter(id => valid.has(id)));
+  const source = unique((session.sourceQuestionIds || []).filter(id => valid.has(id)));
+  const completedSet = new Set(completed);
+
+  let currentQuestionId = valid.has(session.currentQuestionId)
+    ? session.currentQuestionId
+    : null;
+
+  const queue = unique((session.queue || []).filter(id =>
+    valid.has(id) &&
+    !completedSet.has(id) &&
+    id !== currentQuestionId
+  ));
+
+  if (!session.answered && currentQuestionId && !completedSet.has(currentQuestionId)) {
+    // Keep current unanswered question outside queue; it will be rendered directly.
+  } else {
+    currentQuestionId = null;
+  }
+
+  const scheduled = new Set([...completed, ...queue, ...(currentQuestionId ? [currentQuestionId] : [])]);
+  for (const id of source) {
+    if (!scheduled.has(id)) queue.push(id);
+  }
+
+  return {
+    ...session,
+    sourceQuestionIds: source,
+    completedIds: completed,
+    queue,
+    currentQuestionId,
+    answered: currentQuestionId ? false : Boolean(session.answered),
+    finishedAt: null,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+function unique(values) {
+  return [...new Set(values)];
 }

@@ -7,9 +7,25 @@ import {
   listBanks,
 } from '../storage/repositories/banks.js';
 import { addAttempt } from '../storage/repositories/attempts.js';
-import { getFavorite, setFavorite } from '../storage/repositories/learning.js';
-import { recordQuestionResult } from '../storage/repositories/progress.js';
-import { saveSession } from '../storage/repositories/sessions.js';
+import {
+  getFavorite,
+  getNote,
+  getUnfamiliar,
+  listFavorites,
+  listNotes,
+  listUnfamiliar,
+  saveNote,
+  setFavorite,
+  setUnfamiliar,
+} from '../storage/repositories/learning.js';
+import {
+  listQuestionProgress,
+  recordQuestionResult,
+} from '../storage/repositories/progress.js';
+import {
+  getLatestUnfinishedSessionForBank,
+  saveSession,
+} from '../storage/repositories/sessions.js';
 import {
   importInspectedPackage,
   inspectQuestionBankFile,
@@ -21,6 +37,7 @@ import {
   createPracticeSession,
   getSessionStats,
   isSessionFinished,
+  normalizeResumedSession,
   recordSessionAnswer,
 } from '../quiz/session-engine.js';
 import {
@@ -31,11 +48,14 @@ import {
 } from '../ui/bank-detail.js';
 import {
   collectUserAnswer,
+  getNoteValue,
   isAnswerEmpty,
   renderAnswerFeedback,
   renderPracticeFinished,
   renderPracticeQuestion,
   setFavoriteButton,
+  setNoteValue,
+  setUnfamiliarButton,
 } from '../ui/practice.js';
 import {
   renderBankLibrary,
@@ -50,6 +70,9 @@ const state = {
   currentBank: null,
   allQuestions: [],
   filteredQuestions: [],
+  learningFilter: 'all',
+  learning: createEmptyLearningState(),
+  resumeSession: null,
   practice: null,
   practiceQuestionMap: new Map(),
   assetUrls: [],
@@ -156,6 +179,21 @@ function bindEvents() {
       return;
     }
 
+    const learningButton = event.target.closest('[data-learning-filter]');
+    if (learningButton) {
+      state.learningFilter = learningButton.dataset.learningFilter || 'all';
+      elements.bankDetailArea.querySelectorAll('[data-learning-filter]').forEach(button => {
+        button.classList.toggle('is-active', button === learningButton);
+      });
+      applyDetailFilters();
+      return;
+    }
+
+    if (event.target.closest('[data-resume-practice]')) {
+      await resumePractice();
+      return;
+    }
+
     if (event.target.closest('[data-start-practice]')) {
       await startPractice(state.filteredQuestions);
     }
@@ -163,7 +201,7 @@ function bindEvents() {
 
   elements.practiceArea.addEventListener('click', async event => {
     if (event.target.closest('[data-exit-practice]')) {
-      if (!confirm('確定結束目前這輪練習並回到題庫？')) return;
+      if (!confirm('確定結束目前畫面並回到題庫？\n\n目前進度會保留，可稍後繼續。')) return;
       await persistPracticeSession();
       await reopenCurrentBank();
       return;
@@ -181,6 +219,16 @@ function bindEvents() {
 
     if (event.target.closest('[data-toggle-favorite]')) {
       await toggleCurrentFavorite();
+      return;
+    }
+
+    if (event.target.closest('[data-toggle-unfamiliar]')) {
+      await toggleCurrentUnfamiliar();
+      return;
+    }
+
+    if (event.target.closest('[data-save-note]')) {
+      await saveCurrentNote();
       return;
     }
 
@@ -284,10 +332,17 @@ async function refreshBanks() {
 
 async function openBankDetail(bankId) {
   revokeAssetUrls();
-  const [bank, questions] = await Promise.all([
+
+  const [bank, questions, progress, favorites, unfamiliar, notes, resumeSession] = await Promise.all([
     getBank(bankId),
     getQuestionsByBank(bankId),
+    listQuestionProgress(bankId),
+    listFavorites(bankId),
+    listUnfamiliar(bankId),
+    listNotes(bankId),
+    getLatestUnfinishedSessionForBank(bankId),
   ]);
+
   if (!bank) {
     showToast(elements.toastRegion, '找不到這個題庫。', 'error');
     await refreshBanks();
@@ -297,15 +352,36 @@ async function openBankDetail(bankId) {
 
   state.currentBank = bank;
   state.allQuestions = questions;
+  state.learningFilter = 'all';
+  state.learning = buildLearningState(progress, favorites, unfamiliar, notes);
+  state.resumeSession = resumeSession;
   state.filteredQuestions = [...questions];
-  renderBankDetail(elements.bankDetailArea, bank, questions);
+
+  const resumeStats = resumeSession ? getSessionStats(resumeSession) : null;
+  renderBankDetail(elements.bankDetailArea, bank, questions, {
+    ...state.learning,
+    activeFilter: state.learningFilter,
+    resumeSession,
+    summary: {
+      wrong: state.learning.wrongIds.size,
+      favorite: state.learning.favoriteIds.size,
+      unfamiliar: state.learning.unfamiliarIds.size,
+      note: state.learning.noteIds.size,
+      resumeCompleted: resumeStats?.completed || 0,
+      resumeTotal: resumeStats?.total || 0,
+    },
+  });
   showView('bank-detail');
 }
 
 function applyDetailFilters() {
   const filters = readBankFilters(elements.bankDetailArea);
-  state.filteredQuestions = filterQuestions(state.allQuestions, filters);
-  renderFilteredQuestions(elements.bankDetailArea, state.filteredQuestions);
+  const learning = {
+    ...state.learning,
+    activeFilter: state.learningFilter,
+  };
+  state.filteredQuestions = filterQuestions(state.allQuestions, filters, learning);
+  renderFilteredQuestions(elements.bankDetailArea, state.filteredQuestions, learning);
 }
 
 async function reopenCurrentBank() {
@@ -326,12 +402,36 @@ async function startPractice(questions) {
     bankId: state.currentBank.id,
     bankName: state.currentBank.name || state.currentBank.title || state.currentBank.id,
     questions,
-    mode: 'filtered',
+    mode: state.learningFilter === 'all' ? 'filtered' : state.learningFilter,
   });
 
   await persistPracticeSession();
   showView('practice');
   await showNextPracticeQuestion();
+}
+
+async function resumePractice() {
+  if (!state.resumeSession || !state.currentBank) return;
+
+  const validQuestionIds = state.allQuestions.map(question => question.id);
+  state.practice = normalizeResumedSession(state.resumeSession, validQuestionIds);
+
+  const sourceSet = new Set(state.practice.sourceQuestionIds);
+  const practiceQuestions = state.allQuestions.filter(question => sourceSet.has(question.id));
+  state.practiceQuestionMap = new Map(practiceQuestions.map(question => [question.id, question]));
+
+  if (!practiceQuestions.length) {
+    showToast(elements.toastRegion, '這個未完成 Session 的題目已不存在，無法恢復。', 'error');
+    return;
+  }
+
+  showView('practice');
+
+  if (state.practice.currentQuestionId && !state.practice.answered) {
+    await renderCurrentPracticeQuestion();
+  } else {
+    await showNextPracticeQuestion();
+  }
 }
 
 async function showNextPracticeQuestion() {
@@ -358,14 +458,22 @@ async function showNextPracticeQuestion() {
     return;
   }
 
+  await renderCurrentPracticeQuestion();
+}
+
+async function renderCurrentPracticeQuestion() {
+  const questionId = state.practice?.currentQuestionId;
   const question = state.practiceQuestionMap.get(questionId);
   if (!question) {
     showToast(elements.toastRegion, `找不到題目：${questionId}`, 'error');
+    state.practice.currentQuestionId = null;
     await showNextPracticeQuestion();
     return;
   }
 
+  state.practice.questionStartedAt = Date.now();
   revokeAssetUrls();
+
   renderPracticeQuestion(elements.practiceArea, {
     bank: state.currentBank,
     question,
@@ -373,8 +481,16 @@ async function showNextPracticeQuestion() {
     errorCount: state.practice.errorsByQuestion[question.id] || 0,
   });
 
-  const favorite = await getFavorite(state.currentBank.id, question.id);
+  const [favorite, unfamiliar, note] = await Promise.all([
+    getFavorite(state.currentBank.id, question.id),
+    getUnfamiliar(state.currentBank.id, question.id),
+    getNote(state.currentBank.id, question.id),
+  ]);
+
   setFavoriteButton(elements.practiceArea, Boolean(favorite));
+  setUnfamiliarButton(elements.practiceArea, Boolean(unfamiliar));
+  setNoteValue(elements.practiceArea, note);
+
   await hydrateAssetImages(question.images || [], '[data-question-images]');
   await persistPracticeSession();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -428,6 +544,30 @@ async function toggleCurrentFavorite() {
   await setFavorite(state.currentBank.id, questionId, !active);
   setFavoriteButton(elements.practiceArea, !active);
   showToast(elements.toastRegion, !active ? '已加入收藏。' : '已取消收藏。', 'success');
+}
+
+async function toggleCurrentUnfamiliar() {
+  const questionId = state.practice?.currentQuestionId;
+  if (!questionId || !state.currentBank) return;
+
+  const button = elements.practiceArea.querySelector('[data-toggle-unfamiliar]');
+  const active = button?.dataset.unfamiliarActive === 'true';
+  await setUnfamiliar(state.currentBank.id, questionId, !active);
+  setUnfamiliarButton(elements.practiceArea, !active);
+  showToast(elements.toastRegion, !active ? '已標記為不熟題。' : '已取消不熟標記。', 'success');
+}
+
+async function saveCurrentNote() {
+  const questionId = state.practice?.currentQuestionId;
+  if (!questionId || !state.currentBank) return;
+
+  const text = getNoteValue(elements.practiceArea);
+  await saveNote(state.currentBank.id, questionId, text);
+  showToast(
+    elements.toastRegion,
+    text.trim() ? '筆記已儲存。' : '空白筆記已移除。',
+    'success',
+  );
 }
 
 async function persistPracticeSession() {
@@ -485,6 +625,31 @@ function appendMissingAsset(container, path) {
 function revokeAssetUrls() {
   for (const url of state.assetUrls) URL.revokeObjectURL(url);
   state.assetUrls = [];
+}
+
+function buildLearningState(progress, favorites, unfamiliar, notes) {
+  const progressByQuestion = new Map((progress || []).map(item => [item.questionId, item]));
+  return {
+    progressByQuestion,
+    wrongIds: new Set(
+      [...progressByQuestion.values()]
+        .filter(item => item?.lastResult === 'wrong')
+        .map(item => item.questionId)
+    ),
+    favoriteIds: new Set((favorites || []).map(item => item.questionId)),
+    unfamiliarIds: new Set((unfamiliar || []).map(item => item.questionId)),
+    noteIds: new Set((notes || []).filter(item => String(item.text || '').trim()).map(item => item.questionId)),
+  };
+}
+
+function createEmptyLearningState() {
+  return {
+    progressByQuestion: new Map(),
+    wrongIds: new Set(),
+    favoriteIds: new Set(),
+    unfamiliarIds: new Set(),
+    noteIds: new Set(),
+  };
 }
 
 function showView(name) {

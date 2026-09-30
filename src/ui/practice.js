@@ -45,7 +45,19 @@ export function renderPracticeQuestion(container, { bank, question, stats, error
         <div class="practice-actions">
           <button class="button primary" type="button" data-submit-answer>提交答案</button>
           <button class="button secondary favorite-button" type="button" data-toggle-favorite>☆ 收藏</button>
+          <button class="button secondary unfamiliar-button" type="button" data-toggle-unfamiliar>標記不熟</button>
         </div>
+
+        <section class="note-editor">
+          <label>
+            我的筆記
+            <textarea data-note-input placeholder="記錄容易混淆的觀念、口訣或補充說明…"></textarea>
+            <small>筆記會與題目 ID 綁定；更新題庫時，只要題目 ID 不變就會保留。</small>
+          </label>
+          <div class="learning-actions">
+            <button class="button secondary" type="button" data-save-note>儲存筆記</button>
+          </div>
+        </section>
 
         <div data-feedback-area></div>
       </article>
@@ -138,6 +150,23 @@ export function setFavoriteButton(container, active) {
   button.classList.toggle('is-active', active);
   button.textContent = active ? '★ 已收藏' : '☆ 收藏';
   button.dataset.favoriteActive = active ? 'true' : 'false';
+}
+
+export function setUnfamiliarButton(container, active) {
+  const button = container.querySelector('[data-toggle-unfamiliar]');
+  if (!button) return;
+  button.classList.toggle('is-active', active);
+  button.textContent = active ? '已標記不熟' : '標記不熟';
+  button.dataset.unfamiliarActive = active ? 'true' : 'false';
+}
+
+export function setNoteValue(container, note) {
+  const input = container.querySelector('[data-note-input]');
+  if (input) input.value = note?.text || '';
+}
+
+export function getNoteValue(container) {
+  return container.querySelector('[data-note-input]')?.value ?? '';
 }
 
 function buildAnswerForm(question) {
