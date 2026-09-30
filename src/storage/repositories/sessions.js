@@ -24,7 +24,14 @@ export function listSessionsForBank(bankId) {
 export async function getLatestUnfinishedSessionForBank(bankId) {
   const sessions = await listSessionsForBank(bankId);
   return sessions
-    .filter(session => isUnfinished(session))
+    .filter(session => isUnfinishedPractice(session))
+    .sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')))[0] || null;
+}
+
+export async function getLatestUnfinishedExamForBank(bankId) {
+  const sessions = await listSessionsForBank(bankId);
+  return sessions
+    .filter(session => isUnfinishedExam(session))
     .sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')))[0] || null;
 }
 
@@ -32,9 +39,16 @@ export function deleteSession(sessionId) {
   return deleteRecord('sessions', sessionId);
 }
 
-function isUnfinished(session) {
-  if (!session || session.finishedAt) return false;
+function isUnfinishedPractice(session) {
+  if (!session || session.finishedAt || session.submittedAt) return false;
+  if (session.sessionType === 'exam' || session.mode === 'exam') return false;
   const source = Array.isArray(session.sourceQuestionIds) ? session.sourceQuestionIds : [];
   const completed = new Set(Array.isArray(session.completedIds) ? session.completedIds : []);
   return source.some(id => !completed.has(id));
+}
+
+function isUnfinishedExam(session) {
+  if (!session || session.finishedAt || session.submittedAt) return false;
+  if (session.sessionType !== 'exam' && session.mode !== 'exam') return false;
+  return Array.isArray(session.questionIds) && session.questionIds.length > 0;
 }

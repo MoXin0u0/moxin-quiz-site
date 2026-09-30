@@ -31,6 +31,7 @@ import {
   updateReviewScheduleFromResult,
 } from '../storage/repositories/review.js';
 import {
+  getLatestUnfinishedExamForBank,
   getLatestUnfinishedSessionForBank,
   saveSession,
 } from '../storage/repositories/sessions.js';
@@ -50,6 +51,14 @@ import {
 } from '../quiz/session-engine.js';
 import { summarizeMastery } from '../quiz/review-engine.js';
 import {
+  countAnswered,
+  createExamSession,
+  getRemainingSeconds,
+  gradeExam,
+  normalizeResumedExam,
+  setExamAnswer,
+} from '../quiz/exam-engine.js';
+import {
   filterQuestions,
   readBankFilters,
   renderBankDetail,
@@ -68,6 +77,13 @@ import {
 } from '../ui/practice.js';
 import { renderReviewCenter } from '../ui/review-center.js';
 import { renderLearningStats } from '../ui/stats.js';
+import { renderExamCenter } from '../ui/exam-center.js';
+import {
+  collectExamAnswer,
+  renderExamQuestion,
+  renderExamResult,
+  updateExamTimer,
+} from '../ui/exam.js';
 import {
   renderBankLibrary,
   renderInspection,
@@ -88,15 +104,24 @@ const state = {
   practiceQuestionMap: new Map(),
   assetUrls: [],
   reviewGroups: [],
+  exam: null,
+  examQuestionMap: new Map(),
+  examTimerId: null,
+  examSaveTimerId: null,
+  examSubmitting: false,
 };
 
 const elements = {
   libraryView: document.querySelector('#libraryView'),
   reviewView: document.querySelector('#reviewView'),
+  examCenterView: document.querySelector('#examCenterView'),
+  examView: document.querySelector('#examView'),
   statsView: document.querySelector('#statsView'),
   bankDetailView: document.querySelector('#bankDetailView'),
   practiceView: document.querySelector('#practiceView'),
   reviewArea: document.querySelector('#reviewArea'),
+  examCenterArea: document.querySelector('#examCenterArea'),
+  examArea: document.querySelector('#examArea'),
   statsArea: document.querySelector('#statsArea'),
   bankDetailArea: document.querySelector('#bankDetailArea'),
   practiceArea: document.querySelector('#practiceArea'),
@@ -132,14 +157,21 @@ async function bootstrap() {
 function bindEvents() {
   document.addEventListener('click', async event => {
     if (event.target.closest('[data-nav-library]')) {
+      stopExamTimer();
       showView('library');
       return;
     }
     if (event.target.closest('[data-nav-review]')) {
+      stopExamTimer();
       await openReviewCenter();
       return;
     }
+    if (event.target.closest('[data-nav-exam]')) {
+      await openExamCenter();
+      return;
+    }
     if (event.target.closest('[data-nav-stats]')) {
+      stopExamTimer();
       await openStats();
     }
   });
@@ -193,6 +225,67 @@ function bindEvents() {
     const button = event.target.closest('[data-review-bank][data-review-mode]');
     if (!button) return;
     await startDedicatedReview(button.dataset.reviewBank, button.dataset.reviewMode);
+  });
+
+  elements.examCenterArea.addEventListener('click', async event => {
+    const resume = event.target.closest('[data-resume-exam]');
+    if (resume) {
+      await resumeExam(resume.dataset.resumeExam);
+      return;
+    }
+
+    const start = event.target.closest('[data-start-exam]');
+    if (!start) return;
+    const bankId = start.dataset.startExam;
+    const card = start.closest('[data-exam-bank-card]');
+    const questionCount = Number(card?.querySelector('[data-exam-question-count]')?.value);
+    const durationMinutes = Number(card?.querySelector('[data-exam-duration]')?.value);
+    await startExam(bankId, questionCount, durationMinutes);
+  });
+
+  elements.examArea.addEventListener('input', event => {
+    if (event.target.closest('input[name="exam-answer"]')) scheduleExamAnswerSave();
+  });
+
+  elements.examArea.addEventListener('change', event => {
+    if (event.target.closest('input[name="exam-answer"]')) scheduleExamAnswerSave(0);
+  });
+
+  elements.examArea.addEventListener('click', async event => {
+    const go = event.target.closest('[data-exam-go]');
+    if (go) {
+      await navigateExam(Number(go.dataset.examGo));
+      return;
+    }
+
+    if (event.target.closest('[data-exam-prev]')) {
+      await navigateExam((state.exam?.currentIndex || 0) - 1);
+      return;
+    }
+
+    if (event.target.closest('[data-exam-next]')) {
+      await navigateExam((state.exam?.currentIndex || 0) + 1);
+      return;
+    }
+
+    if (event.target.closest('[data-submit-exam]')) {
+      await submitExam({ auto: false });
+      return;
+    }
+
+    if (event.target.closest('[data-exam-again]')) {
+      await openExamCenter();
+      return;
+    }
+
+    if (event.target.closest('[data-exam-result-center]')) {
+      await openExamCenter();
+      return;
+    }
+
+    if (event.target.closest('[data-exam-result-library]')) {
+      showView('library');
+    }
   });
 
   elements.bankDetailArea.addEventListener('input', event => {
@@ -531,6 +624,288 @@ async function openStats() {
   showView('stats');
 }
 
+async function openExamCenter() {
+  stopExamTimer();
+  await refreshBanks();
+
+  const groups = await Promise.all(state.banks.map(async bank => {
+    const [questions, resumeExam] = await Promise.all([
+      getQuestionsByBank(bank.id),
+      getLatestUnfinishedExamForBank(bank.id),
+    ]);
+
+    return {
+      bank,
+      questionCount: questions.length,
+      resumeExam,
+    };
+  }));
+
+  renderExamCenter(elements.examCenterArea, groups);
+  showView('exam-center');
+}
+
+async function startExam(bankId, questionCount, durationMinutes) {
+  const [bank, questions] = await Promise.all([
+    getBank(bankId),
+    getQuestionsByBank(bankId),
+  ]);
+
+  if (!bank || !questions.length) {
+    showToast(elements.toastRegion, '這個題庫沒有可用題目。', 'error');
+    return;
+  }
+
+  const normalizedCount = Math.max(1, Math.min(Number(questionCount) || 20, questions.length, 100));
+  const normalizedDuration = Math.max(1, Math.min(Number(durationMinutes) || 30, 240));
+
+  const confirmed = confirm(
+    `開始模擬考？\n\n題庫：${bank.name || bank.id}\n題數：${normalizedCount}\n時間：${normalizedDuration} 分鐘\n\n開始後會立即倒數。`,
+  );
+  if (!confirmed) return;
+
+  state.currentBank = bank;
+  state.allQuestions = questions;
+  state.examQuestionMap = new Map(questions.map(question => [question.id, question]));
+  state.exam = createExamSession({
+    bankId,
+    bankName: bank.name || bank.title || bank.id,
+    questions,
+    questionCount: normalizedCount,
+    durationMinutes: normalizedDuration,
+  });
+
+  await persistExamSession();
+  showView('exam');
+  await renderCurrentExamQuestion();
+  startExamTimer();
+}
+
+async function resumeExam(bankId) {
+  const [bank, questions, resume] = await Promise.all([
+    getBank(bankId),
+    getQuestionsByBank(bankId),
+    getLatestUnfinishedExamForBank(bankId),
+  ]);
+
+  if (!bank || !resume) {
+    showToast(elements.toastRegion, '找不到可恢復的模擬考。', 'error');
+    await openExamCenter();
+    return;
+  }
+
+  state.currentBank = bank;
+  state.allQuestions = questions;
+  state.examQuestionMap = new Map(questions.map(question => [question.id, question]));
+  state.exam = normalizeResumedExam(resume, questions.map(question => question.id));
+
+  if (!state.exam.questionIds.length) {
+    showToast(elements.toastRegion, '這份模擬考的題目已不存在，無法恢復。', 'error');
+    await openExamCenter();
+    return;
+  }
+
+  showView('exam');
+
+  if (state.exam.expired) {
+    await submitExam({ auto: true });
+    return;
+  }
+
+  await renderCurrentExamQuestion();
+  startExamTimer();
+}
+
+async function renderCurrentExamQuestion() {
+  if (!state.exam) return;
+
+  const index = Math.max(0, Math.min(state.exam.currentIndex, state.exam.questionIds.length - 1));
+  state.exam.currentIndex = index;
+  const questionId = state.exam.questionIds[index];
+  const question = state.examQuestionMap.get(questionId);
+
+  if (!question) {
+    showToast(elements.toastRegion, `找不到考題：${questionId}`, 'error');
+    return;
+  }
+
+  revokeAssetUrls();
+  renderExamQuestion(elements.examArea, {
+    bank: state.currentBank,
+    session: state.exam,
+    question,
+    index,
+  });
+
+  await hydrateExamImages(question.images || []);
+  updateExamTimer(elements.examArea, getRemainingSeconds(state.exam));
+  await persistExamSession();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function navigateExam(targetIndex) {
+  if (!state.exam || state.examSubmitting) return;
+  await saveCurrentExamAnswer();
+  const next = Math.max(0, Math.min(targetIndex, state.exam.questionIds.length - 1));
+  state.exam.currentIndex = next;
+  await renderCurrentExamQuestion();
+}
+
+function scheduleExamAnswerSave(delay = 350) {
+  if (!state.exam || state.examSubmitting) return;
+  if (state.examSaveTimerId) window.clearTimeout(state.examSaveTimerId);
+  state.examSaveTimerId = window.setTimeout(async () => {
+    state.examSaveTimerId = null;
+    await saveCurrentExamAnswer();
+  }, delay);
+}
+
+async function saveCurrentExamAnswer() {
+  if (!state.exam || state.examSubmitting) return;
+  const questionId = state.exam.questionIds[state.exam.currentIndex];
+  const question = state.examQuestionMap.get(questionId);
+  if (!question) return;
+
+  const answer = collectExamAnswer(elements.examArea, question);
+  setExamAnswer(state.exam, questionId, answer);
+  await persistExamSession();
+}
+
+function startExamTimer() {
+  stopExamTimer();
+  tickExamTimer();
+  state.examTimerId = window.setInterval(tickExamTimer, 1000);
+}
+
+function stopExamTimer() {
+  if (state.examTimerId) {
+    window.clearInterval(state.examTimerId);
+    state.examTimerId = null;
+  }
+  if (state.examSaveTimerId) {
+    window.clearTimeout(state.examSaveTimerId);
+    state.examSaveTimerId = null;
+  }
+}
+
+async function tickExamTimer() {
+  if (!state.exam || state.examSubmitting) return;
+  const remaining = getRemainingSeconds(state.exam);
+  updateExamTimer(elements.examArea, remaining);
+  if (remaining <= 0) {
+    stopExamTimer();
+    await submitExam({ auto: true });
+  }
+}
+
+async function submitExam({ auto = false } = {}) {
+  if (!state.exam || state.examSubmitting) return;
+
+  await saveCurrentExamAnswer();
+  const unanswered = state.exam.questionIds.length - countAnswered(state.exam);
+
+  if (!auto) {
+    const confirmed = confirm(
+      `確定交卷？\n\n已作答：${countAnswered(state.exam)} / ${state.exam.questionIds.length}\n未作答：${unanswered}\n\n交卷後不能再修改答案。`,
+    );
+    if (!confirmed) return;
+  }
+
+  state.examSubmitting = true;
+  stopExamTimer();
+
+  try {
+    const result = gradeExam(state.exam, state.examQuestionMap);
+    const submittedAt = new Date().toISOString();
+
+    for (const detail of result.details) {
+      await Promise.all([
+        addAttempt({
+          bankId: state.currentBank.id,
+          questionId: detail.questionId,
+          selectedAnswer: detail.userAnswer,
+          correct: detail.correct,
+          responseTime: null,
+          mode: 'exam',
+        }),
+        recordQuestionResult(state.currentBank.id, detail.questionId, detail.correct),
+        updateReviewScheduleFromResult(state.currentBank.id, detail.questionId, detail.correct),
+      ]);
+    }
+
+    state.exam.submittedAt = submittedAt;
+    state.exam.finishedAt = submittedAt;
+    state.exam.result = {
+      total: result.total,
+      correctCount: result.correctCount,
+      wrongCount: result.wrongCount,
+      unansweredCount: result.unansweredCount,
+      score: result.score,
+    };
+    await persistExamSession();
+
+    revokeAssetUrls();
+    renderExamResult(elements.examArea, {
+      bank: state.currentBank,
+      result,
+      questionMap: state.examQuestionMap,
+      session: state.exam,
+    });
+
+    if (auto) {
+      showToast(elements.toastRegion, '作答時間已到，系統已自動交卷。', 'info');
+    }
+  } catch (error) {
+    console.error(error);
+    showToast(elements.toastRegion, `交卷失敗：${error.message}`, 'error');
+    startExamTimer();
+  } finally {
+    state.examSubmitting = false;
+  }
+}
+
+async function persistExamSession() {
+  if (!state.exam) return;
+  const saved = await saveSession(state.exam);
+  state.exam.id = saved.id;
+  state.exam.createdAt = saved.createdAt;
+  state.exam.updatedAt = saved.updatedAt;
+}
+
+async function hydrateExamImages(paths) {
+  const container = elements.examArea.querySelector('[data-exam-question-images]');
+  if (!container || !Array.isArray(paths) || !paths.length) return;
+
+  for (const path of paths) {
+    try {
+      const asset = await getAsset(state.currentBank.id, path);
+      if (!asset?.blob) {
+        appendMissingAsset(container, path);
+        continue;
+      }
+
+      const url = URL.createObjectURL(asset.blob);
+      state.assetUrls.push(url);
+
+      const figure = document.createElement('figure');
+      figure.className = 'asset-figure';
+
+      const image = document.createElement('img');
+      image.src = url;
+      image.alt = `考題圖片：${path}`;
+      image.loading = 'lazy';
+
+      const caption = document.createElement('figcaption');
+      caption.textContent = path;
+
+      figure.append(image, caption);
+      container.appendChild(figure);
+    } catch {
+      appendMissingAsset(container, path);
+    }
+  }
+}
+
 async function reopenCurrentBank() {
   const bankId = state.currentBank?.id;
   if (!bankId) {
@@ -806,6 +1181,8 @@ function showView(name) {
   const views = {
     library: elements.libraryView,
     review: elements.reviewView,
+    'exam-center': elements.examCenterView,
+    exam: elements.examView,
     stats: elements.statsView,
     'bank-detail': elements.bankDetailView,
     practice: elements.practiceView,
@@ -818,6 +1195,7 @@ function showView(name) {
 
   document.querySelector('[data-nav-library]')?.classList.toggle('is-active', name === 'library');
   document.querySelector('[data-nav-review]')?.classList.toggle('is-active', name === 'review');
+  document.querySelector('[data-nav-exam]')?.classList.toggle('is-active', name === 'exam-center' || name === 'exam');
   document.querySelector('[data-nav-stats]')?.classList.toggle('is-active', name === 'stats');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
