@@ -20,7 +20,7 @@ export function checkAnswer(question, userAnswer) {
     }
 
     case 'true-false':
-      return Boolean(userAnswer) === Boolean(question.answer?.[0]);
+      return typeof userAnswer === 'boolean' && userAnswer === question.answer?.[0];
 
     case 'fill-in': {
       const actual = normalizeText(userAnswer);

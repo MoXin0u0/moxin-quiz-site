@@ -8,9 +8,10 @@ export function shuffle(items, random = Math.random) {
 }
 
 export function createSeededRandom(seed) {
-  let value = Number(seed) || 1;
+  let value = Number(seed) >>> 0;
+  if (!value) value = 1;
   return () => {
-    value = (value * 1664525 + 1013904223) % 4294967296;
+    value = (Math.imul(value, 1664525) + 1013904223) >>> 0;
     return value / 4294967296;
   };
 }

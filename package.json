@@ -1,0 +1,8 @@
+{
+  "name": "moxin-quiz-site-v3-dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/run.mjs"
+  }
+}

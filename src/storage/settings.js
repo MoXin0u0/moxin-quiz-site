@@ -14,13 +14,18 @@ export function loadSettings() {
     const parsed = JSON.parse(raw);
     return { ...DEFAULT_SETTINGS, ...(parsed && typeof parsed === 'object' ? parsed : {}) };
   } catch (error) {
-    console.warn('Failed to read settings; resetting to defaults.', error);
+    console.warn('Failed to read settings; using defaults.', error);
     return { ...DEFAULT_SETTINGS };
   }
 }
 
 export function saveSettings(settings) {
-  const normalized = { ...DEFAULT_SETTINGS, ...settings };
+  const normalized = { ...DEFAULT_SETTINGS, ...(settings || {}) };
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(normalized));
   return normalized;
+}
+
+export function resetSettings() {
+  localStorage.removeItem(SETTINGS_KEY);
+  return { ...DEFAULT_SETTINGS };
 }

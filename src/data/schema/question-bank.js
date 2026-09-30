@@ -18,6 +18,10 @@ export const LEGACY_TYPE_MAP = Object.freeze({
   fill_blank: QUESTION_TYPES.FILL_IN,
 });
 
+export const SAFE_IMAGE_EXTENSIONS = Object.freeze([
+  'png', 'jpg', 'jpeg', 'webp', 'gif', 'svg',
+]);
+
 export function createManifest(overrides = {}) {
   return {
     schemaVersion: SCHEMA_VERSION,
@@ -30,6 +34,16 @@ export function createManifest(overrides = {}) {
     questionCount: 0,
     createdAt: '',
     updatedAt: '',
+    metadata: {},
     ...overrides,
   };
+}
+
+export function isSchemaV2Package(value) {
+  return Boolean(
+    value &&
+    typeof value === 'object' &&
+    value.manifest?.schemaVersion === SCHEMA_VERSION &&
+    Array.isArray(value.questions),
+  );
 }

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360" role="img" aria-labelledby="title desc">
+  <title id="title">墨忻刷題網範例流程圖</title>
+  <desc id="desc">開始節點進入判斷節點，再依結果前往練習或複習，最後完成。</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#3f2c20" /></marker></defs>
+  <rect width="760" height="360" rx="24" fill="#fff8ef" />
+  <text x="380" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#2e1f17">墨忻刷題網範例流程圖</text>
+  <rect x="55" y="135" width="120" height="70" rx="35" fill="#efe5d8" stroke="#3f2c20" stroke-width="2" />
+  <text x="115" y="177" text-anchor="middle" font-family="Arial, sans-serif" font-size="18">開始</text>
+  <path d="M 300 118 L 385 170 L 300 222 L 215 170 Z" fill="#f6eddf" stroke="#3f2c20" stroke-width="2" />
+  <text x="300" y="164" text-anchor="middle" font-family="Arial, sans-serif" font-size="18">是否</text>
+  <text x="300" y="189" text-anchor="middle" font-family="Arial, sans-serif" font-size="18">作答正確？</text>
+  <path d="M 175 170 L 212 170" stroke="#3f2c20" stroke-width="3" fill="none" marker-end="url(#arrow)" />
+</svg>
