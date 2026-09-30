@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="墨忻刷題網 v3 題庫管理、篩選、練習與學習清單介面" />
+  <meta name="description" content="墨忻刷題網 v3 題庫、複習、統計與本機學習介面" />
   <title>墨忻刷題網 v3</title>
   <link rel="stylesheet" href="styles/v3.css" />
   <link rel="stylesheet" href="styles/v3-p3.css" />
   <link rel="stylesheet" href="styles/v3-p4.css" />
+  <link rel="stylesheet" href="styles/v3-p5.css" />
 </head>
 <body>
   <header class="app-header">
@@ -19,9 +20,9 @@
       </div>
     </div>
     <nav class="main-nav" aria-label="主要導覽">
-      <button class="nav-item is-active" type="button" data-nav-library aria-current="page">我的題庫</button>
-      <button class="nav-item" type="button" disabled>今日複習</button>
-      <button class="nav-item" type="button" disabled>學習統計</button>
+      <button class="nav-item is-active" type="button" data-nav-library>我的題庫</button>
+      <button class="nav-item" type="button" data-nav-review>今日複習</button>
+      <button class="nav-item" type="button" data-nav-stats>學習統計</button>
       <button class="nav-item" type="button" disabled>設定</button>
     </nav>
   </header>
@@ -75,6 +76,14 @@
         </div>
         <div id="bankList" class="bank-grid" aria-live="polite"></div>
       </section>
+    </section>
+
+    <section id="reviewView" data-view="review" hidden>
+      <div id="reviewArea"></div>
+    </section>
+
+    <section id="statsView" data-view="stats" hidden>
+      <div id="statsArea"></div>
     </section>
 
     <section id="bankDetailView" data-view="bank-detail" hidden>

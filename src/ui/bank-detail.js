@@ -7,6 +7,7 @@ const TYPE_LABELS = {
 
 const LEARNING_FILTERS = [
   ['all', '全部題目'],
+  ['due', '今日到期'],
   ['wrong', '錯題'],
   ['favorite', '收藏'],
   ['unfamiliar', '不熟題'],
@@ -33,8 +34,8 @@ export function renderBankDetail(container, bank, questions, learning = {}) {
       <div class="detail-meta">
         ${meta('題目', questions.length)}
         ${meta('版本', bank.version || '—')}
-        ${meta('Schema', bank.schemaVersion || '2.0')}
-        ${meta('語言', bank.language || '—')}
+        ${meta('今日到期', summary.due || 0)}
+        ${meta('目前錯題', summary.wrong || 0)}
       </div>
     </section>
 
@@ -196,6 +197,7 @@ export function renderFilteredQuestions(container, questions, learning = {}) {
 }
 
 function matchesLearningFilter(questionId, filter, learning) {
+  if (filter === 'due') return learning.dueIds?.has(questionId);
   if (filter === 'wrong') return learning.wrongIds?.has(questionId);
   if (filter === 'favorite') return learning.favoriteIds?.has(questionId);
   if (filter === 'unfamiliar') return learning.unfamiliarIds?.has(questionId);
@@ -205,6 +207,7 @@ function matchesLearningFilter(questionId, filter, learning) {
 
 function statusFlags(questionId, learning) {
   const result = [];
+  if (learning.dueIds?.has(questionId)) result.push('<span class="status-dot">今日到期</span>');
   if (learning.wrongIds?.has(questionId)) result.push('<span class="status-dot wrong">錯題</span>');
   if (learning.favoriteIds?.has(questionId)) result.push('<span class="status-dot favorite">★ 收藏</span>');
   if (learning.unfamiliarIds?.has(questionId)) result.push('<span class="status-dot unfamiliar">不熟</span>');
@@ -213,6 +216,7 @@ function statusFlags(questionId, learning) {
 }
 
 function countForFilter(filter, total, summary) {
+  if (filter === 'due') return summary.due || 0;
   if (filter === 'wrong') return summary.wrong || 0;
   if (filter === 'favorite') return summary.favorite || 0;
   if (filter === 'unfamiliar') return summary.unfamiliar || 0;

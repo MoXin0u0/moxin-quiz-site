@@ -6,7 +6,10 @@ import {
   getQuestionsByBank,
   listBanks,
 } from '../storage/repositories/banks.js';
-import { addAttempt } from '../storage/repositories/attempts.js';
+import {
+  addAttempt,
+  getAttemptsByBank,
+} from '../storage/repositories/attempts.js';
 import {
   getFavorite,
   getNote,
@@ -22,6 +25,11 @@ import {
   listQuestionProgress,
   recordQuestionResult,
 } from '../storage/repositories/progress.js';
+import {
+  listDueReviews,
+  listReviewSchedules,
+  updateReviewScheduleFromResult,
+} from '../storage/repositories/review.js';
 import {
   getLatestUnfinishedSessionForBank,
   saveSession,
@@ -40,6 +48,7 @@ import {
   normalizeResumedSession,
   recordSessionAnswer,
 } from '../quiz/session-engine.js';
+import { summarizeMastery } from '../quiz/review-engine.js';
 import {
   filterQuestions,
   readBankFilters,
@@ -57,6 +66,8 @@ import {
   setNoteValue,
   setUnfamiliarButton,
 } from '../ui/practice.js';
+import { renderReviewCenter } from '../ui/review-center.js';
+import { renderLearningStats } from '../ui/stats.js';
 import {
   renderBankLibrary,
   renderInspection,
@@ -76,12 +87,17 @@ const state = {
   practice: null,
   practiceQuestionMap: new Map(),
   assetUrls: [],
+  reviewGroups: [],
 };
 
 const elements = {
   libraryView: document.querySelector('#libraryView'),
+  reviewView: document.querySelector('#reviewView'),
+  statsView: document.querySelector('#statsView'),
   bankDetailView: document.querySelector('#bankDetailView'),
   practiceView: document.querySelector('#practiceView'),
+  reviewArea: document.querySelector('#reviewArea'),
+  statsArea: document.querySelector('#statsArea'),
   bankDetailArea: document.querySelector('#bankDetailArea'),
   practiceArea: document.querySelector('#practiceArea'),
   bankFileInput: document.querySelector('#bankFileInput'),
@@ -114,8 +130,18 @@ async function bootstrap() {
 }
 
 function bindEvents() {
-  document.addEventListener('click', event => {
-    if (event.target.closest('[data-nav-library]')) showView('library');
+  document.addEventListener('click', async event => {
+    if (event.target.closest('[data-nav-library]')) {
+      showView('library');
+      return;
+    }
+    if (event.target.closest('[data-nav-review]')) {
+      await openReviewCenter();
+      return;
+    }
+    if (event.target.closest('[data-nav-stats]')) {
+      await openStats();
+    }
   });
 
   elements.bankFileInput.addEventListener('change', async event => {
@@ -161,6 +187,12 @@ function bindEvents() {
     await deleteBank(bankId);
     showToast(elements.toastRegion, `已刪除題庫：${label}`, 'success');
     await refreshBanks();
+  });
+
+  elements.reviewArea.addEventListener('click', async event => {
+    const button = event.target.closest('[data-review-bank][data-review-mode]');
+    if (!button) return;
+    await startDedicatedReview(button.dataset.reviewBank, button.dataset.reviewMode);
   });
 
   elements.bankDetailArea.addEventListener('input', event => {
@@ -333,13 +365,14 @@ async function refreshBanks() {
 async function openBankDetail(bankId) {
   revokeAssetUrls();
 
-  const [bank, questions, progress, favorites, unfamiliar, notes, resumeSession] = await Promise.all([
+  const [bank, questions, progress, favorites, unfamiliar, notes, due, resumeSession] = await Promise.all([
     getBank(bankId),
     getQuestionsByBank(bankId),
     listQuestionProgress(bankId),
     listFavorites(bankId),
     listUnfamiliar(bankId),
     listNotes(bankId),
+    listDueReviews(bankId),
     getLatestUnfinishedSessionForBank(bankId),
   ]);
 
@@ -353,7 +386,7 @@ async function openBankDetail(bankId) {
   state.currentBank = bank;
   state.allQuestions = questions;
   state.learningFilter = 'all';
-  state.learning = buildLearningState(progress, favorites, unfamiliar, notes);
+  state.learning = buildLearningState(progress, favorites, unfamiliar, notes, due);
   state.resumeSession = resumeSession;
   state.filteredQuestions = [...questions];
 
@@ -363,6 +396,7 @@ async function openBankDetail(bankId) {
     activeFilter: state.learningFilter,
     resumeSession,
     summary: {
+      due: state.learning.dueIds.size,
       wrong: state.learning.wrongIds.size,
       favorite: state.learning.favoriteIds.size,
       unfamiliar: state.learning.unfamiliarIds.size,
@@ -384,6 +418,119 @@ function applyDetailFilters() {
   renderFilteredQuestions(elements.bankDetailArea, state.filteredQuestions, learning);
 }
 
+async function openReviewCenter() {
+  await refreshBanks();
+  const groups = await Promise.all(state.banks.map(async bank => {
+    const [questions, progress, favorites, unfamiliar, due] = await Promise.all([
+      getQuestionsByBank(bank.id),
+      listQuestionProgress(bank.id),
+      listFavorites(bank.id),
+      listUnfamiliar(bank.id),
+      listDueReviews(bank.id),
+    ]);
+
+    const validIds = new Set(questions.map(question => question.id));
+    const wrongIds = new Set(
+      progress
+        .filter(item => item?.lastResult === 'wrong' && validIds.has(item.questionId))
+        .map(item => item.questionId)
+    );
+
+    return {
+      bank,
+      questionCount: questions.length,
+      counts: {
+        due: due.filter(item => validIds.has(item.questionId)).length,
+        wrong: wrongIds.size,
+        favorite: favorites.filter(item => validIds.has(item.questionId)).length,
+        unfamiliar: unfamiliar.filter(item => validIds.has(item.questionId)).length,
+      },
+    };
+  }));
+
+  state.reviewGroups = groups;
+  renderReviewCenter(elements.reviewArea, groups);
+  showView('review');
+}
+
+async function startDedicatedReview(bankId, mode) {
+  const [bank, questions, progress, favorites, unfamiliar, due] = await Promise.all([
+    getBank(bankId),
+    getQuestionsByBank(bankId),
+    listQuestionProgress(bankId),
+    listFavorites(bankId),
+    listUnfamiliar(bankId),
+    listDueReviews(bankId),
+  ]);
+
+  if (!bank) return;
+
+  let ids = new Set();
+  if (mode === 'due') ids = new Set(due.map(item => item.questionId));
+  if (mode === 'wrong') ids = new Set(progress.filter(item => item.lastResult === 'wrong').map(item => item.questionId));
+  if (mode === 'favorite') ids = new Set(favorites.map(item => item.questionId));
+  if (mode === 'unfamiliar') ids = new Set(unfamiliar.map(item => item.questionId));
+
+  const selected = questions.filter(question => ids.has(question.id));
+  if (!selected.length) {
+    showToast(elements.toastRegion, '目前沒有符合這個複習條件的題目。', 'info');
+    await openReviewCenter();
+    return;
+  }
+
+  state.currentBank = bank;
+  state.allQuestions = questions;
+  state.filteredQuestions = selected;
+  state.learningFilter = mode;
+  state.learning = createEmptyLearningState();
+  await startPractice(selected, mode);
+}
+
+async function openStats() {
+  await refreshBanks();
+
+  const bankStats = await Promise.all(state.banks.map(async bank => {
+    const [questions, attempts, progress, due, schedules] = await Promise.all([
+      getQuestionsByBank(bank.id),
+      getAttemptsByBank(bank.id),
+      listQuestionProgress(bank.id),
+      listDueReviews(bank.id),
+      listReviewSchedules(bank.id),
+    ]);
+
+    const correct = attempts.filter(item => item.correct).length;
+    const accuracy = attempts.length ? Math.round((correct / attempts.length) * 100) : 0;
+    const answered = new Set(attempts.map(item => item.questionId)).size;
+    const wrong = progress.filter(item => item.lastResult === 'wrong').length;
+
+    return {
+      bank,
+      questionCount: questions.length,
+      attempts: attempts.length,
+      correct,
+      accuracy,
+      answered,
+      wrong,
+      due: due.length,
+      mastery: summarizeMastery(questions.map(question => question.id), schedules),
+    };
+  }));
+
+  const totalAttempts = bankStats.reduce((sum, item) => sum + item.attempts, 0);
+  const totalCorrect = bankStats.reduce((sum, item) => sum + item.correct, 0);
+
+  renderLearningStats(elements.statsArea, {
+    overall: {
+      attempts: totalAttempts,
+      accuracy: totalAttempts ? Math.round((totalCorrect / totalAttempts) * 100) : 0,
+      answeredQuestions: bankStats.reduce((sum, item) => sum + item.answered, 0),
+      due: bankStats.reduce((sum, item) => sum + item.due, 0),
+    },
+    banks: bankStats,
+  });
+  showView('stats');
+}
+
 async function reopenCurrentBank() {
   const bankId = state.currentBank?.id;
   if (!bankId) {
@@ -393,7 +540,7 @@ async function reopenCurrentBank() {
   await openBankDetail(bankId);
 }
 
-async function startPractice(questions) {
+async function startPractice(questions, modeOverride = null) {
   if (!state.currentBank || !questions?.length) return;
 
   revokeAssetUrls();
@@ -402,7 +549,7 @@ async function startPractice(questions) {
     bankId: state.currentBank.id,
     bankName: state.currentBank.name || state.currentBank.title || state.currentBank.id,
     questions,
-    mode: state.learningFilter === 'all' ? 'filtered' : state.learningFilter,
+    mode: modeOverride || (state.learningFilter === 'all' ? 'filtered' : state.learningFilter),
   });
 
   await persistPracticeSession();
@@ -524,6 +671,7 @@ async function submitPracticeAnswer() {
       mode: state.practice.mode,
     }),
     recordQuestionResult(state.currentBank.id, question.id, correct),
+    updateReviewScheduleFromResult(state.currentBank.id, question.id, correct),
     persistPracticeSession(),
   ]);
 
@@ -627,10 +775,11 @@ function revokeAssetUrls() {
   state.assetUrls = [];
 }
 
-function buildLearningState(progress, favorites, unfamiliar, notes) {
+function buildLearningState(progress, favorites, unfamiliar, notes, due = []) {
   const progressByQuestion = new Map((progress || []).map(item => [item.questionId, item]));
   return {
     progressByQuestion,
+    dueIds: new Set((due || []).map(item => item.questionId)),
     wrongIds: new Set(
       [...progressByQuestion.values()]
         .filter(item => item?.lastResult === 'wrong')
@@ -645,6 +794,7 @@ function buildLearningState(progress, favorites, unfamiliar, notes) {
 function createEmptyLearningState() {
   return {
     progressByQuestion: new Map(),
+    dueIds: new Set(),
     wrongIds: new Set(),
     favoriteIds: new Set(),
     unfamiliarIds: new Set(),
@@ -655,6 +805,8 @@ function createEmptyLearningState() {
 function showView(name) {
   const views = {
     library: elements.libraryView,
+    review: elements.reviewView,
+    stats: elements.statsView,
     'bank-detail': elements.bankDetailView,
     practice: elements.practiceView,
   };
@@ -665,6 +817,8 @@ function showView(name) {
   });
 
   document.querySelector('[data-nav-library]')?.classList.toggle('is-active', name === 'library');
+  document.querySelector('[data-nav-review]')?.classList.toggle('is-active', name === 'review');
+  document.querySelector('[data-nav-stats]')?.classList.toggle('is-active', name === 'stats');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
