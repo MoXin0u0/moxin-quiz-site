@@ -5,7 +5,9 @@ on:
     branches:
       - next-v3
     paths:
+      - "index.html"
       - "v3.html"
+      - "legacy-v2.html"
       - "manifest.webmanifest"
       - "service-worker.js"
       - "package.json"
@@ -16,7 +18,9 @@ on:
       - ".github/workflows/v3-regression.yml"
   pull_request:
     paths:
+      - "index.html"
       - "v3.html"
+      - "legacy-v2.html"
       - "manifest.webmanifest"
       - "service-worker.js"
       - "package.json"

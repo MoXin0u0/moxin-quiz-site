@@ -3,7 +3,7 @@
   "short_name": "墨忻刷題",
   "description": "本機優先、可離線使用的個人題庫練習平台。",
   "lang": "zh-TW",
-  "start_url": "./v3.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

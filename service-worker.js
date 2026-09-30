@@ -1,5 +1,6 @@
-const CACHE_VERSION = 'moxin-quiz-v3-rc2-1';
+const CACHE_VERSION = 'moxin-quiz-v3-release-1';
 const APP_SHELL = [
+  './index.html',
   './v3.html',
   './manifest.webmanifest',
   './styles/v3.css',
@@ -99,6 +100,7 @@ async function networkFirstNavigation(request) {
   } catch {
     return (
       await cache.match(request) ||
+      await cache.match('./index.html') ||
       await cache.match('./v3.html') ||
       Response.error()
     );

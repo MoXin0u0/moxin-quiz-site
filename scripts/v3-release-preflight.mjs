@@ -38,36 +38,44 @@ function parsePngSize(file) {
   };
 }
 
-// Core release files
 for (const file of [
+  'index.html',
   'v3.html',
+  'legacy-v2.html',
   'manifest.webmanifest',
   'service-worker.js',
   'package.json',
-]) checkFile(file, 'release file');
-
-const html = read('v3.html');
-
-// Duplicate IDs
-const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
-const seenIds = new Set();
-for (const id of ids) {
-  if (seenIds.has(id)) fail(`Duplicate HTML id: ${id}`);
-  seenIds.add(id);
+]) {
+  checkFile(file, 'release file');
 }
 
-// HTML local resources
-const htmlRefs = [
-  ...html.matchAll(/\b(?:src|href)="([^"]+)"/g),
-].map(match => normalizeLocalPath(match[1])).filter(Boolean);
+const productionHtml = exists('index.html') ? read('index.html') : '';
+const compatibilityHtml = exists('v3.html') ? read('v3.html') : '';
+const legacyHtml = exists('legacy-v2.html') ? read('legacy-v2.html') : '';
 
-for (const ref of htmlRefs) checkFile(ref, 'HTML resource');
+if (productionHtml && compatibilityHtml && productionHtml !== compatibilityHtml) {
+  fail('index.html and v3.html must remain byte-identical during the release cutover.');
+}
 
-if (/\b(?:script\.js|style\.css)\b/.test(html)) {
+checkHtml('index.html', productionHtml);
+checkHtml('v3.html', compatibilityHtml);
+
+if (/\b(?:script\.js|style\.css)\b/.test(productionHtml)) {
+  fail('index.html must not reference the legacy root script.js/style.css.');
+}
+if (/\b(?:script\.js|style\.css)\b/.test(compatibilityHtml)) {
   fail('v3.html must not reference the legacy root script.js/style.css.');
 }
 
-// Required nav entries
+if (legacyHtml) {
+  if (!legacyHtml.includes('style.css')) {
+    warn('legacy-v2.html does not reference legacy style.css.');
+  }
+  if (!legacyHtml.includes('script.js')) {
+    warn('legacy-v2.html does not reference legacy script.js.');
+  }
+}
+
 for (const nav of [
   'data-nav-library',
   'data-nav-review',
@@ -75,10 +83,9 @@ for (const nav of [
   'data-nav-stats',
   'data-nav-settings',
 ]) {
-  if (!html.includes(nav)) fail(`Missing main navigation entry: ${nav}`);
+  if (!productionHtml.includes(nav)) fail(`Missing main navigation entry in index.html: ${nav}`);
 }
 
-// Manifest
 let manifest = null;
 try {
   manifest = JSON.parse(read('manifest.webmanifest'));
@@ -87,11 +94,11 @@ try {
 }
 
 if (manifest) {
-  if (manifest.start_url !== './v3.html') {
-    fail(`manifest start_url must be ./v3.html, got ${manifest.start_url}`);
+  if (manifest.start_url !== './') {
+    fail(`manifest start_url must be ./ after cutover, got ${manifest.start_url}`);
   }
-  if (manifest.display !== 'standalone') {
-    warn(`manifest display is ${manifest.display}; standalone is expected for installable app UX.`);
+  if (manifest.scope !== './') {
+    fail(`manifest scope must be ./, got ${manifest.scope}`);
   }
 
   const iconRequirements = new Map([
@@ -105,6 +112,7 @@ if (manifest) {
       fail(`Manifest icon must be local: ${icon.src}`);
       continue;
     }
+
     checkFile(iconPath, 'manifest icon');
 
     if (exists(iconPath) && icon.type === 'image/png') {
@@ -124,18 +132,21 @@ if (manifest) {
   }
 }
 
-// Service Worker App Shell resources
 const sw = read('service-worker.js');
 const shellBlock = sw.match(/const\s+APP_SHELL\s*=\s*\[([\s\S]*?)\];/);
 if (!shellBlock) {
   fail('service-worker.js does not expose an APP_SHELL array.');
 } else {
   const shellRefs = [...shellBlock[1].matchAll(/['"]\.\/([^'"]+)['"]/g)].map(match => match[1]);
-  if (!shellRefs.includes('v3.html')) fail('Service Worker App Shell must include v3.html.');
+  if (!shellRefs.includes('index.html')) fail('Service Worker App Shell must include index.html.');
+  if (!shellRefs.includes('v3.html')) fail('Service Worker App Shell must retain v3.html compatibility entry.');
   for (const ref of shellRefs) checkFile(ref, 'Service Worker App Shell resource');
 }
 
-// Resolve relative ES module imports.
+if (!/cache\.match\('\.\/index\.html'\)/.test(sw)) {
+  fail('Service Worker navigation fallback must prefer ./index.html.');
+}
+
 const codeFiles = [
   ...walk(path.join(root, 'src')).filter(file => file.endsWith('.js')),
   ...walk(path.join(root, 'tests')).filter(file => file.endsWith('.mjs')),
@@ -156,7 +167,6 @@ for (const absolute of codeFiles) {
   }
 }
 
-// Syntax check every JS/MJS file plus Service Worker.
 for (const absolute of [...codeFiles, path.join(root, 'service-worker.js')]) {
   const result = spawnSync(process.execPath, ['--check', absolute], {
     encoding: 'utf8',
@@ -166,7 +176,6 @@ for (const absolute of [...codeFiles, path.join(root, 'service-worker.js')]) {
   }
 }
 
-// CSS custom property audit across v3 styles.
 const styleDir = path.join(root, 'styles');
 const cssFiles = walk(styleDir).filter(file => file.endsWith('.css') && path.basename(file).startsWith('v3'));
 const css = cssFiles.map(file => fs.readFileSync(file, 'utf8')).join('\n');
@@ -176,21 +185,40 @@ for (const ref of refs) {
   if (!defs.has(ref)) fail(`Undefined CSS custom property: ${ref}`);
 }
 
-// No remote runtime dependencies in v3 entry or SW shell.
-if (/https?:\/\//i.test(html)) {
-  warn('v3.html contains an absolute HTTP(S) URL; review local-first/offline requirement.');
+if (/https?:\/\//i.test(productionHtml)) {
+  warn('index.html contains an absolute HTTP(S) URL; review local-first/offline requirement.');
 }
 if (/https?:\/\//i.test(shellBlock?.[1] || '')) {
   fail('Service Worker APP_SHELL must not depend on remote HTTP(S) assets.');
 }
 
 console.log(`V3 release preflight: ${errors.length ? 'FAIL' : 'PASS'}`);
-console.log(`Checked ${codeFiles.length} module/test files, ${cssFiles.length} v3 CSS files, ${ids.length} HTML IDs.`);
+console.log(
+  `Checked production index + v3 alias, ${codeFiles.length} module/test files, ` +
+  `${cssFiles.length} v3 CSS files.`
+);
 
 for (const message of warnings) console.warn(`WARN: ${message}`);
 for (const message of errors) console.error(`ERROR: ${message}`);
 
 if (errors.length) process.exit(1);
+
+function checkHtml(name, html) {
+  if (!html) return;
+
+  const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
+  const seenIds = new Set();
+  for (const id of ids) {
+    if (seenIds.has(id)) fail(`Duplicate HTML id in ${name}: ${id}`);
+    seenIds.add(id);
+  }
+
+  const refs = [
+    ...html.matchAll(/\b(?:src|href)="([^"]+)"/g),
+  ].map(match => normalizeLocalPath(match[1])).filter(Boolean);
+
+  for (const ref of refs) checkFile(ref, `${name} resource`);
+}
 
 function walk(directory) {
   if (!fs.existsSync(directory)) return [];
