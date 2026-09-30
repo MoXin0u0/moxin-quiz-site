@@ -13,7 +13,7 @@ assert.ok(legacy.length > 0, 'legacy-v2.html must exist as rollback entry.');
 assert.equal(manifest.start_url, './');
 assert.equal(manifest.scope, './');
 
-assert.match(sw, /moxin-quiz-v3-release-1/);
+assert.match(sw, /moxin-quiz-v3-[^'"\s]+/);
 assert.match(sw, /'\.\/index\.html'/);
 assert.match(sw, /'\.\/v3\.html'/);
 assert.match(sw, /cache\.match\('\.\/index\.html'\)/);

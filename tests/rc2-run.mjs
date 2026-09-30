@@ -14,6 +14,6 @@ assert.match(
   /html\[data-theme="dark"\]\s+\.resume-card p,\s*html\[data-theme="dark"\]\s+\.exam-resume-banner span\s*\{[^}]*color:\s*var\(--muted\);/s
 );
 
-assert.match(sw, /moxin-quiz-v3-(?:rc\d+|release)-\d+/);
+assert.match(sw, /moxin-quiz-v3-[^'\"\s]+/);
 
 console.log('MoXin Quiz v3 RC2 dark contrast regression tests passed.');

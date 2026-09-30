@@ -23,6 +23,8 @@ export async function saveBankPackage(pkg) {
       ...manifest,
       id: bankId,
       questionCount: questions.length,
+      sourceType: pkg.sourceType === 'author' ? 'author' : 'user',
+      sourceMetadata: pkg.sourceMetadata || null,
       importedAt: pkg.importedAt || now,
       storedAt: now,
     });

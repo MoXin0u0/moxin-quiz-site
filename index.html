@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="墨忻刷題" />
-  <title>墨忻刷題網 v3</title>
+  <title>墨忻刷題網 v3.1</title>
 
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/pwa/icon-192.png" sizes="192x192" />
@@ -36,13 +36,14 @@
   <link rel="stylesheet" href="styles/v3-p5.css" />
   <link rel="stylesheet" href="styles/v3-p6.css" />
   <link rel="stylesheet" href="styles/v3-p7.css" />
+  <link rel="stylesheet" href="styles/v3-v31.css" />
 </head>
 <body>
   <header class="app-header">
     <div class="brand-block">
       <div class="brand-mark" aria-hidden="true">墨</div>
       <div>
-        <h1>墨忻刷題網 <span class="version-badge">v3</span></h1>
+        <h1>墨忻刷題網 <span class="version-badge">v3.1</span></h1>
         <p>本機優先的題庫練習平台</p>
       </div>
     </div>
@@ -61,48 +62,79 @@
         <div>
           <p class="eyebrow">Question Bank Package</p>
           <h2>我的題庫</h2>
-          <p>題庫資料與圖片儲存在瀏覽器 IndexedDB。可匯入 ZIP、JSON，或直接選擇完整題庫資料夾。</p>
+          <p>依題庫來源分成作者提供與自行新增；加入後都儲存在瀏覽器 IndexedDB，可離線練習。</p>
         </div>
         <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
       </section>
 
-      <section class="panel import-panel" aria-labelledby="importTitle">
+      <section class="panel library-source-panel" aria-labelledby="librarySourceTitle">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">匯入中心</p>
-            <h2 id="importTitle">新增或更新題庫</h2>
+            <p class="eyebrow">Library Source</p>
+            <h2 id="librarySourceTitle">題庫來源</h2>
           </div>
-          <p class="section-note">匯入前先驗證；驗證未通過的題庫不會寫入資料庫。</p>
         </div>
 
-        <div class="import-grid">
-          <label class="import-tile">
-            <span class="import-icon" aria-hidden="true">ZIP</span>
-            <strong>ZIP / JSON</strong>
-            <span>推薦使用 ZIP，可連同 assets 圖片一起匯入。</span>
-            <input id="bankFileInput" type="file" accept=".zip,.json,application/zip,application/json" />
-          </label>
-
-          <label class="import-tile">
-            <span class="import-icon" aria-hidden="true">DIR</span>
-            <strong>題庫資料夾</strong>
-            <span>選擇包含 manifest.json、questions.json 與 assets/ 的資料夾。</span>
-            <input id="bankFolderInput" type="file" webkitdirectory multiple />
-          </label>
+        <div class="library-source-tabs" role="tablist" aria-label="題庫來源">
+          <button class="source-tab is-active" type="button" role="tab" aria-selected="true" data-library-source-tab="author">作者題庫</button>
+          <button class="source-tab" type="button" role="tab" aria-selected="false" data-library-source-tab="user">自行新增</button>
         </div>
-
-        <div id="inspectionArea" class="inspection-area" aria-live="polite"></div>
       </section>
 
-      <section class="panel" aria-labelledby="libraryTitle">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Local Library</p>
-            <h2 id="libraryTitle">已匯入題庫</h2>
+      <div id="authorLibraryPanel" data-library-source-panel="author">
+        <section class="panel" aria-labelledby="authorLibraryTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Curated by Author</p>
+              <h2 id="authorLibraryTitle">作者題庫</h2>
+            </div>
+            <button id="refreshAuthorBanksButton" type="button" class="button secondary">重新整理清單</button>
           </div>
-          <button id="refreshBanksButton" type="button" class="button secondary">重新整理</button>
-        </div>
-        <div id="bankList" class="bank-grid" aria-live="polite"></div>
+          <p class="section-note source-description">作者題庫由網站維護者整理。只有按下「加入我的題庫」後才會寫入本機 IndexedDB。</p>
+          <div id="authorBankList" class="bank-grid" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div id="userLibraryPanel" data-library-source-panel="user" hidden>
+        <section class="panel import-panel" aria-labelledby="importTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">匯入中心</p>
+              <h2 id="importTitle">自行新增題庫</h2>
+            </div>
+            <p class="section-note">匯入前先驗證；驗證未通過的題庫不會寫入資料庫。</p>
+          </div>
+
+          <div class="import-grid">
+            <label class="import-tile">
+              <span class="import-icon" aria-hidden="true">ZIP</span>
+              <strong>ZIP / JSON</strong>
+              <span>推薦使用 ZIP，可連同 assets 圖片一起匯入。</span>
+              <input id="bankFileInput" type="file" accept=".zip,.json,application/zip,application/json" />
+            </label>
+
+            <label class="import-tile">
+              <span class="import-icon" aria-hidden="true">DIR</span>
+              <strong>題庫資料夾</strong>
+              <span>選擇包含 manifest.json、questions.json 與 assets/ 的資料夾。</span>
+              <input id="bankFolderInput" type="file" webkitdirectory multiple />
+            </label>
+          </div>
+
+          <div id="inspectionArea" class="inspection-area" aria-live="polite"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="libraryTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">User Library</p>
+              <h2 id="libraryTitle">自行新增的題庫</h2>
+            </div>
+            <button id="refreshBanksButton" type="button" class="button secondary">重新整理</button>
+          </div>
+          <div id="bankList" class="bank-grid" aria-live="polite"></div>
+        </section>
+      </div>
       </section>
     </section>
 
