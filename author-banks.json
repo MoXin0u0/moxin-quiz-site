@@ -1,0 +1,16 @@
+[
+  {
+    "id": "ERP_Planner_202509_V06",
+    "name": "ERP 規劃師題庫 2025.09 V06",
+    "description": "依據既有 ERP 規劃師題庫整理；加入本機時會轉換成 Schema v2。",
+    "version": "1.1.0",
+    "author": "墨忻",
+    "category": "ERP 規劃師",
+    "questionCount": 443,
+    "language": "zh-TW",
+    "source": {
+      "kind": "legacy-json",
+      "url": "./questions/ERP_Planner_202509_V06_improved_explanations.json"
+    }
+  }
+]

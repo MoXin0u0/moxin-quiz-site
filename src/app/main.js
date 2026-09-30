@@ -36,10 +36,16 @@ import {
   saveSession,
 } from '../storage/repositories/sessions.js';
 import {
+  importAuthorPackage,
   importInspectedPackage,
   inspectQuestionBankFile,
   inspectQuestionBankFolder,
 } from '../question-bank/importer.js';
+import {
+  compareVersions,
+  inspectAuthorBank,
+  loadAuthorCatalog,
+} from '../question-bank/author-catalog.js';
 import { checkAnswer } from '../quiz/scoring.js';
 import {
   advanceSession,
@@ -85,6 +91,8 @@ import {
   updateExamTimer,
 } from '../ui/exam.js';
 import {
+  renderAuthorBankLibrary,
+  renderAuthorCatalogError,
   renderBankLibrary,
   renderInspection,
   renderStorageStatus,
@@ -94,6 +102,8 @@ import {
 const state = {
   inspectedPackage: null,
   banks: [],
+  authorCatalog: [],
+  librarySourceTab: 'author',
   currentBank: null,
   allQuestions: [],
   filteredQuestions: [],
@@ -125,6 +135,10 @@ const elements = {
   statsArea: document.querySelector('#statsArea'),
   bankDetailArea: document.querySelector('#bankDetailArea'),
   practiceArea: document.querySelector('#practiceArea'),
+  authorLibraryPanel: document.querySelector('#authorLibraryPanel'),
+  userLibraryPanel: document.querySelector('#userLibraryPanel'),
+  authorBankList: document.querySelector('#authorBankList'),
+  refreshAuthorBanksButton: document.querySelector('#refreshAuthorBanksButton'),
   bankFileInput: document.querySelector('#bankFileInput'),
   bankFolderInput: document.querySelector('#bankFolderInput'),
   inspectionArea: document.querySelector('#inspectionArea'),
@@ -152,11 +166,19 @@ async function bootstrap() {
     message: 'IndexedDB 已就緒，資料只保存在這個瀏覽器。',
   });
   await refreshBanks();
+  await refreshAuthorCatalog();
+  setLibrarySourceTab(state.librarySourceTab);
   showView('library');
 }
 
 function bindEvents() {
   document.addEventListener('click', async event => {
+    const sourceTab = event.target.closest('[data-library-source-tab]');
+    if (sourceTab) {
+      setLibrarySourceTab(sourceTab.dataset.librarySourceTab);
+      return;
+    }
+
     if (event.target.closest('[data-nav-library]')) {
       stopExamTimer();
       showView('library');
@@ -192,6 +214,7 @@ function bindEvents() {
   });
 
   elements.refreshBanksButton.addEventListener('click', refreshBanks);
+  elements.refreshAuthorBanksButton.addEventListener('click', refreshAuthorCatalog);
 
   elements.inspectionArea.addEventListener('click', async event => {
     const importButton = event.target.closest('[data-import-inspected]');
@@ -202,6 +225,32 @@ function bindEvents() {
       state.inspectedPackage = null;
       renderInspection(elements.inspectionArea, null);
     }
+  });
+
+  elements.authorBankList.addEventListener('click', async event => {
+    const openButton = event.target.closest('[data-open-bank]');
+    if (openButton) {
+      await openBankDetail(openButton.dataset.openBank);
+      return;
+    }
+
+    const installButton = event.target.closest('[data-install-author-bank]');
+    if (installButton) {
+      await installAuthorBank(installButton.dataset.installAuthorBank);
+      return;
+    }
+
+    const deleteButton = event.target.closest('[data-delete-author-bank]');
+    if (!deleteButton) return;
+
+    const bankId = deleteButton.dataset.deleteAuthorBank;
+    const bank = state.banks.find(item => item.id === bankId);
+    const label = bank?.name || bankId;
+    if (!confirm(`確定要移除作者題庫「${label}」的本機版本？\n\n學習紀錄仍會保留。`)) return;
+    await deleteBank(bankId);
+    showToast(elements.toastRegion, `已移除作者題庫：${label}`, 'success');
+    await refreshBanks();
+    renderAuthorCatalog();
   });
 
   elements.bankList.addEventListener('click', async event => {
@@ -386,6 +435,83 @@ function bindEvents() {
   });
 }
 
+
+function setLibrarySourceTab(tab) {
+  const normalized = tab === 'user' ? 'user' : 'author';
+  state.librarySourceTab = normalized;
+
+  document.querySelectorAll('[data-library-source-tab]').forEach(button => {
+    const active = button.dataset.librarySourceTab === normalized;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+
+  if (elements.authorLibraryPanel) elements.authorLibraryPanel.hidden = normalized !== 'author';
+  if (elements.userLibraryPanel) elements.userLibraryPanel.hidden = normalized !== 'user';
+}
+
+async function refreshAuthorCatalog() {
+  try {
+    state.authorCatalog = await loadAuthorCatalog();
+    renderAuthorCatalog();
+  } catch (error) {
+    state.authorCatalog = [];
+    renderAuthorCatalogError(elements.authorBankList, error.message);
+  }
+}
+
+function renderAuthorCatalog() {
+  renderAuthorBankLibrary(elements.authorBankList, state.authorCatalog, state.banks);
+}
+
+async function installAuthorBank(bankId) {
+  const entry = state.authorCatalog.find(item => item.id === bankId);
+  if (!entry) {
+    showToast(elements.toastRegion, '找不到作者題庫清單項目。', 'error');
+    return;
+  }
+
+  const existing = state.banks.find(bank => bank.id === bankId);
+  if (existing) {
+    const sourceLabel = existing.sourceType === 'author' ? '作者題庫' : '自行新增題庫';
+    const versionLabel = existing.version || '未標示';
+    const updateAvailable = existing.sourceType === 'author' &&
+      compareVersions(entry.version, existing.version) > 0;
+
+    const confirmed = confirm(
+      `本機已有同 ID 題庫「${existing.name || bankId}」。\n\n` +
+      `目前來源：${sourceLabel}\n` +
+      `目前版本：${versionLabel}\n` +
+      `作者版本：${entry.version}\n\n` +
+      `${updateAvailable ? '將更新為作者提供的新版本。' : '將以作者提供版本重新寫入題庫內容。'}\n` +
+      '學習紀錄會保留。是否繼續？',
+    );
+    if (!confirmed) return;
+  }
+
+  setBusy(true, `正在下載作者題庫：${entry.name}…`);
+  try {
+    const pkg = await inspectAuthorBank(entry);
+    if (!pkg.report?.valid) {
+      const errors = pkg.report?.summary?.errors ?? 0;
+      throw new Error(`作者題庫驗證失敗，共 ${errors} 個錯誤。`);
+    }
+
+    await importAuthorPackage(pkg);
+    showToast(
+      elements.toastRegion,
+      existing ? `作者題庫已更新：${entry.name}` : `已加入作者題庫：${entry.name}`,
+      'success',
+    );
+    await refreshBanks();
+    renderAuthorCatalog();
+  } catch (error) {
+    showToast(elements.toastRegion, `作者題庫加入失敗：${error.message}`, 'error');
+  } finally {
+    setBusy(false);
+  }
+}
+
 async function inspectFile(file) {
   setBusy(true, `正在檢查 ${file.name}…`);
   try {
@@ -450,6 +576,7 @@ async function importCurrentPackage() {
     state.inspectedPackage = null;
     renderInspection(elements.inspectionArea, null);
     await refreshBanks();
+    setLibrarySourceTab('user');
   } catch (error) {
     showToast(elements.toastRegion, `匯入失敗：${error.message}`, 'error');
   } finally {
@@ -464,8 +591,15 @@ async function refreshBanks() {
     const questions = await getQuestionsByBank(bank.id);
     return { ...bank, questionCount: questions.length };
   }));
-  state.banks = withCounts;
-  renderBankLibrary(elements.bankList, withCounts);
+  state.banks = withCounts.map(bank => ({
+    ...bank,
+    sourceType: bank.sourceType === 'author' ? 'author' : 'user',
+  }));
+  renderBankLibrary(
+    elements.bankList,
+    state.banks.filter(bank => bank.sourceType !== 'author'),
+  );
+  renderAuthorCatalog();
 }
 
 async function openBankDetail(bankId) {

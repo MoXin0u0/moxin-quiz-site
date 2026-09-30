@@ -3,9 +3,12 @@ name: V3 Regression
 on:
   push:
     branches:
+      - main
       - next-v3
+      - "v3.*"
     paths:
       - "index.html"
+      - "author-banks.json"
       - "v3.html"
       - "legacy-v2.html"
       - "manifest.webmanifest"
@@ -19,6 +22,7 @@ on:
   pull_request:
     paths:
       - "index.html"
+      - "author-banks.json"
       - "v3.html"
       - "legacy-v2.html"
       - "manifest.webmanifest"

@@ -20,7 +20,7 @@ export function renderBankLibrary(container, banks) {
     <article class="bank-card">
       <div class="bank-card-topline">
         <span class="bank-id">${escapeHtml(bank.id)}</span>
-        <span class="schema-chip">Schema ${escapeHtml(bank.schemaVersion || '2.0')}</span>
+        <span class="schema-chip">自行新增</span>
       </div>
       <h3>${escapeHtml(bank.name || bank.title || bank.id)}</h3>
       <p>${escapeHtml(bank.description || '沒有題庫說明。')}</p>
@@ -36,6 +36,85 @@ export function renderBankLibrary(container, banks) {
       </div>
     </article>
   `).join('');
+}
+
+
+export function renderAuthorBankLibrary(container, entries, installedBanks = []) {
+  if (!container) return;
+
+  if (!Array.isArray(entries) || entries.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <strong>目前沒有作者題庫</strong>
+        <p>作者題庫清單目前沒有可加入的項目。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const installedMap = new Map(
+    (installedBanks || [])
+      .filter(bank => bank?.id)
+      .map(bank => [bank.id, bank]),
+  );
+
+  container.innerHTML = entries.map(entry => {
+    const installed = installedMap.get(entry.id);
+    const installedVersion = installed?.version || '';
+    const hasUpdate = installed && compareSimpleVersions(entry.version, installedVersion) > 0;
+    const isAuthorInstalled = installed?.sourceType === 'author';
+
+    let statusText = '尚未加入';
+    let statusClass = 'neutral';
+    if (isAuthorInstalled && hasUpdate) {
+      statusText = '有新版';
+      statusClass = 'warning';
+    } else if (isAuthorInstalled) {
+      statusText = '已加入';
+      statusClass = 'success';
+    } else if (installed) {
+      statusText = '同 ID 已存在';
+      statusClass = 'warning';
+    }
+
+    return `
+      <article class="bank-card author-bank-card">
+        <div class="bank-card-topline">
+          <span class="source-chip author">作者提供</span>
+          <span class="status-badge ${statusClass}">${escapeHtml(statusText)}</span>
+        </div>
+        <h3>${escapeHtml(entry.name)}</h3>
+        <p>${escapeHtml(entry.description || '沒有題庫說明。')}</p>
+        <dl class="bank-meta">
+          <div><dt>題數</dt><dd>${formatNumber(entry.questionCount ?? 0)}</dd></div>
+          <div><dt>版本</dt><dd>${escapeHtml(entry.version || '—')}</dd></div>
+          <div><dt>作者</dt><dd>${escapeHtml(entry.author || '—')}</dd></div>
+          <div><dt>分類</dt><dd>${escapeHtml(entry.category || '—')}</dd></div>
+        </dl>
+        <div class="card-actions">
+          ${isAuthorInstalled ? `
+            <button class="button primary" type="button" data-open-bank="${escapeAttr(entry.id)}">開始練習</button>
+            ${hasUpdate ? `<button class="button secondary" type="button" data-install-author-bank="${escapeAttr(entry.id)}">更新題庫</button>` : ''}
+            <button class="button danger-ghost" type="button" data-delete-author-bank="${escapeAttr(entry.id)}">移除本機版本</button>
+          ` : `
+            <button class="button primary" type="button" data-install-author-bank="${escapeAttr(entry.id)}">
+              ${installed ? '改用作者版本' : '加入我的題庫'}
+            </button>
+          `}
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+export function renderAuthorCatalogError(container, message) {
+  if (!container) return;
+  container.innerHTML = `
+    <div class="empty-state">
+      <strong>作者題庫清單暫時無法讀取</strong>
+      <p>${escapeHtml(message || '請稍後重新整理。')}</p>
+    </div>
+  `;
 }
 
 export function renderInspection(container, pkg, options = {}) {
@@ -170,6 +249,22 @@ function formatDate(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return String(value);
   return new Intl.DateTimeFormat('zh-TW', { dateStyle: 'medium' }).format(date);
+}
+
+
+function compareSimpleVersions(left, right) {
+  const parse = value => String(value || '0')
+    .split(/[+-]/, 1)[0]
+    .split('.')
+    .map(part => Number.parseInt(part, 10) || 0);
+  const a = parse(left);
+  const b = parse(right);
+  const length = Math.max(a.length, b.length, 3);
+  for (let index = 0; index < length; index += 1) {
+    const delta = (a[index] || 0) - (b[index] || 0);
+    if (delta !== 0) return Math.sign(delta);
+  }
+  return 0;
 }
 
 function escapeHtml(value) {

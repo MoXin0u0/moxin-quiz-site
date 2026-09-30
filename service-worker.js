@@ -1,14 +1,16 @@
-const CACHE_VERSION = 'moxin-quiz-v3-release-1';
+const CACHE_VERSION = 'moxin-quiz-v3-3.1.0-1';
 const APP_SHELL = [
   './index.html',
   './v3.html',
   './manifest.webmanifest',
+  './author-banks.json',
   './styles/v3.css',
   './styles/v3-p3.css',
   './styles/v3-p4.css',
   './styles/v3-p5.css',
   './styles/v3-p6.css',
   './styles/v3-p7.css',
+  './styles/v3-v31.css',
   './assets/pwa/icon-192.png',
   './assets/pwa/icon-512.png',
   './assets/pwa/icon-maskable-512.png',
@@ -21,6 +23,7 @@ const APP_SHELL = [
   './src/data/migration/legacy-v1-to-v2.js',
   './src/data/schema/question-bank.js',
 
+  './src/question-bank/author-catalog.js',
   './src/question-bank/importer.js',
   './src/question-bank/package-reader.js',
   './src/question-bank/validator.js',

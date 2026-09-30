@@ -1,0 +1,62 @@
+.library-source-panel { padding-bottom: .85rem; }
+.library-source-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  padding: .3rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-soft);
+}
+.source-tab {
+  min-height: 40px;
+  padding: .55rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+}
+.source-tab.is-active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(53, 89, 217, .18);
+}
+.source-description {
+  margin: -.25rem 0 1rem;
+  text-align: left;
+}
+.source-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: .2rem .55rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 850;
+}
+.source-chip.author {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.author-bank-card {
+  border-color: color-mix(in srgb, var(--primary) 28%, var(--line));
+}
+html[data-theme="dark"] .author-bank-card {
+  border-color: var(--line);
+}
+html[data-theme="dark"] .source-tab.is-active {
+  color: #fff;
+}
+@media (max-width: 560px) {
+  .library-source-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    border-radius: 16px;
+  }
+  .source-tab {
+    width: 100%;
+    border-radius: 12px;
+  }
+}
