@@ -4,12 +4,38 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="墨忻刷題網 v3 題庫、複習、模擬考、統計與本機學習介面" />
+  <meta name="theme-color" content="#3559d9" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="墨忻刷題" />
   <title>墨忻刷題網 v3</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/pwa/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/pwa/icon-192.png" />
+
+  <script>
+    try {
+      const raw = localStorage.getItem('moxin.v3.settings');
+      const settings = raw ? JSON.parse(raw) : {};
+      const preference = ['system', 'light', 'dark'].includes(settings.theme) ? settings.theme : 'system';
+      const theme = preference === 'system'
+        ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : preference;
+      document.documentElement.dataset.themePreference = preference;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.fontScale = ['normal', 'large', 'x-large'].includes(settings.fontScale) ? settings.fontScale : 'normal';
+      document.documentElement.dataset.optionSpacing = ['compact', 'normal', 'comfortable'].includes(settings.optionSpacing) ? settings.optionSpacing : 'normal';
+      document.documentElement.dataset.reduceMotion = settings.reduceMotion === true ? 'true' : 'false';
+    } catch {}
+  </script>
+
   <link rel="stylesheet" href="styles/v3.css" />
   <link rel="stylesheet" href="styles/v3-p3.css" />
   <link rel="stylesheet" href="styles/v3-p4.css" />
   <link rel="stylesheet" href="styles/v3-p5.css" />
   <link rel="stylesheet" href="styles/v3-p6.css" />
+  <link rel="stylesheet" href="styles/v3-p7.css" />
 </head>
 <body>
   <header class="app-header">
@@ -25,7 +51,7 @@
       <button class="nav-item" type="button" data-nav-review>今日複習</button>
       <button class="nav-item" type="button" data-nav-exam>模擬考</button>
       <button class="nav-item" type="button" data-nav-stats>學習統計</button>
-      <button class="nav-item" type="button" disabled>設定</button>
+      <button class="nav-item" type="button" data-nav-settings>設定</button>
     </nav>
   </header>
 
@@ -96,6 +122,10 @@
       <div id="statsArea"></div>
     </section>
 
+    <section id="settingsView" data-view="settings" hidden>
+      <div id="settingsArea"></div>
+    </section>
+
     <section id="bankDetailView" data-view="bank-detail" hidden>
       <div id="bankDetailArea"></div>
     </section>
@@ -107,5 +137,6 @@
 
   <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
   <script type="module" src="src/app/main.js"></script>
+  <script type="module" src="src/app/p7.js"></script>
 </body>
 </html>
