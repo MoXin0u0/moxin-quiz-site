@@ -300,6 +300,18 @@ html[data-theme="dark"] .exam-analysis-item summary {
   background: var(--surface-soft);
 }
 
+html[data-theme="dark"] .resume-card,
+html[data-theme="dark"] .exam-resume-banner {
+  border-color: var(--line);
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .resume-card p,
+html[data-theme="dark"] .exam-resume-banner span {
+  color: var(--muted);
+}
+
 @media (max-width: 860px) {
   .settings-grid {
     grid-template-columns: 1fr;

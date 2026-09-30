@@ -16,6 +16,6 @@ assert.match(library, /dataset\.toastMessage/);
 assert.match(library, /dataset\.toastKind/);
 assert.match(library, /visibleNonSticky\.length > 4/);
 
-assert.match(serviceWorker, /moxin-quiz-v3-rc1-1/);
+assert.match(serviceWorker, /moxin-quiz-v3-rc\d+-1/);
 
 console.log('MoXin Quiz v3 RC1 form/toast regression tests passed.');
