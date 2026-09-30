@@ -1,0 +1,170 @@
+/* P4: learning lists, notes, unfamiliar state and session resume */
+
+.learning-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .55rem;
+  margin-bottom: .85rem;
+}
+
+.learning-filter {
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: .72rem .65rem;
+  background: var(--surface-soft);
+  color: var(--text);
+  text-align: left;
+}
+
+.learning-filter strong,
+.learning-filter span {
+  display: block;
+}
+
+.learning-filter strong {
+  font-size: 1.05rem;
+}
+
+.learning-filter span {
+  margin-top: .15rem;
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.learning-filter.is-active {
+  border-color: #9aacee;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.resume-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: .9rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #c6d2fa;
+  border-radius: 15px;
+  background: #f4f6ff;
+}
+
+.resume-card h3 {
+  margin: 0 0 .25rem;
+}
+
+.resume-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.preview-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-top: .55rem;
+}
+
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .18rem .45rem;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.status-dot.wrong {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.status-dot.favorite {
+  background: #fff5d8;
+  color: #8b5700;
+}
+
+.status-dot.unfamiliar {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.status-dot.note {
+  background: #edf8ff;
+  color: #246183;
+}
+
+.unfamiliar-button.is-active {
+  color: #8b5700;
+  border-color: #e5c575;
+  background: var(--warning-soft);
+}
+
+.note-editor {
+  margin-top: 1rem;
+  padding: .9rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.note-editor label {
+  display: grid;
+  gap: .45rem;
+  font-weight: 800;
+}
+
+.note-editor textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .75rem .8rem;
+  background: var(--surface-soft);
+  color: var(--text);
+  font: inherit;
+  line-height: 1.6;
+}
+
+.note-editor small {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.learning-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin-top: .7rem;
+}
+
+.resume-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-top: .45rem;
+}
+
+@media (max-width: 900px) {
+  .learning-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .learning-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .resume-card {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-card .button {
+    width: 100%;
+  }
+}

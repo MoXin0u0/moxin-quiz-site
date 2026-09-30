@@ -1,0 +1,53 @@
+name: V3 Regression
+
+on:
+  push:
+    branches:
+      - next-v3
+    paths:
+      - "index.html"
+      - "v3.html"
+      - "legacy-v2.html"
+      - "manifest.webmanifest"
+      - "service-worker.js"
+      - "package.json"
+      - "src/**"
+      - "styles/v3*.css"
+      - "tests/**"
+      - "scripts/v3-release-preflight.mjs"
+      - ".github/workflows/v3-regression.yml"
+  pull_request:
+    paths:
+      - "index.html"
+      - "v3.html"
+      - "legacy-v2.html"
+      - "manifest.webmanifest"
+      - "service-worker.js"
+      - "package.json"
+      - "src/**"
+      - "styles/v3*.css"
+      - "tests/**"
+      - "scripts/v3-release-preflight.mjs"
+      - ".github/workflows/v3-regression.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    name: Unit + release preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run full v3 regression suite
+        run: npm run ci

@@ -1,0 +1,10 @@
+{
+  "name": "moxin-quiz-site-v3-dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/run.mjs && node tests/p3-run.mjs && node tests/p4-run.mjs && node tests/p5-run.mjs && node tests/p6-run.mjs && node tests/p7-run.mjs && node tests/rc1-run.mjs && node tests/rc2-run.mjs && node tests/release-cutover-run.mjs",
+    "preflight": "node scripts/v3-release-preflight.mjs",
+    "ci": "npm test && npm run preflight"
+  }
+}

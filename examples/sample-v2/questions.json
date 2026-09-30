@@ -1,0 +1,150 @@
+[
+  {
+    "id": "SAMPLE001",
+    "type": "single-choice",
+    "question": "下列哪一項是墨忻刷題網支援的題型？",
+    "options": [
+      {
+        "id": "A",
+        "text": "單選題"
+      },
+      {
+        "id": "B",
+        "text": "只有申論題"
+      },
+      {
+        "id": "C",
+        "text": "只有填空題"
+      },
+      {
+        "id": "D",
+        "text": "只有圖片題"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "本題答案為 A。墨忻刷題網支援單選題、複選題、是非題與填空題。B、C、D 都把系統能力描述得過於狹窄，因此不正確。",
+    "images": [],
+    "explanationImages": [],
+    "chapter": "系統範例",
+    "tags": [
+      "範例",
+      "題型"
+    ],
+    "difficulty": 1
+  },
+  {
+    "id": "SAMPLE002",
+    "type": "multiple-choice",
+    "question": "下列哪些功能屬於墨忻刷題網的核心功能？",
+    "options": [
+      {
+        "id": "A",
+        "text": "錯題本複習"
+      },
+      {
+        "id": "B",
+        "text": "多題庫管理"
+      },
+      {
+        "id": "C",
+        "text": "登入會員系統"
+      },
+      {
+        "id": "D",
+        "text": "模擬考練習"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "explanation": "本題答案為 A、B、D。墨忻刷題網定位為純前端題庫刷題平台，核心包含錯題本、多題庫管理與模擬考。C 不正確，因為本系統不開發登入或會員系統。",
+    "images": [],
+    "explanationImages": [],
+    "chapter": "系統範例",
+    "tags": [
+      "範例",
+      "複選題"
+    ],
+    "difficulty": 3
+  },
+  {
+    "id": "SAMPLE003",
+    "type": "true-false",
+    "question": "墨忻刷題網可以直接部署於 GitHub Pages，不需要後端伺服器。",
+    "answer": [
+      true
+    ],
+    "explanation": "本題答案為 true。墨忻刷題網使用純前端技術，可直接部署在 GitHub Pages，不需要後端伺服器。",
+    "images": [],
+    "explanationImages": [],
+    "chapter": "部署方式",
+    "tags": [
+      "範例",
+      "GitHub Pages"
+    ],
+    "difficulty": 1
+  },
+  {
+    "id": "SAMPLE004",
+    "type": "fill-in",
+    "question": "墨忻刷題網的本機資料主要儲存在瀏覽器的 ____。",
+    "answer": [
+      "localStorage",
+      "LocalStorage",
+      "LOCALSTORAGE"
+    ],
+    "caseSensitive": false,
+    "explanation": "舊版主要使用 localStorage；新版會將題庫與學習資料遷移到 IndexedDB。",
+    "images": [],
+    "explanationImages": [],
+    "chapter": "資料儲存",
+    "tags": [
+      "範例",
+      "localStorage"
+    ],
+    "difficulty": 1
+  },
+  {
+    "id": "SAMPLE_IMG_001",
+    "type": "single-choice",
+    "question": "請根據下圖判斷，下列哪一項說明正確？",
+    "images": [
+      "assets/images/sample_diagram.svg"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "流程由開始節點進入判斷節點"
+      },
+      {
+        "id": "B",
+        "text": "流程沒有任何判斷節點"
+      },
+      {
+        "id": "C",
+        "text": "流程只包含結束節點"
+      },
+      {
+        "id": "D",
+        "text": "圖片與題目無關"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explanation": "本題答案為 A。圖中流程由開始節點進入判斷節點，判斷後才分流到後續步驟。",
+    "explanationImages": [
+      "assets/images/sample_diagram.svg"
+    ],
+    "chapter": "圖片題範例",
+    "tags": [
+      "範例",
+      "圖片題"
+    ],
+    "difficulty": 1
+  }
+]
