@@ -1,5 +1,6 @@
 name: Apply v3.3 Tools and Legacy Cleanup
 
+# recovery-pass-5: keep workflow writes manual; automated commit only touches non-workflow files
 on:
   push:
     branches:
