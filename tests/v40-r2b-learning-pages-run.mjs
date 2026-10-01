@@ -12,20 +12,20 @@ const sw = fs.readFileSync('service-worker.js', 'utf8');
 assert.equal(index, v3);
 
 assert.match(index, /learning-hero-library/);
-assert.match(index, /learning-hero-actions/);
-assert.match(index, /learning-art-slot-library/);
+assert.match(index, /learning-hero-whole/);
+assert.match(index, /learning-hero-cta-row/);
 assert.match(index, /data-nav-review/);
 assert.match(index, /data-nav-exam/);
 assert.match(index, /data-nav-stats/);
 
 assert.match(review, /learning-review-hero/);
-assert.match(review, /learning-review-orbit/);
+assert.match(review, /learning-hero-stat-strip/);
 assert.match(review, /learning-review-mode-grid/);
 assert.match(review, /data-review-bank/);
 assert.match(review, /data-review-mode/);
 
 assert.match(exam, /learning-exam-hero/);
-assert.match(exam, /learning-exam-flow/);
+assert.match(exam, /learning-hero-flow/);
 assert.match(exam, /learning-exam-config/);
 assert.match(exam, /data-start-exam/);
 assert.match(exam, /data-resume-exam/);
@@ -36,9 +36,8 @@ assert.match(stats, /learning-mastery-bar/);
 assert.match(stats, /item\.accuracy/);
 
 assert.match(learning, /\.learning-hero/);
-assert.match(learning, /\.learning-hero-scene/);
-assert.match(learning, /\.learning-review-orbit/);
-assert.match(learning, /\.learning-exam-flow/);
+assert.match(learning, /\.learning-hero-whole/);
+assert.match(learning, /\.learning-hero-art/);
 assert.match(learning, /\.learning-accuracy-ring/);
 assert.match(learning, /html\[data-theme="dark"\]/);
 

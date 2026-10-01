@@ -3,21 +3,39 @@ export function renderReviewCenter(container, groups) {
   const totalWrong = groups.reduce((sum, group) => sum + group.counts.wrong, 0);
   const totalFavorite = groups.reduce((sum, group) => sum + group.counts.favorite, 0);
   const totalUnfamiliar = groups.reduce((sum, group) => sum + group.counts.unfamiliar, 0);
+  const recommended = pickReviewRecommendation(groups);
 
   const focusText = totalDue
     ? `今天有 ${totalDue} 題排程到期，先把它們完成最有效率。`
     : totalWrong
       ? '今天沒有排程到期，可以從錯題開始整理。'
-      : '今天沒有排程壓力，可以自由挑選想加強的內容。';
+      : totalUnfamiliar
+        ? '今天沒有排程與錯題壓力，可以先處理不熟題。'
+        : '今天沒有排程壓力，可以自由挑選想加強的內容。';
 
   container.innerHTML = `
-    <section class="learning-hero learning-review-hero">
-      <div class="learning-hero-copy">
+    <section class="learning-hero learning-review-hero learning-hero-whole" data-learning-scene="review">
+      <div class="learning-hero-art learning-hero-art-review" data-scene-art="review" aria-hidden="true"></div>
+      <div class="learning-hero-content">
         <span class="learning-kicker">今日複習</span>
         <h2>把今天該記住的，留到明天還能想起來</h2>
         <p>${escapeHtml(focusText)}</p>
 
-        <div class="learning-focus-strip">
+        <div class="learning-hero-cta-row">
+          ${recommended
+            ? `<button
+                class="button primary learning-hero-primary-cta"
+                type="button"
+                data-review-bank="${escapeAttr(recommended.group.bank.id)}"
+                data-review-mode="${escapeAttr(recommended.mode)}"
+              >開始${escapeHtml(recommended.label)}</button>`
+            : `<button class="button primary learning-hero-primary-cta" type="button" data-nav-library>先去練幾題</button>`}
+          <span class="learning-hero-cta-note">${recommended
+            ? `${recommended.count} 題優先處理`
+            : '完成作答後，這裡會自動形成複習路線'}</span>
+        </div>
+
+        <div class="learning-focus-strip learning-hero-stat-strip">
           ${focusItem('今日到期', totalDue, 'due')}
           ${focusItem('目前錯題', totalWrong, 'wrong')}
           ${focusItem('不熟題', totalUnfamiliar, 'unfamiliar')}
@@ -25,20 +43,10 @@ export function renderReviewCenter(container, groups) {
         </div>
       </div>
 
-      <div class="learning-review-focus learning-scene-panel learning-scene-review" data-learning-scene="review">
-        <div class="learning-scene-art" data-scene-art="review" aria-hidden="true"></div>
-        <div class="learning-scene-panel-heading">
-          <span>記憶焦點</span>
-          <small>依今天真正需要處理的內容排序</small>
-        </div>
-        <div class="learning-review-orbit">
-          <div class="learning-review-orbit-core">
-            <span>今日重點</span>
-            <strong>${totalDue || totalWrong || totalUnfamiliar || 0}</strong>
-            <small>${totalDue ? '排程到期' : totalWrong ? '錯題待整理' : totalUnfamiliar ? '不熟題' : '自由複習'}</small>
-          </div>
-        </div>
-        <p>先處理最需要記憶鞏固的題目，再依自己的狀況補強。</p>
+      <div class="learning-hero-floating-stat review" aria-hidden="true">
+        <span>今日優先</span>
+        <strong>${totalDue || totalWrong || totalUnfamiliar || 0}</strong>
+        <small>${totalDue ? '排程到期' : totalWrong ? '錯題待整理' : totalUnfamiliar ? '不熟題' : '自由複習'}</small>
       </div>
     </section>
 
@@ -60,6 +68,30 @@ export function renderReviewCenter(container, groups) {
       `}
     </div>
   `;
+}
+
+function pickReviewRecommendation(groups) {
+  const priorities = [
+    ['due', '今日複習'],
+    ['wrong', '錯題整理'],
+    ['unfamiliar', '不熟題複習'],
+    ['favorite', '收藏題複習'],
+  ];
+
+  for (const [mode, label] of priorities) {
+    const candidates = groups
+      .filter(group => Number(group.counts?.[mode] || 0) > 0)
+      .sort((a, b) => Number(b.counts?.[mode] || 0) - Number(a.counts?.[mode] || 0));
+    if (candidates.length) {
+      return {
+        group: candidates[0],
+        mode,
+        label,
+        count: Number(candidates[0].counts?.[mode] || 0),
+      };
+    }
+  }
+  return null;
 }
 
 function renderGroup(group) {

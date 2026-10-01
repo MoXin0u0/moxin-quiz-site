@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2g-1';
+const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2h-1';
 const APP_SHELL = [
   './index.html',
   './v3.html',

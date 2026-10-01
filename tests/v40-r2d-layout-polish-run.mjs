@@ -7,8 +7,8 @@ const css = fs.readFileSync('styles/v4-learning.css', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 
 assert.equal(index, v3);
-assert.match(index, /learning-art-slot/);
-assert.match(index, /learning-art-slot-library/);
+assert.match(index, /learning-hero-whole/);
+assert.match(index, /learning-hero-art-library/);
 assert.doesNotMatch(index, /learning-book book-a/);
 assert.doesNotMatch(index, /learning-book book-b/);
 assert.doesNotMatch(index, /learning-book book-c/);
@@ -16,9 +16,8 @@ assert.doesNotMatch(index, /learning-book book-c/);
 assert.match(css, /v4\.0 R2D — Learning Layout Polish/);
 assert.match(css, /max-width: 1800px/);
 assert.match(css, /width: calc\(100% - var\(--sidebar-width\)\)/);
-assert.match(css, /\.learning-art-slot \{/);
-assert.match(css, /--learning-art-image: none/);
-assert.match(css, /\.learning-scene-glow,\n\.learning-scene-note,\n\.learning-book-stack \{\n  display: none;/);
+assert.match(css, /v4\.0 R2H — Whole-page Learning Composition/);
+assert.match(css, /\.learning-hero-art \{/);
 
 // Legacy R2C decorations stay in the file for compatibility, but R2D must
 // explicitly suppress them later in the cascade.
@@ -34,10 +33,8 @@ assert.match(css, /@media \(max-width: 940px\)/);
 assert.match(css, /backdrop-filter: none/);
 assert.match(css, /bottom: 0 !important/);
 assert.match(css, /@media \(max-width: 760px\)/);
-assert.match(css, /\.learning-art-slot \{\n    display: none;/);
-assert.match(css, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
-assert.match(css, /\.learning-exam-flow \{\n    display: flex;/);
-assert.match(css, /@media \(max-width: 390px\)/);
+assert.match(css, /\.learning-hero-art[\s\S]*height: 54%/);
+assert.match(css, /@media \(max-width: 390px\)|@media \(max-width: 420px\)/);
 
 assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
 

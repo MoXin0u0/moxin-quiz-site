@@ -62,43 +62,31 @@
 
   <main class="app-main">
     <section id="libraryView" data-view="library">
-      <section class="learning-hero learning-hero-library">
-        <div class="learning-hero-copy">
+      <section class="learning-hero learning-hero-library learning-hero-whole" data-learning-scene="library">
+        <div class="learning-hero-art learning-hero-art-library" data-scene-art="library" aria-hidden="true"></div>
+        <div class="learning-hero-content">
           <span class="learning-kicker">我的學習空間</span>
           <h2>從一個題庫開始，建立今天的學習節奏</h2>
           <p>挑選想練習的內容，完成題目後再回到複習與統計，讓每一次作答都留下進步的軌跡。</p>
 
-          <div class="learning-hero-actions" aria-label="學習捷徑">
-            <button class="learning-action primary" type="button" data-nav-review>
-              <span class="learning-action-icon" aria-hidden="true">↻</span>
-              <span><strong>今日複習</strong><small>處理到期與不熟題</small></span>
-            </button>
-            <button class="learning-action" type="button" data-nav-exam>
-              <span class="learning-action-icon" aria-hidden="true">▣</span>
-              <span><strong>模擬考</strong><small>檢查目前掌握程度</small></span>
-            </button>
-            <button class="learning-action" type="button" data-nav-stats>
-              <span class="learning-action-icon" aria-hidden="true">▥</span>
-              <span><strong>學習統計</strong><small>看看最近的進步</small></span>
-            </button>
+          <div class="learning-hero-cta-row">
+            <a class="button primary learning-hero-primary-cta" href="#librarySourceTitle">選擇題庫開始練習</a>
+            <button class="button secondary learning-hero-secondary-cta" type="button" data-nav-review>今日複習</button>
+          </div>
+
+          <div class="learning-hero-quick-links" aria-label="其他學習入口">
+            <button type="button" data-nav-exam><span aria-hidden="true">▣</span> 模擬考</button>
+            <button type="button" data-nav-stats><span aria-hidden="true">▥</span> 學習統計</button>
+          </div>
+
+          <div class="learning-storage-row">
+            <span class="learning-storage-dot" aria-hidden="true"></span>
+            <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
           </div>
         </div>
 
-        <div class="learning-hero-scene learning-art-slot learning-art-slot-library" data-learning-scene="library" aria-hidden="true">
-          <div class="learning-scene-art" data-scene-art="library"></div>
-          <div class="learning-art-ambient"></div>
-          <div class="learning-art-focus">
-            <span class="learning-art-focus-dot"></span>
-            <span class="learning-art-focus-ring"></span>
-          </div>
-          <div class="learning-scene-path">
-            <span>選題庫</span><i></i><span>練習</span><i></i><span>複習</span>
-          </div>
-        </div>
-
-        <div class="learning-storage-row">
-          <span class="learning-storage-dot" aria-hidden="true"></span>
-          <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
+        <div class="learning-hero-journey" aria-hidden="true">
+          <span>選題庫</span><i></i><span>練習</span><i></i><span>複習</span>
         </div>
       </section>
 

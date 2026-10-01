@@ -10,25 +10,21 @@ export function renderLearningStats(container, data) {
   const accuracy = clampPercent(overall.accuracy);
 
   container.innerHTML = `
-    <section class="learning-hero learning-stats-hero">
-      <div class="learning-hero-copy">
+    <section class="learning-hero learning-stats-hero learning-hero-whole" data-learning-scene="stats">
+      <div class="learning-hero-art learning-hero-art-stats" data-scene-art="stats" aria-hidden="true"></div>
+      <div class="learning-hero-content learning-stats-hero-content">
         <span class="learning-kicker">學習統計</span>
         <h2>把作答紀錄變成下一步更清楚的方向</h2>
         <p>所有統計都只來自這個瀏覽器的 IndexedDB，不會上傳到伺服器。</p>
 
-        <div class="learning-focus-strip stats">
+        <div class="learning-focus-strip stats learning-hero-stat-strip">
           ${metricCard('總作答', overall.attempts, '▤')}
           ${metricCard('已作答題', overall.answeredQuestions, '✓')}
           ${metricCard('今日到期', overall.due, '↻')}
         </div>
       </div>
 
-      <div class="learning-accuracy-card learning-scene-panel learning-scene-stats" data-learning-scene="stats">
-        <div class="learning-scene-art" data-scene-art="stats" aria-hidden="true"></div>
-        <div class="learning-scene-panel-heading">
-          <span>整體掌握</span>
-          <small>用真實作答紀錄看目前狀態</small>
-        </div>
+      <div class="learning-hero-data-visual" aria-label="整體正確率 ${accuracy}%">
         <div class="learning-accuracy-ring" style="--accuracy:${accuracy * 3.6}deg">
           <div>
             <strong>${accuracy}%</strong>

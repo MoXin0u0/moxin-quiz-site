@@ -38,6 +38,6 @@ assert.match(css, /exam-light\.webp/);
 assert.match(css, /stats-dark\.webp/);
 assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.learning-scene-panel \.learning-scene-art[\s\S]*display: none/);
 assert.match(css, /prefers-reduced-data: reduce/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2g-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z0-9.]+-1/);
 
 console.log('MoXin Quiz v4.0 R2G scene integration tests passed.');

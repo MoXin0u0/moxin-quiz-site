@@ -4377,3 +4377,650 @@ html[data-theme="dark"] .learning-scene-stats .learning-scene-art {
     display: none !important;
   }
 }
+
+/* ============================================================
+ * v4.0 R2H — Whole-page Learning Composition
+ * Retires the small framed scene-card presentation in runtime DOM.
+ * Hero itself becomes the visual canvas with explicit content/art safe areas.
+ * ========================================================== */
+
+/* ------------------------------------------------------------
+ * Shared full-bleed hero composition
+ * ---------------------------------------------------------- */
+
+.learning-hero-whole {
+  --hero-content-width: min(62%, 880px);
+  --hero-art-opacity: .96;
+  --hero-art-position: 76% center;
+  --hero-art-size: cover;
+  position: relative;
+  display: block;
+  min-height: clamp(360px, 31vw, 470px);
+  overflow: hidden;
+  padding: clamp(1.5rem, 3vw, 2.7rem);
+  border-radius: 26px;
+  isolation: isolate;
+  background: var(--learn-surface-strong);
+}
+
+.learning-hero-whole::before,
+.learning-hero-whole::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.learning-hero-whole::before {
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(249, 252, 255, .99) 0%,
+      rgba(249, 252, 255, .97) 30%,
+      rgba(249, 252, 255, .9) 43%,
+      rgba(249, 252, 255, .7) 55%,
+      rgba(249, 252, 255, .24) 72%,
+      rgba(249, 252, 255, .04) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(249, 252, 255, .12),
+      rgba(249, 252, 255, 0) 58%,
+      rgba(249, 252, 255, .22) 100%
+    );
+}
+
+.learning-hero-whole::after {
+  z-index: 2;
+  border: 1px solid color-mix(in srgb, var(--learn-page-accent, var(--learn-primary)) 20%, var(--learn-line));
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .4),
+    inset 0 -60px 120px color-mix(in srgb, var(--learn-page-accent, var(--learn-primary)) 4%, transparent);
+}
+
+html[data-theme="dark"] .learning-hero-whole {
+  background: #10213a;
+}
+
+html[data-theme="dark"] .learning-hero-whole::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(12, 27, 49, .99) 0%,
+      rgba(12, 27, 49, .97) 30%,
+      rgba(12, 27, 49, .9) 43%,
+      rgba(12, 27, 49, .72) 56%,
+      rgba(12, 27, 49, .28) 74%,
+      rgba(12, 27, 49, .05) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 23, 42, .12),
+      rgba(10, 23, 42, 0) 60%,
+      rgba(10, 23, 42, .24) 100%
+    );
+}
+
+.learning-hero-art {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  background-image: var(--learning-scene-image);
+  background-repeat: no-repeat;
+  background-position: var(--hero-art-position);
+  background-size: var(--hero-art-size);
+  opacity: var(--hero-art-opacity);
+  filter: saturate(1.04) contrast(1.02);
+  transform: scale(1.015);
+  transform-origin: center;
+}
+
+html[data-theme="dark"] .learning-hero-art {
+  filter: saturate(1.05) contrast(1.04) brightness(.9);
+}
+
+.learning-hero-content {
+  position: relative;
+  z-index: 3;
+  width: var(--hero-content-width);
+  max-width: 900px;
+}
+
+.learning-hero-whole .learning-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-bottom: .2rem;
+}
+
+.learning-hero-whole .learning-hero-content h2 {
+  max-width: 18ch;
+  margin: .42rem 0 .7rem;
+  color: var(--learn-text);
+  font-size: clamp(2rem, 3vw, 3.15rem);
+  line-height: 1.1;
+  letter-spacing: -.05em;
+  text-wrap: balance;
+}
+
+.learning-hero-whole .learning-hero-content > p {
+  max-width: 61ch;
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: clamp(.92rem, 1.15vw, 1.04rem);
+  line-height: 1.72;
+}
+
+.learning-hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem;
+  margin-top: 1.25rem;
+}
+
+.learning-hero-primary-cta,
+.learning-hero-secondary-cta {
+  min-height: 44px;
+  padding-inline: 1.05rem;
+}
+
+.learning-hero-cta-note {
+  color: var(--learn-muted);
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+.learning-hero-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin-top: .7rem;
+}
+
+.learning-hero-quick-links button {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .42rem .62rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 82%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 72%, transparent);
+  color: var(--learn-muted);
+  font: inherit;
+  font-size: .74rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.learning-hero-quick-links button:hover {
+  border-color: color-mix(in srgb, var(--learn-page-accent, var(--learn-primary)) 38%, var(--learn-line));
+  color: var(--learn-text);
+}
+
+.learning-hero-whole .learning-storage-row {
+  position: static;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 1rem;
+  padding: .42rem .58rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 72%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 68%, transparent);
+  backdrop-filter: blur(9px);
+}
+
+.learning-hero-whole .learning-storage-row .storage-status {
+  color: var(--learn-muted);
+}
+
+.learning-hero-stat-strip {
+  max-width: 760px;
+  margin-top: 1rem;
+}
+
+/* ------------------------------------------------------------
+ * Page-specific art direction / safe areas
+ * ---------------------------------------------------------- */
+
+#libraryView .learning-hero-whole {
+  --hero-content-width: min(58%, 820px);
+  --hero-art-position: 78% center;
+  min-height: clamp(390px, 32vw, 500px);
+}
+
+#libraryView .learning-hero-art {
+  background-position: 78% center;
+}
+
+.learning-hero-journey {
+  position: absolute;
+  z-index: 3;
+  right: clamp(1.4rem, 3vw, 3rem);
+  bottom: clamp(1.2rem, 2.4vw, 2rem);
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  color: color-mix(in srgb, var(--learn-text) 70%, transparent);
+  font-size: .7rem;
+  font-weight: 780;
+  text-shadow: 0 1px 8px color-mix(in srgb, var(--learn-surface-strong) 75%, transparent);
+}
+
+.learning-hero-journey i {
+  width: clamp(28px, 3vw, 48px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--learn-page-accent, var(--learn-primary)), color-mix(in srgb, var(--learn-page-accent-2, var(--learn-cyan)) 58%, transparent));
+}
+
+#reviewView .learning-hero-whole {
+  --hero-content-width: min(61%, 850px);
+  --hero-art-position: 78% center;
+}
+
+#examCenterView .learning-hero-whole {
+  --hero-content-width: min(64%, 920px);
+  --hero-art-position: 80% center;
+  min-height: clamp(400px, 33vw, 510px);
+}
+
+#statsView .learning-hero-whole {
+  --hero-content-width: min(59%, 820px);
+  --hero-art-position: 80% center;
+  --hero-art-opacity: .78;
+}
+
+.learning-hero-floating-stat {
+  position: absolute;
+  z-index: 3;
+  right: clamp(2rem, 7vw, 7.5rem);
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  min-width: 150px;
+  transform: translateY(-46%);
+  text-align: center;
+  color: var(--learn-text);
+  text-shadow: 0 2px 18px color-mix(in srgb, var(--learn-surface-strong) 75%, transparent);
+}
+
+.learning-hero-floating-stat::before {
+  content: "";
+  position: absolute;
+  inset: -1.4rem -2rem;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--learn-surface-strong) 66%, transparent), transparent 68%);
+  filter: blur(1px);
+}
+
+.learning-hero-floating-stat span,
+.learning-hero-floating-stat small {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.learning-hero-floating-stat strong {
+  margin: .1rem 0;
+  color: var(--learn-page-accent-2, var(--learn-cyan));
+  font-size: clamp(2.8rem, 4vw, 4.1rem);
+  line-height: 1;
+}
+
+.learning-hero-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .45rem;
+  max-width: 760px;
+  margin-top: .85rem;
+}
+
+.learning-hero-flow .learning-flow-step {
+  min-width: 0;
+  padding: .5rem .58rem;
+  border-color: color-mix(in srgb, var(--learn-page-accent) 18%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 74%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.learning-hero-flow .learning-flow-step span {
+  width: 1.7rem;
+  height: 1.7rem;
+  font-size: .62rem;
+}
+
+.learning-hero-flow .learning-flow-step strong {
+  font-size: .74rem;
+}
+
+.learning-hero-data-visual {
+  position: absolute;
+  z-index: 3;
+  right: clamp(1.8rem, 6vw, 6.5rem);
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  gap: .65rem;
+  width: min(250px, 25%);
+  transform: translateY(-47%);
+  text-align: center;
+}
+
+.learning-hero-data-visual .learning-accuracy-ring {
+  width: clamp(145px, 12vw, 190px);
+  height: clamp(145px, 12vw, 190px);
+  box-shadow:
+    0 0 0 10px color-mix(in srgb, var(--learn-page-accent-2, var(--learn-teal)) 5%, transparent),
+    0 18px 48px rgba(0, 0, 0, .1);
+}
+
+.learning-hero-data-visual .learning-accuracy-ring > div {
+  width: 78%;
+  height: 78%;
+  background: color-mix(in srgb, var(--learn-surface-strong) 90%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.learning-hero-data-visual > p {
+  max-width: 27ch;
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: .76rem;
+  line-height: 1.5;
+  text-shadow: 0 1px 10px color-mix(in srgb, var(--learn-surface-strong) 65%, transparent);
+}
+
+/* ------------------------------------------------------------
+ * Page flow: hero leads naturally into actionable content
+ * ---------------------------------------------------------- */
+
+.learning-hero-whole + .learning-section-head {
+  margin-top: clamp(1.25rem, 2.2vw, 2rem);
+}
+
+.learning-hero-whole + .learning-section-head::before {
+  content: "";
+  align-self: stretch;
+  width: 3px;
+  margin-right: .1rem;
+  border-radius: 999px;
+  background: linear-gradient(var(--learn-page-accent, var(--learn-primary)), var(--learn-page-accent-2, var(--learn-cyan)));
+}
+
+.learning-hero-whole + .learning-section-head > div:first-child {
+  flex: 1 1 auto;
+}
+
+/* ------------------------------------------------------------
+ * Tablet safe areas
+ * ---------------------------------------------------------- */
+
+@media (max-width: 1180px) and (min-width: 761px) {
+  .learning-hero-whole {
+    --hero-content-width: min(67%, 720px);
+    min-height: 350px;
+    padding: 1.45rem;
+  }
+
+  .learning-hero-whole::before {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(249, 252, 255, .99) 0%,
+        rgba(249, 252, 255, .95) 38%,
+        rgba(249, 252, 255, .78) 57%,
+        rgba(249, 252, 255, .28) 79%,
+        rgba(249, 252, 255, .06) 100%
+      );
+  }
+
+  html[data-theme="dark"] .learning-hero-whole::before {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(12, 27, 49, .99) 0%,
+        rgba(12, 27, 49, .95) 38%,
+        rgba(12, 27, 49, .8) 58%,
+        rgba(12, 27, 49, .3) 80%,
+        rgba(12, 27, 49, .06) 100%
+      );
+  }
+
+  .learning-hero-whole .learning-hero-content h2 {
+    font-size: clamp(1.8rem, 3.8vw, 2.55rem);
+  }
+
+  .learning-hero-floating-stat {
+    right: 3rem;
+  }
+
+  .learning-hero-data-visual {
+    right: 2.5rem;
+    width: 24%;
+  }
+
+  .learning-hero-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 560px;
+  }
+}
+
+/* ------------------------------------------------------------
+ * Mobile: content first, art becomes a cropped atmospheric layer
+ * ---------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .learning-hero-whole,
+  #libraryView .learning-hero-whole,
+  #reviewView .learning-hero-whole,
+  #examCenterView .learning-hero-whole,
+  #statsView .learning-hero-whole {
+    --hero-content-width: 100%;
+    min-height: 0;
+    padding: 1.05rem;
+    border-radius: 19px;
+    background: var(--learn-surface-strong);
+  }
+
+  .learning-hero-whole::before {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(249, 252, 255, .92) 0%,
+        rgba(249, 252, 255, .96) 43%,
+        rgba(249, 252, 255, .99) 75%,
+        rgba(249, 252, 255, 1) 100%
+      );
+  }
+
+  html[data-theme="dark"] .learning-hero-whole::before {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(12, 27, 49, .82) 0%,
+        rgba(12, 27, 49, .93) 43%,
+        rgba(12, 27, 49, .98) 74%,
+        rgba(12, 27, 49, 1) 100%
+      );
+  }
+
+  .learning-hero-art {
+    inset: 0;
+    height: 54%;
+    background-position: 72% 28%;
+    background-size: cover;
+    opacity: .46;
+    transform: none;
+  }
+
+  html[data-theme="dark"] .learning-hero-art {
+    opacity: .5;
+  }
+
+  .learning-hero-content {
+    width: 100%;
+    max-width: none;
+    padding-top: clamp(5.4rem, 23vw, 7.5rem);
+  }
+
+  .learning-hero-whole .learning-hero-content h2 {
+    max-width: none;
+    font-size: clamp(1.6rem, 7.2vw, 2.05rem);
+    line-height: 1.17;
+  }
+
+  .learning-hero-whole .learning-hero-content > p {
+    max-width: none;
+    font-size: .86rem;
+  }
+
+  .learning-hero-cta-row {
+    align-items: stretch;
+    margin-top: 1rem;
+  }
+
+  .learning-hero-primary-cta,
+  .learning-hero-secondary-cta {
+    flex: 1 1 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .learning-hero-quick-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learning-hero-quick-links button {
+    justify-content: center;
+  }
+
+  .learning-hero-whole .learning-storage-row {
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  .learning-hero-journey {
+    display: none;
+  }
+
+  .learning-hero-floating-stat {
+    display: none;
+  }
+
+  .learning-hero-stat-strip,
+  .learning-focus-strip.exam.learning-hero-stat-strip,
+  .learning-focus-strip.stats.learning-hero-stat-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+
+  .learning-focus-strip.exam.learning-hero-stat-strip .learning-focus-item:last-child,
+  .learning-focus-strip.stats.learning-hero-stat-strip .learning-focus-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .learning-hero-flow {
+    display: flex;
+    gap: .42rem;
+    max-width: none;
+    overflow-x: auto;
+    padding-bottom: .2rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .learning-hero-flow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .learning-hero-flow .learning-flow-step {
+    flex: 0 0 132px;
+    scroll-snap-align: start;
+  }
+
+  .learning-hero-data-visual {
+    position: relative;
+    right: auto;
+    top: auto;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    align-items: center;
+    width: 100%;
+    margin-top: .9rem;
+    padding: .75rem;
+    transform: none;
+    border: 1px solid color-mix(in srgb, var(--learn-line) 78%, transparent);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--learn-surface-strong) 82%, transparent);
+    backdrop-filter: blur(8px);
+    text-align: left;
+  }
+
+  .learning-hero-data-visual .learning-accuracy-ring {
+    width: 104px;
+    height: 104px;
+  }
+
+  .learning-hero-data-visual > p {
+    max-width: none;
+    font-size: .73rem;
+  }
+
+  .learning-hero-whole + .learning-section-head::before {
+    width: 2px;
+  }
+}
+
+@media (max-width: 420px) {
+  .learning-hero-art {
+    height: 48%;
+    background-position: 70% 24%;
+    opacity: .38;
+  }
+
+  html[data-theme="dark"] .learning-hero-art {
+    opacity: .42;
+  }
+
+  .learning-hero-content {
+    padding-top: 4.8rem;
+  }
+
+  .learning-hero-whole .learning-hero-content h2 {
+    font-size: clamp(1.48rem, 7.4vw, 1.85rem);
+  }
+
+  .learning-hero-cta-note {
+    width: 100%;
+    text-align: center;
+  }
+
+  .learning-hero-data-visual {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-data: reduce) {
+  .learning-hero-art {
+    display: none !important;
+  }
+
+  .learning-hero-content {
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .learning-hero-whole::before {
+    background: transparent;
+  }
+}

@@ -4,26 +4,25 @@ export function renderExamCenter(container, groups) {
   const resumable = groups.filter(group => group.resumeExam).length;
 
   container.innerHTML = `
-    <section class="learning-hero learning-exam-hero">
-      <div class="learning-hero-copy">
+    <section class="learning-hero learning-exam-hero learning-hero-whole" data-learning-scene="exam">
+      <div class="learning-hero-art learning-hero-art-exam" data-scene-art="exam" aria-hidden="true"></div>
+      <div class="learning-hero-content">
         <span class="learning-kicker">模擬考場</span>
         <h2>用一場完整測驗，確認現在真正掌握多少</h2>
         <p>考試期間不顯示正誤；交卷後一次判分與檢討。題數與時間都由你決定。</p>
 
-        <div class="learning-focus-strip exam">
+        <div class="learning-hero-cta-row">
+          <a class="button primary learning-hero-primary-cta" href="#examBankList">建立模擬考</a>
+          ${resumable ? `<span class="learning-hero-cta-note">有 ${resumable} 場未完成考試</span>` : '<span class="learning-hero-cta-note">設定題數與時間後即可開始</span>'}
+        </div>
+
+        <div class="learning-focus-strip exam learning-hero-stat-strip">
           ${examStat('可用題庫', totalBanks)}
           ${examStat('可抽題目', totalQuestions)}
           ${examStat('未完成考試', resumable)}
         </div>
-      </div>
 
-      <div class="learning-exam-flow learning-scene-panel learning-scene-exam" data-learning-scene="exam" aria-label="模擬考流程">
-        <div class="learning-scene-art" data-scene-art="exam" aria-hidden="true"></div>
-        <div class="learning-scene-panel-heading">
-          <span>考場流程</span>
-          <small>設定完成後，專注把一場考試做完</small>
-        </div>
-        <div class="learning-exam-flow-steps">
+        <div class="learning-hero-flow" aria-label="模擬考流程">
           ${flowStep('01', '選題庫')}
           ${flowStep('02', '設定題數')}
           ${flowStep('03', '專心作答')}
@@ -40,7 +39,7 @@ export function renderExamCenter(container, groups) {
       </div>
     </section>
 
-    <div class="exam-bank-list learning-exam-list">
+    <div id="examBankList" class="exam-bank-list learning-exam-list">
       ${groups.length ? groups.map(renderGroup).join('') : `
         <div class="learning-empty">
           <div class="learning-empty-icon" aria-hidden="true">▣</div>

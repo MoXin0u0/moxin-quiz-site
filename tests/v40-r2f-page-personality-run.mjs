@@ -11,32 +11,29 @@ const sw = fs.readFileSync('service-worker.js', 'utf8');
 
 assert.equal(index, v3);
 assert.match(index, /data-learning-scene="library"/);
+assert.match(index, /data-scene-art="library"/);
 
-assert.match(review, /learning-scene-panel learning-scene-review/);
 assert.match(review, /data-learning-scene="review"/);
-assert.match(review, /記憶焦點/);
+assert.match(review, /data-scene-art="review"/);
+assert.match(review, /今日優先/);
 
-assert.match(exam, /learning-scene-panel learning-scene-exam/);
-assert.match(exam, /learning-exam-flow-steps/);
 assert.match(exam, /data-learning-scene="exam"/);
-assert.match(exam, /考場流程/);
+assert.match(exam, /data-scene-art="exam"/);
+assert.match(exam, /learning-hero-flow/);
 
-assert.match(stats, /learning-scene-panel learning-scene-stats/);
 assert.match(stats, /data-learning-scene="stats"/);
-assert.match(stats, /整體掌握/);
+assert.match(stats, /data-scene-art="stats"/);
+assert.match(stats, /learning-hero-data-visual/);
 
 assert.match(css, /v4\.0 R2F — Learning Page Personality & Scene Framework/);
 assert.match(css, /--learn-page-accent:/);
 assert.match(css, /--learn-page-accent-2:/);
-assert.match(css, /\.learning-scene-panel \{/);
-assert.match(css, /\.learning-scene-panel-heading/);
-assert.match(css, /\.learning-exam-flow-steps/);
-assert.match(css, /--learning-library-art: none/);
+assert.match(css, /v4\.0 R2H — Whole-page Learning Composition/);
+assert.match(css, /\.learning-hero-whole/);
 assert.match(css, /html\[data-reduce-motion="true"\]/);
 assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 
-// Page-level scene framework must not reactivate the retired R2C bitmap/SVG
-// decorations as a full-page background.
+// Legacy R2C bitmap/SVG decorations remain retired from the R2F+ page layer.
 const r2fStart = css.indexOf('v4.0 R2F — Learning Page Personality & Scene Framework');
 assert.ok(r2fStart >= 0);
 const r2fCss = css.slice(r2fStart);
