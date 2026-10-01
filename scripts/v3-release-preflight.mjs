@@ -42,6 +42,7 @@ for (const file of [
   'index.html',
   'v3.html',
   'legacy-v2.html',
+  'legacy-v2/index.html',
   'manifest.webmanifest',
   'service-worker.js',
   'package.json',
@@ -67,12 +68,22 @@ if (/\b(?:script\.js|style\.css)\b/.test(compatibilityHtml)) {
   fail('v3.html must not reference the legacy root script.js/style.css.');
 }
 
-if (legacyHtml) {
-  if (!legacyHtml.includes('style.css')) {
-    warn('legacy-v2.html does not reference legacy style.css.');
-  }
-  if (!legacyHtml.includes('script.js')) {
-    warn('legacy-v2.html does not reference legacy script.js.');
+if (legacyHtml && !legacyHtml.includes('./legacy-v2/')) {
+  fail('legacy-v2.html must redirect to ./legacy-v2/.');
+}
+
+for (const file of [
+  'legacy-v2/index.html',
+  'legacy-v2/script.js',
+  'legacy-v2/style.css',
+  'legacy-v2/question-banks.json',
+]) {
+  checkFile(file, 'legacy archive file');
+}
+
+for (const legacyRootFile of ['script.js', 'style.css', 'question-banks.json']) {
+  if (exists(legacyRootFile)) {
+    fail(`Legacy root file should be archived: ${legacyRootFile}`);
   }
 }
 
@@ -81,6 +92,7 @@ for (const nav of [
   'data-nav-review',
   'data-nav-exam',
   'data-nav-stats',
+  'data-nav-tools',
   'data-nav-settings',
 ]) {
   if (!productionHtml.includes(nav)) fail(`Missing main navigation entry in index.html: ${nav}`);

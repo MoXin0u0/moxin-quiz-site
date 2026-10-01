@@ -54,7 +54,7 @@ function bindNavigation() {
       return;
     }
 
-    if (event.target.closest('[data-nav-library], [data-nav-review], [data-nav-exam], [data-nav-stats]')) {
+    if (event.target.closest('[data-nav-library], [data-nav-review], [data-nav-exam], [data-nav-stats], [data-nav-tools]')) {
       if (settingsView) settingsView.hidden = true;
     }
   });

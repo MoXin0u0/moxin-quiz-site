@@ -37,6 +37,9 @@ export function renderBankDetail(container, bank, questions, learning = {}) {
         ${meta('今日到期', summary.due || 0)}
         ${meta('目前錯題', summary.wrong || 0)}
       </div>
+      <div class="detail-actions">
+        <button class="button secondary" type="button" data-export-bank>匯出題庫 ZIP</button>
+      </div>
     </section>
 
     ${resume ? `

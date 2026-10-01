@@ -3,6 +3,7 @@ import {
   deleteBank,
   getAsset,
   getBank,
+  getBankPackage,
   getQuestionsByBank,
   listBanks,
 } from '../storage/repositories/banks.js';
@@ -46,6 +47,11 @@ import {
   inspectAuthorBank,
   loadAuthorCatalog,
 } from '../question-bank/author-catalog.js';
+import { downloadQuestionBankZip } from '../question-bank/zip-writer.js';
+import {
+  QUESTION_BANK_AI_PROMPT,
+  renderQuestionBankTools,
+} from '../ui/tools.js';
 import { checkAnswer } from '../quiz/scoring.js';
 import {
   advanceSession,
@@ -127,12 +133,15 @@ const elements = {
   examCenterView: document.querySelector('#examCenterView'),
   examView: document.querySelector('#examView'),
   statsView: document.querySelector('#statsView'),
+  toolsView: document.querySelector('#toolsView'),
+  settingsView: document.querySelector('#settingsView'),
   bankDetailView: document.querySelector('#bankDetailView'),
   practiceView: document.querySelector('#practiceView'),
   reviewArea: document.querySelector('#reviewArea'),
   examCenterArea: document.querySelector('#examCenterArea'),
   examArea: document.querySelector('#examArea'),
   statsArea: document.querySelector('#statsArea'),
+  toolsArea: document.querySelector('#toolsArea'),
   bankDetailArea: document.querySelector('#bankDetailArea'),
   practiceArea: document.querySelector('#practiceArea'),
   authorLibraryPanel: document.querySelector('#authorLibraryPanel'),
@@ -160,6 +169,7 @@ bootstrap().catch(error => {
 async function bootstrap() {
   cleanupLegacyAnswerQuery();
   bindEvents();
+  renderQuestionBankTools(elements.toolsArea);
   await openDatabase();
   renderStorageStatus(elements.storageStatus, {
     ok: true,
@@ -196,6 +206,12 @@ function bindEvents() {
     if (event.target.closest('[data-nav-stats]')) {
       stopExamTimer();
       await openStats();
+      return;
+    }
+    if (event.target.closest('[data-nav-tools]')) {
+      stopExamTimer();
+      renderQuestionBankTools(elements.toolsArea);
+      showView('tools');
     }
   });
 
@@ -269,6 +285,23 @@ function bindEvents() {
     await deleteBank(bankId);
     showToast(elements.toastRegion, `已刪除題庫：${label}`, 'success');
     await refreshBanks();
+  });
+
+  elements.toolsArea.addEventListener('click', async event => {
+    if (event.target.closest('[data-copy-ai-prompt]')) {
+      try {
+        await copyText(QUESTION_BANK_AI_PROMPT);
+        showToast(elements.toastRegion, 'Schema v2 AI 題庫提示詞已複製。', 'success');
+      } catch (error) {
+        showToast(elements.toastRegion, `複製失敗：${error.message}`, 'error');
+      }
+      return;
+    }
+
+    if (event.target.closest('[data-download-ai-prompt]')) {
+      downloadTextFile('moxin-quiz-schema-v2-ai-prompt.txt', QUESTION_BANK_AI_PROMPT);
+      showToast(elements.toastRegion, '提示詞已下載。', 'success');
+    }
   });
 
   elements.reviewArea.addEventListener('click', async event => {
@@ -357,6 +390,11 @@ function bindEvents() {
   elements.bankDetailArea.addEventListener('click', async event => {
     if (event.target.closest('[data-back-library]')) {
       showView('library');
+      return;
+    }
+
+    if (event.target.closest('[data-export-bank]')) {
+      await exportCurrentBank();
       return;
     }
 
@@ -600,6 +638,59 @@ async function refreshBanks() {
     state.banks.filter(bank => bank.sourceType !== 'author'),
   );
   renderAuthorCatalog();
+}
+
+async function exportCurrentBank() {
+  const bankId = state.currentBank?.id;
+  if (!bankId) {
+    showToast(elements.toastRegion, '目前沒有可匯出的題庫。', 'error');
+    return;
+  }
+
+  showToast(elements.toastRegion, '正在建立題庫 ZIP…', 'info', { sticky: true });
+  try {
+    const pkg = await getBankPackage(bankId, { includeAssets: true });
+    if (!pkg) throw new Error('找不到題庫資料。');
+    const filename = await downloadQuestionBankZip(pkg);
+    showToast(elements.toastRegion, `題庫已匯出：${filename}`, 'success');
+  } catch (error) {
+    console.error(error);
+    showToast(elements.toastRegion, `題庫匯出失敗：${error.message}`, 'error');
+  } finally {
+    elements.toastRegion.querySelectorAll('[data-sticky-toast]').forEach(node => node.remove());
+  }
+}
+
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch { /* fall through */ }
+  }
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand('copy');
+  textarea.remove();
+  if (!copied) throw new Error('瀏覽器拒絕複製到剪貼簿。');
+}
+
+function downloadTextFile(filename, text) {
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.hidden = true;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 
 async function openBankDetail(bankId) {
@@ -1331,6 +1422,8 @@ function showView(name) {
     'exam-center': elements.examCenterView,
     exam: elements.examView,
     stats: elements.statsView,
+    tools: elements.toolsView,
+    settings: elements.settingsView,
     'bank-detail': elements.bankDetailView,
     practice: elements.practiceView,
   };
@@ -1344,6 +1437,8 @@ function showView(name) {
   document.querySelector('[data-nav-review]')?.classList.toggle('is-active', name === 'review');
   document.querySelector('[data-nav-exam]')?.classList.toggle('is-active', name === 'exam-center' || name === 'exam');
   document.querySelector('[data-nav-stats]')?.classList.toggle('is-active', name === 'stats');
+  document.querySelector('[data-nav-tools]')?.classList.toggle('is-active', name === 'tools');
+  document.querySelector('[data-nav-settings]')?.classList.toggle('is-active', name === 'settings');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

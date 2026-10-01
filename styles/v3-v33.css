@@ -1,0 +1,86 @@
+.detail-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: .65rem;
+  margin-top: .15rem;
+}
+
+.tools-workflow {
+  display: grid;
+  gap: .7rem;
+  margin: 1rem 0;
+  padding-left: 1.4rem;
+  color: var(--text);
+}
+
+.tools-workflow li {
+  padding-left: .2rem;
+}
+
+.tools-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin: 1rem 0;
+}
+
+.tools-prompt-details {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.tools-prompt-details summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.tools-prompt-box,
+.tools-code-tree {
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: .85rem 0 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font: inherit;
+  line-height: 1.65;
+}
+
+.tools-code-tree {
+  white-space: pre;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.tool-card h2 {
+  margin-top: .25rem;
+}
+
+@media (max-width: 900px) {
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .detail-actions,
+  .tools-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .detail-actions .button,
+  .tools-actions .button {
+    width: 100%;
+  }
+}
