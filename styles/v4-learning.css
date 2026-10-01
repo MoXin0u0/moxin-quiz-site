@@ -1,0 +1,844 @@
+/*
+ * v4.0 R2A — Learning Experience Visual Layer
+ * Learner-facing only. Tools / Settings intentionally stay backend-like.
+ */
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #f6f9ff;
+  --learn-canvas-2: #edf4ff;
+  --learn-surface: rgba(255, 255, 255, .90);
+  --learn-surface-strong: #ffffff;
+  --learn-surface-soft: #f4f7fd;
+  --learn-text: #17233c;
+  --learn-muted: #64718a;
+  --learn-line: #d8e1ef;
+  --learn-primary: #4668ee;
+  --learn-primary-2: #7c5cff;
+  --learn-cyan: #1ea7c8;
+  --learn-teal: #13a77a;
+  --learn-gold: #d89221;
+  --learn-rose: #d85d87;
+  --learn-shadow: 0 16px 42px rgba(67, 86, 125, .12);
+  --learn-shadow-soft: 0 6px 20px rgba(67, 86, 125, .08);
+
+  position: relative;
+  isolation: isolate;
+  min-height: calc(100vh - 4.5rem);
+  padding: clamp(.8rem, 2vw, 1.2rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 78%, transparent);
+  border-radius: 28px;
+  color: var(--learn-text);
+  background:
+    radial-gradient(circle at 94% 2%, color-mix(in srgb, var(--learn-primary) 11%, transparent), transparent 28rem),
+    radial-gradient(circle at 8% 92%, color-mix(in srgb, var(--learn-teal) 8%, transparent), transparent 26rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="dark"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #0b1426;
+  --learn-canvas-2: #101d35;
+  --learn-surface: rgba(18, 31, 55, .88);
+  --learn-surface-strong: #15243e;
+  --learn-surface-soft: #1b2b47;
+  --learn-text: #f5f8ff;
+  --learn-muted: #aebbd0;
+  --learn-line: #304563;
+  --learn-primary: #7d87ff;
+  --learn-primary-2: #aa72ff;
+  --learn-cyan: #42c7e4;
+  --learn-teal: #55d8ad;
+  --learn-gold: #f2bd62;
+  --learn-rose: #ff8db2;
+  --learn-shadow: 0 20px 54px rgba(0, 0, 0, .26);
+  --learn-shadow-soft: 0 8px 24px rgba(0, 0, 0, .18);
+
+  border-color: rgba(83, 112, 157, .34);
+  background:
+    radial-gradient(circle at 88% -6%, rgba(98, 111, 255, .18), transparent 31rem),
+    radial-gradient(circle at 12% 92%, rgba(48, 190, 161, .1), transparent 28rem),
+    radial-gradient(circle at 50% 120%, rgba(151, 85, 255, .08), transparent 28rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: .5;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--learn-line) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--learn-line) 15%, transparent) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .3), transparent 58%);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Learning navigation vs backend tools */
+.main-nav .nav-item:is(
+  [data-nav-library],
+  [data-nav-review],
+  [data-nav-exam],
+  [data-nav-stats]
+) {
+  position: relative;
+  overflow: hidden;
+  transition:
+    background .18s ease,
+    color .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.main-nav .nav-item:is(
+  [data-nav-library],
+  [data-nav-review],
+  [data-nav-exam],
+  [data-nav-stats]
+):hover {
+  transform: translateX(2px);
+}
+
+.main-nav .nav-item:is(
+  [data-nav-library],
+  [data-nav-review],
+  [data-nav-exam],
+  [data-nav-stats]
+).is-active {
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--primary) 22%, var(--surface)),
+      color-mix(in srgb, var(--accent) 10%, var(--surface))
+    );
+  box-shadow:
+    inset 3px 0 0 var(--primary),
+    0 8px 22px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+html[data-theme="dark"] .main-nav .nav-item:is(
+  [data-nav-library],
+  [data-nav-review],
+  [data-nav-exam],
+  [data-nav-stats]
+).is-active {
+  background:
+    linear-gradient(105deg, rgba(86, 93, 214, .34), rgba(44, 130, 151, .13));
+  box-shadow:
+    inset 3px 0 0 var(--primary),
+    0 10px 24px rgba(71, 78, 205, .15);
+}
+
+.main-nav .nav-item[data-nav-tools] {
+  margin-top: .75rem;
+}
+
+.main-nav .nav-item[data-nav-tools]::after {
+  content: "";
+  position: absolute;
+  top: -.44rem;
+  right: .45rem;
+  left: .45rem;
+  height: 1px;
+  background: var(--line);
+}
+
+/* Shared learning surfaces */
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) :is(
+  .hero-card,
+  .panel,
+  .detail-hero,
+  .practice-shell,
+  .filter-panel,
+  .exam-shell
+) {
+  border-color: var(--learn-line);
+  background: var(--learn-surface);
+  color: var(--learn-text);
+  box-shadow: var(--learn-shadow-soft);
+  backdrop-filter: blur(15px);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .hero-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 152px;
+  align-items: center;
+  padding: clamp(1.15rem, 3vw, 1.75rem);
+  border-radius: 22px;
+  box-shadow: var(--learn-shadow);
+  background:
+    radial-gradient(circle at 86% 15%, color-mix(in srgb, var(--learn-cyan) 17%, transparent), transparent 14rem),
+    radial-gradient(circle at 66% 100%, color-mix(in srgb, var(--learn-primary-2) 15%, transparent), transparent 17rem),
+    linear-gradient(125deg, var(--learn-surface-strong), var(--learn-surface));
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .hero-card::after {
+  content: "✦";
+  position: absolute;
+  right: clamp(1rem, 4vw, 3rem);
+  top: .7rem;
+  color: color-mix(in srgb, var(--learn-primary) 38%, transparent);
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  line-height: 1;
+  transform: rotate(13deg);
+  pointer-events: none;
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .hero-card h2 {
+  margin-bottom: .45rem;
+  color: var(--learn-text);
+  font-size: clamp(1.55rem, 4vw, 2.2rem);
+  letter-spacing: -.035em;
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .hero-card p {
+  max-width: 58rem;
+  color: var(--learn-muted);
+  line-height: 1.68;
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) :is(
+  .section-note,
+  .detail-summary,
+  .exam-bank-heading p,
+  .practice-header p,
+  .bank-card > p
+) {
+  color: var(--learn-muted);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .panel {
+  border-radius: 20px;
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .section-heading h2 {
+  color: var(--learn-text);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
+  border: 0;
+  background: linear-gradient(105deg, var(--learn-primary), var(--learn-primary-2));
+  color: #fff;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--learn-primary) 24%, transparent);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.secondary {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+/* 我的題庫 */
+#libraryView .library-source-panel {
+  padding: .75rem .9rem;
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--learn-primary) 6%, var(--learn-surface)),
+      var(--learn-surface)
+    );
+}
+
+#libraryView .library-source-tabs {
+  padding: .3rem;
+  border: 1px solid var(--learn-line);
+  background: var(--learn-surface-soft);
+}
+
+#libraryView .source-tab {
+  color: var(--learn-muted);
+}
+
+#libraryView .source-tab.is-active {
+  background: var(--learn-surface-strong);
+  color: var(--learn-primary);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+#libraryView .bank-grid {
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+}
+
+#libraryView .bank-card,
+#libraryView .author-bank-card {
+  min-height: 0;
+  border-color: var(--learn-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--card-accent, var(--learn-primary)) 12%, transparent), transparent 10rem),
+    var(--learn-surface-strong);
+  color: var(--learn-text);
+  box-shadow: var(--learn-shadow-soft);
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+#libraryView .bank-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--card-accent, var(--learn-primary)) 48%, var(--learn-line));
+  box-shadow: var(--learn-shadow);
+}
+
+#libraryView .bank-meta div {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+}
+
+#libraryView .bank-meta dt {
+  color: var(--learn-muted);
+}
+
+#libraryView .bank-meta dd {
+  color: var(--learn-text);
+}
+
+#libraryView .storage-status.is-ok {
+  border-color: color-mix(in srgb, var(--learn-teal) 46%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-teal) 10%, var(--learn-surface));
+  color: var(--learn-teal);
+}
+
+#libraryView .import-panel {
+  background:
+    linear-gradient(135deg, var(--learn-surface), color-mix(in srgb, var(--learn-primary) 5%, var(--learn-surface)));
+}
+
+#libraryView .import-tile {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+/* 今日複習 */
+#reviewView .review-summary-grid {
+  min-width: min(100%, 480px);
+}
+
+#reviewView .review-summary-grid > div {
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+#reviewView .review-summary-grid > div:nth-child(1) {
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+}
+
+#reviewView .review-summary-grid > div:nth-child(2) {
+  background: color-mix(in srgb, var(--learn-rose) 9%, var(--learn-surface));
+}
+
+#reviewView .review-summary-grid > div:nth-child(3) {
+  background: color-mix(in srgb, var(--learn-gold) 10%, var(--learn-surface));
+}
+
+#reviewView .review-summary-grid > div:nth-child(4) {
+  background: color-mix(in srgb, var(--learn-cyan) 9%, var(--learn-surface));
+}
+
+#reviewView .review-summary-grid span {
+  color: var(--learn-muted);
+}
+
+#reviewView .review-summary-grid strong {
+  color: var(--learn-text);
+  font-size: 1.35rem;
+}
+
+#reviewView .review-bank-card {
+  overflow: hidden;
+  border-color: var(--learn-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--learn-primary) 9%, transparent), transparent 13rem),
+    var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+#reviewView .review-bank-heading {
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--learn-line);
+}
+
+#reviewView .review-mode-card {
+  min-height: 172px;
+  border: 1px solid var(--learn-line);
+  border-radius: 15px;
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+#reviewView .review-mode-card:nth-child(1) {
+  background: color-mix(in srgb, var(--learn-primary) 9%, var(--learn-surface));
+}
+
+#reviewView .review-mode-card:nth-child(2) {
+  background: color-mix(in srgb, var(--learn-rose) 8%, var(--learn-surface));
+}
+
+#reviewView .review-mode-card:nth-child(3) {
+  background: color-mix(in srgb, var(--learn-gold) 9%, var(--learn-surface));
+}
+
+#reviewView .review-mode-card:nth-child(4) {
+  background: color-mix(in srgb, var(--learn-cyan) 8%, var(--learn-surface));
+}
+
+#reviewView .review-mode-card > span,
+#reviewView .review-mode-card small {
+  color: var(--learn-muted);
+}
+
+#reviewView .review-mode-card strong {
+  color: var(--learn-text);
+  font-size: 1.8rem;
+}
+
+/* 模擬考 */
+#examCenterView .exam-rules span {
+  border: 1px solid color-mix(in srgb, var(--learn-primary) 24%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 9%, var(--learn-surface));
+  color: var(--learn-primary);
+}
+
+#examCenterView .exam-bank-card {
+  border-color: var(--learn-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 95% 10%, color-mix(in srgb, var(--learn-gold) 9%, transparent), transparent 12rem),
+    var(--learn-surface-strong);
+  color: var(--learn-text);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+#examCenterView .exam-bank-heading {
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--learn-line);
+}
+
+#examCenterView .exam-setup-grid {
+  padding: .85rem;
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+#examCenterView .exam-setup-grid label {
+  color: var(--learn-muted);
+}
+
+#examCenterView .exam-setup-grid :is(input, select) {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-strong);
+  color: var(--learn-text);
+}
+
+#examCenterView .exam-resume-banner {
+  border-color: color-mix(in srgb, var(--learn-gold) 30%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-gold) 9%, var(--learn-surface));
+  color: var(--learn-text);
+}
+
+#examView .exam-shell {
+  border-color: var(--learn-line);
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow);
+}
+
+#examView .exam-timer,
+#examView .exam-status-row,
+#examView .exam-navigator,
+#examView .exam-result-stats div,
+#examView .exam-analysis-item summary {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+#examView .exam-number {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-strong);
+  color: var(--learn-muted);
+}
+
+#examView .exam-number.is-answered {
+  border-color: color-mix(in srgb, var(--learn-primary) 42%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 12%, var(--learn-surface));
+  color: var(--learn-primary);
+}
+
+/* 學習統計 */
+#statsView .stats-overall {
+  min-width: min(100%, 500px);
+}
+
+#statsView .stats-overall > div,
+#statsView .stats-mini-grid > div {
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+#statsView .stats-overall > div:nth-child(1) {
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+}
+
+#statsView .stats-overall > div:nth-child(2) {
+  background: color-mix(in srgb, var(--learn-teal) 10%, var(--learn-surface));
+}
+
+#statsView .stats-overall > div:nth-child(3) {
+  background: color-mix(in srgb, var(--learn-cyan) 9%, var(--learn-surface));
+}
+
+#statsView .stats-overall > div:nth-child(4) {
+  background: color-mix(in srgb, var(--learn-gold) 10%, var(--learn-surface));
+}
+
+#statsView :is(.stats-overall, .stats-mini-grid) span {
+  color: var(--learn-muted);
+}
+
+#statsView :is(.stats-overall, .stats-mini-grid) strong {
+  color: var(--learn-text);
+}
+
+#statsView .stats-bank-card {
+  border-color: var(--learn-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--learn-primary) 8%, transparent), transparent 12rem),
+    var(--learn-surface-strong);
+  color: var(--learn-text);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+#statsView .stats-bank-heading {
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--learn-line);
+}
+
+#statsView .mastery-block {
+  padding: .85rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+#statsView .mastery-cell {
+  border: 1px solid var(--learn-line);
+  color: var(--learn-text);
+}
+
+#statsView .mastery-cell.new {
+  background: var(--learn-surface-strong);
+}
+
+#statsView .mastery-cell.learning {
+  background: color-mix(in srgb, var(--learn-gold) 12%, var(--learn-surface));
+}
+
+#statsView .mastery-cell.familiar {
+  background: color-mix(in srgb, var(--learn-cyan) 11%, var(--learn-surface));
+}
+
+#statsView .mastery-cell.mastered {
+  background: color-mix(in srgb, var(--learn-teal) 12%, var(--learn-surface));
+}
+
+#statsView .mastery-cell span {
+  color: var(--learn-muted);
+}
+
+/* 題庫詳情 / 刷題 */
+#bankDetailView .detail-hero {
+  background:
+    radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--learn-primary) 13%, transparent), transparent 15rem),
+    var(--learn-surface-strong);
+}
+
+#bankDetailView .detail-meta div,
+#practiceView .question-card,
+#practiceView .answer-option,
+#practiceView .note-editor,
+#practiceView .feedback-panel {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+#practiceView .practice-shell {
+  background:
+    radial-gradient(circle at 92% 4%, color-mix(in srgb, var(--learn-primary) 10%, transparent), transparent 17rem),
+    var(--learn-surface);
+}
+
+#practiceView .question-card {
+  background: var(--learn-surface-strong);
+}
+
+#practiceView .answer-option:hover {
+  border-color: var(--learn-primary);
+  background: color-mix(in srgb, var(--learn-primary) 9%, var(--learn-surface));
+}
+
+#practiceView .answer-option.is-correct {
+  border-color: color-mix(in srgb, var(--learn-teal) 38%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-teal) 12%, var(--learn-surface));
+}
+
+#practiceView .answer-option.is-wrong {
+  border-color: color-mix(in srgb, var(--learn-rose) 38%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-rose) 12%, var(--learn-surface));
+}
+
+/* Theme-specific learning microcopy */
+html[data-theme="light"] #libraryView .hero-card::before {
+  content: "知識累積成選擇，練習累積成底氣";
+}
+html[data-theme="light"] #reviewView .hero-card::before {
+  content: "今天複習一點，明天記得更久";
+}
+html[data-theme="light"] #examCenterView .hero-card::before {
+  content: "把每一次模擬，都當成更了解自己的機會";
+}
+html[data-theme="light"] #statsView .hero-card::before {
+  content: "看見進步，也看見下一步";
+}
+
+html[data-theme="dark"] #libraryView .hero-card::before {
+  content: "安靜累積，每一道題都是往前的一步";
+}
+html[data-theme="dark"] #reviewView .hero-card::before {
+  content: "今晚複習的內容，會變成明天更穩的記憶";
+}
+html[data-theme="dark"] #examCenterView .hero-card::before {
+  content: "專注完成這一場，再多了解自己一點";
+}
+html[data-theme="dark"] #statsView .hero-card::before {
+  content: "每一筆紀錄，都是你正在前進的證明";
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .hero-card::before {
+  position: absolute;
+  right: clamp(1rem, 4vw, 3rem);
+  bottom: .75rem;
+  max-width: min(38ch, 42%);
+  color: var(--learn-muted);
+  font-size: .76rem;
+  font-weight: 760;
+  letter-spacing: .03em;
+  text-align: right;
+  pointer-events: none;
+}
+
+@media (max-width: 940px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  ) {
+    min-height: calc(100vh - 8rem);
+    padding: .65rem;
+    border-radius: 20px;
+  }
+
+  .main-nav .nav-item[data-nav-tools] {
+    margin-top: 0;
+  }
+
+  .main-nav .nav-item[data-nav-tools]::after {
+    display: none;
+  }
+
+  .main-nav .nav-item:is(
+    [data-nav-library],
+    [data-nav-review],
+    [data-nav-exam],
+    [data-nav-stats]
+  ):hover {
+    transform: none;
+  }
+
+  .main-nav .nav-item:is(
+    [data-nav-library],
+    [data-nav-review],
+    [data-nav-exam],
+    [data-nav-stats]
+  ).is-active {
+    box-shadow:
+      inset 0 3px 0 var(--primary),
+      0 8px 18px color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #statsView
+  ) .hero-card::before {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #statsView
+  ) .hero-card {
+    min-height: 0;
+    padding: 1rem;
+  }
+
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #statsView
+  ) .hero-card::after {
+    right: .7rem;
+    top: .45rem;
+    font-size: 3.3rem;
+  }
+
+  #libraryView .bank-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #reviewView .review-summary-grid,
+  #statsView .stats-overall {
+    min-width: 0;
+  }
+}

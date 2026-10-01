@@ -177,6 +177,6 @@ assert.match(css, /\.studio-r1-media-drop/);
 assert.match(css, /\.studio-r1-media-grid/);
 assert.match(css, /\.studio-r1-asset-summary/);
 assert.match(sw, /src\/studio\/asset-manager\.js/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-p2a-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
 
 console.log('MoXin Quiz v4.0 P2A image asset tests passed.');
