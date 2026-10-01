@@ -9,6 +9,7 @@ on:
     paths:
       - "index.html"
       - "author-banks.json"
+      - "author-banks/**"
       - "v3.html"
       - "legacy-v2.html"
       - "manifest.webmanifest"
@@ -23,6 +24,7 @@ on:
     paths:
       - "index.html"
       - "author-banks.json"
+      - "author-banks/**"
       - "v3.html"
       - "legacy-v2.html"
       - "manifest.webmanifest"
