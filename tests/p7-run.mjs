@@ -44,12 +44,14 @@ const normalized = normalizeSettings({
   fontScale: 'x-large',
   optionSpacing: 'comfortable',
   reduceMotion: true,
+  studioTypeSwitchConfirm: false,
 });
 assert.deepEqual(normalized, {
   theme: 'dark',
   fontScale: 'x-large',
   optionSpacing: 'comfortable',
   reduceMotion: true,
+  studioTypeSwitchConfirm: false,
 });
 
 assert.deepEqual(normalizeSettings({
@@ -58,6 +60,8 @@ assert.deepEqual(normalizeSettings({
   optionSpacing: 'invalid',
   reduceMotion: 'yes',
 }), DEFAULT_SETTINGS);
+
+assert.equal(normalizeSettings({}).studioTypeSwitchConfirm, true);
 
 const filename = createBackupFilename(new Date('2026-10-01T01:02:03.000Z'));
 assert.ok(filename.startsWith('moxin-quiz-backup-2026-10-01T01-02-03-000Z'));

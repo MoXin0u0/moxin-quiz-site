@@ -7,7 +7,7 @@ export function renderSettings(container, { settings, storage, checks, pwa }) {
       <div>
         <p class="eyebrow">Local Settings</p>
         <h2>設定與資料管理</h2>
-        <p>外觀設定保存在 localStorage；題庫與學習紀錄保存在 IndexedDB。</p>
+        <p>偏好設定保存在 localStorage；題庫與學習紀錄保存在 IndexedDB。</p>
       </div>
       <div class="settings-pwa-status">
         <span class="status-badge ${pwa?.registered ? 'success' : 'warning'}">
@@ -64,7 +64,37 @@ export function renderSettings(container, { settings, storage, checks, pwa }) {
         </div>
 
         <div class="settings-actions">
-          <button class="button secondary" type="button" data-reset-settings>重設外觀設定</button>
+          <button class="button secondary" type="button" data-reset-settings>重設所有偏好設定</button>
+        </div>
+      </article>
+
+      <article class="panel settings-card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Question Bank Studio</p>
+            <h2>題庫工作室</h2>
+          </div>
+        </div>
+
+        <p class="settings-copy">
+          控制工作室在可能清除答案或選項時，是否先詢問你。
+        </p>
+
+        <div class="settings-form">
+          <label class="settings-toggle">
+            <input
+              type="checkbox"
+              data-setting-studio-type-switch-confirm
+              ${settings.studioTypeSwitchConfirm ? 'checked' : ''}
+            />
+            <span>
+              <strong>題型切換前確認</strong>
+              <small>
+                開啟時，若切換題型會清除答案或選項，會先顯示確認視窗。
+                關閉後會直接切換，並在工作室顯示可復原提示。
+              </small>
+            </span>
+          </label>
         </div>
       </article>
 
@@ -160,6 +190,8 @@ export function readSettingsForm(container) {
     fontScale: container.querySelector('[data-setting-font-scale]')?.value || 'normal',
     optionSpacing: container.querySelector('[data-setting-option-spacing]')?.value || 'normal',
     reduceMotion: container.querySelector('[data-setting-reduce-motion]')?.checked === true,
+    studioTypeSwitchConfirm:
+      container.querySelector('[data-setting-studio-type-switch-confirm]')?.checked !== false,
   };
 }
 

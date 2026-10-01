@@ -33,6 +33,10 @@ import {
   planQuestionTypeChange,
   validateQuestionDraft,
 } from '../studio/question-draft.js';
+import {
+  loadSettings,
+  saveSettings,
+} from '../storage/settings.js';
 
 const TYPE_LABELS = Object.freeze({
   'single-choice': '單選題',
@@ -50,6 +54,8 @@ const state = {
   autosaveTimer: null,
   validationTimer: null,
   mount: null,
+  undo: null,
+  undoTimer: null,
 };
 
 export async function mountStudioWorkspace(mount) {
@@ -181,6 +187,7 @@ function bindWorkspace(mount) {
     if (typeButton) return changeCurrentQuestionType(typeButton.dataset.questionTypeChoice);
 
     if (event.target.closest('[data-studio-add-question]')) {
+      clearUndoState();
       state.draft.questions.push(createQuestion('single-choice', state.draft.questions));
       state.activeQuestionId = state.draft.questions.at(-1).id;
       await persistDraftNow();
@@ -189,6 +196,7 @@ function bindWorkspace(mount) {
     }
 
     if (event.target.closest('[data-studio-duplicate-question]')) {
+      clearUndoState();
       const current = getActiveQuestion();
       if (!current) return;
       const copy = duplicateQuestion(current, state.draft.questions);
@@ -201,6 +209,7 @@ function bindWorkspace(mount) {
     }
 
     if (event.target.closest('[data-studio-delete-question]')) {
+      clearUndoState();
       const current = getActiveQuestion();
       if (!current || state.draft.questions.length <= 1) return;
       if (!confirm(`確定刪除題目 ${current.id}？\n\n這個操作只會刪除工作室中的題目內容。`)) return;
@@ -217,6 +226,7 @@ function bindWorkspace(mount) {
 
     const moveButton = event.target.closest('[data-studio-move]');
     if (moveButton) {
+      clearUndoState();
       const current = getActiveQuestion();
       if (!current) return;
       state.draft.questions = moveQuestion(
@@ -230,6 +240,7 @@ function bindWorkspace(mount) {
     }
 
     if (event.target.closest('[data-studio-add-option]')) {
+      clearUndoState();
       const current = getActiveQuestion();
       if (!current || !isChoice(current.type)) return;
       current.options.push({ id: nextOptionId(current.options), text: '' });
@@ -240,6 +251,7 @@ function bindWorkspace(mount) {
 
     const removeOption = event.target.closest('[data-studio-remove-option]');
     if (removeOption) {
+      clearUndoState();
       const current = getActiveQuestion();
       if (!current || current.options.length <= 2) return;
 
@@ -255,6 +267,7 @@ function bindWorkspace(mount) {
 
     const trueAnswer = event.target.closest('[data-studio-true-answer]');
     if (trueAnswer) {
+      clearUndoState();
       const current = getActiveQuestion();
       if (!current || current.type !== 'true-false') return;
       current.answer = [trueAnswer.dataset.studioTrueAnswer === 'true'];
@@ -263,7 +276,13 @@ function bindWorkspace(mount) {
       return;
     }
 
+    if (event.target.closest('[data-studio-undo-type-change]')) {
+      await undoLastTypeChange();
+      return;
+    }
+
     if (event.target.closest('[data-studio-clear-suspect-answers]')) {
+      clearUndoState();
       const suspects = findLegacySuspectQuestions(state.draft);
       if (!suspects.length) return;
       if (!confirm(
@@ -280,6 +299,7 @@ function bindWorkspace(mount) {
   mount.addEventListener('input', event => {
     if (state.mode !== 'editor' || !state.draft) return;
     if (!applyInputToDraft(event.target)) return;
+    clearUndoState();
     scheduleAutosave();
     scheduleInspectorUpdate();
   });
@@ -287,6 +307,7 @@ function bindWorkspace(mount) {
   mount.addEventListener('change', event => {
     if (state.mode !== 'editor' || !state.draft) return;
     if (!applyInputToDraft(event.target)) return;
+    clearUndoState();
     scheduleAutosave();
     scheduleInspectorUpdate();
   });
@@ -374,23 +395,175 @@ async function changeCurrentQuestionType(targetType) {
   if (!current || current.type === targetType) return;
 
   const plan = planQuestionTypeChange(current, targetType);
-  if (plan.requiresConfirmation) {
-    const confirmed = confirm(
-      `切換為「${TYPE_LABELS[targetType] || targetType}」？\n\n` +
-      `${plan.reason}\n\n` +
-      '題目文字、詳解、圖片、章節、標籤與難度會保留。',
-    );
-    if (!confirmed) {
-      renderEditor();
-      return;
+  const settings = loadSettings();
+
+  if (plan.requiresConfirmation && settings.studioTypeSwitchConfirm) {
+    const decision = await requestTypeChangeConfirmation(targetType, plan);
+    if (!decision.confirmed) return;
+
+    if (decision.disableFutureConfirm) {
+      saveSettings({
+        ...settings,
+        studioTypeSwitchConfirm: false,
+      });
     }
   }
 
   const index = state.draft.questions.findIndex(question => question.id === current.id);
+  const previousQuestion = cloneValue(current);
   state.draft.questions[index] = convertQuestionType(current, targetType);
+
+  state.undo = {
+    questionId: current.id,
+    previousQuestion,
+    message: buildTypeChangeNotice(plan, targetType),
+  };
 
   await persistDraftNow();
   renderEditor();
+  armUndoTimer();
+}
+
+function requestTypeChangeConfirmation(targetType, plan) {
+  return new Promise(resolve => {
+    const dialog = document.createElement('dialog');
+    dialog.className = 'studio-r1-dialog';
+    dialog.setAttribute('aria-labelledby', 'studioTypeSwitchDialogTitle');
+
+    const losses = [];
+    if (plan.clearsOptions) losses.push('目前的選項');
+    if (plan.clearsAnswer) losses.push('已設定的答案');
+
+    dialog.innerHTML = `
+      <form method="dialog" class="studio-r1-dialog-card">
+        <div class="studio-r1-dialog-icon" aria-hidden="true">↻</div>
+        <div class="studio-r1-dialog-copy">
+          <span class="studio-r1-dialog-kicker">切換題型</span>
+          <h3 id="studioTypeSwitchDialogTitle">切換為「${escapeHtml(TYPE_LABELS[targetType] || targetType)}」？</h3>
+          <p>
+            ${losses.length
+              ? `這次切換會移除${escapeHtml(losses.join('與'))}。`
+              : '這次切換不會移除目前內容。'}
+            題目文字、詳解、圖片、章節、標籤與難度會保留。
+          </p>
+
+          <label class="studio-r1-dialog-toggle">
+            <input type="checkbox" data-studio-disable-type-confirm />
+            <span>
+              <strong>之後不再提醒題型切換</strong>
+              <small>之後會直接切換，完成後仍會顯示可復原提示；可隨時到「設定 → 題庫工作室」重新開啟。</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="studio-r1-dialog-actions">
+          <button class="button secondary" type="button" data-studio-dialog-cancel>取消</button>
+          <button class="button primary" type="button" data-studio-dialog-confirm>切換題型</button>
+        </div>
+      </form>
+    `;
+
+    const finish = result => {
+      if (dialog.open && typeof dialog.close === 'function') dialog.close();
+      dialog.remove();
+      resolve(result);
+    };
+
+    dialog.addEventListener('cancel', event => {
+      event.preventDefault();
+      finish({ confirmed: false, disableFutureConfirm: false });
+    });
+
+    dialog.addEventListener('click', event => {
+      if (event.target === dialog) {
+        finish({ confirmed: false, disableFutureConfirm: false });
+        return;
+      }
+
+      if (event.target.closest('[data-studio-dialog-cancel]')) {
+        finish({ confirmed: false, disableFutureConfirm: false });
+        return;
+      }
+
+      if (event.target.closest('[data-studio-dialog-confirm]')) {
+        const disableFutureConfirm =
+          dialog.querySelector('[data-studio-disable-type-confirm]')?.checked === true;
+        finish({ confirmed: true, disableFutureConfirm });
+      }
+    });
+
+    document.body.appendChild(dialog);
+
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute('open', '');
+      dialog.classList.add('is-fallback');
+    }
+
+    dialog.querySelector('[data-studio-dialog-cancel]')?.focus();
+  });
+}
+
+function buildTypeChangeNotice(plan, targetType) {
+  const parts = [];
+  if (plan.clearsOptions) parts.push('原選項已清除');
+  if (plan.clearsAnswer) parts.push('原答案已清除');
+
+  return `已切換為${TYPE_LABELS[targetType] || targetType}${parts.length ? `，${parts.join('、')}` : ''}。`;
+}
+
+async function undoLastTypeChange() {
+  const undo = state.undo;
+  if (!undo || !state.draft) return;
+
+  const index = state.draft.questions.findIndex(question => question.id === undo.questionId);
+  if (index < 0) {
+    clearUndoState();
+    return;
+  }
+
+  state.draft.questions[index] = cloneValue(undo.previousQuestion);
+  state.activeQuestionId = undo.questionId;
+  clearUndoState();
+
+  await persistDraftNow();
+  renderEditor();
+  setStatus('已復原上一次題型切換。', 'ok');
+}
+
+function armUndoTimer() {
+  clearTimeout(state.undoTimer);
+  state.undoTimer = setTimeout(() => {
+    state.undo = null;
+    state.undoTimer = null;
+    renderUndoNotice();
+  }, 9000);
+  renderUndoNotice();
+}
+
+function clearUndoState() {
+  clearTimeout(state.undoTimer);
+  state.undoTimer = null;
+  state.undo = null;
+  renderUndoNotice();
+}
+
+function renderUndoNotice() {
+  const host = state.mount?.querySelector('[data-studio-undo-host]');
+  if (!host) return;
+
+  if (!state.undo) {
+    host.innerHTML = '';
+    return;
+  }
+
+  host.innerHTML = `
+    <div class="studio-r1-snackbar" role="status">
+      <span>${escapeHtml(state.undo.message)}</span>
+      <button type="button" data-studio-undo-type-change>復原</button>
+    </div>
+  `;
 }
 
 function renderEditor() {
@@ -419,11 +592,12 @@ function renderEditor() {
 
         <div class="studio-r1-top-actions">
           <span class="studio-r1-save-state" data-studio-status>${formatSaveState(state.draft.updatedAt)}</span>
-          <button class="button secondary compact" type="button" data-studio-save-draft>儲存草稿</button>
           <button class="button secondary compact" type="button" data-studio-validate>檢查</button>
           <button class="button primary compact" type="button" data-studio-save-library ${report.valid ? '' : 'disabled'}>儲存到我的題庫</button>
         </div>
       </header>
+
+      <div class="studio-r1-undo-host" data-studio-undo-host></div>
 
       ${suspects.length ? renderLegacyAuditBanner(suspects) : ''}
       ${renderBankSettings(state.draft)}
@@ -463,6 +637,8 @@ function renderEditor() {
       </footer>
     </section>
   `;
+
+  renderUndoNotice();
 }
 
 function renderBankSettings(draft) {
@@ -687,7 +863,11 @@ function renderPreviewAnswer(question) {
 }
 
 function renderValidationPanel(report, question) {
-  const questionReport = question ? validateQuestionDraft(question) : { valid: false, issues: [] };
+  const questionReport = question
+    ? validateQuestionDraft(question)
+    : { valid: false, issues: [] };
+
+  const uniqueBankIssues = uniqueIssues(report.issues).slice(0, 3);
 
   return `
     <section class="studio-r1-inspector-card">
@@ -697,29 +877,64 @@ function renderValidationPanel(report, question) {
           ${questionReport.valid ? '可用' : '未完成'}
         </strong>
       </div>
+
       ${questionReport.issues.length
-        ? `<div class="studio-r1-issue-list">${questionReport.issues.slice(0,8).map(issue => `
-            <div class="studio-r1-issue ${issue.severity}"><span>!</span><p>${escapeHtml(issue.message)}</p></div>
+        ? `<div class="studio-r1-issue-list">${questionReport.issues.slice(0, 5).map(issue => `
+            <div class="studio-r1-issue ${issue.severity}">
+              <span>!</span><p>${escapeHtml(issue.message)}</p>
+            </div>
           `).join('')}</div>`
         : '<p class="studio-r1-ok-copy">這一題目前沒有必要欄位問題。</p>'}
     </section>
 
-    <section class="studio-r1-inspector-card">
+    <section class="studio-r1-inspector-card studio-r1-bank-health">
       <div class="studio-r1-inspector-heading">
         <span>整份題庫</span>
         <strong class="${report.valid ? 'is-success' : 'is-danger'}">
-          ${report.valid ? '可以儲存' : `${report.summary.errors} 個錯誤`}
+          ${report.valid ? '可以儲存' : '需要修正'}
         </strong>
       </div>
-      ${report.issues.length
-        ? `<div class="studio-r1-issue-list">${report.issues.slice(0,8).map(issue => `
-            <div class="studio-r1-issue ${issue.severity}">
-              <span>${issue.severity === 'error' ? '!' : '·'}</span><p>${escapeHtml(issue.message)}</p>
-            </div>
-          `).join('')}${report.issues.length > 8 ? `<small>另有 ${report.issues.length - 8} 項未顯示。</small>` : ''}</div>`
+
+      <div class="studio-r1-health-grid">
+        <div>
+          <span>題目</span>
+          <strong>${state.draft?.questions?.length || 0}</strong>
+        </div>
+        <div class="${report.summary.errors ? 'is-danger' : ''}">
+          <span>錯誤</span>
+          <strong>${report.summary.errors}</strong>
+        </div>
+        <div class="${report.summary.warnings ? 'is-warning' : ''}">
+          <span>警告</span>
+          <strong>${report.summary.warnings}</strong>
+        </div>
+      </div>
+
+      ${uniqueBankIssues.length
+        ? `<div class="studio-r1-issue-list studio-r1-bank-issue-preview">
+            ${uniqueBankIssues.map(issue => `
+              <div class="studio-r1-issue ${issue.severity}">
+                <span>${issue.severity === 'error' ? '!' : '·'}</span>
+                <p>${escapeHtml(issue.message)}</p>
+              </div>
+            `).join('')}
+            ${report.issues.length > uniqueBankIssues.length
+              ? '<small>其餘問題可切換左側題目逐題查看。</small>'
+              : ''}
+          </div>`
         : '<p class="studio-r1-ok-copy">Schema 2.0 檢查通過。</p>'}
     </section>
   `;
+}
+
+function uniqueIssues(issues) {
+  const seen = new Set();
+  return (issues || []).filter(issue => {
+    const key = `${issue.severity}:${issue.message}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function renderLegacyAuditBanner(suspects) {
@@ -1155,6 +1370,11 @@ function ensureStudioStyles() {
   link.href = './styles/v4-studio-r1.css';
   link.dataset.v4StudioR1Styles = 'true';
   document.head.appendChild(link);
+}
+
+function cloneValue(value) {
+  if (globalThis.structuredClone) return structuredClone(value);
+  return JSON.parse(JSON.stringify(value));
 }
 
 function escapeHtml(value) {

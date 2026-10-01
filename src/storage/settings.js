@@ -5,6 +5,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   fontScale: 'normal',
   optionSpacing: 'normal',
   reduceMotion: false,
+  studioTypeSwitchConfirm: true,
 });
 
 const VALID_THEMES = new Set(['system', 'light', 'dark']);
@@ -22,6 +23,7 @@ export function normalizeSettings(settings = {}) {
       ? source.optionSpacing
       : DEFAULT_SETTINGS.optionSpacing,
     reduceMotion: source.reduceMotion === true,
+    studioTypeSwitchConfirm: source.studioTypeSwitchConfirm !== false,
   };
 }
 

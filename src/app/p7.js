@@ -65,11 +65,12 @@ function bindSettingsActions() {
 
   settingsArea.addEventListener('change', async event => {
     if (event.target.closest(
-      '[data-setting-theme], [data-setting-font-scale], [data-setting-option-spacing], [data-setting-reduce-motion]'
+      '[data-setting-theme], [data-setting-font-scale], [data-setting-option-spacing], ' +
+      '[data-setting-reduce-motion], [data-setting-studio-type-switch-confirm]'
     )) {
       const settings = saveSettings(readSettingsForm(settingsArea));
       applySettings(settings);
-      showToast(toastRegion, '外觀設定已儲存。', 'success');
+      showToast(toastRegion, '設定已儲存。', 'success');
     }
 
     const fileInput = event.target.closest('[data-import-backup]');
@@ -85,7 +86,7 @@ function bindSettingsActions() {
       const settings = resetSettings();
       applySettings(settings);
       await openSettings();
-      showToast(toastRegion, '外觀設定已重設。', 'success');
+      showToast(toastRegion, '偏好設定已重設。', 'success');
       return;
     }
 
