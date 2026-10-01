@@ -1904,6 +1904,7 @@ html[data-theme="dark"] .learning-art-slot {
 }
 
 .learning-scene-path {
+  position: absolute;
   z-index: 2;
   right: clamp(1rem, 2vw, 1.4rem);
   bottom: 1rem;
@@ -1913,6 +1914,12 @@ html[data-theme="dark"] .learning-art-slot {
   border-radius: 999px;
   background: color-mix(in srgb, var(--learn-surface-strong) 74%, transparent);
   backdrop-filter: blur(10px);
+}
+
+.learning-art-slot .learning-scene-path {
+  max-width: calc(100% - 2rem);
+  margin-inline: auto;
+  pointer-events: none;
 }
 
 /* Old bar/book placeholder no longer participates in layout. */
