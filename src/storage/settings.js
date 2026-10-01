@@ -5,12 +5,16 @@ export const DEFAULT_SETTINGS = Object.freeze({
   fontScale: 'normal',
   optionSpacing: 'normal',
   reduceMotion: false,
+  learningStyle: 'academy',
+  sceneIntensity: 'full',
   studioTypeSwitchConfirm: true,
 });
 
 const VALID_THEMES = new Set(['system', 'light', 'dark']);
 const VALID_FONT_SCALES = new Set(['normal', 'large', 'x-large']);
 const VALID_OPTION_SPACING = new Set(['compact', 'normal', 'comfortable']);
+const VALID_LEARNING_STYLES = new Set(['academy', 'focus']);
+const VALID_SCENE_INTENSITIES = new Set(['full', 'reduced', 'off']);
 
 export function normalizeSettings(settings = {}) {
   const source = settings && typeof settings === 'object' ? settings : {};
@@ -23,6 +27,12 @@ export function normalizeSettings(settings = {}) {
       ? source.optionSpacing
       : DEFAULT_SETTINGS.optionSpacing,
     reduceMotion: source.reduceMotion === true,
+    learningStyle: VALID_LEARNING_STYLES.has(source.learningStyle)
+      ? source.learningStyle
+      : DEFAULT_SETTINGS.learningStyle,
+    sceneIntensity: VALID_SCENE_INTENSITIES.has(source.sceneIntensity)
+      ? source.sceneIntensity
+      : DEFAULT_SETTINGS.sceneIntensity,
     studioTypeSwitchConfirm: source.studioTypeSwitchConfirm !== false,
   };
 }

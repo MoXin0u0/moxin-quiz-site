@@ -56,6 +56,6 @@ for (const name of [
   assert.ok(sw.includes(`./assets/learning/scenes/${name}`));
 }
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2h-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
 
 console.log('MoXin Quiz v4.0 R2H whole-page learning composition tests passed.');

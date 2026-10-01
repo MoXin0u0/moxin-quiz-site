@@ -27,6 +27,12 @@
       document.documentElement.dataset.fontScale = ['normal', 'large', 'x-large'].includes(settings.fontScale) ? settings.fontScale : 'normal';
       document.documentElement.dataset.optionSpacing = ['compact', 'normal', 'comfortable'].includes(settings.optionSpacing) ? settings.optionSpacing : 'normal';
       document.documentElement.dataset.reduceMotion = settings.reduceMotion === true ? 'true' : 'false';
+      document.documentElement.dataset.learningStyle = ['academy', 'focus'].includes(settings.learningStyle)
+        ? settings.learningStyle
+        : 'academy';
+      document.documentElement.dataset.sceneIntensity = ['full', 'reduced', 'off'].includes(settings.sceneIntensity)
+        ? settings.sceneIntensity
+        : 'full';
     } catch {}
   </script>
 
@@ -40,6 +46,7 @@
   <link rel="stylesheet" href="styles/v3-v33.css" />
   <link rel="stylesheet" href="styles/v4-design.css" />
   <link rel="stylesheet" href="styles/v4-learning.css" />
+  <link rel="stylesheet" href="styles/v4-learning-styles.css" />
 </head>
 <body>
   <header class="app-header">

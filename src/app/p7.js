@@ -66,7 +66,8 @@ function bindSettingsActions() {
   settingsArea.addEventListener('change', async event => {
     if (event.target.closest(
       '[data-setting-theme], [data-setting-font-scale], [data-setting-option-spacing], ' +
-      '[data-setting-reduce-motion], [data-setting-studio-type-switch-confirm]'
+      '[data-setting-reduce-motion], [data-setting-learning-style], ' +
+      '[data-setting-scene-intensity], [data-setting-studio-type-switch-confirm]'
     )) {
       const settings = saveSettings(readSettingsForm(settingsArea));
       applySettings(settings);
@@ -150,6 +151,8 @@ function applySettings(settings) {
   root.dataset.fontScale = settings.fontScale;
   root.dataset.optionSpacing = settings.optionSpacing;
   root.dataset.reduceMotion = settings.reduceMotion ? 'true' : 'false';
+  root.dataset.learningStyle = settings.learningStyle;
+  root.dataset.sceneIntensity = settings.sceneIntensity;
 
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) {

@@ -51,6 +51,8 @@ assert.deepEqual(normalized, {
   fontScale: 'x-large',
   optionSpacing: 'comfortable',
   reduceMotion: true,
+  learningStyle: 'academy',
+  sceneIntensity: 'full',
   studioTypeSwitchConfirm: false,
 });
 

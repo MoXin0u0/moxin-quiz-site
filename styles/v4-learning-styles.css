@@ -1,0 +1,479 @@
+/*
+ * v4.0 R2I — Learning Visual Style System
+ *
+ * Theme (light / dark), learning style and scene intensity are independent.
+ * Tooling pages intentionally keep the existing backend-like design.
+ */
+
+/* ------------------------------------------------------------
+ * Style Pack: Classic Academy (default)
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="academy"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --style-card-radius: 20px;
+  --style-hero-radius: 24px;
+  --style-shadow-factor: 1;
+}
+
+/* ------------------------------------------------------------
+ * Style Pack: Pure Focus
+ * Same information architecture; substantially quieter visuals.
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #f5f6f8;
+  --learn-canvas-2: #fbfcfd;
+  --learn-surface: #ffffff;
+  --learn-surface-strong: #ffffff;
+  --learn-surface-soft: #f3f5f7;
+  --learn-surface-tint: #eef1f4;
+  --learn-text: #182132;
+  --learn-muted: #687386;
+  --learn-line: #dce1e8;
+  --learn-line-strong: #c7cfd9;
+  --learn-primary: #4f65b7;
+  --learn-primary-2: #6779c7;
+  --learn-cyan: #4d8796;
+  --learn-teal: #478576;
+  --learn-gold: #a97f43;
+  --learn-rose: #a9677d;
+  --learn-shadow: 0 10px 28px rgba(44, 55, 77, .08);
+  --learn-shadow-soft: 0 4px 14px rgba(44, 55, 77, .06);
+  --learn-decor-opacity: 0;
+
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="dark"][data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #10141c;
+  --learn-canvas-2: #131923;
+  --learn-surface: #171e29;
+  --learn-surface-strong: #1a2230;
+  --learn-surface-soft: #202938;
+  --learn-surface-tint: #253043;
+  --learn-text: #f3f5f8;
+  --learn-muted: #a9b2c0;
+  --learn-line: #354052;
+  --learn-line-strong: #46536a;
+  --learn-primary: #98a6df;
+  --learn-primary-2: #a9b5e9;
+  --learn-cyan: #80aeb9;
+  --learn-teal: #83b3a6;
+  --learn-gold: #c8a773;
+  --learn-rose: #c492a5;
+  --learn-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+  --learn-shadow-soft: 0 5px 16px rgba(0, 0, 0, .14);
+
+  border-color: #303b4d;
+  background: linear-gradient(180deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::before {
+  opacity: .12;
+}
+
+html[data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after {
+  display: none;
+}
+
+html[data-learning-style="focus"] .learning-hero-whole {
+  min-height: 0;
+  border-radius: 18px;
+  background: var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+html[data-learning-style="focus"] .learning-hero-whole::before {
+  background: linear-gradient(90deg, var(--learn-surface-strong), color-mix(in srgb, var(--learn-surface-strong) 92%, transparent));
+}
+
+html[data-learning-style="focus"] .learning-hero-art,
+html[data-learning-style="focus"] .learning-hero-journey {
+  display: none;
+}
+
+html[data-learning-style="focus"] .learning-hero-content {
+  width: min(100%, 980px);
+  max-width: 980px;
+}
+
+html[data-learning-style="focus"] .learning-content-card,
+html[data-learning-style="focus"] .learning-review-bank,
+html[data-learning-style="focus"] .learning-exam-card,
+html[data-learning-style="focus"] .learning-stats-card,
+html[data-learning-style="focus"] #bankDetailView :is(.detail-hero, .filter-panel),
+html[data-learning-style="focus"] #practiceView .practice-shell,
+html[data-learning-style="focus"] #examView .exam-shell {
+  border-radius: 14px;
+  box-shadow: var(--learn-shadow-soft);
+  backdrop-filter: none;
+}
+
+html[data-learning-style="focus"] .learning-hero-primary-cta,
+html[data-learning-style="focus"] .button.primary {
+  background: var(--learn-primary);
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------
+ * Scene intensity — independent from Style Pack
+ * ---------------------------------------------------------- */
+
+html[data-scene-intensity="reduced"] .learning-hero-art {
+  opacity: .28 !important;
+  filter: saturate(.72) contrast(.94) brightness(.96);
+}
+
+html[data-theme="dark"][data-scene-intensity="reduced"] .learning-hero-art {
+  opacity: .32 !important;
+}
+
+html[data-scene-intensity="reduced"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after {
+  opacity: .12;
+}
+
+html[data-scene-intensity="off"] .learning-hero-art,
+html[data-scene-intensity="off"] .learning-hero-journey {
+  display: none !important;
+}
+
+html[data-scene-intensity="off"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after {
+  display: none !important;
+}
+
+html[data-scene-intensity="off"] .learning-hero-content {
+  width: min(100%, 1040px);
+  max-width: 1040px;
+}
+
+html[data-scene-intensity="off"] .learning-hero-whole::before {
+  background: linear-gradient(110deg, var(--learn-surface-strong), color-mix(in srgb, var(--learn-surface-soft) 72%, var(--learn-surface-strong)));
+}
+
+/* ------------------------------------------------------------
+ * Settings UI
+ * ---------------------------------------------------------- */
+
+.learning-style-settings,
+.scene-intensity-settings {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: .2rem 0;
+  padding: 0;
+  border: 0;
+}
+
+.learning-style-settings legend,
+.scene-intensity-settings legend {
+  margin-bottom: .2rem;
+  color: var(--text);
+  font-size: .9rem;
+  font-weight: 820;
+}
+
+.learning-style-settings > p,
+.scene-intensity-settings > p {
+  margin: 0 0 .7rem;
+  color: var(--text-muted);
+  font-size: .76rem;
+  line-height: 1.55;
+}
+
+.learning-style-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem;
+}
+
+.learning-style-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) auto;
+  gap: .7rem;
+  align-items: center;
+  min-width: 0;
+  padding: .65rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+
+.learning-style-option:hover:not(.is-future) {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.learning-style-option:has(input:checked) {
+  border-color: color-mix(in srgb, var(--primary) 58%, var(--line));
+  background: color-mix(in srgb, var(--primary-soft) 55%, var(--surface));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.learning-style-option > input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.learning-style-preview {
+  position: relative;
+  display: block;
+  width: 78px;
+  height: 52px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.learning-style-preview i {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+}
+
+.learning-style-preview.academy {
+  background: linear-gradient(145deg, #102544 0 48%, #26396e 100%);
+}
+
+.learning-style-preview.academy i:nth-child(1) {
+  inset: 8px 8px auto auto;
+  width: 25px;
+  height: 25px;
+  background: radial-gradient(circle, #e6b863, transparent 70%);
+}
+
+.learning-style-preview.academy i:nth-child(2) {
+  left: 9px;
+  bottom: 11px;
+  width: 45px;
+  height: 7px;
+  background: #6e79f4;
+}
+
+.learning-style-preview.academy i:nth-child(3) {
+  left: 16px;
+  bottom: 5px;
+  width: 39px;
+  height: 5px;
+  background: #46b8a4;
+}
+
+.learning-style-preview.focus {
+  background: linear-gradient(180deg, #fafbfc, #eef1f5);
+}
+
+html[data-theme="dark"] .learning-style-preview.focus {
+  background: linear-gradient(180deg, #1a2230, #121821);
+}
+
+.learning-style-preview.focus i:nth-child(1) {
+  inset: 9px 10px auto 10px;
+  height: 4px;
+  background: #7786c8;
+}
+
+.learning-style-preview.focus i:nth-child(2) {
+  left: 10px;
+  top: 21px;
+  width: 48px;
+  height: 3px;
+  background: #9da6b4;
+}
+
+.learning-style-preview.focus i:nth-child(3) {
+  left: 10px;
+  top: 31px;
+  width: 36px;
+  height: 3px;
+  background: #c1c7d0;
+}
+
+.learning-style-preview.epic {
+  background: radial-gradient(circle at 70% 25%, #e0a85c, transparent 26%), linear-gradient(145deg, #221640, #603b87);
+}
+
+.learning-style-preview.nature {
+  background: radial-gradient(circle at 68% 24%, #ffe7a4, transparent 30%), linear-gradient(145deg, #cce8e1, #8ec5a7);
+}
+
+.learning-style-copy {
+  min-width: 0;
+  display: grid;
+  gap: .15rem;
+}
+
+.learning-style-copy strong {
+  font-size: .86rem;
+}
+
+.learning-style-copy small {
+  color: var(--text-muted);
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+.learning-style-check {
+  display: none;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.learning-style-option:has(input:checked) .learning-style-check {
+  display: grid;
+}
+
+.learning-style-option.is-future {
+  opacity: .68;
+  cursor: default;
+}
+
+.learning-style-soon {
+  padding: .2rem .42rem;
+  border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--text-muted);
+  font-size: .62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.scene-intensity-picker {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  padding: .25rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.scene-intensity-option {
+  position: relative;
+  cursor: pointer;
+}
+
+.scene-intensity-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene-intensity-option span {
+  display: block;
+  padding: .48rem .75rem;
+  border-radius: 9px;
+  color: var(--text-muted);
+  font-size: .76rem;
+  font-weight: 760;
+}
+
+.scene-intensity-option:has(input:checked) span {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: var(--shadow-xs);
+}
+
+@media (max-width: 680px) {
+  .learning-style-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-style-option {
+    grid-template-columns: 70px minmax(0, 1fr) auto;
+  }
+
+  .learning-style-preview {
+    width: 70px;
+    height: 48px;
+  }
+
+  .scene-intensity-picker {
+    width: 100%;
+  }
+
+  .scene-intensity-option {
+    flex: 1 1 0;
+  }
+
+  .scene-intensity-option span {
+    text-align: center;
+  }
+}

@@ -36,6 +36,48 @@ export function renderSettings(container, { settings, storage, checks, pwa }) {
             </select>
           </label>
 
+          <fieldset class="learning-style-settings">
+            <legend>學習介面風格</legend>
+            <p>只影響「我的題庫、今日複習、模擬考、學習統計」等學習畫面；題庫工作室與設定維持工具型介面。</p>
+
+            <div class="learning-style-picker">
+              ${styleOption({
+                value: 'academy',
+                label: '經典學院',
+                description: '完整場景、層次與學院式學習氛圍。',
+                current: settings.learningStyle,
+                previewClass: 'academy',
+              })}
+              ${styleOption({
+                value: 'focus',
+                label: '純粹專注',
+                description: '降低場景與裝飾，讓內容與題目成為主角。',
+                current: settings.learningStyle,
+                previewClass: 'focus',
+              })}
+              ${futureStyle({
+                label: '史詩幻想',
+                description: '大型世界觀場景與更具戲劇感的視覺。',
+                previewClass: 'epic',
+              })}
+              ${futureStyle({
+                label: '自然晨光',
+                description: '清爽自然、明亮柔和的學習環境。',
+                previewClass: 'nature',
+              })}
+            </div>
+          </fieldset>
+
+          <fieldset class="scene-intensity-settings">
+            <legend>場景效果</legend>
+            <p>可保留目前風格的配色與元件，但調整大型情境視覺的存在感。</p>
+            <div class="scene-intensity-picker">
+              ${radioPill('full', '完整', settings.sceneIntensity, '完整顯示情境視覺')}
+              ${radioPill('reduced', '減弱', settings.sceneIntensity, '降低圖片與光影存在感')}
+              ${radioPill('off', '關閉', settings.sceneIntensity, '隱藏大型場景，只保留介面風格')}
+            </div>
+          </fieldset>
+
           <label>
             字體大小
             <select data-setting-font-scale>
@@ -190,9 +232,66 @@ export function readSettingsForm(container) {
     fontScale: container.querySelector('[data-setting-font-scale]')?.value || 'normal',
     optionSpacing: container.querySelector('[data-setting-option-spacing]')?.value || 'normal',
     reduceMotion: container.querySelector('[data-setting-reduce-motion]')?.checked === true,
+    learningStyle:
+      container.querySelector('[data-setting-learning-style]:checked')?.value || 'academy',
+    sceneIntensity:
+      container.querySelector('[data-setting-scene-intensity]:checked')?.value || 'full',
     studioTypeSwitchConfirm:
       container.querySelector('[data-setting-studio-type-switch-confirm]')?.checked !== false,
   };
+}
+
+function styleOption({ value, label, description, current, previewClass }) {
+  const checked = current === value ? 'checked' : '';
+  return `
+    <label class="learning-style-option">
+      <input
+        type="radio"
+        name="learning-style"
+        value="${escapeAttr(value)}"
+        data-setting-learning-style
+        ${checked}
+      />
+      <span class="learning-style-preview ${escapeAttr(previewClass)}" aria-hidden="true">
+        <i></i><i></i><i></i>
+      </span>
+      <span class="learning-style-copy">
+        <strong>${escapeHtml(label)}</strong>
+        <small>${escapeHtml(description)}</small>
+      </span>
+      <span class="learning-style-check" aria-hidden="true">✓</span>
+    </label>
+  `;
+}
+
+function futureStyle({ label, description, previewClass }) {
+  return `
+    <div class="learning-style-option is-future" aria-disabled="true">
+      <span class="learning-style-preview ${escapeAttr(previewClass)}" aria-hidden="true">
+        <i></i><i></i><i></i>
+      </span>
+      <span class="learning-style-copy">
+        <strong>${escapeHtml(label)}</strong>
+        <small>${escapeHtml(description)}</small>
+      </span>
+      <span class="learning-style-soon">準備中</span>
+    </div>
+  `;
+}
+
+function radioPill(value, label, current, description) {
+  return `
+    <label class="scene-intensity-option" title="${escapeAttr(description)}">
+      <input
+        type="radio"
+        name="scene-intensity"
+        value="${escapeAttr(value)}"
+        data-setting-scene-intensity
+        ${current === value ? 'checked' : ''}
+      />
+      <span>${escapeHtml(label)}</span>
+    </label>
+  `;
 }
 
 function option(value, label, current) {
