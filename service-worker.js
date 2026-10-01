@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v3-3.2.0-1';
+const CACHE_VERSION = 'moxin-quiz-v3-3.3.0-1';
 const APP_SHELL = [
   './index.html',
   './v3.html',
@@ -11,6 +11,7 @@ const APP_SHELL = [
   './styles/v3-p6.css',
   './styles/v3-p7.css',
   './styles/v3-v31.css',
+  './styles/v3-v33.css',
   './assets/pwa/icon-192.png',
   './assets/pwa/icon-512.png',
   './assets/pwa/icon-maskable-512.png',
@@ -28,6 +29,7 @@ const APP_SHELL = [
   './src/question-bank/package-reader.js',
   './src/question-bank/validator.js',
   './src/question-bank/zip-reader.js',
+  './src/question-bank/zip-writer.js',
 
   './src/quiz/exam-engine.js',
   './src/quiz/review-engine.js',
@@ -53,6 +55,7 @@ const APP_SHELL = [
   './src/ui/review-center.js',
   './src/ui/settings.js',
   './src/ui/stats.js',
+  './src/ui/tools.js',
 
   './src/utils/ids.js',
   './src/utils/mime.js',

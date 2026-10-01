@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="墨忻刷題" />
-  <title>墨忻刷題網 v3.2</title>
+  <title>墨忻刷題網 v3.3</title>
 
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/pwa/icon-192.png" sizes="192x192" />
@@ -37,13 +37,14 @@
   <link rel="stylesheet" href="styles/v3-p6.css" />
   <link rel="stylesheet" href="styles/v3-p7.css" />
   <link rel="stylesheet" href="styles/v3-v31.css" />
+  <link rel="stylesheet" href="styles/v3-v33.css" />
 </head>
 <body>
   <header class="app-header">
     <div class="brand-block">
       <div class="brand-mark" aria-hidden="true">墨</div>
       <div>
-        <h1>墨忻刷題網 <span class="version-badge">v3.2</span></h1>
+        <h1>墨忻刷題網 <span class="version-badge">v3.3</span></h1>
         <p>本機優先的題庫練習平台</p>
       </div>
     </div>
@@ -52,6 +53,7 @@
       <button class="nav-item" type="button" data-nav-review>今日複習</button>
       <button class="nav-item" type="button" data-nav-exam>模擬考</button>
       <button class="nav-item" type="button" data-nav-stats>學習統計</button>
+      <button class="nav-item" type="button" data-nav-tools>題庫工具</button>
       <button class="nav-item" type="button" data-nav-settings>設定</button>
     </nav>
   </header>
@@ -152,6 +154,10 @@
 
     <section id="statsView" data-view="stats" hidden>
       <div id="statsArea"></div>
+    </section>
+
+    <section id="toolsView" data-view="tools" hidden>
+      <div id="toolsArea"></div>
     </section>
 
     <section id="settingsView" data-view="settings" hidden>
