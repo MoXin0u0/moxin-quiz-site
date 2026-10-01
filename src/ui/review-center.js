@@ -4,67 +4,95 @@ export function renderReviewCenter(container, groups) {
   const totalFavorite = groups.reduce((sum, group) => sum + group.counts.favorite, 0);
   const totalUnfamiliar = groups.reduce((sum, group) => sum + group.counts.unfamiliar, 0);
 
-  container.innerHTML = `
-    <section class="hero-card review-hero">
-      <div>
-        <p class="eyebrow">Review Center</p>
-        <h2>今日複習</h2>
-        <p>依排程、錯題、收藏與不熟題快速建立複習輪次。每次複習仍以單一題庫進行，避免題庫內容與圖片來源混淆。</p>
-      </div>
-      <div class="review-summary-grid">
-        ${summaryStat('今日到期', totalDue)}
-        ${summaryStat('目前錯題', totalWrong)}
-        ${summaryStat('收藏', totalFavorite)}
-        ${summaryStat('不熟題', totalUnfamiliar)}
-      </div>
-    </section>
+  const focusText = totalDue
+    ? `今天有 ${totalDue} 題排程到期，先把它們完成最有效率。`
+    : totalWrong
+      ? '今天沒有排程到期，可以從錯題開始整理。'
+      : '今天沒有排程壓力，可以自由挑選想加強的內容。';
 
-    <section class="panel">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Review Queues</p>
-          <h2>選擇複習來源</h2>
+  container.innerHTML = `
+    <section class="learning-hero learning-review-hero">
+      <div class="learning-hero-copy">
+        <span class="learning-kicker">今日複習</span>
+        <h2>把今天該記住的，留到明天還能想起來</h2>
+        <p>${escapeHtml(focusText)}</p>
+
+        <div class="learning-focus-strip">
+          ${focusItem('今日到期', totalDue, 'due')}
+          ${focusItem('目前錯題', totalWrong, 'wrong')}
+          ${focusItem('不熟題', totalUnfamiliar, 'unfamiliar')}
+          ${focusItem('收藏', totalFavorite, 'favorite')}
         </div>
       </div>
 
-      <div class="review-bank-list">
-        ${groups.length ? groups.map(renderGroup).join('') : `
-          <div class="empty-state">
-            <strong>目前沒有可複習的本機題庫</strong>
-            <p>請先回到「我的題庫」匯入題庫並完成一些練習。</p>
+      <div class="learning-review-focus">
+        <div class="learning-review-orbit">
+          <div class="learning-review-orbit-core">
+            <span>今日重點</span>
+            <strong>${totalDue || totalWrong || totalUnfamiliar || 0}</strong>
+            <small>${totalDue ? '排程到期' : totalWrong ? '錯題待整理' : totalUnfamiliar ? '不熟題' : '自由複習'}</small>
           </div>
-        `}
+        </div>
+        <p>先處理最需要記憶鞏固的題目，再依自己的狀況補強。</p>
       </div>
     </section>
+
+    <section class="learning-section-head">
+      <div>
+        <span class="learning-kicker">複習路線</span>
+        <h2>依題庫選擇今天的複習方式</h2>
+        <p>每次仍以單一題庫進行，圖片與學習紀錄都會保持正確關聯。</p>
+      </div>
+    </section>
+
+    <div class="review-bank-list learning-review-list">
+      ${groups.length ? groups.map(renderGroup).join('') : `
+        <div class="learning-empty">
+          <div class="learning-empty-icon" aria-hidden="true">↻</div>
+          <strong>目前沒有可複習的本機題庫</strong>
+          <p>先到「我的題庫」完成一些練習，這裡就會開始累積你的複習路線。</p>
+        </div>
+      `}
+    </div>
   `;
 }
 
 function renderGroup(group) {
   return `
-    <article class="review-bank-card">
-      <div class="review-bank-heading">
+    <article class="review-bank-card learning-review-bank">
+      <header class="learning-bank-header">
+        <div class="learning-bank-symbol" aria-hidden="true">▤</div>
         <div>
-          <span class="bank-id">${escapeHtml(group.bank.id)}</span>
+          <span class="learning-bank-id">${escapeHtml(group.bank.id)}</span>
           <h3>${escapeHtml(group.bank.name || group.bank.title || group.bank.id)}</h3>
+          <p>${group.questionCount} 題可供學習</p>
         </div>
-        <span class="schema-chip">${group.questionCount} 題</span>
-      </div>
+      </header>
 
-      <div class="review-mode-grid">
-        ${reviewMode(group, 'due', '今日到期', group.counts.due, '依間隔複習排程')}
-        ${reviewMode(group, 'wrong', '目前錯題', group.counts.wrong, '最後一次作答仍為錯誤')}
-        ${reviewMode(group, 'favorite', '收藏', group.counts.favorite, '你手動收藏的題目')}
-        ${reviewMode(group, 'unfamiliar', '不熟題', group.counts.unfamiliar, '你手動標記為不熟')}
+      <div class="review-mode-grid learning-review-mode-grid">
+        ${reviewMode(group, 'due', '今日到期', group.counts.due, '依間隔複習排程', '↻')}
+        ${reviewMode(group, 'wrong', '錯題整理', group.counts.wrong, '最後一次作答仍為錯誤', '×')}
+        ${reviewMode(group, 'unfamiliar', '不熟題', group.counts.unfamiliar, '你手動標記為不熟', '?')}
+        ${reviewMode(group, 'favorite', '收藏題', group.counts.favorite, '你想再次看的題目', '☆')}
       </div>
     </article>
   `;
 }
 
-function reviewMode(group, mode, label, count, description) {
+function reviewMode(group, mode, label, count, description, icon) {
+  const total = Math.max(1, Number(group.questionCount) || 1);
+  const ratio = Math.min(100, Math.round((Number(count) || 0) / total * 100));
+
   return `
-    <div class="review-mode-card">
-      <span>${escapeHtml(label)}</span>
-      <strong>${count}</strong>
+    <div class="review-mode-card learning-review-mode ${mode}" style="--review-ratio:${ratio}%">
+      <div class="learning-review-mode-top">
+        <span class="learning-mode-icon" aria-hidden="true">${escapeHtml(icon)}</span>
+        <div>
+          <span>${escapeHtml(label)}</span>
+          <strong>${count}</strong>
+        </div>
+      </div>
+      <div class="learning-mini-progress" aria-hidden="true"><i></i></div>
       <small>${escapeHtml(description)}</small>
       <button
         class="button ${mode === 'due' ? 'primary' : 'secondary'}"
@@ -72,13 +100,18 @@ function reviewMode(group, mode, label, count, description) {
         data-review-bank="${escapeAttr(group.bank.id)}"
         data-review-mode="${escapeAttr(mode)}"
         ${count ? '' : 'disabled'}
-      >開始複習</button>
+      >${count ? '開始複習' : '目前沒有題目'}</button>
     </div>
   `;
 }
 
-function summaryStat(label, value) {
-  return `<div><span>${escapeHtml(label)}</span><strong>${value}</strong></div>`;
+function focusItem(label, value, kind) {
+  return `
+    <div class="learning-focus-item ${kind}">
+      <span>${escapeHtml(label)}</span>
+      <strong>${value}</strong>
+    </div>
+  `;
 }
 
 function escapeHtml(value) {

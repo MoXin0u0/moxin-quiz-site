@@ -62,40 +62,71 @@
 
   <main class="app-main">
     <section id="libraryView" data-view="library">
-      <section class="hero-card">
-        <div>
-          <p class="eyebrow">Question Bank Package</p>
-          <h2>我的題庫</h2>
-          <p>依題庫來源分成作者提供與自行新增；加入後都儲存在瀏覽器 IndexedDB，可離線練習。</p>
-        </div>
-        <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
-      </section>
+      <section class="learning-hero learning-hero-library">
+        <div class="learning-hero-copy">
+          <span class="learning-kicker">我的學習空間</span>
+          <h2>從一個題庫開始，建立今天的學習節奏</h2>
+          <p>挑選想練習的內容，完成題目後再回到複習與統計，讓每一次作答都留下進步的軌跡。</p>
 
-      <section class="panel library-source-panel" aria-labelledby="librarySourceTitle">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Library Source</p>
-            <h2 id="librarySourceTitle">題庫來源</h2>
+          <div class="learning-hero-actions" aria-label="學習捷徑">
+            <button class="learning-action primary" type="button" data-nav-review>
+              <span class="learning-action-icon" aria-hidden="true">↻</span>
+              <span><strong>今日複習</strong><small>處理到期與不熟題</small></span>
+            </button>
+            <button class="learning-action" type="button" data-nav-exam>
+              <span class="learning-action-icon" aria-hidden="true">▣</span>
+              <span><strong>模擬考</strong><small>檢查目前掌握程度</small></span>
+            </button>
+            <button class="learning-action" type="button" data-nav-stats>
+              <span class="learning-action-icon" aria-hidden="true">▥</span>
+              <span><strong>學習統計</strong><small>看看最近的進步</small></span>
+            </button>
           </div>
         </div>
 
-        <div class="library-source-tabs" role="tablist" aria-label="題庫來源">
+        <div class="learning-hero-scene" aria-hidden="true">
+          <div class="learning-scene-glow"></div>
+          <div class="learning-scene-note">今天想先練哪一份？</div>
+          <div class="learning-book-stack">
+            <span class="learning-book book-a">讀</span>
+            <span class="learning-book book-b">練</span>
+            <span class="learning-book book-c">複</span>
+          </div>
+          <div class="learning-scene-path">
+            <span>選題庫</span><i></i><span>練習</span><i></i><span>複習</span>
+          </div>
+        </div>
+
+        <div class="learning-storage-row">
+          <span class="learning-storage-dot" aria-hidden="true"></span>
+          <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
+        </div>
+      </section>
+
+      <section class="learning-section-head" aria-labelledby="librarySourceTitle">
+        <div>
+          <span class="learning-kicker">題庫收藏</span>
+          <h2 id="librarySourceTitle">選擇今天要學的內容</h2>
+          <p>作者提供的題庫可以直接加入；自己整理的題庫則保存在「自行新增」。</p>
+        </div>
+
+        <div class="library-source-tabs learning-source-tabs" role="tablist" aria-label="題庫來源">
           <button class="source-tab is-active" type="button" role="tab" aria-selected="true" data-library-source-tab="author">作者題庫</button>
           <button class="source-tab" type="button" role="tab" aria-selected="false" data-library-source-tab="user">自行新增</button>
         </div>
       </section>
 
       <div id="authorLibraryPanel" data-library-source-panel="author">
-        <section class="panel" aria-labelledby="authorLibraryTitle">
-          <div class="section-heading">
+        <section class="learning-content-card learning-bank-section" aria-labelledby="authorLibraryTitle">
+          <div class="section-heading learning-card-heading">
             <div>
-              <p class="eyebrow">Curated by Author</p>
+              <span class="learning-kicker">推薦題庫</span>
               <h2 id="authorLibraryTitle">作者題庫</h2>
+              <p class="section-note source-description">由網站維護者整理。加入後會保存在本機，即使離線也能繼續練習。</p>
             </div>
-            <button id="refreshAuthorBanksButton" type="button" class="button secondary">重新整理清單</button>
+            <button id="refreshAuthorBanksButton" type="button" class="button secondary">重新整理</button>
           </div>
-          <p class="section-note source-description">作者題庫由網站維護者整理。只有按下「加入我的題庫」後才會寫入本機 IndexedDB。</p>
-          <div id="authorBankList" class="bank-grid" aria-live="polite"></div>
+          <div id="authorBankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
         </section>
       </div>
 
@@ -103,17 +134,16 @@
         <section class="panel import-panel" aria-labelledby="importTitle">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">匯入中心</p>
-              <h2 id="importTitle">自行新增題庫</h2>
+              <h2 id="importTitle">加入自己的題庫</h2>
+              <p class="section-note">匯入前會先驗證格式；有問題的題庫不會寫入資料庫。</p>
             </div>
-            <p class="section-note">匯入前先驗證；驗證未通過的題庫不會寫入資料庫。</p>
           </div>
 
           <div class="import-grid">
             <label class="import-tile">
               <span class="import-icon" aria-hidden="true">ZIP</span>
               <strong>ZIP / JSON</strong>
-              <span>推薦使用 ZIP，可連同 assets 圖片一起匯入。</span>
+              <span>推薦 ZIP，可連同 assets 圖片一起匯入。</span>
               <input id="bankFileInput" type="file" accept=".zip,.json,application/zip,application/json" />
             </label>
 
@@ -128,15 +158,15 @@
           <div id="inspectionArea" class="inspection-area" aria-live="polite"></div>
         </section>
 
-        <section class="panel" aria-labelledby="libraryTitle">
-          <div class="section-heading">
+        <section class="learning-content-card learning-bank-section" aria-labelledby="libraryTitle">
+          <div class="section-heading learning-card-heading">
             <div>
-              <p class="eyebrow">User Library</p>
+              <span class="learning-kicker">我的收藏</span>
               <h2 id="libraryTitle">自行新增的題庫</h2>
             </div>
             <button id="refreshBanksButton" type="button" class="button secondary">重新整理</button>
           </div>
-          <div id="bankList" class="bank-grid" aria-live="polite"></div>
+          <div id="bankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
         </section>
       </div>
     </section>

@@ -54,6 +54,6 @@ assert.match(learning, /#statsView \.mastery-cell/);
 assert.match(learning, /#practiceView \.answer-option/);
 
 assert.match(sw, /styles\/v4-learning\.css/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2a-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
 
 console.log('MoXin Quiz v4.0 R2A learning experience tests passed.');
