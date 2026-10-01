@@ -1,0 +1,38 @@
+<svg width="360" height="260" viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#102646"/>
+      <stop offset="1" stop-color="#0B1731"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#172F57"/>
+      <stop offset="1" stop-color="#0D1C35"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+  </defs>
+  <rect width="360" height="260" rx="26" fill="url(#bg)"/>
+  <rect x="30" y="28" width="204" height="116" rx="18" fill="url(#sky)"/>
+  <circle cx="190" cy="54" r="20" fill="#FAE2A4"/>
+  <circle cx="198" cy="48" r="20" fill="#132544"/>
+  <circle cx="56" cy="52" r="2.4" fill="#D7E4FF"/>
+  <circle cx="84" cy="78" r="1.8" fill="#D7E4FF"/>
+  <circle cx="120" cy="58" r="1.8" fill="#D7E4FF"/>
+  <circle cx="154" cy="88" r="2.2" fill="#D7E4FF"/>
+  <circle cx="202" cy="84" r="1.8" fill="#D7E4FF"/>
+  <rect x="248" y="164" width="56" height="72" rx="12" fill="#2E364A"/>
+  <rect x="263" y="176" width="26" height="38" rx="9" fill="#F4C67A" fill-opacity="0.82"/>
+  <circle cx="276" cy="194" r="22" fill="#F3B96E" fill-opacity="0.5" filter="url(#glow)"/>
+  <rect x="270" y="156" width="12" height="10" rx="5" fill="#C8D5F8"/>
+  <path d="M255 167H297" stroke="#C7D6F7" stroke-width="4" stroke-linecap="round"/>
+  <rect x="42" y="204" width="268" height="20" rx="10" fill="#2A4A77"/>
+  <rect x="54" y="178" width="88" height="26" rx="10" fill="#5776E7"/>
+  <rect x="68" y="152" width="104" height="26" rx="10" fill="#9A6EEC"/>
+  <rect x="80" y="126" width="82" height="26" rx="10" fill="#2CB49D"/>
+  <path d="M118 102C140 121 164 132 192 138" stroke="#7BC8FF" stroke-width="4" stroke-linecap="round" stroke-opacity="0.5"/>
+  <rect x="258" y="42" width="56" height="56" rx="16" fill="#FFFFFF" fill-opacity="0.06"/>
+  <path d="M270 66C270 58 276 52 284 52H288C296 52 302 58 302 66V86C302 89 300 91 297 91H275C272 91 270 89 270 86V66Z" fill="#7E8EFF"/>
+  <path d="M286 52V91" stroke="#DEE7FF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M276 60H283M289 60H296" stroke="#DEE7FF" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

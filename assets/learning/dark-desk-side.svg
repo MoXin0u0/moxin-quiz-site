@@ -1,0 +1,28 @@
+<svg width="260" height="320" viewBox="0 0 260 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#102747"/>
+      <stop offset="1" stop-color="#081325"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+  <rect width="260" height="320" rx="26" fill="url(#bg)"/>
+  <circle cx="198" cy="74" r="18" fill="#F7E0A2"/>
+  <circle cx="206" cy="68" r="18" fill="#102747"/>
+  <path d="M26 236H232" stroke="#294974" stroke-width="18" stroke-linecap="round"/>
+  <rect x="40" y="206" width="84" height="28" rx="10" fill="#4D6EDF"/>
+  <rect x="56" y="178" width="100" height="28" rx="10" fill="#946AE7"/>
+  <rect x="146" y="170" width="44" height="66" rx="12" fill="#334159"/>
+  <rect x="158" y="182" width="20" height="36" rx="8" fill="#F5C77C" fill-opacity="0.88"/>
+  <circle cx="168" cy="199" r="22" fill="#F2BC72" fill-opacity="0.55" filter="url(#glow)"/>
+  <path d="M140 114C126 92 104 82 79 82C60 82 45 88 34 98" stroke="#335B8E" stroke-width="7" stroke-linecap="round"/>
+  <path d="M70 94L50 126" stroke="#4D6E9D" stroke-width="5" stroke-linecap="round"/>
+  <path d="M84 94L106 128" stroke="#4D6E9D" stroke-width="5" stroke-linecap="round"/>
+  <path d="M64 129C64 111 79 97 97 97C115 97 130 111 130 129V167H64V129Z" fill="#D4B293"/>
+  <ellipse cx="97" cy="128" rx="33" ry="9" fill="#E3C4A7"/>
+  <rect x="82" y="104" width="30" height="35" rx="12" fill="#EFF6FF"/>
+  <path d="M96 104C106 92 118 90 125 94C117 95 113 101 108 108L96 104Z" fill="#79C660"/>
+  <path d="M91 101C84 88 70 84 63 87C70 90 76 96 80 104L91 101Z" fill="#64AF50"/>
+</svg>

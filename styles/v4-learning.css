@@ -33,6 +33,11 @@
   --learn-danger: #c93c4b;
   --learn-shadow: 0 22px 55px rgba(72, 92, 129, .13);
   --learn-shadow-soft: 0 10px 28px rgba(72, 92, 129, .09);
+  --learn-decor-a: url('../assets/learning/light-sun-corner.svg');
+  --learn-decor-b: url('../assets/learning/light-books-side.svg');
+  --learn-decor-opacity: .6;
+  --learn-decor-a-size: min(22vw, 320px);
+  --learn-decor-b-size: min(14vw, 230px);
 
   position: relative;
   isolation: isolate;
@@ -68,6 +73,9 @@ html[data-theme="light"] :is(
   --learn-muted: #65738f;
   --learn-line: #d9e2ef;
   --learn-line-strong: #c4d0e1;
+  --learn-decor-a: url('../assets/learning/light-sun-corner.svg');
+  --learn-decor-b: url('../assets/learning/light-books-side.svg');
+  --learn-decor-opacity: .72;
 }
 
 html[data-theme="dark"] :is(
@@ -98,6 +106,9 @@ html[data-theme="dark"] :is(
   --learn-danger: #ff858f;
   --learn-shadow: 0 24px 64px rgba(0, 0, 0, .28);
   --learn-shadow-soft: 0 10px 30px rgba(0, 0, 0, .20);
+  --learn-decor-a: url('../assets/learning/dark-moon-lantern.svg');
+  --learn-decor-b: url('../assets/learning/dark-desk-side.svg');
+  --learn-decor-opacity: .5;
 
   border-color: rgba(69, 98, 139, .42);
   background:
@@ -139,6 +150,28 @@ html[data-theme="dark"] :is(
 ) > * {
   position: relative;
   z-index: 1;
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--learn-decor-opacity);
+  background-image: var(--learn-decor-a), var(--learn-decor-b);
+  background-repeat: no-repeat, no-repeat;
+  background-size: var(--learn-decor-a-size) auto, var(--learn-decor-b-size) auto;
+  background-position: calc(100% - 1.25rem) 8rem, 1.1rem calc(100% - 1.2rem);
+  filter: saturate(1.02);
 }
 
 /* ------------------------------------------------------------
@@ -224,6 +257,7 @@ html[data-theme="dark"] .main-nav .nav-item:is(
 
 .learning-hero {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(260px, .75fr);
   gap: clamp(1rem, 3vw, 2rem);
@@ -251,6 +285,11 @@ html[data-theme="dark"] .learning-hero {
 .learning-hero-copy {
   min-width: 0;
   align-self: center;
+}
+
+.learning-hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .learning-hero-copy h2 {
@@ -555,6 +594,7 @@ html[data-theme="dark"] .learning-hero-scene {
 
 .learning-storage-row {
   position: absolute;
+  z-index: 2;
   right: 1.35rem;
   bottom: 1rem;
   left: 1.35rem;
@@ -1320,11 +1360,94 @@ html[data-theme="dark"] .learning-hero-scene {
   background: color-mix(in srgb, var(--learn-rose) 12%, var(--learn-surface));
 }
 
+
+/* ------------------------------------------------------------
+ * Decorative imagery
+ * ---------------------------------------------------------- */
+
+#libraryView {
+  --learn-decor-a-size: min(24vw, 340px);
+  --learn-decor-b-size: min(14vw, 235px);
+}
+
+#reviewView,
+#statsView {
+  --learn-decor-a-size: min(21vw, 300px);
+  --learn-decor-b-size: min(13vw, 210px);
+}
+
+#examCenterView,
+#examView,
+#bankDetailView,
+#practiceView {
+  --learn-decor-a-size: min(18vw, 260px);
+  --learn-decor-b-size: min(12vw, 180px);
+}
+
+.learning-hero-scene::before,
+.learning-review-focus::before,
+.learning-accuracy-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: .24;
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: min(62%, 220px) auto;
+}
+
+html[data-theme="light"] .learning-hero-scene::before {
+  background-image: url('../assets/learning/light-books-side.svg');
+}
+
+html[data-theme="dark"] .learning-hero-scene::before {
+  background-image: url('../assets/learning/dark-desk-side.svg');
+  opacity: .18;
+}
+
+html[data-theme="light"] .learning-review-focus::before,
+html[data-theme="light"] .learning-accuracy-card::before {
+  background-image: url('../assets/learning/light-sun-corner.svg');
+  background-size: min(54%, 180px) auto;
+  opacity: .16;
+}
+
+html[data-theme="dark"] .learning-review-focus::before,
+html[data-theme="dark"] .learning-accuracy-card::before {
+  background-image: url('../assets/learning/dark-moon-lantern.svg');
+  background-size: min(56%, 190px) auto;
+  opacity: .14;
+}
+
+.learning-hero-scene > *,
+.learning-review-focus > *,
+.learning-accuracy-card > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* ------------------------------------------------------------
  * Responsive
  * ---------------------------------------------------------- */
 
 @media (max-width: 1100px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::after {
+    background-position: calc(100% - .75rem) 7rem, .75rem calc(100% - .75rem);
+    background-size: min(26vw, 280px) auto, min(16vw, 200px) auto;
+    opacity: calc(var(--learn-decor-opacity) - .08);
+  }
+
   .learning-hero,
   .learning-hero-library,
   .learning-review-hero,
@@ -1335,6 +1458,11 @@ html[data-theme="dark"] .learning-hero-scene {
 
   .learning-hero-scene {
     min-height: 190px;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    min-height: 200px;
   }
 
   .learning-exam-card {
@@ -1367,6 +1495,20 @@ html[data-theme="dark"] .learning-hero-scene {
     min-height: calc(100vh - 8rem);
     padding: .65rem;
     border-radius: 20px;
+  }
+
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::after {
+    background-position: calc(100% - .55rem) 6.5rem, .65rem calc(100% - .65rem);
+    background-size: min(31vw, 250px) auto, min(21vw, 160px) auto;
+    opacity: .34;
   }
 
   .main-nav .nav-item[data-nav-tools] {
@@ -1409,6 +1551,21 @@ html[data-theme="dark"] .learning-hero-scene {
 }
 
 @media (max-width: 760px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::after {
+    background-image: var(--learn-decor-a);
+    background-position: calc(100% - .5rem) calc(100% - .5rem);
+    background-size: min(42vw, 220px) auto;
+    opacity: .2;
+  }
+
   .learning-hero {
     padding: 1rem;
     border-radius: 19px;
@@ -1416,6 +1573,23 @@ html[data-theme="dark"] .learning-hero-scene {
 
   .learning-hero-copy h2 {
     max-width: none;
+  }
+
+  .learning-hero-scene {
+    order: 3;
+    min-height: 175px;
+  }
+
+  .learning-scene-note {
+    top: 16px;
+    left: 16px;
+    max-width: 9.5rem;
+  }
+
+  .learning-book-stack {
+    right: 18px;
+    bottom: 44px;
+    left: 18px;
   }
 
   .learning-hero-actions,
@@ -1446,9 +1620,30 @@ html[data-theme="dark"] .learning-hero-scene {
   .learning-source-tabs .source-tab {
     flex: 1 1 0;
   }
+
+  .learning-action {
+    min-height: 64px;
+  }
+
+  .learning-review-focus {
+    min-height: 0;
+    padding-block: 1.2rem;
+  }
 }
 
 @media (max-width: 520px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::after {
+    display: none;
+  }
+
   .learning-hero-actions,
   .learning-focus-strip,
   .learning-focus-strip.exam,
@@ -1466,7 +1661,41 @@ html[data-theme="dark"] .learning-hero-scene {
   }
 
   .learning-hero-scene {
-    min-height: 170px;
+    min-height: 160px;
+  }
+
+  .learning-hero-scene::before {
+    background-size: min(48%, 140px) auto;
+    opacity: .14;
+  }
+
+  .learning-scene-note {
+    top: 12px;
+    left: 12px;
+    padding: .45rem .55rem;
+    max-width: 8rem;
+    font-size: .67rem;
+  }
+
+  .learning-book-stack {
+    right: 12px;
+    bottom: 36px;
+    left: 12px;
+    gap: .3rem;
+  }
+
+  .learning-book {
+    height: 29px;
+    padding: 0 .8rem;
+    font-size: .95rem;
+  }
+
+  .learning-scene-path {
+    right: 12px;
+    bottom: 10px;
+    left: 12px;
+    gap: .3rem;
+    font-size: .62rem;
   }
 
   .learning-review-orbit,

@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2b-1';
+const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2c-1';
 const APP_SHELL = [
   './index.html',
   './v3.html',
@@ -19,6 +19,10 @@ const APP_SHELL = [
   './assets/pwa/icon-192.png',
   './assets/pwa/icon-512.png',
   './assets/pwa/icon-maskable-512.png',
+  './assets/learning/light-sun-corner.svg',
+  './assets/learning/light-books-side.svg',
+  './assets/learning/dark-moon-lantern.svg',
+  './assets/learning/dark-desk-side.svg',
 
   './src/app/config.js',
   './src/app/main.js',
