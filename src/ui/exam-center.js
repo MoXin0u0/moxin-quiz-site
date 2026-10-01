@@ -18,6 +18,7 @@ export function renderExamCenter(container, groups) {
       </div>
 
       <div class="learning-exam-flow learning-scene-panel learning-scene-exam" data-learning-scene="exam" aria-label="模擬考流程">
+        <div class="learning-scene-art" data-scene-art="exam" aria-hidden="true"></div>
         <div class="learning-scene-panel-heading">
           <span>考場流程</span>
           <small>設定完成後，專注把一場考試做完</small>

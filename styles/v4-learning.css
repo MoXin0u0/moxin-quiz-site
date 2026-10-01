@@ -4181,3 +4181,199 @@ html[data-theme="dark"] #libraryView .learning-art-slot {
 html[data-reduce-motion="true"] .learning-scene-panel::before {
   animation: none !important;
 }
+
+/* ============================================================
+ * v4.0 R2G — Learning Scene Integration
+ * Real scene assets enter only through the bounded scene slots.
+ * ========================================================== */
+
+html[data-theme="light"] #libraryView {
+  --learning-scene-image: url('../assets/learning/scenes/library-light.webp');
+}
+
+html[data-theme="dark"] #libraryView {
+  --learning-scene-image: url('../assets/learning/scenes/library-dark.webp');
+}
+
+html[data-theme="light"] #reviewView {
+  --learning-scene-image: url('../assets/learning/scenes/review-light.webp');
+}
+
+html[data-theme="dark"] #reviewView {
+  --learning-scene-image: url('../assets/learning/scenes/review-dark.webp');
+}
+
+html[data-theme="light"] #examCenterView {
+  --learning-scene-image: url('../assets/learning/scenes/exam-light.webp');
+}
+
+html[data-theme="dark"] #examCenterView {
+  --learning-scene-image: url('../assets/learning/scenes/exam-dark.webp');
+}
+
+html[data-theme="light"] #statsView {
+  --learning-scene-image: url('../assets/learning/scenes/stats-light.webp');
+}
+
+html[data-theme="dark"] #statsView {
+  --learning-scene-image: url('../assets/learning/scenes/stats-dark.webp');
+}
+
+.learning-scene-art {
+  position: absolute;
+  z-index: 0 !important;
+  pointer-events: none;
+  user-select: none;
+  background-image: var(--learning-scene-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transform: translateZ(0);
+}
+
+/* Library gets the strongest artwork because this slot contains no data
+ * that needs to be read through the image. */
+#libraryView .learning-art-slot .learning-scene-art {
+  inset: .45rem .45rem 2.9rem;
+  border-radius: calc(20px - .35rem);
+  background-position: center bottom;
+  background-size: contain;
+  opacity: .94;
+  filter: saturate(1.03) contrast(1.02);
+}
+
+#libraryView .learning-art-ambient,
+#libraryView .learning-art-focus {
+  display: none;
+}
+
+#libraryView .learning-art-slot {
+  background-image:
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-page-accent) 8%, transparent), transparent 52%),
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--learn-page-warm) 13%, transparent), transparent 26%),
+    linear-gradient(145deg, var(--learn-surface-tint), var(--learn-surface-soft));
+}
+
+html[data-theme="dark"] #libraryView .learning-art-slot {
+  background-image:
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-page-accent) 10%, transparent), transparent 54%),
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--learn-page-warm) 10%, transparent), transparent 25%),
+    linear-gradient(145deg, #173354, #10233e);
+}
+
+#libraryView .learning-scene-path {
+  z-index: 3;
+  background: color-mix(in srgb, var(--learn-surface-strong) 88%, transparent);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--learn-page-accent) 9%, transparent);
+}
+
+html[data-theme="dark"] #libraryView .learning-scene-path {
+  background: color-mix(in srgb, #10233e 86%, transparent);
+}
+
+/* Review / exam / stats keep their real data as the foreground. The artwork
+ * lives on the right side with a fade mask, so readability always wins. */
+.learning-scene-panel .learning-scene-art {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 64%;
+  opacity: .3;
+  background-position: center;
+  background-size: cover;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.28) 24%, #000 68%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.28) 24%, #000 68%);
+  filter: saturate(.95) contrast(1.02);
+}
+
+html[data-theme="dark"] .learning-scene-panel .learning-scene-art {
+  opacity: .34;
+  filter: saturate(1.05) contrast(1.04) brightness(.92);
+}
+
+.learning-scene-panel > :not(.learning-scene-art) {
+  position: relative;
+  z-index: 2;
+}
+
+.learning-scene-review .learning-scene-art {
+  width: 68%;
+  background-position: 62% center;
+}
+
+.learning-scene-exam .learning-scene-art {
+  width: 72%;
+  background-position: 54% center;
+  opacity: .27;
+}
+
+html[data-theme="dark"] .learning-scene-exam .learning-scene-art {
+  opacity: .31;
+}
+
+.learning-scene-stats .learning-scene-art {
+  width: 66%;
+  background-position: 54% center;
+  opacity: .23;
+}
+
+html[data-theme="dark"] .learning-scene-stats .learning-scene-art {
+  opacity: .28;
+}
+
+/* Functional elements receive just enough surface opacity to remain clear
+ * over the art without feeling like opaque admin cards. */
+#reviewView .learning-review-orbit-core,
+#statsView .learning-accuracy-ring > div {
+  background: color-mix(in srgb, var(--learn-surface-strong) 94%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+#examCenterView .learning-flow-step {
+  background: color-mix(in srgb, var(--learn-surface-strong) 90%, transparent);
+  backdrop-filter: blur(7px);
+}
+
+.learning-scene-panel-heading {
+  max-width: 22rem;
+  padding: .42rem .5rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--learn-surface-strong) 84%, transparent), transparent);
+}
+
+/* Tablet: show the art, but let it step back. */
+@media (max-width: 1180px) and (min-width: 761px) {
+  #libraryView .learning-art-slot .learning-scene-art {
+    inset: .45rem .35rem 2.75rem;
+    opacity: .84;
+  }
+
+  .learning-scene-panel .learning-scene-art {
+    width: 58%;
+    opacity: .21;
+  }
+
+  html[data-theme="dark"] .learning-scene-panel .learning-scene-art {
+    opacity: .25;
+  }
+}
+
+/* Mobile stays content-first. The library art slot is already removed by
+ * R2D, and secondary scene art is hidden to prevent clipping or layout noise. */
+@media (max-width: 760px) {
+  .learning-scene-panel .learning-scene-art {
+    display: none;
+  }
+
+  .learning-scene-panel-heading {
+    max-width: none;
+    padding: 0;
+    background: none;
+  }
+}
+
+@media (prefers-reduced-data: reduce) {
+  .learning-scene-art {
+    display: none !important;
+  }
+}

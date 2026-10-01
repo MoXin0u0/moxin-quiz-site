@@ -24,6 +24,7 @@ export function renderLearningStats(container, data) {
       </div>
 
       <div class="learning-accuracy-card learning-scene-panel learning-scene-stats" data-learning-scene="stats">
+        <div class="learning-scene-art" data-scene-art="stats" aria-hidden="true"></div>
         <div class="learning-scene-panel-heading">
           <span>整體掌握</span>
           <small>用真實作答紀錄看目前狀態</small>
