@@ -2,7 +2,7 @@ export const APP_CONFIG = Object.freeze({
   appName: 'MoXin Quiz',
   schemaVersion: '2.0',
   dbName: 'moxin-quiz-v3',
-  dbVersion: 2,
+  dbVersion: 3,
   legacyStoragePrefix: 'moxin.',
   packageLimits: Object.freeze({
     maxZipBytes: 100 * 1024 * 1024,
