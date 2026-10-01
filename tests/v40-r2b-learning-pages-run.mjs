@@ -13,7 +13,7 @@ assert.equal(index, v3);
 
 assert.match(index, /learning-hero-library/);
 assert.match(index, /learning-hero-actions/);
-assert.match(index, /learning-book-stack/);
+assert.match(index, /learning-art-slot-library/);
 assert.match(index, /data-nav-review/);
 assert.match(index, /data-nav-exam/);
 assert.match(index, /data-nav-stats/);

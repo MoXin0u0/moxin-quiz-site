@@ -28,7 +28,7 @@ assert.match(css, /display: none;/);
 assert.match(css, /learning-scene-note/);
 assert.match(css, /learning-book-stack/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2c-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
 assert.match(sw, /assets\/learning\/light-sun-corner\.svg/);
 assert.match(sw, /assets\/learning\/dark-desk-side\.svg/);
 

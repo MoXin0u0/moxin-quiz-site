@@ -1724,3 +1724,706 @@ html[data-theme="dark"] .learning-accuracy-card::before {
     grid-column: auto;
   }
 }
+
+/* ============================================================
+ * v4.0 R2D — Learning Layout Polish
+ * Layout first: full-width desktop composition, stable art slots,
+ * and mobile-first reflow. Legacy R2C decorative SVG layers are
+ * intentionally suppressed until final illustration assets land.
+ * ========================================================== */
+
+/* Give learner-facing pages the available desktop canvas instead of
+ * stopping at the old 1500px app shell. Tooling keeps its old width. */
+@media (min-width: 941px) {
+  .app-main {
+    width: calc(100% - var(--sidebar-width));
+    max-width: none;
+    box-sizing: border-box;
+    padding: clamp(.9rem, 1.35vw, 1.5rem);
+  }
+
+  [data-view="tools"],
+  [data-view="settings"] {
+    width: 100%;
+    max-width: 1500px;
+    margin-right: auto;
+  }
+
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  ) {
+    width: 100%;
+    max-width: 1800px;
+    margin-inline: auto;
+  }
+}
+
+/* R2C's temporary page-background illustrations are kept in the repo for
+ * compatibility, but no longer painted behind the page. Final artwork will
+ * enter through a bounded .learning-art-slot instead. */
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after,
+.learning-hero-scene::before,
+.learning-review-focus::before,
+.learning-accuracy-card::before {
+  display: none;
+}
+
+/* ------------------------------------------------------------
+ * Hero composition and future-proof art slot
+ * ---------------------------------------------------------- */
+
+.learning-hero {
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, .72fr);
+  min-height: 278px;
+  gap: clamp(1.1rem, 2.4vw, 2.25rem);
+  padding: clamp(1.25rem, 2.35vw, 2.15rem);
+}
+
+.learning-hero-copy {
+  max-width: 860px;
+}
+
+.learning-hero-copy h2 {
+  max-width: 21ch;
+  font-size: clamp(1.8rem, 2.55vw, 2.72rem);
+}
+
+.learning-hero-copy > p {
+  max-width: 68ch;
+}
+
+.learning-hero-library {
+  grid-template-columns: minmax(0, 1.5fr) clamp(320px, 27vw, 450px);
+  padding-bottom: clamp(3.3rem, 4vw, 4rem);
+}
+
+.learning-art-slot {
+  --learning-art-image: none;
+  position: relative;
+  isolation: isolate;
+  min-height: 232px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 86%, transparent);
+  border-radius: 22px;
+  background-image:
+    var(--learning-art-image),
+    radial-gradient(circle at 74% 27%, color-mix(in srgb, var(--learn-gold) 20%, transparent), transparent 22%),
+    radial-gradient(circle at 30% 74%, color-mix(in srgb, var(--learn-primary) 17%, transparent), transparent 31%),
+    linear-gradient(145deg, var(--learn-surface-tint), var(--learn-surface-soft));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 30%, transparent);
+}
+
+html[data-theme="dark"] .learning-art-slot {
+  background-image:
+    var(--learning-art-image),
+    radial-gradient(circle at 75% 28%, rgba(238, 183, 92, .13), transparent 23%),
+    radial-gradient(circle at 30% 76%, rgba(99, 121, 255, .20), transparent 32%),
+    linear-gradient(145deg, #173354, #10233e);
+}
+
+.learning-art-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.learning-art-ambient::before,
+.learning-art-ambient::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(1px);
+}
+
+.learning-art-ambient::before {
+  top: 16%;
+  right: 12%;
+  width: clamp(72px, 8vw, 116px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, color-mix(in srgb, var(--learn-gold) 24%, transparent), transparent 68%);
+}
+
+.learning-art-ambient::after {
+  bottom: 21%;
+  left: 11%;
+  width: clamp(120px, 13vw, 190px);
+  height: 54px;
+  border: 1px solid color-mix(in srgb, var(--learn-primary) 22%, transparent);
+  background: color-mix(in srgb, var(--learn-primary) 7%, transparent);
+  transform: rotate(-8deg);
+}
+
+.learning-art-focus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(88px, 8vw, 126px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -54%);
+}
+
+.learning-art-focus-dot,
+.learning-art-focus-ring {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.learning-art-focus-dot {
+  width: 22%;
+  aspect-ratio: 1;
+  background: linear-gradient(145deg, var(--learn-primary), var(--learn-primary-2));
+  box-shadow: 0 0 30px color-mix(in srgb, var(--learn-primary) 35%, transparent);
+}
+
+.learning-art-focus-ring {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--learn-primary) 34%, transparent);
+  box-shadow:
+    0 0 0 18px color-mix(in srgb, var(--learn-primary) 5%, transparent),
+    0 0 0 40px color-mix(in srgb, var(--learn-cyan) 3%, transparent);
+}
+
+.learning-scene-path {
+  z-index: 2;
+  right: clamp(1rem, 2vw, 1.4rem);
+  bottom: 1rem;
+  left: clamp(1rem, 2vw, 1.4rem);
+  padding: .42rem .58rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 78%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 74%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+/* Old bar/book placeholder no longer participates in layout. */
+.learning-scene-glow,
+.learning-scene-note,
+.learning-book-stack {
+  display: none;
+}
+
+/* ------------------------------------------------------------
+ * Desktop density: use horizontal room instead of tall stacking
+ * ---------------------------------------------------------- */
+
+@media (min-width: 1280px) {
+  .learning-section-head {
+    margin-top: 1.2rem;
+  }
+
+  .learning-exam-list {
+    grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+    align-items: start;
+  }
+
+  .learning-stats-list {
+    grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
+    align-items: start;
+  }
+
+  .learning-exam-card {
+    grid-template-columns: minmax(210px, .72fr) minmax(340px, 1.28fr);
+  }
+}
+
+@media (min-width: 1500px) {
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card {
+    border-radius: 22px;
+  }
+
+  .learning-bank-grid {
+    gap: 1rem;
+  }
+}
+
+/* ------------------------------------------------------------
+ * Tablet: keep hierarchy, reduce art dominance
+ * ---------------------------------------------------------- */
+
+@media (max-width: 1180px) and (min-width: 761px) {
+  .learning-hero,
+  .learning-hero-library,
+  .learning-review-hero,
+  .learning-exam-hero,
+  .learning-stats-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 34%);
+  }
+
+  .learning-hero {
+    min-height: 244px;
+    padding: 1.25rem;
+  }
+
+  .learning-hero-copy h2 {
+    font-size: clamp(1.65rem, 3vw, 2.15rem);
+  }
+
+  .learning-hero-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .learning-action {
+    padding: .62rem;
+  }
+
+  .learning-action small {
+    display: none;
+  }
+
+  .learning-art-slot {
+    min-height: 190px;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    min-height: 190px;
+  }
+
+  .learning-review-mode-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learning-exam-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------
+ * Mobile shell: bottom navigation and content-first composition
+ * ---------------------------------------------------------- */
+
+@media (max-width: 940px) {
+  .app-header {
+    transform: none;
+    filter: none;
+    perspective: none;
+    contain: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--surface);
+  }
+
+  .main-nav {
+    position: fixed !important;
+    z-index: 200;
+    inset: auto 0 0 0 !important;
+    top: auto !important;
+    bottom: 0 !important;
+    transform: none !important;
+    border-top: 1px solid var(--line);
+    border-bottom: 0;
+    background: color-mix(in srgb, var(--surface) 98%, transparent);
+    box-shadow: 0 -10px 30px rgba(12, 20, 35, .12);
+  }
+
+  .app-main {
+    width: min(100% - .75rem, 1180px);
+    padding-top: .55rem;
+  }
+}
+
+@media (max-width: 760px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  ) {
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::before {
+    display: none;
+  }
+
+  .learning-hero,
+  .learning-hero-library,
+  .learning-review-hero,
+  .learning-exam-hero,
+  .learning-stats-hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: .8rem;
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .learning-hero-copy {
+    max-width: none;
+  }
+
+  .learning-hero-copy h2 {
+    max-width: none;
+    margin-top: .3rem;
+    font-size: clamp(1.58rem, 7.2vw, 2rem);
+    line-height: 1.18;
+  }
+
+  .learning-hero-copy > p {
+    font-size: .88rem;
+    line-height: 1.66;
+  }
+
+  .learning-art-slot {
+    display: none;
+  }
+
+  .learning-hero-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .4rem;
+    margin-top: .85rem;
+  }
+
+  .learning-action,
+  .learning-action:last-child {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    place-items: center;
+    min-height: 78px;
+    padding: .5rem .35rem;
+    text-align: center;
+  }
+
+  .learning-action-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .learning-action > span:last-child {
+    justify-items: center;
+  }
+
+  .learning-action strong {
+    font-size: .78rem;
+    white-space: nowrap;
+  }
+
+  .learning-action small {
+    display: none;
+  }
+
+  .learning-storage-row {
+    position: static;
+    grid-column: auto;
+    margin-top: .1rem;
+    padding-top: .65rem;
+    border-top: 1px solid color-mix(in srgb, var(--learn-line) 78%, transparent);
+  }
+
+  .learning-section-head {
+    gap: .65rem;
+    margin: 1rem 0 .6rem;
+    padding-inline: .15rem;
+  }
+
+  .learning-section-head h2 {
+    font-size: 1.25rem;
+  }
+
+  .learning-section-head p {
+    font-size: .82rem;
+  }
+
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card {
+    padding: .8rem;
+    border-radius: 16px;
+  }
+
+  .learning-focus-strip,
+  .learning-focus-strip.exam,
+  .learning-focus-strip.stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .42rem;
+  }
+
+  .learning-focus-strip.exam .learning-focus-item:last-child,
+  .learning-focus-strip.stats .learning-focus-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    min-height: 0;
+    gap: .85rem;
+    padding: .85rem;
+    text-align: left;
+  }
+
+  .learning-review-orbit,
+  .learning-accuracy-ring {
+    width: 116px;
+    height: 116px;
+    flex: 0 0 auto;
+  }
+
+  .learning-review-orbit-core,
+  .learning-accuracy-ring > div {
+    width: 92px;
+    height: 92px;
+  }
+
+  .learning-review-orbit-core strong,
+  .learning-accuracy-ring strong {
+    font-size: 1.55rem;
+  }
+
+  .learning-review-focus > p,
+  .learning-accuracy-card > p {
+    max-width: none;
+    font-size: .76rem;
+    line-height: 1.55;
+  }
+
+  .learning-review-mode-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .48rem;
+  }
+
+  .learning-review-mode {
+    padding: .65rem;
+  }
+
+  .learning-review-mode > small {
+    min-height: 0;
+    font-size: .7rem;
+  }
+
+  .learning-exam-flow {
+    display: flex;
+    gap: .45rem;
+    overflow-x: auto;
+    padding: .65rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .learning-exam-flow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .learning-flow-step {
+    min-width: 128px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .learning-exam-config {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
+  }
+
+  .learning-exam-start {
+    grid-column: 1 / -1;
+  }
+
+  .learning-exam-start .button {
+    width: 100%;
+  }
+
+  .learning-stat-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .learning-mastery-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .app-header {
+    min-height: 60px;
+    padding: .55rem .65rem;
+  }
+
+  .brand-mark {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .brand-block h1 {
+    font-size: .88rem;
+  }
+
+  .main-nav {
+    padding-top: .28rem;
+  }
+
+  .nav-item {
+    min-height: 51px;
+    padding-inline: .1rem;
+    font-size: clamp(.54rem, 2.2vw, .61rem);
+  }
+
+  .nav-item::before {
+    font-size: .95rem;
+  }
+
+  .app-main {
+    width: min(100% - .5rem, 1180px);
+    padding-top: .4rem;
+  }
+
+  .learning-hero {
+    padding: .9rem;
+  }
+
+  .learning-kicker {
+    font-size: .7rem;
+  }
+
+  .learning-hero-copy h2 {
+    font-size: clamp(1.48rem, 7.6vw, 1.82rem);
+  }
+
+  .learning-hero-actions {
+    gap: .32rem;
+  }
+
+  .learning-action {
+    min-height: 72px;
+  }
+
+  .learning-action strong {
+    font-size: .73rem;
+  }
+
+  .learning-focus-strip,
+  .learning-focus-strip.exam,
+  .learning-focus-strip.stats {
+    gap: .34rem;
+  }
+
+  .learning-focus-item {
+    padding: .55rem .58rem;
+  }
+
+  .learning-focus-item strong {
+    font-size: 1.1rem;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .learning-review-orbit,
+  .learning-accuracy-ring {
+    width: 96px;
+    height: 96px;
+  }
+
+  .learning-review-orbit-core,
+  .learning-accuracy-ring > div {
+    width: 76px;
+    height: 76px;
+  }
+
+  .learning-review-orbit-core strong,
+  .learning-accuracy-ring strong {
+    font-size: 1.3rem;
+  }
+
+  .learning-review-orbit-core span,
+  .learning-review-orbit-core small,
+  .learning-accuracy-ring span {
+    font-size: .6rem;
+  }
+
+  .learning-review-mode-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learning-bank-header {
+    gap: .58rem;
+  }
+
+  .learning-bank-symbol {
+    width: 2.45rem;
+    height: 2.45rem;
+  }
+
+  .learning-stat-row {
+    gap: .35rem;
+  }
+
+  .learning-stat-row > div {
+    padding: .5rem;
+  }
+
+  .learning-stat-row span {
+    font-size: .64rem;
+  }
+
+  .learning-stat-row strong {
+    font-size: .98rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .learning-review-mode-grid,
+  .learning-exam-config,
+  .learning-mastery-legend {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-stat-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .learning-stat-row > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
