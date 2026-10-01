@@ -19,18 +19,22 @@ export async function loadAuthorCatalog({
 export async function inspectAuthorBank(entry, { fetchImpl = fetch } = {}) {
   const catalogEntry = normalizeCatalogEntry(entry);
   const source = catalogEntry.source;
-  if (!source?.url) throw new Error(`作者題庫 ${catalogEntry.id} 缺少 source.url。`);
-
-  const response = await fetchImpl(source.url, { cache: 'no-store' });
-  if (!response.ok) {
-    throw new Error(`作者題庫 ${catalogEntry.name} 下載失敗：HTTP ${response.status}`);
-  }
 
   let pkg;
   if (source.kind === 'legacy-json') {
+    if (!source.url) throw new Error(`作者題庫 ${catalogEntry.id} 缺少 source.url。`);
+    const response = await fetchImpl(source.url, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`作者題庫 ${catalogEntry.name} 下載失敗：HTTP ${response.status}`);
+    }
     const data = await response.json();
     pkg = migrateLegacyBank(data);
   } else if (source.kind === 'v2-json') {
+    if (!source.url) throw new Error(`作者題庫 ${catalogEntry.id} 缺少 source.url。`);
+    const response = await fetchImpl(source.url, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`作者題庫 ${catalogEntry.name} 下載失敗：HTTP ${response.status}`);
+    }
     const data = await response.json();
     if (!data?.manifest || !Array.isArray(data.questions)) {
       throw new Error('作者題庫 v2-json 必須包含 manifest 與 questions。');
@@ -38,6 +42,33 @@ export async function inspectAuthorBank(entry, { fetchImpl = fetch } = {}) {
     pkg = {
       manifest: data.manifest,
       questions: data.questions,
+      assets: [],
+      assetPaths: [],
+    };
+  } else if (source.kind === 'v2-package') {
+    if (!source.manifestUrl || !source.questionsUrl) {
+      throw new Error(`作者題庫 ${catalogEntry.id} 缺少 manifestUrl 或 questionsUrl。`);
+    }
+
+    const manifestResponse = await fetchImpl(source.manifestUrl, { cache: 'no-store' });
+    if (!manifestResponse.ok) {
+      throw new Error(`作者題庫 manifest 下載失敗：HTTP ${manifestResponse.status}`);
+    }
+
+    const questionsResponse = await fetchImpl(source.questionsUrl, { cache: 'no-store' });
+    if (!questionsResponse.ok) {
+      throw new Error(`作者題庫 questions 下載失敗：HTTP ${questionsResponse.status}`);
+    }
+
+    const manifest = await manifestResponse.json();
+    const questions = await questionsResponse.json();
+    if (!manifest || !Array.isArray(questions)) {
+      throw new Error('作者題庫 v2-package 格式不完整。');
+    }
+
+    pkg = {
+      manifest,
+      questions,
       assets: [],
       assetPaths: [],
     };
@@ -117,6 +148,8 @@ function normalizeCatalogEntry(entry) {
     source: {
       kind: String(entry.source?.kind || ''),
       url: String(entry.source?.url || ''),
+      manifestUrl: String(entry.source?.manifestUrl || ''),
+      questionsUrl: String(entry.source?.questionsUrl || ''),
     },
   };
 }
