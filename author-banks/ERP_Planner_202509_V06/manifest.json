@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "2.0",
+  "id": "ERP_Planner_202509_V06",
+  "name": "ERP 規劃師題庫 2025.09 V06",
+  "description": "依據既有 ERP 規劃師題庫整理之墨忻刷題網 Schema v2 作者題庫。",
+  "version": "1.2.0",
+  "author": "墨忻",
+  "language": "zh-TW",
+  "questionCount": 443,
+  "createdAt": "2026-06-07T00:00:00.000Z",
+  "updatedAt": "2026-10-01T02:55:41.009Z",
+  "metadata": {
+    "category": "ERP 規劃師",
+    "migratedFrom": "legacy-v1",
+    "sourceType": "author",
+    "legacySource": "questions/ERP_Planner_202509_V06_improved_explanations.json"
+  }
+}
