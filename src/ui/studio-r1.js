@@ -37,6 +37,16 @@ import {
   loadSettings,
   saveSettings,
 } from '../storage/settings.js';
+import {
+  addQuestionImages,
+  duplicateQuestionAssets,
+  findUnusedAssets,
+  getAssetByPath,
+  getAssetUsageSummary,
+  pruneUnusedAssets,
+  removeQuestionImage,
+  replaceQuestionImage,
+} from '../studio/asset-manager.js';
 
 const TYPE_LABELS = Object.freeze({
   'single-choice': '單選題',
@@ -56,6 +66,7 @@ const state = {
   mount: null,
   undo: null,
   undoTimer: null,
+  assetPreviewUrls: new Map(),
 };
 
 export async function mountStudioWorkspace(mount) {
@@ -73,6 +84,7 @@ export async function mountStudioWorkspace(mount) {
 }
 
 async function renderHome() {
+  revokeAllAssetPreviewUrls();
   state.mode = 'home';
   state.draft = null;
   state.activeQuestionId = null;
@@ -186,6 +198,43 @@ function bindWorkspace(mount) {
     const typeButton = event.target.closest('[data-question-type-choice]');
     if (typeButton) return changeCurrentQuestionType(typeButton.dataset.questionTypeChoice);
 
+    const removeImageButton = event.target.closest('[data-studio-remove-image]');
+    if (removeImageButton) {
+      clearUndoState();
+      const current = getActiveQuestion();
+      if (!current) return;
+
+      const field = removeImageButton.dataset.studioImageField;
+      const path = removeImageButton.dataset.studioRemoveImage;
+
+      removeQuestionImage({
+        draft: state.draft,
+        questionId: current.id,
+        field,
+        path,
+      });
+      reconcileAssetPreviewUrls();
+      await persistDraftNow();
+      renderEditor();
+      setStatus('圖片已移除。', 'ok');
+      return;
+    }
+
+    if (event.target.closest('[data-studio-clean-unused-assets]')) {
+      clearUndoState();
+      const unused = findUnusedAssets(state.draft);
+      if (!unused.length) return;
+
+      if (!confirm(`確定清理 ${unused.length} 個未被任何題目引用的圖片資產？`)) return;
+
+      pruneUnusedAssets(state.draft);
+      reconcileAssetPreviewUrls();
+      await persistDraftNow();
+      renderEditor();
+      setStatus(`已清理 ${unused.length} 個未使用圖片。`, 'ok');
+      return;
+    }
+
     if (event.target.closest('[data-studio-add-question]')) {
       clearUndoState();
       state.draft.questions.push(createQuestion('single-choice', state.draft.questions));
@@ -200,6 +249,18 @@ function bindWorkspace(mount) {
       const current = getActiveQuestion();
       if (!current) return;
       const copy = duplicateQuestion(current, state.draft.questions);
+      try {
+        duplicateQuestionAssets({
+          draft: state.draft,
+          sourceQuestion: current,
+          targetQuestion: copy,
+        });
+      } catch (error) {
+        console.error(error);
+        setStatus(`複製題目圖片失敗：${error.message}`, 'error');
+        return;
+      }
+
       const index = state.draft.questions.findIndex(question => question.id === current.id);
       state.draft.questions.splice(index + 1, 0, copy);
       state.activeQuestionId = copy.id;
@@ -216,6 +277,8 @@ function bindWorkspace(mount) {
 
       const index = state.draft.questions.findIndex(question => question.id === current.id);
       state.draft.questions = removeQuestion(state.draft.questions, current.id);
+      pruneUnusedAssets(state.draft);
+      reconcileAssetPreviewUrls();
       state.activeQuestionId =
         state.draft.questions[Math.min(index, state.draft.questions.length - 1)]?.id || null;
 
@@ -304,12 +367,60 @@ function bindWorkspace(mount) {
     scheduleInspectorUpdate();
   });
 
-  mount.addEventListener('change', event => {
+  mount.addEventListener('change', async event => {
     if (state.mode !== 'editor' || !state.draft) return;
+
+    const addImagesInput = event.target.closest('[data-studio-image-input]');
+    if (addImagesInput) {
+      const files = addImagesInput.files;
+      const field = addImagesInput.dataset.studioImageInput;
+      addImagesInput.value = '';
+      if (files?.length) await addImagesToActiveQuestion(field, files);
+      return;
+    }
+
+    const replaceImageInput = event.target.closest('[data-studio-replace-image]');
+    if (replaceImageInput) {
+      const file = replaceImageInput.files?.[0];
+      const field = replaceImageInput.dataset.studioImageField;
+      const path = replaceImageInput.dataset.studioReplaceImage;
+      replaceImageInput.value = '';
+      if (file) await replaceActiveQuestionImage(field, path, file);
+      return;
+    }
+
     if (!applyInputToDraft(event.target)) return;
     clearUndoState();
     scheduleAutosave();
     scheduleInspectorUpdate();
+  });
+
+  mount.addEventListener('dragover', event => {
+    const zone = event.target.closest('[data-studio-image-drop]');
+    if (!zone || state.mode !== 'editor' || !state.draft) return;
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+    zone.classList.add('is-dragover');
+  });
+
+  mount.addEventListener('dragleave', event => {
+    const zone = event.target.closest('[data-studio-image-drop]');
+    if (!zone) return;
+    if (event.relatedTarget && zone.contains(event.relatedTarget)) return;
+    zone.classList.remove('is-dragover');
+  });
+
+  mount.addEventListener('drop', async event => {
+    const zone = event.target.closest('[data-studio-image-drop]');
+    if (!zone || state.mode !== 'editor' || !state.draft) return;
+
+    event.preventDefault();
+    zone.classList.remove('is-dragover');
+
+    const files = event.dataTransfer?.files;
+    if (files?.length) {
+      await addImagesToActiveQuestion(zone.dataset.studioImageDrop, files);
+    }
   });
 }
 
@@ -572,6 +683,7 @@ function renderEditor() {
 
   state.mode = 'editor';
   state.draft = normalizeDraftForEditor(state.draft);
+  reconcileAssetPreviewUrls();
 
   const question = getActiveQuestion() || state.draft.questions[0] || null;
   if (question) state.activeQuestionId = question.id;
@@ -623,6 +735,8 @@ function renderEditor() {
           <div data-studio-validation-panel>${renderValidationPanel(report, question)}</div>
         </aside>
       </div>
+
+      ${renderAssetSummary()}
 
       <footer class="studio-r1-export-bar">
         <div>
@@ -725,6 +839,13 @@ function renderQuestionEditor(question) {
         <textarea rows="5" data-question-field="question" placeholder="輸入題目敘述…">${escapeHtml(question.question || '')}</textarea>
       </label>
 
+      ${renderMediaEditor(
+        question,
+        'images',
+        '題目圖片',
+        '顯示在題目敘述下方，可拖曳多張圖片加入。',
+      )}
+
       <section class="studio-r1-answer-section">
         <div class="studio-r1-section-title">
           <div><span>答案</span><h3>設定正確答案</h3></div>
@@ -764,6 +885,15 @@ function renderQuestionEditor(question) {
             <span>詳解</span>
             <textarea rows="5" data-question-field="explanation" placeholder="輸入詳解、觀念或解題提示…">${escapeHtml(question.explanation || '')}</textarea>
           </label>
+
+          <div class="studio-r1-span-2">
+            ${renderMediaEditor(
+              question,
+              'explanationImages',
+              '詳解圖片',
+              '用於補充解題步驟、圖表或觀念說明。',
+            )}
+          </div>
         </div>
       </details>
     </section>
@@ -822,6 +952,216 @@ function renderAnswerEditor(question) {
   `;
 }
 
+async function addImagesToActiveQuestion(field, files) {
+  const current = getActiveQuestion();
+  if (!current || !state.draft) return;
+
+  clearUndoState();
+
+  try {
+    const added = addQuestionImages({
+      draft: state.draft,
+      questionId: current.id,
+      field,
+      files,
+    });
+
+    await persistDraftNow();
+    renderEditor();
+    setStatus(`已加入 ${added.length} 張圖片。`, 'ok');
+  } catch (error) {
+    console.error(error);
+    setStatus(`加入圖片失敗：${error.message}`, 'error');
+  }
+}
+
+async function replaceActiveQuestionImage(field, path, file) {
+  const current = getActiveQuestion();
+  if (!current || !state.draft) return;
+
+  clearUndoState();
+
+  try {
+    replaceQuestionImage({
+      draft: state.draft,
+      questionId: current.id,
+      field,
+      path,
+      file,
+    });
+
+    reconcileAssetPreviewUrls();
+    await persistDraftNow();
+    renderEditor();
+    setStatus('圖片已更換。', 'ok');
+  } catch (error) {
+    console.error(error);
+    setStatus(`更換圖片失敗：${error.message}`, 'error');
+  }
+}
+
+function renderMediaEditor(question, field, title, description) {
+  const paths = Array.isArray(question[field]) ? question[field] : [];
+
+  return `
+    <section class="studio-r1-media-editor">
+      <div class="studio-r1-media-heading">
+        <div>
+          <strong>${escapeHtml(title)}</strong>
+          <small>${escapeHtml(description)}</small>
+        </div>
+        <span>${paths.length} 張</span>
+      </div>
+
+      <div
+        class="studio-r1-media-drop"
+        data-studio-image-drop="${escapeAttr(field)}"
+      >
+        <div class="studio-r1-media-drop-copy">
+          <span aria-hidden="true">▧</span>
+          <div>
+            <strong>拖曳圖片到這裡</strong>
+            <small>PNG / JPG / JPEG / WebP / GIF / SVG，單檔最多 25 MB</small>
+          </div>
+        </div>
+
+        <label class="button secondary compact studio-r1-file-button">
+          選擇圖片
+          <input
+            type="file"
+            accept=".png,.jpg,.jpeg,.webp,.gif,.svg,image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+            multiple
+            data-studio-image-input="${escapeAttr(field)}"
+            hidden
+          />
+        </label>
+      </div>
+
+      ${paths.length
+        ? `<div class="studio-r1-media-grid">
+            ${paths.map((path, index) => renderMediaCard(path, field, title, index)).join('')}
+          </div>`
+        : ''}
+    </section>
+  `;
+}
+
+function renderMediaCard(path, field, title, index) {
+  const asset = getAssetByPath(state.draft, path);
+  const url = getAssetPreviewUrl(path);
+  const filename = path.split('/').pop() || path;
+
+  return `
+    <article class="studio-r1-media-card">
+      <div class="studio-r1-media-thumb">
+        ${url
+          ? `<img src="${escapeAttr(url)}" alt="${escapeAttr(`${title} ${index + 1}`)}" loading="lazy" />`
+          : '<span>圖片資料遺失</span>'}
+      </div>
+
+      <div class="studio-r1-media-meta">
+        <strong title="${escapeAttr(path)}">${escapeHtml(filename)}</strong>
+        <small>${asset ? formatBytes(asset.size) : '找不到 asset'}</small>
+      </div>
+
+      <div class="studio-r1-media-actions">
+        <label class="button secondary compact studio-r1-file-button">
+          更換
+          <input
+            type="file"
+            accept=".png,.jpg,.jpeg,.webp,.gif,.svg,image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+            data-studio-replace-image="${escapeAttr(path)}"
+            data-studio-image-field="${escapeAttr(field)}"
+            hidden
+          />
+        </label>
+        <button
+          class="button danger-ghost compact"
+          type="button"
+          data-studio-remove-image="${escapeAttr(path)}"
+          data-studio-image-field="${escapeAttr(field)}"
+        >移除</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderPreviewImages(paths, label) {
+  const items = (paths || [])
+    .map((path, index) => {
+      const url = getAssetPreviewUrl(path);
+      if (!url) {
+        return `<div class="studio-r1-preview-image-missing">找不到 ${escapeHtml(path)}</div>`;
+      }
+      return `<img src="${escapeAttr(url)}" alt="${escapeAttr(`${label} ${index + 1}`)}" loading="lazy" />`;
+    });
+
+  return items.length
+    ? `<div class="studio-r1-preview-images">${items.join('')}</div>`
+    : '';
+}
+
+function renderAssetSummary() {
+  const summary = getAssetUsageSummary(state.draft);
+  if (!summary.assetCount) return '';
+
+  return `
+    <section class="studio-r1-asset-summary">
+      <div>
+        <span>圖片資產</span>
+        <strong>${summary.assetCount} 張 · ${formatBytes(summary.totalBytes)}</strong>
+        <small>
+          ${summary.unusedCount
+            ? `有 ${summary.unusedCount} 個圖片目前沒有被題目引用。`
+            : '所有圖片目前都有題目引用。'}
+        </small>
+      </div>
+
+      ${summary.unusedCount
+        ? `<button class="button secondary compact" type="button" data-studio-clean-unused-assets>
+            清理未使用圖片
+          </button>`
+        : ''}
+    </section>
+  `;
+}
+
+function getAssetPreviewUrl(path) {
+  if (state.assetPreviewUrls.has(path)) {
+    return state.assetPreviewUrls.get(path);
+  }
+
+  const asset = getAssetByPath(state.draft, path);
+  if (!(asset?.blob instanceof Blob)) return null;
+
+  const url = URL.createObjectURL(asset.blob);
+  state.assetPreviewUrls.set(path, url);
+  return url;
+}
+
+function reconcileAssetPreviewUrls() {
+  const validPaths = new Set((state.draft?.assets || []).map(asset => asset.path));
+  for (const [path, url] of state.assetPreviewUrls) {
+    if (validPaths.has(path)) continue;
+    try { URL.revokeObjectURL(url); } catch {}
+    state.assetPreviewUrls.delete(path);
+  }
+}
+
+function revokeAllAssetPreviewUrls() {
+  for (const url of state.assetPreviewUrls.values()) {
+    try { URL.revokeObjectURL(url); } catch {}
+  }
+  state.assetPreviewUrls.clear();
+}
+
+function formatBytes(value) {
+  const bytes = Number(value || 0);
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1024 ** 2).toFixed(1)} MB`;
+}
+
 function renderPreviewPanel(question) {
   return `
     <section class="studio-r1-inspector-card">
@@ -830,9 +1170,14 @@ function renderPreviewPanel(question) {
         <strong>${escapeHtml(TYPE_LABELS[question.type] || question.type)}</strong>
       </div>
       <div class="studio-r1-preview-question">${escapeHtml(question.question || '尚未輸入題目')}</div>
+      ${renderPreviewImages(question.images, '題目圖片')}
       ${renderPreviewAnswer(question)}
-      ${question.explanation
-        ? `<div class="studio-r1-preview-explanation"><span>詳解</span><p>${escapeHtml(question.explanation)}</p></div>`
+      ${question.explanation || question.explanationImages?.length
+        ? `<div class="studio-r1-preview-explanation">
+            <span>詳解</span>
+            ${question.explanation ? `<p>${escapeHtml(question.explanation)}</p>` : ''}
+            ${renderPreviewImages(question.explanationImages, '詳解圖片')}
+          </div>`
         : ''}
     </section>
   `;
