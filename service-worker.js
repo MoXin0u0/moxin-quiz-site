@@ -12,6 +12,7 @@ const APP_SHELL = [
   './styles/v3-p7.css',
   './styles/v3-v31.css',
   './styles/v3-v33.css',
+  './styles/v4-studio.css',
   './assets/pwa/icon-192.png',
   './assets/pwa/icon-512.png',
   './assets/pwa/icon-maskable-512.png',
@@ -42,10 +43,14 @@ const APP_SHELL = [
   './src/storage/settings.js',
   './src/storage/repositories/attempts.js',
   './src/storage/repositories/banks.js',
+  './src/storage/repositories/goals.js',
   './src/storage/repositories/learning.js',
   './src/storage/repositories/progress.js',
   './src/storage/repositories/review.js',
   './src/storage/repositories/sessions.js',
+  './src/storage/repositories/studio.js',
+
+  './src/studio/editor-model.js',
 
   './src/ui/bank-detail.js',
   './src/ui/exam-center.js',
@@ -55,6 +60,7 @@ const APP_SHELL = [
   './src/ui/review-center.js',
   './src/ui/settings.js',
   './src/ui/stats.js',
+  './src/ui/studio.js',
   './src/ui/tools.js',
 
   './src/utils/ids.js',
