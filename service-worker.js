@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-p1.2-1';
+const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r1-1';
 const APP_SHELL = [
   './index.html',
   './v3.html',
@@ -12,7 +12,9 @@ const APP_SHELL = [
   './styles/v3-p7.css',
   './styles/v3-v31.css',
   './styles/v3-v33.css',
+  './styles/v4-design.css',
   './styles/v4-studio.css',
+  './styles/v4-studio-r1.css',
   './assets/pwa/icon-192.png',
   './assets/pwa/icon-512.png',
   './assets/pwa/icon-maskable-512.png',
@@ -51,6 +53,7 @@ const APP_SHELL = [
   './src/storage/repositories/studio.js',
 
   './src/studio/editor-model.js',
+  './src/studio/question-draft.js',
 
   './src/ui/bank-detail.js',
   './src/ui/exam-center.js',
@@ -61,6 +64,7 @@ const APP_SHELL = [
   './src/ui/settings.js',
   './src/ui/stats.js',
   './src/ui/studio.js',
+  './src/ui/studio-r1.js',
   './src/ui/tools.js',
 
   './src/utils/ids.js',

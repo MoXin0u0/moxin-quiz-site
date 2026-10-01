@@ -1,20 +1,13 @@
-const QUESTION_TYPES = new Set([
-  'single-choice',
-  'multiple-choice',
-  'true-false',
-  'fill-in',
-]);
+import {
+  createQuestionDraft,
+  nextQuestionId,
+  normalizeQuestionDraft,
+} from './question-draft.js';
 
-export function createEmptyStudioPackage({
-  now = new Date(),
-  existingBankIds = [],
-} = {}) {
+export function createEmptyStudioPackage({ now = new Date(), existingBankIds = [] } = {}) {
   const timestamp = now.toISOString();
-  const id = makeUniqueBankId(
-    `my-bank-${compactTimestamp(now)}`,
-    new Set(existingBankIds),
-  );
-  const question = createQuestion('single-choice', []);
+  const id = makeUniqueBankId(`my-bank-${compactTimestamp(now)}`, new Set(existingBankIds));
+  const question = createQuestionDraft('single-choice', []);
 
   return {
     manifest: {
@@ -28,9 +21,7 @@ export function createEmptyStudioPackage({
       questionCount: 1,
       createdAt: timestamp,
       updatedAt: timestamp,
-      metadata: {
-        category: '自訂',
-      },
+      metadata: { category: '自訂' },
     },
     questions: [question],
     assets: [],
@@ -38,121 +29,22 @@ export function createEmptyStudioPackage({
 }
 
 export function createQuestion(type = 'single-choice', existingQuestions = []) {
-  const normalizedType = QUESTION_TYPES.has(type) ? type : 'single-choice';
-  const id = nextQuestionId(existingQuestions);
-
-  const base = {
-    id,
-    type: normalizedType,
-    question: '',
-    options: [],
-    answer: [],
-    explanation: '',
-    images: [],
-    explanationImages: [],
-    chapter: '',
-    tags: [],
-    difficulty: 3,
-  };
-
-  return normalizeQuestionForType(base, normalizedType);
-}
-
-export function normalizeQuestionForType(question, type) {
-  const normalizedType = QUESTION_TYPES.has(type) ? type : 'single-choice';
-  const source = clone(question);
-  const base = {
-    ...source,
-    type: normalizedType,
-    images: Array.isArray(source.images) ? [...source.images] : [],
-    explanationImages: Array.isArray(source.explanationImages)
-      ? [...source.explanationImages]
-      : [],
-    tags: Array.isArray(source.tags) ? [...source.tags] : [],
-    difficulty: Number.isInteger(source.difficulty) ? source.difficulty : 3,
-  };
-
-  const sourceType = QUESTION_TYPES.has(source.type) ? source.type : null;
-  const sourceIsChoice = sourceType === 'single-choice' || sourceType === 'multiple-choice';
-  const targetIsChoice = normalizedType === 'single-choice' || normalizedType === 'multiple-choice';
-
-  if (targetIsChoice) {
-    const options = normalizeOptions(source.options);
-    const optionIds = new Set(options.map(option => option.id));
-    const previous = sourceIsChoice && Array.isArray(source.answer)
-      ? source.answer.filter(value => optionIds.has(value))
-      : [];
-
-    return {
-      ...base,
-      options,
-      answer: normalizedType === 'single-choice'
-        ? [previous[0] || options[0].id]
-        : (previous.length ? previous : [options[0].id]),
-      caseSensitive: undefined,
-    };
-  }
-
-  if (normalizedType === 'true-false') {
-    const current = sourceType === 'true-false' &&
-      Array.isArray(source.answer) &&
-      typeof source.answer[0] === 'boolean'
-      ? source.answer[0]
-      : true;
-
-    return {
-      ...base,
-      options: [],
-      answer: [current],
-      caseSensitive: undefined,
-    };
-  }
-
-  const fillAnswers = sourceType === 'fill-in' && Array.isArray(source.answer)
-    ? source.answer.filter(value => typeof value === 'string')
-    : [];
-
-  return {
-    ...base,
-    options: [],
-    answer: fillAnswers.length ? fillAnswers : [''],
-    caseSensitive: source.caseSensitive === true,
-  };
+  return createQuestionDraft(type, existingQuestions);
 }
 
 export function duplicateQuestion(question, questions) {
-  const copy = clone(question);
+  const copy = normalizeQuestionDraft(question);
   copy.id = nextQuestionId(questions);
   copy.question = copy.question ? `${copy.question}（副本）` : '';
   return copy;
-}
-
-export function nextQuestionId(questions = []) {
-  const used = new Set((questions || []).map(question => String(question?.id || '')));
-  let max = 0;
-
-  for (const id of used) {
-    const match = /^Q(\d+)$/i.exec(id);
-    if (match) max = Math.max(max, Number(match[1]) || 0);
-  }
-
-  let value = max + 1;
-  let candidate = formatQuestionId(value);
-  while (used.has(candidate)) {
-    value += 1;
-    candidate = formatQuestionId(value);
-  }
-  return candidate;
 }
 
 export function moveQuestion(questions, questionId, delta) {
   const list = [...questions];
   const index = list.findIndex(question => question.id === questionId);
   if (index < 0) return list;
-
   const target = index + Number(delta || 0);
   if (target < 0 || target >= list.length) return list;
-
   [list[index], list[target]] = [list[target], list[index]];
   return list;
 }
@@ -186,15 +78,13 @@ export function createEditableCopyPackage(pkg, existingBankIds = []) {
         copiedFrom: pkg.manifest.id || null,
       },
     },
-    questions: pkg.questions.map(question => clone(question)),
+    questions: pkg.questions.map(question => normalizeQuestionDraft(question)),
     assets: Array.isArray(pkg.assets) ? [...pkg.assets] : [],
   };
 }
 
 export function makeUniqueBankId(base, existingBankIds = new Set()) {
-  const taken = existingBankIds instanceof Set
-    ? existingBankIds
-    : new Set(existingBankIds || []);
+  const taken = existingBankIds instanceof Set ? existingBankIds : new Set(existingBankIds || []);
   const normalized = sanitizeBankId(base) || 'question-bank';
   if (!taken.has(normalized)) return normalized;
 
@@ -235,45 +125,6 @@ export function syncManifestQuestionCount(manifest, questions) {
     ...manifest,
     questionCount: Array.isArray(questions) ? questions.length : 0,
   };
-}
-
-function normalizeOptions(options) {
-  const source = Array.isArray(options) ? options : [];
-  const result = [];
-  const used = new Set();
-
-  for (const option of source) {
-    if (!option || typeof option !== 'object') continue;
-    let id = String(option.id || '').trim().toUpperCase();
-    if (!id || used.has(id)) id = nextOptionId(used);
-    used.add(id);
-    result.push({
-      id,
-      text: String(option.text || ''),
-    });
-  }
-
-  while (result.length < 2) {
-    const id = nextOptionId(used);
-    used.add(id);
-    result.push({ id, text: '' });
-  }
-
-  return result;
-}
-
-function nextOptionId(used) {
-  for (let code = 65; code <= 90; code += 1) {
-    const id = String.fromCharCode(code);
-    if (!used.has(id)) return id;
-  }
-  let index = 1;
-  while (used.has(`O${index}`)) index += 1;
-  return `O${index}`;
-}
-
-function formatQuestionId(value) {
-  return `Q${String(value).padStart(3, '0')}`;
 }
 
 function compactTimestamp(date) {
