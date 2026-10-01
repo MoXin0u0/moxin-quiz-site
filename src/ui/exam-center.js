@@ -17,11 +17,17 @@ export function renderExamCenter(container, groups) {
         </div>
       </div>
 
-      <div class="learning-exam-flow" aria-label="模擬考流程">
-        ${flowStep('01', '選題庫')}
-        ${flowStep('02', '設定題數')}
-        ${flowStep('03', '專心作答')}
-        ${flowStep('04', '交卷檢討')}
+      <div class="learning-exam-flow learning-scene-panel learning-scene-exam" data-learning-scene="exam" aria-label="模擬考流程">
+        <div class="learning-scene-panel-heading">
+          <span>考場流程</span>
+          <small>設定完成後，專注把一場考試做完</small>
+        </div>
+        <div class="learning-exam-flow-steps">
+          ${flowStep('01', '選題庫')}
+          ${flowStep('02', '設定題數')}
+          ${flowStep('03', '專心作答')}
+          ${flowStep('04', '交卷檢討')}
+        </div>
       </div>
     </section>
 

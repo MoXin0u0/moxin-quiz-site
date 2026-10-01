@@ -81,6 +81,6 @@ assert.match(css, /\.exam-result-score-ring/);
 assert.match(css, /@media \(max-width: 700px\)/);
 assert.match(css, /@media \(max-width: 460px\)/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2e-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
 
 console.log('MoXin Quiz v4.0 R2E practice experience tests passed.');

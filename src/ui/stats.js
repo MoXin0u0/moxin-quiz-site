@@ -23,7 +23,11 @@ export function renderLearningStats(container, data) {
         </div>
       </div>
 
-      <div class="learning-accuracy-card">
+      <div class="learning-accuracy-card learning-scene-panel learning-scene-stats" data-learning-scene="stats">
+        <div class="learning-scene-panel-heading">
+          <span>整體掌握</span>
+          <small>用真實作答紀錄看目前狀態</small>
+        </div>
         <div class="learning-accuracy-ring" style="--accuracy:${accuracy * 3.6}deg">
           <div>
             <strong>${accuracy}%</strong>

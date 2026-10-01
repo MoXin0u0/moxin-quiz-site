@@ -25,7 +25,11 @@ export function renderReviewCenter(container, groups) {
         </div>
       </div>
 
-      <div class="learning-review-focus">
+      <div class="learning-review-focus learning-scene-panel learning-scene-review" data-learning-scene="review">
+        <div class="learning-scene-panel-heading">
+          <span>記憶焦點</span>
+          <small>依今天真正需要處理的內容排序</small>
+        </div>
         <div class="learning-review-orbit">
           <div class="learning-review-orbit-core">
             <span>今日重點</span>
