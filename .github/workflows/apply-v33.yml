@@ -7,9 +7,6 @@ on:
     paths:
       - ".github/workflows/apply-v33.yml"
       - "scripts/apply-v33.mjs"
-      - "scripts/v3-release-preflight.mjs"
-      - "scripts/build-question-index.js"
-      - "scripts/migrate-erp-author-to-v2.mjs"
   workflow_dispatch:
 
 permissions:
@@ -38,14 +35,10 @@ jobs:
       - name: Run full regression suite
         run: npm run ci
 
-      - name: Retire one-time updater and commit v3.3
+      - name: Commit generated v3.3 files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git rm --ignore-unmatch \
-            .github/workflows/apply-v33.yml \
-            scripts/apply-v33.mjs
 
           git add -A
 

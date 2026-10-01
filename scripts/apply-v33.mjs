@@ -867,7 +867,6 @@ assert.equal(fs.existsSync('style.css'), false);
 assert.equal(fs.existsSync('question-banks.json'), false);
 assert.equal(fs.existsSync('questions'), false);
 assert.equal(fs.existsSync('assets/images'), false);
-assert.equal(fs.existsSync('.github/workflows/build-question-index.yml'), false);
 
 for (const file of [
   'legacy-v2/index.html',
@@ -1306,7 +1305,6 @@ write('styles/v3-v33.css', v33Css);
 write('tests/v33-run.mjs', v33Test);
 write('package.json', updatePackage());
 write('service-worker.js', updateServiceWorker());
-write('.github/workflows/v3-regression.yml', updateRegressionWorkflow());
 write('scripts/v3-release-preflight.mjs', updateReleasePreflight());
 write('tests/release-cutover-run.mjs', updateReleaseCutoverTest());
 write('tests/v32-run.mjs', updateV32RegressionTest());
@@ -1331,18 +1329,8 @@ if (exists('scripts/migrate-erp-author-to-v2.mjs')) {
   move('scripts/migrate-erp-author-to-v2.mjs', 'legacy-v2/archive/migrate-erp-author-to-v2.mjs');
 }
 
-if (exists('.github/workflows/build-question-index.yml')) {
-  move(
-    '.github/workflows/build-question-index.yml',
-    'legacy-v2/archive/build-question-index.yml',
-  );
-}
-
 write('legacy-v2.html', redirectHtml);
 write('README.md', newReadme);
-
-// The old index builder must no longer be active after the legacy data moves.
-removeIfExists('.github/workflows/build-question-index.yml');
 
 console.log('v3.3 transformation completed.');
 console.log('Next: npm run ci');
