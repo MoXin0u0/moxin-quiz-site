@@ -39,6 +39,6 @@ assert.match(css, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
 assert.match(css, /\.learning-exam-flow \{\n    display: flex;/);
 assert.match(css, /@media \(max-width: 390px\)/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2d(?:\.1)?-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
 
 console.log('MoXin Quiz v4.0 R2D layout polish tests passed.');

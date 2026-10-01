@@ -19,109 +19,114 @@ export function renderBankDetail(container, bank, questions, learning = {}) {
   const difficulties = unique(questions.map(question => question.difficulty).filter(Number.isInteger)).sort((a, b) => a - b);
   const summary = learning.summary || {};
   const resume = learning.resumeSession;
+  const activeFilter = learning.activeFilter || 'all';
 
   container.innerHTML = `
-    <div class="view-toolbar">
-      <button class="back-button" type="button" data-back-library>← 回到我的題庫</button>
-    </div>
+    <section class="bank-study-shell">
+      <div class="bank-study-toolbar">
+        <button class="back-button" type="button" data-back-library>← 回到我的題庫</button>
+        <button class="button secondary compact" type="button" data-export-bank>匯出題庫 ZIP</button>
+      </div>
 
-    <section class="detail-hero">
-      <div>
-        <p class="eyebrow">Question Bank</p>
-        <h2>${escapeHtml(bank.name || bank.title || bank.id)}</h2>
-        <p class="detail-summary">${escapeHtml(bank.description || '沒有題庫說明。')}</p>
-      </div>
-      <div class="detail-meta">
-        ${meta('題目', questions.length)}
-        ${meta('版本', bank.version || '—')}
-        ${meta('今日到期', summary.due || 0)}
-        ${meta('目前錯題', summary.wrong || 0)}
-      </div>
-      <div class="detail-actions">
-        <button class="button secondary" type="button" data-export-bank>匯出題庫 ZIP</button>
-      </div>
-    </section>
+      <section class="bank-study-hero">
+        <div class="bank-study-hero-copy">
+          <span class="learning-kicker">準備開始練習</span>
+          <h2>${escapeHtml(bank.name || bank.title || bank.id)}</h2>
+          <p>${escapeHtml(bank.description || '這份題庫目前沒有額外說明。')}</p>
 
-    ${resume ? `
-      <section class="resume-card">
-        <div>
-          <h3>有一輪未完成的練習</h3>
-          <p>可以從上次中斷的位置繼續，不需要重新洗牌。</p>
-          <div class="resume-meta">
-            <span class="mini-chip">${escapeHtml(String(summary.resumeCompleted ?? 0))} / ${escapeHtml(String(summary.resumeTotal ?? 0))} 題完成</span>
-            <span class="mini-chip">${escapeHtml(formatDateTime(resume.updatedAt))}</span>
+          <div class="bank-study-summary">
+            ${summaryCard('總題數', questions.length, '全部可練習')}
+            ${summaryCard('今日到期', summary.due || 0, '優先複習')}
+            ${summaryCard('目前錯題', summary.wrong || 0, '值得再看')}
+            ${summaryCard('收藏', summary.favorite || 0, '想再次複習')}
           </div>
         </div>
-        <button class="button primary" type="button" data-resume-practice>繼續上次練習</button>
+
+        <div class="bank-study-hero-panel">
+          <div class="bank-study-hero-panel-top">
+            <span>這次練習</span>
+            <strong data-filter-count>${questions.length} 題</strong>
+          </div>
+          <p>先選擇學習清單，再用題型、章節或關鍵字縮小範圍。</p>
+          <button class="button primary bank-study-start" type="button" data-start-practice>開始練習</button>
+        </div>
       </section>
-    ` : ''}
 
-    <section class="filter-panel">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Learning Lists</p>
-          <h2>學習清單</h2>
+      ${resume ? `
+        <section class="resume-card bank-study-resume">
+          <div>
+            <span class="learning-kicker">未完成練習</span>
+            <h3>繼續上次的進度</h3>
+            <p>${escapeHtml(String(summary.resumeCompleted ?? 0))} / ${escapeHtml(String(summary.resumeTotal ?? 0))} 題完成 · ${escapeHtml(formatDateTime(resume.updatedAt))}</p>
+          </div>
+          <button class="button primary" type="button" data-resume-practice>繼續上次練習</button>
+        </section>
+      ` : ''}
+
+      <section class="bank-study-planner">
+        <div class="bank-study-section-head">
+          <div>
+            <span class="learning-kicker">學習清單</span>
+            <h2>先決定這次要練什麼</h2>
+          </div>
+          <span class="bank-study-hint">所有條件都可以再搭配下方篩選</span>
         </div>
-      </div>
 
-      <div class="learning-strip">
-        ${LEARNING_FILTERS.map(([value, label]) => `
-          <button class="learning-filter ${value === (learning.activeFilter || 'all') ? 'is-active' : ''}" type="button" data-learning-filter="${value}">
-            <strong>${escapeHtml(String(countForFilter(value, questions.length, summary)))}</strong>
-            <span>${escapeHtml(label)}</span>
-          </button>
-        `).join('')}
-      </div>
-
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Practice Filter</p>
-          <h2>選擇這次要練習的題目</h2>
+        <div class="learning-strip bank-study-learning-strip">
+          ${LEARNING_FILTERS.map(([value, label]) => `
+            <button class="learning-filter ${value === activeFilter ? 'is-active' : ''}" type="button" data-learning-filter="${value}">
+              <strong>${escapeHtml(String(countForFilter(value, questions.length, summary)))}</strong>
+              <span>${escapeHtml(label)}</span>
+            </button>
+          `).join('')}
         </div>
-      </div>
 
-      <div class="filter-grid">
-        <label>
-          搜尋題目
-          <input type="search" data-filter-keyword placeholder="搜尋題目、選項、標籤或詳解" />
-        </label>
-        <label>
-          題型
-          <select data-filter-type>
-            <option value="all">全部題型</option>
-            ${Object.entries(TYPE_LABELS).map(([value, label]) => `<option value="${escapeAttr(value)}">${escapeHtml(label)}</option>`).join('')}
-          </select>
-        </label>
-        <label>
-          難度
-          <select data-filter-difficulty>
-            <option value="all">全部難度</option>
-            ${difficulties.map(value => `<option value="${value}">難度 ${value}</option>`).join('')}
-          </select>
-        </label>
-        <label>
-          章節
-          <select data-filter-chapter>
-            <option value="all">全部章節</option>
-            ${chapters.map(value => `<option value="${escapeAttr(value)}">${escapeHtml(value)}</option>`).join('')}
-          </select>
-        </label>
-      </div>
+        <details class="bank-study-filter-details" open>
+          <summary>
+            <span>進一步篩選</span>
+            <small>搜尋、題型、難度與章節</small>
+          </summary>
 
-      <div class="filter-footer">
-        <span class="filter-count" data-filter-count></span>
-        <button class="button primary" type="button" data-start-practice>開始練習</button>
-      </div>
-    </section>
+          <div class="filter-grid bank-study-filter-grid">
+            <label>
+              搜尋題目
+              <input type="search" data-filter-keyword placeholder="搜尋題目、選項、標籤或詳解" />
+            </label>
+            <label>
+              題型
+              <select data-filter-type>
+                <option value="all">全部題型</option>
+                ${Object.entries(TYPE_LABELS).map(([value, label]) => `<option value="${escapeAttr(value)}">${escapeHtml(label)}</option>`).join('')}
+              </select>
+            </label>
+            <label>
+              難度
+              <select data-filter-difficulty>
+                <option value="all">全部難度</option>
+                ${difficulties.map(value => `<option value="${value}">難度 ${value}</option>`).join('')}
+              </select>
+            </label>
+            <label>
+              章節
+              <select data-filter-chapter>
+                <option value="all">全部章節</option>
+                ${chapters.map(value => `<option value="${escapeAttr(value)}">${escapeHtml(value)}</option>`).join('')}
+              </select>
+            </label>
+          </div>
+        </details>
+      </section>
 
-    <section class="panel">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Question Preview</p>
-          <h2>題目預覽</h2>
+      <section class="bank-study-preview">
+        <div class="bank-study-section-head">
+          <div>
+            <span class="learning-kicker">題目預覽</span>
+            <h2>確認這次會練到哪些題目</h2>
+          </div>
+          <span class="bank-study-preview-note">預覽最多顯示 60 題</span>
         </div>
-      </div>
-      <div class="question-preview-list" data-question-results></div>
+        <div class="question-preview-list bank-study-question-list" data-question-results></div>
+      </section>
     </section>
   `;
 
@@ -167,35 +172,42 @@ export function filterQuestions(questions, filters, learning = {}) {
 }
 
 export function renderFilteredQuestions(container, questions, learning = {}) {
-  const count = container.querySelector('[data-filter-count]');
+  const counts = container.querySelectorAll('[data-filter-count]');
   const list = container.querySelector('[data-question-results]');
-  const startButton = container.querySelector('[data-start-practice]');
+  const startButtons = container.querySelectorAll('[data-start-practice]');
 
-  if (count) count.textContent = `目前篩選結果：${questions.length} 題`;
-  if (startButton) startButton.disabled = questions.length === 0;
+  counts.forEach(count => {
+    count.textContent = `${questions.length} 題`;
+  });
+  startButtons.forEach(button => {
+    button.disabled = questions.length === 0;
+  });
   if (!list) return;
 
   if (questions.length === 0) {
-    list.innerHTML = '<div class="empty-state"><strong>沒有符合條件的題目</strong><p>請修改搜尋、學習清單或篩選條件。</p></div>';
+    list.innerHTML = '<div class="learning-empty"><div class="learning-empty-icon">?</div><strong>沒有符合條件的題目</strong><p>調整學習清單或篩選條件後再試一次。</p></div>';
     return;
   }
 
-  list.innerHTML = questions.slice(0, 60).map(question => {
+  list.innerHTML = questions.slice(0, 60).map((question, index) => {
     const flags = statusFlags(question.id, learning);
     return `
-      <article class="question-preview">
-        <div class="question-preview-top">
-          <span class="mini-chip">${escapeHtml(question.id)}</span>
-          <span class="mini-chip">${escapeHtml(TYPE_LABELS[question.type] || question.type)}</span>
-          <span class="mini-chip">難度 ${escapeHtml(String(question.difficulty ?? '—'))}</span>
-          ${question.chapter ? `<span class="mini-chip">${escapeHtml(question.chapter)}</span>` : ''}
+      <article class="question-preview bank-study-question-preview">
+        <div class="bank-study-question-number">${String(index + 1).padStart(2, '0')}</div>
+        <div class="bank-study-question-body">
+          <div class="question-preview-top">
+            <span class="mini-chip">${escapeHtml(question.id)}</span>
+            <span class="mini-chip">${escapeHtml(TYPE_LABELS[question.type] || question.type)}</span>
+            <span class="mini-chip">難度 ${escapeHtml(String(question.difficulty ?? '—'))}</span>
+            ${question.chapter ? `<span class="mini-chip">${escapeHtml(question.chapter)}</span>` : ''}
+          </div>
+          <p>${escapeHtml(question.question)}</p>
+          ${flags.length ? `<div class="preview-status-row">${flags.join('')}</div>` : ''}
         </div>
-        <p>${escapeHtml(question.question)}</p>
-        ${flags.length ? `<div class="preview-status-row">${flags.join('')}</div>` : ''}
       </article>
     `;
   }).join('') + (questions.length > 60
-    ? `<div class="empty-state"><strong>另有 ${questions.length - 60} 題未顯示</strong><p>預覽最多顯示 60 題；練習仍會包含全部篩選結果。</p></div>`
+    ? `<div class="learning-empty compact"><strong>另有 ${questions.length - 60} 題未顯示</strong><p>開始練習時仍會包含全部篩選結果。</p></div>`
     : '');
 }
 
@@ -227,8 +239,14 @@ function countForFilter(filter, total, summary) {
   return total;
 }
 
-function meta(label, value) {
-  return `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(String(value))}</strong></div>`;
+function summaryCard(label, value, description) {
+  return `
+    <div>
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(String(value))}</strong>
+      <small>${escapeHtml(description)}</small>
+    </div>
+  `;
 }
 
 function unique(values) {

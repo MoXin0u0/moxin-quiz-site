@@ -2434,3 +2434,1245 @@ html[data-theme="dark"] .learning-art-slot {
     text-align: center;
   }
 }
+
+/* ============================================================
+ * v4.0 R2E — Practice Experience Redesign
+ * Learner-facing detail, practice and active exam views.
+ * ========================================================== */
+
+/* ------------------------------------------------------------
+ * Bank detail / practice planning
+ * ---------------------------------------------------------- */
+
+.bank-study-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.bank-study-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.bank-study-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, .55fr);
+  gap: 1rem;
+  padding: clamp(1.15rem, 2.4vw, 1.8rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 94% 8%, color-mix(in srgb, var(--learn-primary) 14%, transparent), transparent 17rem),
+    radial-gradient(circle at 72% 108%, color-mix(in srgb, var(--learn-cyan) 10%, transparent), transparent 18rem),
+    var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow);
+}
+
+.bank-study-hero-copy h2 {
+  max-width: 26ch;
+  margin: .35rem 0 .55rem;
+  color: var(--learn-text);
+  font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+  letter-spacing: -.035em;
+  line-height: 1.2;
+}
+
+.bank-study-hero-copy > p {
+  max-width: 70ch;
+  margin: 0;
+  color: var(--learn-muted);
+  line-height: 1.7;
+}
+
+.bank-study-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .55rem;
+  margin-top: 1rem;
+}
+
+.bank-study-summary > div {
+  padding: .7rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 13px;
+  background: var(--learn-surface-soft);
+}
+
+.bank-study-summary span,
+.bank-study-summary small {
+  display: block;
+  color: var(--learn-muted);
+}
+
+.bank-study-summary span {
+  font-size: .7rem;
+}
+
+.bank-study-summary strong {
+  display: block;
+  margin: .12rem 0 .05rem;
+  color: var(--learn-text);
+  font-size: 1.28rem;
+}
+
+.bank-study-summary small {
+  font-size: .66rem;
+}
+
+.bank-study-hero-panel {
+  display: grid;
+  align-content: center;
+  gap: .7rem;
+  padding: 1rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 18px;
+  background:
+    linear-gradient(150deg, color-mix(in srgb, var(--learn-primary) 9%, var(--learn-surface)), var(--learn-surface-soft));
+}
+
+.bank-study-hero-panel-top {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.bank-study-hero-panel-top span {
+  color: var(--learn-muted);
+  font-size: .76rem;
+}
+
+.bank-study-hero-panel-top strong {
+  color: var(--learn-text);
+  font-size: 1.65rem;
+}
+
+.bank-study-hero-panel > p {
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: .8rem;
+  line-height: 1.55;
+}
+
+.bank-study-start {
+  width: 100%;
+  min-height: 46px;
+}
+
+.bank-study-resume {
+  margin: 0;
+  border-color: color-mix(in srgb, var(--learn-primary) 30%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 7%, var(--learn-surface));
+  color: var(--learn-text);
+}
+
+.bank-study-resume h3 {
+  margin: .18rem 0 .2rem;
+}
+
+.bank-study-resume p {
+  color: var(--learn-muted);
+}
+
+.bank-study-planner,
+.bank-study-preview {
+  padding: clamp(.9rem, 2vw, 1.15rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.bank-study-section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .8rem;
+}
+
+.bank-study-section-head h2 {
+  margin: .2rem 0 0;
+  color: var(--learn-text);
+  font-size: 1.25rem;
+}
+
+.bank-study-hint,
+.bank-study-preview-note {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.bank-study-learning-strip {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: .5rem;
+  margin: 0 0 .75rem;
+}
+
+.bank-study-learning-strip .learning-filter {
+  min-height: 76px;
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.bank-study-learning-strip .learning-filter.is-active {
+  border-color: color-mix(in srgb, var(--learn-primary) 42%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 11%, var(--learn-surface));
+  color: var(--learn-primary);
+}
+
+.bank-study-learning-strip .learning-filter span {
+  color: var(--learn-muted);
+}
+
+.bank-study-filter-details {
+  overflow: hidden;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+.bank-study-filter-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .72rem .8rem;
+  cursor: pointer;
+  color: var(--learn-text);
+  font-weight: 800;
+  list-style: none;
+}
+
+.bank-study-filter-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.bank-study-filter-details > summary small {
+  color: var(--learn-muted);
+  font-weight: 600;
+}
+
+.bank-study-filter-grid {
+  padding: .8rem;
+  border-top: 1px solid var(--learn-line);
+}
+
+.bank-study-filter-grid label {
+  color: var(--learn-muted);
+}
+
+.bank-study-filter-grid :is(input, select) {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-strong);
+  color: var(--learn-text);
+}
+
+.bank-study-question-list {
+  gap: .55rem;
+}
+
+.bank-study-question-preview {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .8rem;
+  padding: .75rem .85rem;
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.bank-study-question-number {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+  color: var(--learn-primary);
+  font: 850 .74rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.bank-study-question-body {
+  min-width: 0;
+}
+
+.bank-study-question-body > p {
+  color: var(--learn-text);
+}
+
+.learning-empty.compact {
+  min-height: 120px;
+}
+
+/* ------------------------------------------------------------
+ * Practice focus mode
+ * ---------------------------------------------------------- */
+
+.practice-focus-shell,
+.exam-focus-shell,
+.exam-result-shell {
+  width: 100%;
+  max-width: 1500px;
+  margin-inline: auto;
+}
+
+.practice-focus-topbar,
+.exam-focus-topbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(220px, 330px);
+  gap: .85rem;
+  align-items: center;
+  padding: .75rem .8rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 16px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.practice-focus-bank,
+.exam-focus-title {
+  min-width: 0;
+  display: grid;
+  gap: .08rem;
+}
+
+.practice-focus-bank strong,
+.exam-focus-title strong {
+  overflow: hidden;
+  color: var(--learn-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.practice-focus-progress,
+.exam-focus-progress {
+  min-width: 0;
+}
+
+.practice-focus-progress .progress-track,
+.exam-focus-progress .progress-track {
+  background: color-mix(in srgb, var(--learn-line) 66%, transparent);
+}
+
+.practice-focus-progress .progress-label,
+.exam-focus-progress .progress-label {
+  color: var(--learn-muted);
+}
+
+.practice-focus-stage {
+  display: grid;
+  place-items: start center;
+  padding: clamp(1rem, 2.5vw, 2rem) 0;
+}
+
+.practice-focus-question,
+.exam-focus-question {
+  width: min(100%, 980px);
+  padding: clamp(1rem, 2.6vw, 1.6rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--learn-primary) 7%, transparent), transparent 13rem),
+    var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow);
+}
+
+.practice-focus-question-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.practice-error-badge {
+  flex: 0 0 auto;
+}
+
+.practice-focus-title,
+.exam-focus-question-title {
+  max-width: 44ch;
+  margin: .9rem 0 0;
+  color: var(--learn-text);
+  font-size: clamp(1.25rem, 2.3vw, 1.65rem);
+  line-height: 1.68;
+}
+
+.practice-focus-images,
+.exam-focus-question .question-images {
+  margin-top: 1rem;
+}
+
+.practice-focus-answer,
+.exam-focus-answer {
+  gap: .7rem;
+  margin-top: 1.25rem;
+}
+
+.practice-focus-option,
+.exam-focus-option {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: .7rem;
+  align-items: center;
+  min-height: 60px;
+  padding: .72rem .8rem;
+  border-color: var(--learn-line);
+  border-radius: 15px;
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+  transition:
+    border-color .16s ease,
+    background .16s ease,
+    transform .16s ease;
+}
+
+.practice-focus-option:hover,
+.exam-focus-option:hover {
+  border-color: color-mix(in srgb, var(--learn-primary) 44%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 7%, var(--learn-surface));
+  transform: translateY(-1px);
+}
+
+.practice-option-key {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 9px;
+  background: var(--learn-surface-strong);
+  color: var(--learn-primary);
+  font-weight: 900;
+}
+
+.practice-option-text {
+  min-width: 0;
+  line-height: 1.55;
+}
+
+.practice-fill-answer {
+  gap: .45rem;
+  color: var(--learn-muted);
+}
+
+.practice-fill-answer input {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.practice-focus-primary-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.practice-submit {
+  min-width: 150px;
+}
+
+.practice-focus-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .7rem;
+  padding-top: .7rem;
+  border-top: 1px solid var(--learn-line);
+}
+
+.practice-note-details {
+  margin-top: .7rem;
+  overflow: hidden;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+.practice-note-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .7rem .8rem;
+  cursor: pointer;
+  color: var(--learn-text);
+  font-weight: 800;
+  list-style: none;
+}
+
+.practice-note-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.practice-note-details > summary small {
+  color: var(--learn-muted);
+  font-weight: 600;
+}
+
+.practice-focus-note {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--learn-line);
+  border-radius: 0;
+  background: var(--learn-surface-strong);
+}
+
+.practice-focus-note textarea {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.practice-focus-feedback {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 18px;
+}
+
+.practice-feedback-heading {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+
+.practice-feedback-heading h3 {
+  margin: .08rem 0 0;
+}
+
+.practice-feedback-icon {
+  display: grid;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--learn-teal) 13%, var(--learn-surface));
+  color: var(--learn-teal);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.practice-focus-feedback.wrong .practice-feedback-icon {
+  background: color-mix(in srgb, var(--learn-rose) 13%, var(--learn-surface));
+  color: var(--learn-rose);
+}
+
+.practice-feedback-grid,
+.exam-analysis-answer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  margin-top: .8rem;
+}
+
+.practice-feedback-grid > div,
+.exam-analysis-answer-grid > div {
+  padding: .7rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 82%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 78%, transparent);
+}
+
+.practice-feedback-grid span,
+.exam-analysis-answer-grid span,
+.practice-feedback-explanation > span,
+.exam-analysis-explanation > span {
+  display: block;
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.practice-feedback-grid strong,
+.exam-analysis-answer-grid strong {
+  display: block;
+  margin-top: .18rem;
+  color: var(--learn-text);
+  line-height: 1.5;
+}
+
+.practice-feedback-explanation,
+.exam-analysis-explanation {
+  margin-top: .7rem;
+  padding: .75rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 76%, transparent);
+}
+
+.practice-feedback-explanation p,
+.exam-analysis-explanation p {
+  margin: .3rem 0 0;
+  color: var(--learn-text);
+  line-height: 1.7;
+}
+
+.practice-focus-next {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: .8rem;
+}
+
+.practice-finish-shell {
+  display: grid;
+  place-items: center;
+  min-height: min(70vh, 720px);
+}
+
+.practice-focus-finish {
+  width: min(100%, 760px);
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 24px;
+  background: var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow);
+}
+
+.practice-focus-finish h2 {
+  margin: .35rem 0 .45rem;
+  color: var(--learn-text);
+}
+
+.practice-finish-score {
+  display: grid;
+  place-items: center;
+  width: 148px;
+  height: 148px;
+  margin: 1.1rem auto;
+  border: 10px solid color-mix(in srgb, var(--learn-primary) 16%, var(--learn-line));
+  border-radius: 999px;
+  background: var(--learn-surface-soft);
+}
+
+.practice-finish-score strong {
+  color: var(--learn-primary);
+  font-size: 2rem;
+}
+
+.practice-finish-score span {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.practice-finish-stats {
+  max-width: none;
+}
+
+.practice-finish-stats > div {
+  border: 1px solid var(--learn-line);
+  background: var(--learn-surface-soft);
+}
+
+.practice-finish-actions {
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------
+ * Active exam focus mode
+ * ---------------------------------------------------------- */
+
+.exam-focus-topbar {
+  grid-template-columns: minmax(190px, .8fr) minmax(240px, 1fr) auto;
+}
+
+.exam-focus-time-block {
+  display: grid;
+  justify-items: end;
+  gap: .2rem;
+}
+
+.exam-focus-time-block > span {
+  color: var(--learn-muted);
+  font-size: .7rem;
+}
+
+.exam-focus-time-block .exam-timer {
+  min-width: 110px;
+  padding: .45rem .65rem;
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+  font-size: 1.3rem;
+}
+
+.exam-focus-layout {
+  display: grid;
+  grid-template-columns: minmax(170px, 210px) minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.exam-focus-navigator {
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  display: grid;
+  gap: .7rem;
+  padding: .75rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 16px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.exam-focus-navigator-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.exam-focus-navigator-head span {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.exam-focus-navigator-head strong {
+  color: var(--learn-text);
+}
+
+.exam-focus-navigator .exam-navigator {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-height: calc(100vh - 240px);
+  overflow: auto;
+  padding: .2rem;
+  border: 0;
+  background: transparent;
+}
+
+.exam-focus-navigator .exam-number {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-muted);
+}
+
+.exam-focus-navigator .exam-number.is-answered {
+  border-color: color-mix(in srgb, var(--learn-primary) 40%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+  color: var(--learn-primary);
+}
+
+.exam-focus-navigator .exam-number.is-current {
+  outline-color: var(--learn-primary);
+  background: var(--learn-primary);
+  color: #fff;
+}
+
+.exam-submit-button {
+  width: 100%;
+}
+
+.exam-focus-main {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.exam-focus-question {
+  width: min(100%, 1040px);
+}
+
+.exam-focus-question-actions {
+  display: grid;
+  grid-template-columns: minmax(120px, auto) 1fr minmax(120px, auto);
+  align-items: center;
+  gap: .7rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--learn-line);
+}
+
+.exam-focus-question-actions > span {
+  color: var(--learn-muted);
+  font-size: .76rem;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------
+ * Exam result
+ * ---------------------------------------------------------- */
+
+.exam-result-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.exam-focus-result-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr);
+  gap: 1rem;
+  align-items: center;
+  padding: clamp(1.2rem, 2.5vw, 1.8rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 92% 7%, color-mix(in srgb, var(--learn-teal) 13%, transparent), transparent 17rem),
+    var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow);
+  text-align: left;
+}
+
+.exam-result-copy h2 {
+  margin: .3rem 0 .35rem;
+  color: var(--learn-text);
+}
+
+.exam-result-copy > p {
+  margin: 0;
+  color: var(--learn-muted);
+}
+
+.exam-focus-result-stats {
+  max-width: none;
+  margin: 1rem 0 0;
+}
+
+.exam-focus-result-stats > div {
+  border: 1px solid var(--learn-line);
+  background: var(--learn-surface-soft);
+}
+
+.exam-result-actions {
+  justify-content: flex-start;
+}
+
+.exam-result-score-card {
+  display: grid;
+  justify-items: center;
+  gap: .7rem;
+  padding: 1rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 18px;
+  background: var(--learn-surface-soft);
+  text-align: center;
+}
+
+.exam-result-score-ring {
+  display: grid;
+  place-items: center;
+  width: 160px;
+  height: 160px;
+  border-radius: 999px;
+  background:
+    conic-gradient(
+      var(--learn-teal) 0 var(--exam-score),
+      color-mix(in srgb, var(--learn-line) 64%, transparent) var(--exam-score) 360deg
+    );
+}
+
+.exam-result-score-ring > div {
+  display: grid;
+  place-items: center;
+  width: 126px;
+  height: 126px;
+  border-radius: 999px;
+  background: var(--learn-surface-strong);
+}
+
+.exam-result-score-ring strong {
+  color: var(--learn-text);
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.exam-result-score-ring span {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.exam-result-score-card > p {
+  max-width: 28ch;
+  margin: 0;
+  color: var(--learn-muted);
+  line-height: 1.55;
+}
+
+.exam-focus-analysis {
+  margin: 0;
+  padding: clamp(.9rem, 2vw, 1.15rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.exam-focus-analysis .exam-analysis-list {
+  gap: .5rem;
+}
+
+.exam-focus-analysis .exam-analysis-item {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-strong);
+}
+
+.exam-focus-analysis .exam-analysis-item summary {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.exam-analysis-number {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9px;
+  background: var(--learn-surface-strong);
+  color: var(--learn-muted);
+  font: 850 .7rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.exam-analysis-body {
+  background: var(--learn-surface-strong);
+}
+
+/* ------------------------------------------------------------
+ * R2E responsive behavior
+ * ---------------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .bank-study-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-hero-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .bank-study-hero-panel > p {
+    grid-column: 1;
+  }
+
+  .bank-study-start {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    min-width: 160px;
+  }
+
+  .bank-study-learning-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .practice-focus-topbar,
+  .exam-focus-topbar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .practice-focus-progress,
+  .exam-focus-progress {
+    grid-column: 1 / -1;
+  }
+
+  .exam-focus-time-block {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .bank-study-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bank-study-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exam-focus-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-focus-navigator {
+    position: static;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .exam-focus-navigator-head {
+    display: grid;
+  }
+
+  .exam-focus-navigator .exam-navigator {
+    display: flex;
+    gap: .4rem;
+    max-height: none;
+    overflow-x: auto;
+    padding-bottom: .25rem;
+  }
+
+  .exam-focus-navigator .exam-number {
+    width: 2.35rem;
+    min-width: 2.35rem;
+    aspect-ratio: 1;
+  }
+
+  .exam-submit-button {
+    width: auto;
+    min-width: 90px;
+  }
+
+  .exam-focus-result-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-result-score-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    text-align: left;
+  }
+
+  .exam-result-score-card > p {
+    max-width: 45ch;
+  }
+}
+
+@media (max-width: 700px) {
+  .bank-study-toolbar {
+    align-items: stretch;
+  }
+
+  .bank-study-toolbar .button,
+  .bank-study-toolbar .back-button {
+    flex: 1 1 0;
+    text-align: center;
+  }
+
+  .bank-study-hero,
+  .bank-study-planner,
+  .bank-study-preview {
+    padding: .85rem;
+    border-radius: 17px;
+  }
+
+  .bank-study-hero-copy h2 {
+    font-size: 1.55rem;
+  }
+
+  .bank-study-hero-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-hero-panel > p,
+  .bank-study-start {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .bank-study-learning-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bank-study-section-head {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .bank-study-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-filter-details > summary,
+  .practice-note-details > summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .bank-study-question-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-question-number {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .practice-focus-topbar,
+  .exam-focus-topbar {
+    grid-template-columns: 1fr auto;
+    padding: .65rem;
+  }
+
+  .practice-focus-bank,
+  .exam-focus-title {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .practice-focus-topbar .back-button {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .practice-focus-progress,
+  .exam-focus-progress {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .exam-focus-time-block {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .practice-focus-stage {
+    padding: .7rem 0;
+  }
+
+  .practice-focus-question,
+  .exam-focus-question {
+    padding: .9rem;
+    border-radius: 17px;
+  }
+
+  .practice-focus-question-head {
+    display: grid;
+  }
+
+  .practice-error-badge {
+    justify-self: start;
+  }
+
+  .practice-focus-option,
+  .exam-focus-option {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: .55rem;
+    min-height: 56px;
+    padding: .65rem;
+  }
+
+  .practice-focus-primary-actions,
+  .practice-focus-next {
+    justify-content: stretch;
+  }
+
+  .practice-focus-primary-actions .button,
+  .practice-focus-next .button {
+    width: 100%;
+  }
+
+  .practice-focus-tools {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .practice-feedback-grid,
+  .exam-analysis-answer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-focus-navigator {
+    grid-template-columns: 1fr auto;
+  }
+
+  .exam-focus-navigator-head {
+    grid-column: 1;
+  }
+
+  .exam-focus-navigator .exam-navigator {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .exam-submit-button {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .exam-focus-question-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .exam-focus-question-actions > span {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .exam-focus-question-actions [data-exam-prev] {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .exam-focus-question-actions [data-exam-next] {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .exam-focus-result-hero {
+    padding: .9rem;
+    border-radius: 18px;
+  }
+
+  .exam-focus-result-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exam-result-score-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .exam-result-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .exam-focus-analysis .exam-analysis-item summary {
+    grid-template-columns: auto auto;
+  }
+
+  .exam-focus-analysis .exam-analysis-item summary > span:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 460px) {
+  .bank-study-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-summary,
+  .bank-study-learning-strip,
+  .practice-focus-tools,
+  .exam-focus-result-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .practice-focus-option,
+  .exam-focus-option {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .practice-focus-option input,
+  .exam-focus-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .practice-option-key {
+    grid-column: 1;
+  }
+
+  .practice-option-text {
+    grid-column: 2;
+  }
+
+  .exam-focus-time-block .exam-timer {
+    min-width: 96px;
+    font-size: 1.15rem;
+  }
+
+  .exam-result-score-ring {
+    width: 138px;
+    height: 138px;
+  }
+
+  .exam-result-score-ring > div {
+    width: 108px;
+    height: 108px;
+  }
+}

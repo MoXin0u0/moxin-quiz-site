@@ -7,56 +7,72 @@ const TYPE_LABELS = {
 
 export function renderExamQuestion(container, { bank, session, question, index }) {
   const answered = countAnswered(session);
+  const total = session.questionIds.length;
+  const progress = total ? Math.round(((index + 1) / total) * 100) : 0;
 
   container.innerHTML = `
-    <section class="exam-shell">
-      <header class="exam-header">
-        <div>
-          <p class="eyebrow">Mock Exam</p>
-          <h2>${escapeHtml(bank.name || bank.title || bank.id)}</h2>
-          <p>作答中不顯示正誤；答案會保存在本機。</p>
+    <section class="exam-focus-shell">
+      <header class="exam-focus-topbar">
+        <div class="exam-focus-title">
+          <span class="learning-kicker">模擬考進行中</span>
+          <strong>${escapeHtml(bank.name || bank.title || bank.id)}</strong>
         </div>
-        <div class="exam-timer" data-exam-timer aria-live="polite">--:--</div>
+
+        <div class="exam-focus-progress">
+          <div class="progress-track"><span style="width:${progress}%"></span></div>
+          <div class="progress-label">第 ${index + 1} / ${total} 題 · 已作答 ${answered}</div>
+        </div>
+
+        <div class="exam-focus-time-block">
+          <span>剩餘時間</span>
+          <div class="exam-timer" data-exam-timer aria-live="polite">--:--</div>
+        </div>
       </header>
 
-      <div class="exam-status-row">
-        <span>第 ${index + 1} / ${session.questionIds.length} 題</span>
-        <span>已作答 ${answered} 題</span>
-        <button class="button danger-ghost" type="button" data-submit-exam>交卷</button>
-      </div>
+      <div class="exam-focus-layout">
+        <aside class="exam-focus-navigator" aria-label="題號導覽">
+          <div class="exam-focus-navigator-head">
+            <span>題目</span>
+            <strong>${answered} / ${total}</strong>
+          </div>
 
-      <div class="exam-layout">
-        <aside class="exam-navigator" aria-label="題號導覽">
-          ${session.questionIds.map((questionId, questionIndex) => `
-            <button
-              type="button"
-              class="exam-number ${questionIndex === index ? 'is-current' : ''} ${hasAnswer(session, questionId) ? 'is-answered' : ''}"
-              data-exam-go="${questionIndex}"
-              aria-label="前往第 ${questionIndex + 1} 題"
-            >${questionIndex + 1}</button>
-          `).join('')}
+          <div class="exam-navigator">
+            ${session.questionIds.map((questionId, questionIndex) => `
+              <button
+                type="button"
+                class="exam-number ${questionIndex === index ? 'is-current' : ''} ${hasAnswer(session, questionId) ? 'is-answered' : ''}"
+                data-exam-go="${questionIndex}"
+                aria-label="前往第 ${questionIndex + 1} 題"
+              >${questionIndex + 1}</button>
+            `).join('')}
+          </div>
+
+          <button class="button danger-ghost exam-submit-button" type="button" data-submit-exam>交卷</button>
         </aside>
 
-        <article class="question-card exam-question-card">
-          <div class="question-meta-row">
-            <span class="mini-chip">${escapeHtml(question.id)}</span>
-            <span class="mini-chip">${escapeHtml(TYPE_LABELS[question.type] || question.type)}</span>
-            ${question.chapter ? `<span class="mini-chip">${escapeHtml(question.chapter)}</span>` : ''}
-            <span class="mini-chip">難度 ${escapeHtml(String(question.difficulty ?? '—'))}</span>
-          </div>
+        <main class="exam-focus-main">
+          <article class="question-card exam-question-card exam-focus-question">
+            <div class="question-meta-row">
+              <span class="mini-chip">${escapeHtml(question.id)}</span>
+              <span class="mini-chip">${escapeHtml(TYPE_LABELS[question.type] || question.type)}</span>
+              ${question.chapter ? `<span class="mini-chip">${escapeHtml(question.chapter)}</span>` : ''}
+              <span class="mini-chip">難度 ${escapeHtml(String(question.difficulty ?? '—'))}</span>
+            </div>
 
-          <h3 class="question-title">${escapeHtml(question.question)}</h3>
-          <div class="question-images" data-exam-question-images></div>
+            <h3 class="question-title exam-focus-question-title">${escapeHtml(question.question)}</h3>
+            <div class="question-images" data-exam-question-images></div>
 
-          <form class="answer-form" data-exam-answer-form>
-            ${buildAnswerForm(question, session.answers?.[question.id])}
-          </form>
+            <form class="answer-form exam-focus-answer" data-exam-answer-form>
+              ${buildAnswerForm(question, session.answers?.[question.id])}
+            </form>
 
-          <div class="exam-question-actions">
-            <button class="button secondary" type="button" data-exam-prev ${index <= 0 ? 'disabled' : ''}>上一題</button>
-            <button class="button primary" type="button" data-exam-next ${index >= session.questionIds.length - 1 ? 'disabled' : ''}>下一題</button>
-          </div>
-        </article>
+            <footer class="exam-question-actions exam-focus-question-actions">
+              <button class="button secondary" type="button" data-exam-prev ${index <= 0 ? 'disabled' : ''}>← 上一題</button>
+              <span>${index + 1} / ${total}</span>
+              <button class="button primary" type="button" data-exam-next ${index >= total - 1 ? 'disabled' : ''}>下一題 →</button>
+            </footer>
+          </article>
+        </main>
       </div>
     </section>
   `;
@@ -102,35 +118,53 @@ export function updateExamTimer(container, remainingSeconds) {
 }
 
 export function renderExamResult(container, { bank, result, questionMap, session }) {
+  const score = Math.max(0, Math.min(100, Number(result.score) || 0));
+
   container.innerHTML = `
-    <section class="exam-shell">
-      <div class="exam-result-hero">
-        <p class="eyebrow">Exam Result</p>
-        <h2>模擬考已交卷</h2>
-        <p>${escapeHtml(bank.name || bank.title || bank.id)}</p>
+    <section class="exam-result-shell">
+      <section class="exam-result-hero exam-focus-result-hero">
+        <div class="exam-result-copy">
+          <span class="learning-kicker">模擬考結果</span>
+          <h2>這一場已經完成</h2>
+          <p>${escapeHtml(bank.name || bank.title || bank.id)}</p>
 
-        <div class="exam-result-score">${result.score}<small>分</small></div>
-
-        <div class="exam-result-stats">
-          ${resultStat('總題數', result.total)}
-          ${resultStat('答對', result.correctCount)}
-          ${resultStat('答錯', result.wrongCount)}
-          ${resultStat('未作答', result.unansweredCount)}
-        </div>
-
-        <div class="practice-actions">
-          <button class="button primary" type="button" data-exam-again>再考一次</button>
-          <button class="button secondary" type="button" data-exam-result-center>回模擬考</button>
-          <button class="button secondary" type="button" data-exam-result-library>回我的題庫</button>
-        </div>
-      </div>
-
-      <section class="exam-analysis">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Answer Analysis</p>
-            <h2>考後分析</h2>
+          <div class="exam-result-stats exam-focus-result-stats">
+            ${resultStat('總題數', result.total)}
+            ${resultStat('答對', result.correctCount)}
+            ${resultStat('答錯', result.wrongCount)}
+            ${resultStat('未作答', result.unansweredCount)}
           </div>
+
+          <div class="practice-actions exam-result-actions">
+            <button class="button primary" type="button" data-exam-again>再考一次</button>
+            <button class="button secondary" type="button" data-exam-result-center>回模擬考</button>
+            <button class="button secondary" type="button" data-exam-result-library>回我的題庫</button>
+          </div>
+        </div>
+
+        <div class="exam-result-score-card">
+          <div class="exam-result-score-ring" style="--exam-score:${score * 3.6}deg">
+            <div>
+              <strong>${score}</strong>
+              <span>分</span>
+            </div>
+          </div>
+          <p>${score >= 80
+            ? '整體表現穩定，可以從答錯題目做最後補強。'
+            : score >= 60
+              ? '已有一定掌握度，整理錯題後再測一次會更穩。'
+              : '先從錯題與未作答題目開始複習，再回來挑戰一次。'
+          }</p>
+        </div>
+      </section>
+
+      <section class="exam-analysis exam-focus-analysis">
+        <div class="bank-study-section-head">
+          <div>
+            <span class="learning-kicker">考後分析</span>
+            <h2>逐題檢查這一場的表現</h2>
+          </div>
+          <span class="bank-study-hint">答錯與未作答題目會預設展開</span>
         </div>
 
         <div class="exam-analysis-list">
@@ -152,14 +186,25 @@ function renderAnalysisItem(question, detail, index) {
   return `
     <details class="exam-analysis-item ${state}" ${detail.correct ? '' : 'open'}>
       <summary>
-        <span>第 ${index + 1} 題</span>
+        <span class="exam-analysis-number">${String(index + 1).padStart(2, '0')}</span>
         <strong>${escapeHtml(label)}</strong>
         <span>${escapeHtml(question.question)}</span>
       </summary>
       <div class="exam-analysis-body">
-        <p><strong>你的答案：</strong>${escapeHtml(formatAnswer(question, detail.userAnswer))}</p>
-        <p><strong>正確答案：</strong>${escapeHtml(formatAnswer(question, question.answer || []))}</p>
-        <p><strong>詳解：</strong>${escapeHtml(question.explanation || '這題目前沒有詳解。')}</p>
+        <div class="exam-analysis-answer-grid">
+          <div>
+            <span>你的答案</span>
+            <strong>${escapeHtml(formatAnswer(question, detail.userAnswer))}</strong>
+          </div>
+          <div>
+            <span>正確答案</span>
+            <strong>${escapeHtml(formatAnswer(question, question.answer || []))}</strong>
+          </div>
+        </div>
+        <div class="exam-analysis-explanation">
+          <span>詳解</span>
+          <p>${escapeHtml(question.explanation || '這題目前沒有詳解。')}</p>
+        </div>
       </div>
     </details>
   `;
@@ -170,34 +215,37 @@ function buildAnswerForm(question, savedAnswer) {
     const inputType = question.type === 'single-choice' ? 'radio' : 'checkbox';
     const selected = new Set(Array.isArray(savedAnswer) ? savedAnswer.map(String) : [String(savedAnswer ?? '')]);
     return (question.options || []).map(option => `
-      <label class="answer-option">
+      <label class="answer-option exam-focus-option">
         <input
           type="${inputType}"
           name="exam-answer"
           value="${escapeAttr(option.id)}"
           ${selected.has(String(option.id)) ? 'checked' : ''}
         />
-        <span><strong>${escapeHtml(option.id)}.</strong> ${escapeHtml(option.text)}</span>
+        <span class="practice-option-key">${escapeHtml(option.id)}</span>
+        <span class="practice-option-text">${escapeHtml(option.text)}</span>
       </label>
     `).join('');
   }
 
   if (question.type === 'true-false') {
     return `
-      <label class="answer-option">
+      <label class="answer-option exam-focus-option">
         <input type="radio" name="exam-answer" value="true" ${savedAnswer === true ? 'checked' : ''} />
-        <span>O / 是 / 正確</span>
+        <span class="practice-option-key">O</span>
+        <span class="practice-option-text">是 / 正確</span>
       </label>
-      <label class="answer-option">
+      <label class="answer-option exam-focus-option">
         <input type="radio" name="exam-answer" value="false" ${savedAnswer === false ? 'checked' : ''} />
-        <span>X / 否 / 錯誤</span>
+        <span class="practice-option-key">X</span>
+        <span class="practice-option-text">否 / 錯誤</span>
       </label>
     `;
   }
 
   if (question.type === 'fill-in') {
     return `
-      <label class="fill-answer">
+      <label class="fill-answer practice-fill-answer">
         <span>請輸入答案</span>
         <input
           type="text"
