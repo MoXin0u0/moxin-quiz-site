@@ -8,6 +8,8 @@ on:
       - ".github/workflows/migrate-erp-author-v2.yml"
       - "scripts/migrate-erp-author-to-v2.mjs"
       - "src/question-bank/author-catalog.js"
+      - "tests/v31-run.mjs"
+      - "tests/v32-run.mjs"
   workflow_dispatch:
 
 permissions:
