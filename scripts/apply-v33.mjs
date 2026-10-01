@@ -1248,6 +1248,19 @@ for (const legacyRootFile of ['script.js', 'style.css', 'question-banks.json']) 
   return js;
 }
 
+function updateV32RegressionTest() {
+  let js = read('tests/v32-run.mjs');
+
+  js = replaceOnce(
+    js,
+    "assert.match(sw, /moxin-quiz-v3-3\\.2\\.0-1/);",
+    "assert.match(sw, /const CACHE_VERSION = 'moxin-quiz-v3-[^']+';/);",
+    'v3.2 regression: future-proof Service Worker cache version',
+  );
+
+  return js;
+}
+
 function updateReleaseCutoverTest() {
   let js = read('tests/release-cutover-run.mjs');
 
@@ -1296,6 +1309,7 @@ write('service-worker.js', updateServiceWorker());
 write('.github/workflows/v3-regression.yml', updateRegressionWorkflow());
 write('scripts/v3-release-preflight.mjs', updateReleasePreflight());
 write('tests/release-cutover-run.mjs', updateReleaseCutoverTest());
+write('tests/v32-run.mjs', updateV32RegressionTest());
 write('docs/V3_3_TOOLS_AND_LEGACY_CLEANUP.md', v33Doc);
 
 // ------------------------------------------------------------------
