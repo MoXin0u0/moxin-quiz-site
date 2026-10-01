@@ -72,10 +72,14 @@ export function normalizeQuestionForType(question, type) {
     difficulty: Number.isInteger(source.difficulty) ? source.difficulty : 3,
   };
 
-  if (normalizedType === 'single-choice' || normalizedType === 'multiple-choice') {
+  const sourceType = QUESTION_TYPES.has(source.type) ? source.type : null;
+  const sourceIsChoice = sourceType === 'single-choice' || sourceType === 'multiple-choice';
+  const targetIsChoice = normalizedType === 'single-choice' || normalizedType === 'multiple-choice';
+
+  if (targetIsChoice) {
     const options = normalizeOptions(source.options);
     const optionIds = new Set(options.map(option => option.id));
-    const previous = Array.isArray(source.answer)
+    const previous = sourceIsChoice && Array.isArray(source.answer)
       ? source.answer.filter(value => optionIds.has(value))
       : [];
 
@@ -90,7 +94,9 @@ export function normalizeQuestionForType(question, type) {
   }
 
   if (normalizedType === 'true-false') {
-    const current = Array.isArray(source.answer) && typeof source.answer[0] === 'boolean'
+    const current = sourceType === 'true-false' &&
+      Array.isArray(source.answer) &&
+      typeof source.answer[0] === 'boolean'
       ? source.answer[0]
       : true;
 
@@ -102,7 +108,7 @@ export function normalizeQuestionForType(question, type) {
     };
   }
 
-  const fillAnswers = Array.isArray(source.answer)
+  const fillAnswers = sourceType === 'fill-in' && Array.isArray(source.answer)
     ? source.answer.filter(value => typeof value === 'string')
     : [];
 

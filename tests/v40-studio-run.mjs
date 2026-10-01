@@ -30,7 +30,26 @@ assert.ok(q2.answer.length >= 1);
 const fill = normalizeQuestionForType(q2, 'fill-in');
 assert.equal(fill.type, 'fill-in');
 assert.deepEqual(fill.options, []);
+assert.deepEqual(fill.answer, ['']);
 assert.equal(fill.caseSensitive, false);
+
+// Switching between incompatible answer models must never reinterpret an
+// option ID such as "A" as a legitimate fill-in answer.
+const choiceWithAnswerA = {
+  ...pkg.questions[0],
+  type: 'single-choice',
+  answer: ['A'],
+};
+const fillFromChoice = normalizeQuestionForType(choiceWithAnswerA, 'fill-in');
+assert.deepEqual(fillFromChoice.answer, ['']);
+
+const filledQuestion = {
+  ...fill,
+  type: 'fill-in',
+  answer: ['ERP'],
+};
+const choiceFromFill = normalizeQuestionForType(filledQuestion, 'single-choice');
+assert.deepEqual(choiceFromFill.answer, ['A']);
 
 const tf = normalizeQuestionForType(fill, 'true-false');
 assert.deepEqual(tf.answer, [true]);
