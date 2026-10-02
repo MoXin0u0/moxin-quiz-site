@@ -33,6 +33,14 @@ export function renderLearningGoalPanel(model = {}) {
   const review = today.reviewGoal || emptyMetric(goal.dailyReviewTarget);
   const history = Array.isArray(progress.history) ? progress.history : [];
   const configured = model.configured === true;
+  const reportedActiveTargetCount = Number(progress.activeTargetCount);
+  const activeTargetCount = Number.isFinite(reportedActiveTargetCount)
+    ? reportedActiveTargetCount
+    : Number(Number(goal.dailyPracticeTarget || 0) > 0) +
+      Number(Number(goal.dailyReviewTarget || 0) > 0);
+  const hasActiveGoal =
+    goal.enabled === true &&
+    activeTargetCount > 0;
 
   return `
     <section class="learning-goal-panel" aria-labelledby="learningGoalTitle">
@@ -60,10 +68,16 @@ export function renderLearningGoalPanel(model = {}) {
       <div class="learning-goal-dashboard">
         <article class="learning-goal-summary-card primary">
           <span>今日整體進度</span>
-          <strong>${clampPercent(today.completionPercent)}%</strong>
-          <small>${today.achieved ? '今日目標已完成' : goal.enabled ? '依目前目標持續累積' : '目前未啟用目標'}</small>
+          <strong>${hasActiveGoal ? `${clampPercent(today.completionPercent)}%` : '尚未設定'}</strong>
+          <small>${
+            hasActiveGoal
+              ? today.achieved
+                ? '今日目標已完成'
+                : '依目前目標持續累積'
+              : '目前未啟用每日目標'
+          }</small>
           <div class="learning-goal-progress-track" aria-hidden="true">
-            <i style="width:${clampPercent(today.completionPercent)}%"></i>
+            <i style="width:${hasActiveGoal ? clampPercent(today.completionPercent) : 0}%"></i>
           </div>
         </article>
 
@@ -75,8 +89,8 @@ export function renderLearningGoalPanel(model = {}) {
 
         <article class="learning-goal-summary-card">
           <span>近 7 日達成</span>
-          <strong>${Number(progress.recentAchievedDays || 0)} / ${history.length || 7}</strong>
-          <small>以目前設定的目標回看</small>
+          <strong>${hasActiveGoal ? `${Number(progress.recentAchievedDays || 0)} / ${history.length || 7}` : '—'}</strong>
+          <small>${hasActiveGoal ? '以目前設定的目標回看' : '啟用目標後開始計算達成日'}</small>
         </article>
       </div>
 
@@ -89,11 +103,13 @@ export function renderLearningGoalPanel(model = {}) {
         <div class="learning-goal-history-head">
           <div>
             <strong>最近 7 日</strong>
-            <span>綠色代表依目前目標達成；有作答但未完成會顯示進度。</span>
+            <span>${hasActiveGoal
+              ? '綠色代表依目前目標達成；有作答但未完成會顯示進度。'
+              : '尚未啟用目標時，只顯示是否有學習與當日題數。'}</span>
           </div>
         </div>
         <div class="learning-goal-week" role="list" aria-label="最近七日學習目標">
-          ${history.map(day => historyCell(day)).join('')}
+          ${history.map(day => historyCell(day, { hasActiveGoal })).join('')}
         </div>
       </div>
 
@@ -177,18 +193,28 @@ function targetCard(title, subtitle, metric, kind) {
   `;
 }
 
-function historyCell(day) {
+function historyCell(day, { hasActiveGoal = false } = {}) {
   const percent = clampPercent(day?.completionPercent);
-  const state = day?.achieved
+  const state = hasActiveGoal && day?.achieved
     ? 'is-achieved'
     : day?.active
       ? 'is-active'
       : 'is-empty';
 
+  const status = hasActiveGoal
+    ? day?.achieved
+      ? '✓'
+      : day?.active
+        ? `${percent}%`
+        : '—'
+    : day?.active
+      ? '有學習'
+      : '—';
+
   return `
     <div class="learning-goal-day ${state}" role="listitem" title="${escapeAttr(day.dateKey || '')}">
       <span>${formatShortDate(day.dateKey)}</span>
-      <strong>${day?.achieved ? '✓' : day?.active ? `${percent}%` : '—'}</strong>
+      <strong>${status}</strong>
       <small>${Number(day?.answered || 0)} 題</small>
     </div>
   `;
