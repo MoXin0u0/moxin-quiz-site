@@ -50,12 +50,13 @@ assert.match(p7, /root\.dataset\.sceneIntensity = settings\.sceneIntensity/);
 
 assert.match(styleCss, /data-learning-style="academy"/);
 assert.match(styleCss, /data-learning-style="focus"/);
+assert.match(styleCss, /data-learning-style="epic"/);
 assert.match(styleCss, /data-scene-intensity="reduced"/);
 assert.match(styleCss, /data-scene-intensity="off"/);
 assert.match(styleCss, /learning-style-picker/);
 assert.match(styleCss, /scene-intensity-picker/);
 
 assert.match(sw, /styles\/v4-learning-styles\.css/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2i-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[ij]-1/);
 
 console.log('MoXin Quiz v4.0 R2I visual style system tests passed.');

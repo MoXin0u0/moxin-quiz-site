@@ -13,7 +13,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
 const VALID_THEMES = new Set(['system', 'light', 'dark']);
 const VALID_FONT_SCALES = new Set(['normal', 'large', 'x-large']);
 const VALID_OPTION_SPACING = new Set(['compact', 'normal', 'comfortable']);
-const VALID_LEARNING_STYLES = new Set(['academy', 'focus']);
+const VALID_LEARNING_STYLES = new Set(['academy', 'epic', 'focus']);
 const VALID_SCENE_INTENSITIES = new Set(['full', 'reduced', 'off']);
 
 export function normalizeSettings(settings = {}) {

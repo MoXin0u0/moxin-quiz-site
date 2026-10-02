@@ -55,9 +55,11 @@ export function renderSettings(container, { settings, storage, checks, pwa }) {
                 current: settings.learningStyle,
                 previewClass: 'focus',
               })}
-              ${futureStyle({
+              ${styleOption({
+                value: 'epic',
                 label: '史詩幻想',
-                description: '大型世界觀場景與更具戲劇感的視覺。',
+                description: '奇幻學院、知識殿堂與更具戲劇感的場景光影。',
+                current: settings.learningStyle,
                 previewClass: 'epic',
               })}
               ${futureStyle({
