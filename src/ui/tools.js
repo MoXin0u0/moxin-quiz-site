@@ -92,7 +92,7 @@ questions.json 的 images 與 explanationImages 只放相對路徑字串，例�
 輸出後，再另外列出「人工核對清單」，只指出需要人工確認的題號、原因與欄位，不要擅自修正來源沒有證據支持的內容。
 `.trim();
 
-export function renderQuestionBankTools(container) {
+export function renderQuestionBankTools(container, options = {}) {
   if (!container) return;
 
   container.innerHTML = `
@@ -161,6 +161,7 @@ export function renderQuestionBankTools(container) {
 
   mountStudioWorkspace(
     container.querySelector('#studioWorkspaceMount'),
+    { draftId: options.draftId || null },
   ).catch(error => {
     console.error('Question Bank Studio failed to mount.', error);
     const mount = container.querySelector('#studioWorkspaceMount');

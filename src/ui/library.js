@@ -150,6 +150,10 @@ export function renderInspection(container, pkg, options = {}) {
   const questionCount = report?.summary?.questionCount ?? pkg.questions?.length ?? 0;
   const assetCount = report?.summary?.assetCount ?? pkg.assets?.length ?? 0;
   const sourceName = pkg.source?.name || pkg.source?.kind || '題庫';
+  const studioPlan = options.studioPlan || null;
+  const studioValid = studioPlan?.valid === true;
+  const studioCollision = studioPlan?.hasCollision === true;
+  const studioTargetId = studioPlan?.targetBankId || manifest.id || '';
 
   container.innerHTML = `
     <article class="inspection-card ${valid ? 'is-valid' : 'is-error'}">
@@ -157,7 +161,7 @@ export function renderInspection(container, pkg, options = {}) {
         <div>
           <div class="inspection-status-row">
             <span class="status-badge ${valid ? 'success' : 'error'}">${valid ? '驗證通過' : '驗證失敗'}</span>
-            ${existing ? '<span class="status-badge warning">將更新既有題庫</span>' : ''}
+            ${existing ? '<span class="status-badge warning">本機已有同 ID 題庫</span>' : ''}
           </div>
           <h3>${escapeHtml(manifest.name || manifest.id || sourceName)}</h3>
           <p>${escapeHtml(sourceName)} · ${escapeHtml(manifest.id || '無 ID')}</p>
@@ -189,9 +193,24 @@ export function renderInspection(container, pkg, options = {}) {
         </details>
       ` : '<p class="inspection-clean">沒有發現格式問題。</p>'}
 
+      ${studioPlan ? `
+        <div class="inspection-studio-note ${studioCollision ? 'warning' : ''}">
+          <strong>${studioCollision ? '工作室會建立可編輯副本' : '可直接開進題庫工作室'}</strong>
+          <p>
+            ${studioCollision
+              ? `本機已有 ID「${escapeHtml(studioPlan.originalBankId)}」，工作室會改用「${escapeHtml(studioTargetId)}」，不會覆蓋目前本機題庫。`
+              : `工作室草稿會使用 ID「${escapeHtml(studioTargetId)}」，原始匯入檔不會被修改。`}
+            ${warnings ? '目前有警告項目，可進入工作室後再檢查與修正。' : ''}
+          </p>
+        </div>
+      ` : ''}
+
       <div class="inspection-actions">
         <button class="button primary" type="button" data-import-inspected ${valid ? '' : 'disabled'}>
           ${existing ? '更新這個題庫' : '匯入到我的題庫'}
+        </button>
+        <button class="button secondary" type="button" data-open-inspected-studio ${studioValid ? '' : 'disabled'}>
+          在題庫工作室中開啟
         </button>
         <button class="button secondary" type="button" data-dismiss-inspection>取消</button>
       </div>

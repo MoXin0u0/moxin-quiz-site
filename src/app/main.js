@@ -42,6 +42,11 @@ import {
   inspectQuestionBankFile,
   inspectQuestionBankFolder,
 } from '../question-bank/importer.js';
+import { saveStudioDraft } from '../storage/repositories/studio.js';
+import {
+  createStudioDraftFromInspectedPackage,
+  inspectStudioPackagePlan,
+} from '../studio/package-to-draft.js';
 import {
   compareVersions,
   inspectAuthorBank,
@@ -233,8 +238,17 @@ function bindEvents() {
   elements.refreshAuthorBanksButton.addEventListener('click', refreshAuthorCatalog);
 
   elements.inspectionArea.addEventListener('click', async event => {
+    const studioButton = event.target.closest('[data-open-inspected-studio]');
+    if (studioButton) {
+      await openCurrentPackageInStudio();
+      return;
+    }
+
     const importButton = event.target.closest('[data-import-inspected]');
-    if (importButton) await importCurrentPackage();
+    if (importButton) {
+      await importCurrentPackage();
+      return;
+    }
 
     const dismissButton = event.target.closest('[data-dismiss-inspection]');
     if (dismissButton) {
@@ -555,8 +569,11 @@ async function inspectFile(file) {
   try {
     const pkg = await inspectQuestionBankFile(file);
     state.inspectedPackage = pkg;
+    const existingBankIds = new Set(state.banks.map(bank => bank.id));
+    const studioPlan = inspectStudioPackagePlan(pkg, { existingBankIds });
     renderInspection(elements.inspectionArea, pkg, {
-      existingBankIds: new Set(state.banks.map(bank => bank.id)),
+      existingBankIds,
+      studioPlan,
     });
   } catch (error) {
     state.inspectedPackage = null;
@@ -574,8 +591,11 @@ async function inspectFolder(files) {
   try {
     const pkg = await inspectQuestionBankFolder(files);
     state.inspectedPackage = pkg;
+    const existingBankIds = new Set(state.banks.map(bank => bank.id));
+    const studioPlan = inspectStudioPackagePlan(pkg, { existingBankIds });
     renderInspection(elements.inspectionArea, pkg, {
-      existingBankIds: new Set(state.banks.map(bank => bank.id)),
+      existingBankIds,
+      studioPlan,
     });
   } catch (error) {
     state.inspectedPackage = null;
@@ -583,6 +603,43 @@ async function inspectFolder(files) {
       fatalError: error.message,
       source: { name: '題庫資料夾', kind: 'folder' },
     });
+  } finally {
+    setBusy(false);
+  }
+}
+
+async function openCurrentPackageInStudio() {
+  const pkg = state.inspectedPackage;
+  if (!pkg) return;
+
+  setBusy(true, '正在建立題庫工作室草稿…');
+
+  try {
+    const existingBankIds = state.banks.map(bank => bank.id);
+    const { draft, plan } = createStudioDraftFromInspectedPackage(pkg, {
+      existingBankIds,
+    });
+
+    const saved = await saveStudioDraft(draft);
+
+    state.inspectedPackage = null;
+    renderInspection(elements.inspectionArea, null);
+
+    renderQuestionBankTools(elements.toolsArea, {
+      draftId: saved.id,
+    });
+    showView('tools');
+
+    showToast(
+      elements.toastRegion,
+      plan.hasCollision
+        ? `已建立工作室副本「${saved.manifest.name}」，ID：${saved.manifest.id}`
+        : `已在題庫工作室開啟「${saved.manifest.name}」。`,
+      'success',
+    );
+  } catch (error) {
+    console.error(error);
+    showToast(elements.toastRegion, `無法開啟題庫工作室：${error.message}`, 'error');
   } finally {
     setBusy(false);
   }

@@ -2,6 +2,14 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P2C.1 — Import → Studio UI Integration
+- ZIP / JSON / 資料夾檢查結果新增「在題庫工作室中開啟」。
+- 檢查畫面顯示 P2C 的目標題庫 ID；同 ID 已存在時明確顯示安全 copy ID。
+- 外部 package 建立 Studio Draft 後，自動導航並直接開啟該草稿。
+- Schema warning 可進 Studio 修正；Schema error 仍阻止開啟。
+- 原本「匯入到我的題庫 / 更新題庫」流程保持不變。
+- 新增 P2C.1 UI regression，並更新 APP cache。
+
 ## P2C — Package → Studio Draft Core
 - 新增 ZIP / JSON inspected package → Studio Draft 的正式轉換層。
 - 重新執行 canonical validator，不信任過期 pkg.report。

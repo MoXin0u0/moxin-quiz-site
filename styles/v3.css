@@ -182,6 +182,29 @@ button:disabled { cursor: not-allowed; opacity: .48; }
 .issue-row code { font-size: .78rem; word-break: break-all; }
 .issue-row p { margin: .2rem 0 0; }
 .inspection-clean { color: var(--success); font-weight: 700; }
+.inspection-studio-note {
+  margin-top: .9rem;
+  padding: .75rem .85rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 26%, var(--line));
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+}
+.inspection-studio-note.warning {
+  border-color: color-mix(in srgb, var(--warning) 38%, var(--line));
+  background: var(--warning-soft);
+}
+.inspection-studio-note strong {
+  display: block;
+  color: var(--text);
+}
+.inspection-studio-note p {
+  margin: .3rem 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.inspection-studio-note.warning p {
+  color: var(--warning);
+}
 .inspection-actions, .card-actions { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1rem; }
 
 .button {

@@ -73,11 +73,17 @@ const state = {
   assetPreviewUrls: new Map(),
 };
 
-export async function mountStudioWorkspace(mount) {
+export async function mountStudioWorkspace(mount, options = {}) {
   if (!mount) return;
   ensureStudioStyles();
   state.mount = mount;
   bindWorkspace(mount);
+
+  const requestedDraftId = String(options.draftId || '').trim();
+  if (requestedDraftId) {
+    await openDraftById(requestedDraftId);
+    return;
+  }
 
   if (state.mode === 'editor' && state.draft) {
     renderEditor();
