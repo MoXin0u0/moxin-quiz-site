@@ -102,10 +102,10 @@ import {
     source = replaceOne(
       source,
       `          <button class="button secondary compact" type="button" data-studio-validate>檢查</button>
-          <button class="button primary compact" type="button" data-studio-save-library ${report.valid ? '' : 'disabled'}>儲存到我的題庫</button>`,
+          <button class="button primary compact" type="button" data-studio-save-library \${report.valid ? '' : 'disabled'}>儲存到我的題庫</button>`,
       `          <button class="button secondary compact" type="button" data-studio-batch-import>批次貼題</button>
           <button class="button secondary compact" type="button" data-studio-validate>檢查</button>
-          <button class="button primary compact" type="button" data-studio-save-library ${report.valid ? '' : 'disabled'}>儲存到我的題庫</button>`,
+          <button class="button primary compact" type="button" data-studio-save-library \${report.valid ? '' : 'disabled'}>儲存到我的題庫</button>`,
       'studio editor batch button',
     );
   }
@@ -166,7 +166,7 @@ async function importBatchQuestions({ replaceStarter = false } = {}) {
   await persistDraftNow();
   renderEditor();
   setStatus(
-    \`已從批次文字加入 ${additions.length} 題。需確認的題目仍會由工作室驗證標示。\`,
+    \`已從批次文字加入 \${additions.length} 題。需確認的題目仍會由工作室驗證標示。\`,
     'ok',
   );
 }
