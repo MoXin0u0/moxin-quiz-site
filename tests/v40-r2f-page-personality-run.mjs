@@ -40,6 +40,7 @@ const r2fCss = css.slice(r2fStart);
 assert.doesNotMatch(r2fCss, /assets\/learning\/light-sun-corner\.svg/);
 assert.doesNotMatch(r2fCss, /assets\/learning\/dark-desk-side\.svg/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z0-9.]+-1/);
+// Cache revision is allowed to advance independently of this milestone.
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z0-9.]+-\d+/);
 
 console.log('MoXin Quiz v4.0 R2F page personality and scene framework tests passed.');

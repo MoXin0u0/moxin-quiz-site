@@ -47,6 +47,7 @@ assert.match(sceneLoader, /styles\/epic\/library-light\.webp/);
 assert.match(sceneLoader, /styles\/epic\/stats-dark\.webp/);
 assert.match(sw, /cacheFirstScene/);
 assert.match(sw, /moxin-quiz-scenes-/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-1/);
+// Cache revision is allowed to advance independently of this milestone.
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-\d+/);
 
 console.log('MoXin Quiz v4.0 R2J epic fantasy style tests passed.');
