@@ -53,7 +53,7 @@ write('docs/V4_0_P3_1_LEARNING_GOAL_UI.md', DOC_CODE);
     <section class="learning-section-head">`,
 `    </section>
 
-    ${renderLearningGoalPanel(options.goalModel || {})}
+    \${renderLearningGoalPanel(options.goalModel || {})}
 
     <section class="learning-section-head">`,
     'review goal panel insertion',
