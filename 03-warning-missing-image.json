@@ -1,0 +1,48 @@
+{
+  "manifest": {
+    "schemaVersion": "2.0",
+    "id": "p2c-acceptance-warning",
+    "name": "P2C 驗收：Warning 題庫",
+    "description": "故意缺少圖片檔，用來驗收 warning 不阻擋 Studio。",
+    "version": "1.0.0",
+    "author": "P2C Acceptance Test",
+    "language": "zh-TW",
+    "questionCount": 1,
+    "createdAt": "2026-10-02T00:00:00.000Z",
+    "updatedAt": "2026-10-02T00:00:00.000Z",
+    "metadata": {
+      "category": "P2C 驗收"
+    }
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "type": "single-choice",
+      "question": "這一題故意引用不存在的圖片，應只產生 warning。",
+      "options": [
+        {
+          "id": "A",
+          "text": "仍可進入工作室"
+        },
+        {
+          "id": "B",
+          "text": "完全禁止開啟"
+        }
+      ],
+      "answer": [
+        "A"
+      ],
+      "explanation": "P2C 規格允許 warning package 開進 Studio 再修正。",
+      "images": [
+        "assets/images/Q001/question/missing.png"
+      ],
+      "explanationImages": [],
+      "chapter": "警告驗收",
+      "tags": [
+        "P2C",
+        "warning"
+      ],
+      "difficulty": 3
+    }
+  ]
+}

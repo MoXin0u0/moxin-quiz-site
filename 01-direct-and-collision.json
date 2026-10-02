@@ -1,0 +1,72 @@
+{
+  "manifest": {
+    "schemaVersion": "2.0",
+    "id": "p2c-acceptance-direct",
+    "name": "P2C 驗收：JSON 直開題庫",
+    "description": "用來驗收 JSON → Studio Draft 與 ID collision。",
+    "version": "1.0.0",
+    "author": "P2C Acceptance Test",
+    "language": "zh-TW",
+    "questionCount": 2,
+    "createdAt": "2026-10-02T00:00:00.000Z",
+    "updatedAt": "2026-10-02T00:00:00.000Z",
+    "metadata": {
+      "category": "P2C 驗收"
+    }
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "type": "single-choice",
+      "question": "P2C 驗收：ERP 的核心目的為何？",
+      "options": [
+        {
+          "id": "A",
+          "text": "整合企業流程與資訊"
+        },
+        {
+          "id": "B",
+          "text": "只處理圖片"
+        },
+        {
+          "id": "C",
+          "text": "只管理電子郵件"
+        },
+        {
+          "id": "D",
+          "text": "取代所有員工"
+        }
+      ],
+      "answer": [
+        "A"
+      ],
+      "explanation": "ERP 的核心之一是整合跨部門流程與資訊。",
+      "images": [],
+      "explanationImages": [],
+      "chapter": "P2C 基礎",
+      "tags": [
+        "P2C",
+        "ERP"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "Q002",
+      "type": "true-false",
+      "question": "P2C 驗收：HTML 是資料庫管理系統。",
+      "options": [],
+      "answer": [
+        false
+      ],
+      "explanation": "HTML 是標記語言，不是資料庫管理系統。",
+      "images": [],
+      "explanationImages": [],
+      "chapter": "P2C 基礎",
+      "tags": [
+        "P2C",
+        "HTML"
+      ],
+      "difficulty": 1
+    }
+  ]
+}
