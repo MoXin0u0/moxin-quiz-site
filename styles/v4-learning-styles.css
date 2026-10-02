@@ -771,3 +771,540 @@ html[data-theme="dark"] .learning-style-preview.focus {
     text-align: center;
   }
 }
+
+
+/* ============================================================
+ * v4.0 R2K — Style Differentiation
+ *
+ * Academy and Epic must differ in object language, material,
+ * typography, light behavior and scene composition — not only hue.
+ * ========================================================== */
+
+/* ------------------------------------------------------------
+ * Classic Academy — heritage scholarship
+ * Object language: leather-bound books, brass globe/astrolabe,
+ * manuscripts, ink, hourglass, exam hall, research blackboard.
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="academy"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #f1e9dc;
+  --learn-canvas-2: #faf5ec;
+  --learn-surface: rgba(255, 250, 240, .93);
+  --learn-surface-strong: #fffaf0;
+  --learn-surface-soft: #f4eadb;
+  --learn-surface-tint: #eadac4;
+  --learn-text: #30261d;
+  --learn-muted: #746454;
+  --learn-line: #d5c2a7;
+  --learn-line-strong: #bfa27f;
+  --learn-primary: #6d4b30;
+  --learn-primary-2: #a77a43;
+  --learn-cyan: #527f79;
+  --learn-teal: #567963;
+  --learn-gold: #b98745;
+  --learn-rose: #96636b;
+  --learn-shadow: 0 24px 58px rgba(78, 58, 38, .14);
+  --learn-shadow-soft: 0 9px 25px rgba(78, 58, 38, .09);
+  --academy-brass: #b88948;
+  --academy-walnut: #67462f;
+  --academy-parchment: #efe0c6;
+  --style-card-radius: 14px;
+  --style-hero-radius: 18px;
+
+  border-color: color-mix(in srgb, var(--academy-brass) 28%, var(--learn-line));
+  background:
+    radial-gradient(circle at 88% 2%, rgba(188, 142, 77, .12), transparent 28rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="dark"][data-learning-style="academy"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #14110e;
+  --learn-canvas-2: #201811;
+  --learn-surface: rgba(35, 28, 22, .93);
+  --learn-surface-strong: #2a2119;
+  --learn-surface-soft: #33281e;
+  --learn-surface-tint: #403125;
+  --learn-text: #f5ecdc;
+  --learn-muted: #c2b19c;
+  --learn-line: #594634;
+  --learn-line-strong: #735b42;
+  --learn-primary: #d0ad72;
+  --learn-primary-2: #9e7045;
+  --learn-cyan: #79a49a;
+  --learn-teal: #84a58a;
+  --learn-gold: #d9ae68;
+  --learn-rose: #c48d91;
+  --learn-shadow: 0 28px 66px rgba(0,0,0,.34);
+  --learn-shadow-soft: 0 12px 30px rgba(0,0,0,.24);
+  --academy-brass: #d5ad6a;
+  --academy-walnut: #9a6b43;
+  --academy-parchment: #57432f;
+
+  border-color: rgba(117, 91, 62, .72);
+  background:
+    radial-gradient(circle at 86% -8%, rgba(181, 126, 62, .12), transparent 30rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+/* Academy scene assets — deliberately different objects per page. */
+html[data-learning-style="academy"][data-theme="light"] #libraryView { --learning-scene-image: url('../assets/learning/styles/academy/library-light.webp'); }
+html[data-learning-style="academy"][data-theme="dark"] #libraryView { --learning-scene-image: url('../assets/learning/styles/academy/library-dark.webp'); }
+html[data-learning-style="academy"][data-theme="light"] #reviewView { --learning-scene-image: url('../assets/learning/styles/academy/review-light.webp'); }
+html[data-learning-style="academy"][data-theme="dark"] #reviewView { --learning-scene-image: url('../assets/learning/styles/academy/review-dark.webp'); }
+html[data-learning-style="academy"][data-theme="light"] #examCenterView { --learning-scene-image: url('../assets/learning/styles/academy/exam-light.webp'); }
+html[data-learning-style="academy"][data-theme="dark"] #examCenterView { --learning-scene-image: url('../assets/learning/styles/academy/exam-dark.webp'); }
+html[data-learning-style="academy"][data-theme="light"] #statsView { --learning-scene-image: url('../assets/learning/styles/academy/stats-light.webp'); }
+html[data-learning-style="academy"][data-theme="dark"] #statsView { --learning-scene-image: url('../assets/learning/styles/academy/stats-dark.webp'); }
+
+html[data-learning-style="academy"] #libraryView { --learn-page-accent: #7b5537; --learn-page-accent-2: #b08750; }
+html[data-learning-style="academy"] #reviewView { --learn-page-accent: #67714d; --learn-page-accent-2: #a4814c; }
+html[data-learning-style="academy"] #examCenterView,
+html[data-learning-style="academy"] #examView { --learn-page-accent: #844f43; --learn-page-accent-2: #b6874a; }
+html[data-learning-style="academy"] #statsView { --learn-page-accent: #4e7774; --learn-page-accent-2: #a27a48; }
+
+html[data-learning-style="academy"] .learning-hero-whole {
+  border-radius: 18px;
+  border-color: color-mix(in srgb, var(--academy-brass) 42%, var(--learn-line));
+  box-shadow:
+    0 24px 54px rgba(67, 46, 27, .14),
+    inset 0 0 0 1px color-mix(in srgb, var(--academy-parchment) 72%, transparent);
+}
+
+html[data-learning-style="academy"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(255,250,239,.995) 0%,
+      rgba(255,250,239,.98) 30%,
+      rgba(248,239,223,.90) 44%,
+      rgba(238,221,195,.64) 59%,
+      rgba(228,203,168,.22) 77%,
+      rgba(228,203,168,.03) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.06), transparent 60%, rgba(92,57,31,.09));
+}
+
+html[data-theme="dark"][data-learning-style="academy"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(29,23,18,.995) 0%,
+      rgba(29,23,18,.98) 30%,
+      rgba(38,29,21,.91) 44%,
+      rgba(54,39,27,.68) 59%,
+      rgba(72,48,29,.24) 78%,
+      rgba(72,48,29,.04) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.08), transparent 58%, rgba(0,0,0,.26));
+}
+
+html[data-learning-style="academy"] .learning-hero-whole::after {
+  border-color: color-mix(in srgb, var(--academy-brass) 48%, var(--learn-line));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.42),
+    inset 0 -70px 120px color-mix(in srgb, var(--academy-walnut) 8%, transparent);
+}
+
+html[data-learning-style="academy"] :is(
+  .learning-hero-whole h2,
+  .learning-section-head h2,
+  .learning-bank-header h3,
+  .detail-hero h2
+) {
+  font-family: "Songti TC", "PMingLiU", Georgia, serif;
+  letter-spacing: -.028em;
+}
+
+html[data-learning-style="academy"] :is(
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card,
+  #bankDetailView .detail-hero,
+  #bankDetailView .filter-panel,
+  #practiceView .practice-shell,
+  #examView .exam-shell
+) {
+  border-radius: 14px;
+  border-color: color-mix(in srgb, var(--academy-brass) 26%, var(--learn-line));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, var(--academy-parchment)),
+      var(--learn-surface));
+  box-shadow:
+    var(--learn-shadow-soft),
+    inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
+}
+
+html[data-theme="dark"][data-learning-style="academy"] :is(
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card,
+  #bankDetailView .detail-hero,
+  #bankDetailView .filter-panel,
+  #practiceView .practice-shell,
+  #examView .exam-shell
+) {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, var(--academy-walnut)),
+      var(--learn-surface));
+}
+
+html[data-learning-style="academy"] .learning-hero-primary-cta,
+html[data-learning-style="academy"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
+  background: linear-gradient(105deg, var(--academy-walnut), var(--academy-brass));
+  color: #fffaf0;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--academy-walnut) 22%, transparent);
+}
+
+html[data-learning-style="academy"] :is(
+  .learning-hero-quick-links button,
+  .learning-hero-whole .learning-storage-row,
+  .learning-source-tabs
+) {
+  border-color: color-mix(in srgb, var(--academy-brass) 30%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 88%, var(--academy-parchment));
+}
+
+html[data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art {
+  filter: saturate(.86) contrast(1.05) sepia(.08);
+  transform: scale(1.018);
+}
+
+html[data-theme="dark"][data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art {
+  filter: saturate(.78) contrast(1.1) brightness(.82) sepia(.1);
+}
+
+/* ------------------------------------------------------------
+ * Epic Fantasy — arcane knowledge world
+ * Object language: floating grimoires, runic spheres, celestial
+ * instruments, portals, crystals, magical trial architecture.
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #eee9ff;
+  --learn-canvas-2: #f8f3ff;
+  --learn-surface: rgba(252, 249, 255, .88);
+  --learn-surface-strong: rgba(255, 252, 255, .94);
+  --learn-surface-soft: rgba(237, 229, 251, .88);
+  --learn-surface-tint: #e6daf7;
+  --learn-text: #23153b;
+  --learn-muted: #716183;
+  --learn-line: #d4c0ec;
+  --learn-line-strong: #b79bd9;
+  --learn-primary: #714fd5;
+  --learn-primary-2: #c15bd6;
+  --learn-cyan: #3ca8d0;
+  --learn-teal: #47b9a5;
+  --learn-gold: #d3a34f;
+  --learn-rose: #d36f9f;
+  --learn-shadow: 0 28px 72px rgba(77, 42, 130, .20);
+  --learn-shadow-soft: 0 12px 34px rgba(77, 42, 130, .13);
+  --epic-gold: #e0af53;
+  --epic-violet: #815cff;
+  --epic-cyan: #4ac4eb;
+  --epic-glow: rgba(132, 85, 246, .30);
+  --style-card-radius: 24px;
+  --style-hero-radius: 30px;
+
+  border-color: color-mix(in srgb, var(--epic-violet) 28%, var(--learn-line));
+  background:
+    radial-gradient(circle at 88% -2%, rgba(125, 88, 230, .18), transparent 30rem),
+    radial-gradient(circle at 12% 96%, rgba(52, 176, 205, .10), transparent 28rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="dark"][data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #080818;
+  --learn-canvas-2: #130c2a;
+  --learn-surface: rgba(19, 15, 42, .86);
+  --learn-surface-strong: rgba(27, 19, 55, .92);
+  --learn-surface-soft: rgba(37, 27, 70, .88);
+  --learn-surface-tint: #302254;
+  --learn-text: #fbf8ff;
+  --learn-muted: #c1b4d2;
+  --learn-line: #4d3975;
+  --learn-line-strong: #6e51a0;
+  --learn-primary: #aa7cff;
+  --learn-primary-2: #ec7fe7;
+  --learn-cyan: #65d6ff;
+  --learn-teal: #68ddc2;
+  --learn-gold: #f2c56f;
+  --learn-rose: #ff91bd;
+  --learn-shadow: 0 32px 80px rgba(0,0,0,.40);
+  --learn-shadow-soft: 0 14px 38px rgba(0,0,0,.28);
+  --epic-gold: #f1c56f;
+  --epic-violet: #ad85ff;
+  --epic-cyan: #72dcff;
+  --epic-glow: rgba(139, 91, 255, .36);
+
+  border-color: rgba(105, 76, 166, .70);
+  background:
+    radial-gradient(circle at 88% -8%, rgba(118, 69, 222, .30), transparent 33rem),
+    radial-gradient(circle at 10% 96%, rgba(45, 169, 209, .12), transparent 30rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-learning-style="epic"] .learning-hero-whole {
+  border-radius: 30px;
+  border-color: color-mix(in srgb, var(--epic-violet) 44%, var(--epic-gold));
+  box-shadow:
+    0 32px 76px color-mix(in srgb, var(--epic-violet) 22%, transparent),
+    0 0 42px color-mix(in srgb, var(--epic-cyan) 8%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+html[data-learning-style="epic"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(250,247,255,.995) 0%,
+      rgba(250,247,255,.97) 27%,
+      rgba(242,234,252,.86) 42%,
+      rgba(218,198,245,.52) 57%,
+      rgba(171,128,231,.16) 76%,
+      rgba(113,72,196,.02) 100%),
+    radial-gradient(circle at 82% 30%, rgba(106,82,220,.10), transparent 34%);
+}
+
+html[data-theme="dark"][data-learning-style="epic"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(10,8,28,.995) 0%,
+      rgba(10,8,28,.98) 27%,
+      rgba(16,11,38,.89) 42%,
+      rgba(31,18,66,.62) 57%,
+      rgba(62,32,116,.22) 77%,
+      rgba(74,38,134,.03) 100%),
+    radial-gradient(circle at 82% 28%, rgba(85,108,255,.12), transparent 34%);
+}
+
+html[data-learning-style="epic"] .learning-hero-whole::after {
+  border-color: color-mix(in srgb, var(--epic-violet) 46%, var(--epic-gold));
+  background:
+    radial-gradient(circle, rgba(255,255,255,.72) 0 1px, transparent 1.4px) 0 0 / 44px 44px,
+    radial-gradient(circle, color-mix(in srgb, var(--epic-cyan) 55%, transparent) 0 1px, transparent 1.7px) 17px 21px / 61px 61px;
+  opacity: .75;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.46),
+    inset 0 -90px 160px color-mix(in srgb, var(--learn-page-accent) 12%, transparent),
+    inset 0 0 110px color-mix(in srgb, var(--epic-violet) 7%, transparent);
+}
+
+html[data-theme="dark"][data-learning-style="epic"] .learning-hero-whole::after {
+  opacity: .9;
+}
+
+html[data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art {
+  filter: saturate(1.26) contrast(1.08) brightness(1.02);
+  transform: scale(1.045);
+}
+
+html[data-theme="dark"][data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art {
+  filter: saturate(1.30) contrast(1.12) brightness(.92);
+}
+
+html[data-learning-style="epic"] .learning-hero-whole h2 {
+  letter-spacing: -.045em;
+  text-shadow: 0 2px 28px color-mix(in srgb, var(--epic-violet) 10%, transparent);
+}
+
+html[data-learning-style="epic"] :is(
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card,
+  #bankDetailView .detail-hero,
+  #bankDetailView .filter-panel,
+  #practiceView .practice-shell,
+  #examView .exam-shell
+) {
+  border-radius: 22px;
+  border-color: color-mix(in srgb, var(--epic-violet) 26%, var(--learn-line));
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--epic-cyan) 7%, transparent), transparent 14rem),
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--learn-surface-strong) 94%, var(--epic-violet)),
+      var(--learn-surface));
+  box-shadow:
+    var(--learn-shadow-soft),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  backdrop-filter: blur(16px);
+}
+
+html[data-learning-style="epic"] .learning-hero-primary-cta,
+html[data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
+  background: linear-gradient(105deg,
+    var(--learn-page-accent, var(--epic-violet)),
+    var(--epic-violet) 52%,
+    var(--epic-cyan));
+  color: #fff;
+  box-shadow:
+    0 12px 30px color-mix(in srgb, var(--epic-violet) 30%, transparent),
+    0 0 22px color-mix(in srgb, var(--epic-cyan) 13%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--epic-gold) 22%, transparent);
+}
+
+html[data-learning-style="epic"] :is(
+  .learning-hero-quick-links button,
+  .learning-hero-whole .learning-storage-row,
+  .learning-source-tabs
+) {
+  border-color: color-mix(in srgb, var(--epic-violet) 28%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 66%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+html[data-learning-style="epic"] .learning-kicker {
+  color: var(--learn-page-accent, var(--epic-violet));
+  text-shadow: 0 0 22px color-mix(in srgb, var(--epic-violet) 34%, transparent);
+}
+
+html[data-learning-style="epic"] :is(.learning-mastery-bar, .learning-mini-progress) {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--epic-cyan) 16%, transparent);
+}
+
+html[data-learning-style="epic"] .answer-option:hover {
+  border-color: color-mix(in srgb, var(--epic-violet) 58%, var(--learn-line));
+  background: color-mix(in srgb, var(--epic-violet) 11%, var(--learn-surface));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--epic-cyan) 8%, transparent);
+}
+
+/* Settings previews now communicate object language, not only hue. */
+.learning-style-preview.academy {
+  background:
+    linear-gradient(90deg, transparent 0 56%, rgba(217,174,104,.22) 56% 58%, transparent 58%),
+    linear-gradient(145deg, #efe1ca 0 48%, #76513a 48% 100%);
+}
+
+html[data-theme="dark"] .learning-style-preview.academy {
+  background: linear-gradient(145deg, #1d1712 0 48%, #5d412f 100%);
+}
+
+.learning-style-preview.academy i:nth-child(1) {
+  inset: 7px 8px auto auto;
+  width: 27px;
+  height: 27px;
+  border: 2px solid #c99c58;
+  background: radial-gradient(circle at 50% 50%, transparent 0 42%, #c99c58 44% 47%, transparent 49%);
+}
+
+.learning-style-preview.academy i:nth-child(2) {
+  left: 8px;
+  bottom: 11px;
+  width: 43px;
+  height: 8px;
+  border-radius: 2px 5px 5px 2px;
+  background: #76513a;
+  box-shadow: 0 -9px 0 #9a7550;
+}
+
+.learning-style-preview.academy i:nth-child(3) {
+  left: 11px;
+  bottom: 4px;
+  width: 33px;
+  height: 4px;
+  border-radius: 1px;
+  background: #c99c58;
+}
+
+.learning-style-preview.epic {
+  background:
+    radial-gradient(circle at 72% 24%, rgba(120,216,255,.82), transparent 18%),
+    radial-gradient(circle at 48% 66%, rgba(177,101,255,.72), transparent 30%),
+    linear-gradient(145deg, #100d31, #48247c);
+}
+
+.learning-style-preview.epic i:nth-child(1) {
+  right: 9px;
+  top: 7px;
+  width: 27px;
+  height: 27px;
+  border: 2px solid #8bdcff;
+  background:
+    radial-gradient(circle, #efeaff 0 10%, transparent 12%),
+    conic-gradient(from 45deg, transparent 0 10%, #8bdcff 10% 12%, transparent 12% 23%, #bc7cff 23% 25%, transparent 25% 100%);
+  box-shadow: 0 0 10px rgba(100,190,255,.5);
+}
+
+.learning-style-preview.epic i:nth-child(2) {
+  left: 9px;
+  bottom: 9px;
+  width: 46px;
+  height: 8px;
+  background: linear-gradient(90deg, #815cff, #d36fe6, #65d6ff);
+  box-shadow: 0 0 9px rgba(131,93,255,.55);
+}
+
+.learning-style-preview.epic i:nth-child(3) {
+  left: 18px;
+  bottom: 3px;
+  width: 34px;
+  height: 4px;
+  background: #e2b45e;
+}
+
+@media (max-width: 760px) {
+  html[data-learning-style="academy"] .learning-hero-whole {
+    border-radius: 16px;
+  }
+
+  html[data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .30;
+    filter: saturate(.72) contrast(.98) sepia(.06);
+  }
+
+  html[data-learning-style="epic"] .learning-hero-whole {
+    border-radius: 22px;
+  }
+
+  html[data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .44;
+    filter: saturate(1.06) contrast(1.02);
+  }
+}

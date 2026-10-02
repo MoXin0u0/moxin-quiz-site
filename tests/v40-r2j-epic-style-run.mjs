@@ -44,6 +44,6 @@ for (const asset of [
 
 assert.match(sw, /assets\/learning\/styles\/epic\/library-light\.webp/);
 assert.match(sw, /assets\/learning\/styles\/epic\/stats-dark\.webp/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2j-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[kj]-1/);
 
 console.log('MoXin Quiz v4.0 R2J epic fantasy style tests passed.');

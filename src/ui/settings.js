@@ -44,7 +44,7 @@ export function renderSettings(container, { settings, storage, checks, pwa }) {
               ${styleOption({
                 value: 'academy',
                 label: '經典學院',
-                description: '完整場景、層次與學院式學習氛圍。',
+                description: '古典書庫、手稿、黃銅儀器與學院考場的學術氛圍。',
                 current: settings.learningStyle,
                 previewClass: 'academy',
               })}
@@ -58,7 +58,7 @@ export function renderSettings(container, { settings, storage, checks, pwa }) {
               ${styleOption({
                 value: 'epic',
                 label: '史詩幻想',
-                description: '奇幻學院、知識殿堂與更具戲劇感的場景光影。',
+                description: '漂浮魔導書、符文星圖、記憶水晶與試煉殿堂的幻想知識世界。',
                 current: settings.learningStyle,
                 previewClass: 'epic',
               })}
