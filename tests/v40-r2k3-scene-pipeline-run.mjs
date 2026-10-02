@@ -25,8 +25,8 @@ assert.match(css, /background-image:\s*none/);
 assert.match(css, /data-scene-state="loading"/);
 assert.match(css, /data-scene-state="ready"/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2k\.3-1/);
-assert.match(sw, /moxin-quiz-scenes-r2k\.3-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2k\.\d+-1/);
+assert.match(sw, /moxin-quiz-scenes-r2k\.\d+-1/);
 assert.match(sw, /cacheFirstScene/);
 assert.match(sw, /isLearningScene/);
 assert.match(sw, /src\/ui\/scene-assets\.js/);

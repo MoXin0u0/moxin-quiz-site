@@ -1,15 +1,94 @@
+const SCENE_BREAKPOINT = '(max-width: 760px)';
+const REDUCED_DATA_QUERY = '(prefers-reduced-data: reduce)';
+
+const sceneMedia = window.matchMedia(SCENE_BREAKPOINT);
+const reducedDataMedia = window.matchMedia(REDUCED_DATA_QUERY);
+const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
+
 const SCENE_ASSETS = Object.freeze({
   academy: Object.freeze({
-    library: { light: './assets/learning/styles/academy/library-light.webp', dark: './assets/learning/styles/academy/library-dark.webp' },
-    review: { light: './assets/learning/styles/academy/review-light.webp', dark: './assets/learning/styles/academy/review-dark.webp' },
-    exam: { light: './assets/learning/styles/academy/exam-light.webp', dark: './assets/learning/styles/academy/exam-dark.webp' },
-    stats: { light: './assets/learning/styles/academy/stats-light.webp', dark: './assets/learning/styles/academy/stats-dark.webp' },
+    library: Object.freeze({
+      light: Object.freeze({
+        desktop: './assets/learning/styles/academy/library-light.webp',
+        focal: Object.freeze({ desktop: '78% 50%', mobile: '70% 42%' }),
+      }),
+      dark: Object.freeze({
+        desktop: './assets/learning/styles/academy/library-dark.webp',
+        focal: Object.freeze({ desktop: '78% 50%', mobile: '70% 42%' }),
+      }),
+    }),
+    review: Object.freeze({
+      light: Object.freeze({
+        desktop: './assets/learning/styles/academy/review-light.webp',
+        focal: Object.freeze({ desktop: '76% 48%', mobile: '69% 40%' }),
+      }),
+      dark: Object.freeze({
+        desktop: './assets/learning/styles/academy/review-dark.webp',
+        focal: Object.freeze({ desktop: '76% 48%', mobile: '69% 40%' }),
+      }),
+    }),
+    exam: Object.freeze({
+      light: Object.freeze({
+        desktop: './assets/learning/styles/academy/exam-light.webp',
+        focal: Object.freeze({ desktop: '73% 50%', mobile: '66% 42%' }),
+      }),
+      dark: Object.freeze({
+        desktop: './assets/learning/styles/academy/exam-dark.webp',
+        focal: Object.freeze({ desktop: '73% 50%', mobile: '66% 42%' }),
+      }),
+    }),
+    stats: Object.freeze({
+      light: Object.freeze({
+        desktop: './assets/learning/styles/academy/stats-light.webp',
+        focal: Object.freeze({ desktop: '78% 48%', mobile: '70% 40%' }),
+      }),
+      dark: Object.freeze({
+        desktop: './assets/learning/styles/academy/stats-dark.webp',
+        focal: Object.freeze({ desktop: '78% 48%', mobile: '70% 40%' }),
+      }),
+    }),
   }),
   epic: Object.freeze({
-    library: { light: './assets/learning/styles/epic/library-light.webp', dark: './assets/learning/styles/epic/library-dark.webp' },
-    review: { light: './assets/learning/styles/epic/review-light.webp', dark: './assets/learning/styles/epic/review-dark.webp' },
-    exam: { light: './assets/learning/styles/epic/exam-light.webp', dark: './assets/learning/styles/epic/exam-dark.webp' },
-    stats: { light: './assets/learning/styles/epic/stats-light.webp', dark: './assets/learning/styles/epic/stats-dark.webp' },
+    library: Object.freeze({
+      light: Object.freeze({
+        desktop: './assets/learning/styles/epic/library-light.webp',
+        focal: Object.freeze({ desktop: '80% 47%', mobile: '72% 38%' }),
+      }),
+      dark: Object.freeze({
+        desktop: './assets/learning/styles/epic/library-dark.webp',
+        focal: Object.freeze({ desktop: '80% 47%', mobile: '72% 38%' }),
+      }),
+    }),
+    review: Object.freeze({
+      light: Object.freeze({
+        desktop: './assets/learning/styles/epic/review-light.webp',
+        focal: Object.freeze({ desktop: '78% 50%', mobile: '71% 40%' }),
+      }),
+      dark: Object.freeze({
+        desktop: './assets/learning/styles/epic/review-dark.webp',
+        focal: Object.freeze({ desktop: '78% 50%', mobile: '71% 40%' }),
+      }),
+    }),
+    exam: Object.freeze({
+      light: Object.freeze({
+        desktop: './assets/learning/styles/epic/exam-light.webp',
+        focal: Object.freeze({ desktop: '76% 50%', mobile: '68% 42%' }),
+      }),
+      dark: Object.freeze({
+        desktop: './assets/learning/styles/epic/exam-dark.webp',
+        focal: Object.freeze({ desktop: '76% 50%', mobile: '68% 42%' }),
+      }),
+    }),
+    stats: Object.freeze({
+      light: Object.freeze({
+        desktop: './assets/learning/styles/epic/stats-light.webp',
+        focal: Object.freeze({ desktop: '78% 48%', mobile: '70% 40%' }),
+      }),
+      dark: Object.freeze({
+        desktop: './assets/learning/styles/epic/stats-dark.webp',
+        focal: Object.freeze({ desktop: '78% 48%', mobile: '70% 40%' }),
+      }),
+    }),
   }),
 });
 
@@ -22,32 +101,101 @@ function currentContext() {
     style: root.dataset.learningStyle || 'academy',
     theme: root.dataset.theme === 'dark' ? 'dark' : 'light',
     intensity: root.dataset.sceneIntensity || 'full',
+    mobile: sceneMedia.matches,
+    highDpi: (window.devicePixelRatio || 1) >= 1.5,
+    saveData: connection?.saveData === true || reducedDataMedia.matches,
+  };
+}
+
+function pickAssetVariant(entry, context) {
+  if (!entry) return null;
+
+  const candidates = context.mobile
+    ? [
+        context.highDpi && entry.mobile2x,
+        entry.mobile,
+        context.highDpi && entry.desktop2x,
+        entry.desktop,
+      ]
+    : [
+        context.highDpi && entry.desktop2x,
+        entry.desktop,
+      ];
+
+  const href = candidates.find(Boolean) || null;
+  if (!href) return null;
+
+  let variant = 'desktop';
+  if (context.mobile && href === entry.mobile2x) variant = 'mobile-2x';
+  else if (context.mobile && href === entry.mobile) variant = 'mobile';
+  else if (context.highDpi && href === entry.desktop2x) variant = 'desktop-2x';
+  else if (context.mobile) variant = 'mobile-fallback-desktop';
+
+  return {
+    href,
+    variant,
+    position: context.mobile
+      ? (entry.focal?.mobile || entry.focal?.desktop || '76% center')
+      : (entry.focal?.desktop || '76% center'),
   };
 }
 
 function resolveAsset(scene, context = currentContext()) {
-  if (context.intensity === 'off' || context.style === 'focus') return null;
-  return SCENE_ASSETS[context.style]?.[scene]?.[context.theme] || null;
+  if (context.intensity === 'off') return { href: null, reason: 'off' };
+  if (context.style === 'focus') return { href: null, reason: 'focus' };
+  if (context.saveData) return { href: null, reason: 'data-saver' };
+
+  const entry = SCENE_ASSETS[context.style]?.[scene]?.[context.theme] || null;
+  return pickAssetVariant(entry, context) || { href: null, reason: 'missing' };
 }
 
-function setSceneAsset(node, href) {
+function clearSceneAsset(node, reason = 'off') {
+  node.style.backgroundImage = 'none';
+  node.style.removeProperty('background-position');
+  node.removeAttribute('data-scene-src');
+  node.removeAttribute('data-scene-variant');
+  node.dataset.sceneState = reason;
+}
+
+function applySceneAsset(node, asset) {
+  node.style.backgroundImage = `url("${asset.href}")`;
+  node.style.backgroundPosition = asset.position;
+  node.dataset.sceneSrc = asset.href;
+  node.dataset.sceneVariant = asset.variant;
+  node.dataset.sceneState = 'ready';
+}
+
+function setSceneAsset(node, asset) {
   if (!node) return;
 
-  if (!href) {
-    node.style.backgroundImage = 'none';
-    node.removeAttribute('data-scene-src');
-    node.dataset.sceneState = 'off';
+  if (!asset?.href) {
+    clearSceneAsset(node, asset?.reason || 'off');
     return;
   }
 
-  if (node.dataset.sceneSrc === href && node.dataset.sceneState === 'ready') return;
+  // Focal point and device variant can change even when the URL is the same.
+  node.style.backgroundPosition = asset.position;
+  node.dataset.sceneVariant = asset.variant;
 
-  node.dataset.sceneSrc = href;
-  node.dataset.sceneState = loadedAssets.has(href) ? 'ready' : 'loading';
+  if (node.dataset.sceneSrc === asset.href && node.dataset.sceneState === 'ready') return;
+
+  if (loadedAssets.has(asset.href)) {
+    applySceneAsset(node, asset);
+    return;
+  }
+
+  const previousHref = node.dataset.sceneSrc;
+  const hasVisibleScene =
+    Boolean(previousHref) &&
+    node.style.backgroundImage &&
+    node.style.backgroundImage !== 'none';
+
+  // Keep the previous scene visible while the next one decodes.
+  node.dataset.sceneState = hasVisibleScene ? 'swapping' : 'loading';
 
   const image = new Image();
   image.decoding = 'async';
-  image.src = href;
+  image.src = asset.href;
 
   const ready = async () => {
     try {
@@ -56,19 +204,29 @@ function setSceneAsset(node, href) {
       // A successfully loaded image can still fail decode() in some browsers.
     }
 
-    if (node.dataset.sceneSrc !== href) return;
-    loadedAssets.add(href);
-    node.style.backgroundImage = `url("${href}")`;
-    node.dataset.sceneState = 'ready';
+    const latest = resolveAsset(node.dataset.sceneArt);
+    if (!latest?.href || latest.href !== asset.href) return;
+
+    loadedAssets.add(asset.href);
+    applySceneAsset(node, {
+      ...asset,
+      position: latest.position,
+      variant: latest.variant,
+    });
   };
 
   if (image.complete && image.naturalWidth) ready();
   else {
     image.addEventListener('load', ready, { once: true });
     image.addEventListener('error', () => {
-      if (node.dataset.sceneSrc !== href) return;
-      node.style.backgroundImage = 'none';
-      node.dataset.sceneState = 'error';
+      const latest = resolveAsset(node.dataset.sceneArt);
+      if (latest?.href !== asset.href) return;
+
+      if (hasVisibleScene) {
+        node.dataset.sceneState = 'ready';
+      } else {
+        clearSceneAsset(node, 'error');
+      }
     }, { once: true });
   }
 }
@@ -88,6 +246,21 @@ function scheduleSync() {
     scheduled = false;
     syncLearningScenes();
   });
+}
+
+function listenMediaQuery(query) {
+  if (typeof query.addEventListener === 'function') {
+    query.addEventListener('change', scheduleSync);
+  } else if (typeof query.addListener === 'function') {
+    query.addListener(scheduleSync);
+  }
+}
+
+listenMediaQuery(sceneMedia);
+listenMediaQuery(reducedDataMedia);
+
+if (connection && typeof connection.addEventListener === 'function') {
+  connection.addEventListener('change', scheduleSync);
 }
 
 const rootObserver = new MutationObserver(scheduleSync);
