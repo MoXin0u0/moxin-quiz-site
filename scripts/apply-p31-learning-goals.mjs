@@ -232,21 +232,29 @@ import { buildLearningGoalProgress } from '../learning/goal-progress.js';`,
   write(path, source);
 }
 
-// 3. v3.html stylesheet.
+// 3. Release entry stylesheets.
+// index.html and v3.html are intentionally locked to identical content by
+// tests/release-cutover-run.mjs, so every release-entry HTML change must be
+// applied to both files in the same installer step.
 {
-  const path = 'v3.html';
-  let html = read(path);
+  for (const path of ['v3.html', 'index.html']) {
+    let html = read(path);
 
-  if (!html.includes('styles/v4-learning-goals.css')) {
-    html = replaceOne(
-      html,
-      '  <link rel="stylesheet" href="styles/v4-learning-styles.css" />',
-      '  <link rel="stylesheet" href="styles/v4-learning-styles.css" />\n  <link rel="stylesheet" href="styles/v4-learning-goals.css" />',
-      'v3 P3.1 stylesheet',
-    );
+    if (!html.includes('styles/v4-learning-goals.css')) {
+      html = replaceOne(
+        html,
+        '  <link rel="stylesheet" href="styles/v4-learning-styles.css" />',
+        '  <link rel="stylesheet" href="styles/v4-learning-styles.css" />\n  <link rel="stylesheet" href="styles/v4-learning-goals.css" />',
+        `${path} P3.1 stylesheet`,
+      );
+    }
+
+    write(path, html);
   }
 
-  write(path, html);
+  if (read('index.html') !== read('v3.html')) {
+    throw new Error('P3.1 release entry mismatch: index.html and v3.html must stay identical');
+  }
 }
 
 // 4. Service Worker.
@@ -332,8 +340,13 @@ import { buildLearningGoalProgress } from '../learning/goal-progress.js';`,
   const main = read('src/app/main.js');
   const review = read('src/ui/review-center.js');
   const html = read('v3.html');
+  const indexHtml = read('index.html');
   const sw = read('service-worker.js');
   const pkg = JSON.parse(read('package.json'));
+
+  if (indexHtml !== html) {
+    throw new Error('P3.1 self-check failed: index.html and v3.html are not identical');
+  }
 
   for (const [source, marker, label] of [
     [main, 'learningGoalScope: GLOBAL_SCOPE', 'goal scope state'],
@@ -341,7 +354,8 @@ import { buildLearningGoalProgress } from '../learning/goal-progress.js';`,
     [main, 'saveLearningGoal', 'goal save'],
     [main, "data-learning-goal-form", 'goal form handler'],
     [review, 'renderLearningGoalPanel', 'review goal panel'],
-    [html, 'styles/v4-learning-goals.css', 'goal css link'],
+    [html, 'styles/v4-learning-goals.css', 'v3 goal css link'],
+    [indexHtml, 'styles/v4-learning-goals.css', 'index goal css link'],
     [sw, "'./src/ui/learning-goals.js'", 'goal ui app shell'],
   ]) {
     if (!source.includes(marker)) throw new Error(`P3.1 self-check failed: ${label}`);
