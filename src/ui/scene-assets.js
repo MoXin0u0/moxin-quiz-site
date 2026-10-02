@@ -10,40 +10,48 @@ const SCENE_ASSETS = Object.freeze({
     library: Object.freeze({
       light: Object.freeze({
         desktop: './assets/learning/styles/academy/library-light.webp',
+        mobile: './assets/learning/styles/academy/library-light-mobile.webp',
         focal: Object.freeze({ desktop: '78% 50%', mobile: '70% 42%' }),
       }),
       dark: Object.freeze({
         desktop: './assets/learning/styles/academy/library-dark.webp',
+        mobile: './assets/learning/styles/academy/library-dark-mobile.webp',
         focal: Object.freeze({ desktop: '78% 50%', mobile: '70% 42%' }),
       }),
     }),
     review: Object.freeze({
       light: Object.freeze({
         desktop: './assets/learning/styles/academy/review-light.webp',
+        mobile: './assets/learning/styles/academy/review-light-mobile.webp',
         focal: Object.freeze({ desktop: '76% 48%', mobile: '69% 40%' }),
       }),
       dark: Object.freeze({
         desktop: './assets/learning/styles/academy/review-dark.webp',
+        mobile: './assets/learning/styles/academy/review-dark-mobile.webp',
         focal: Object.freeze({ desktop: '76% 48%', mobile: '69% 40%' }),
       }),
     }),
     exam: Object.freeze({
       light: Object.freeze({
         desktop: './assets/learning/styles/academy/exam-light.webp',
+        mobile: './assets/learning/styles/academy/exam-light-mobile.webp',
         focal: Object.freeze({ desktop: '73% 50%', mobile: '66% 42%' }),
       }),
       dark: Object.freeze({
         desktop: './assets/learning/styles/academy/exam-dark.webp',
+        mobile: './assets/learning/styles/academy/exam-dark-mobile.webp',
         focal: Object.freeze({ desktop: '73% 50%', mobile: '66% 42%' }),
       }),
     }),
     stats: Object.freeze({
       light: Object.freeze({
         desktop: './assets/learning/styles/academy/stats-light.webp',
+        mobile: './assets/learning/styles/academy/stats-light-mobile.webp',
         focal: Object.freeze({ desktop: '78% 48%', mobile: '70% 40%' }),
       }),
       dark: Object.freeze({
         desktop: './assets/learning/styles/academy/stats-dark.webp',
+        mobile: './assets/learning/styles/academy/stats-dark-mobile.webp',
         focal: Object.freeze({ desktop: '78% 48%', mobile: '70% 40%' }),
       }),
     }),
@@ -52,40 +60,48 @@ const SCENE_ASSETS = Object.freeze({
     library: Object.freeze({
       light: Object.freeze({
         desktop: './assets/learning/styles/epic/library-light.webp',
+        mobile: './assets/learning/styles/epic/library-light-mobile.webp',
         focal: Object.freeze({ desktop: '80% 47%', mobile: '72% 38%' }),
       }),
       dark: Object.freeze({
         desktop: './assets/learning/styles/epic/library-dark.webp',
+        mobile: './assets/learning/styles/epic/library-dark-mobile.webp',
         focal: Object.freeze({ desktop: '80% 47%', mobile: '72% 38%' }),
       }),
     }),
     review: Object.freeze({
       light: Object.freeze({
         desktop: './assets/learning/styles/epic/review-light.webp',
+        mobile: './assets/learning/styles/epic/review-light-mobile.webp',
         focal: Object.freeze({ desktop: '78% 50%', mobile: '71% 40%' }),
       }),
       dark: Object.freeze({
         desktop: './assets/learning/styles/epic/review-dark.webp',
+        mobile: './assets/learning/styles/epic/review-dark-mobile.webp',
         focal: Object.freeze({ desktop: '78% 50%', mobile: '71% 40%' }),
       }),
     }),
     exam: Object.freeze({
       light: Object.freeze({
         desktop: './assets/learning/styles/epic/exam-light.webp',
+        mobile: './assets/learning/styles/epic/exam-light-mobile.webp',
         focal: Object.freeze({ desktop: '76% 50%', mobile: '68% 42%' }),
       }),
       dark: Object.freeze({
         desktop: './assets/learning/styles/epic/exam-dark.webp',
+        mobile: './assets/learning/styles/epic/exam-dark-mobile.webp',
         focal: Object.freeze({ desktop: '76% 50%', mobile: '68% 42%' }),
       }),
     }),
     stats: Object.freeze({
       light: Object.freeze({
         desktop: './assets/learning/styles/epic/stats-light.webp',
+        mobile: './assets/learning/styles/epic/stats-light-mobile.webp',
         focal: Object.freeze({ desktop: '78% 48%', mobile: '70% 40%' }),
       }),
       dark: Object.freeze({
         desktop: './assets/learning/styles/epic/stats-dark.webp',
+        mobile: './assets/learning/styles/epic/stats-dark-mobile.webp',
         focal: Object.freeze({ desktop: '78% 48%', mobile: '70% 40%' }),
       }),
     }),
@@ -173,7 +189,6 @@ function setSceneAsset(node, asset) {
     return;
   }
 
-  // Focal point and device variant can change even when the URL is the same.
   node.style.backgroundPosition = asset.position;
   node.dataset.sceneVariant = asset.variant;
 
@@ -190,7 +205,6 @@ function setSceneAsset(node, asset) {
     node.style.backgroundImage &&
     node.style.backgroundImage !== 'none';
 
-  // Keep the previous scene visible while the next one decodes.
   node.dataset.sceneState = hasVisibleScene ? 'swapping' : 'loading';
 
   const image = new Image();
