@@ -1,4 +1,6 @@
-export function renderReviewCenter(container, groups) {
+import { renderLearningGoalPanel } from './learning-goals.js';
+
+export function renderReviewCenter(container, groups, options = {}) {
   const totalDue = groups.reduce((sum, group) => sum + group.counts.due, 0);
   const totalWrong = groups.reduce((sum, group) => sum + group.counts.wrong, 0);
   const totalFavorite = groups.reduce((sum, group) => sum + group.counts.favorite, 0);
@@ -49,6 +51,8 @@ export function renderReviewCenter(container, groups) {
         <small>${totalDue ? '排程到期' : totalWrong ? '錯題待整理' : totalUnfamiliar ? '不熟題' : '自由複習'}</small>
       </div>
     </section>
+
+    ${renderLearningGoalPanel(options.goalModel || {})}
 
     <section class="learning-section-head">
       <div>

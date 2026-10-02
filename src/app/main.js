@@ -10,6 +10,7 @@ import {
 import {
   addAttempt,
   getAttemptsByBank,
+  listAllAttempts,
 } from '../storage/repositories/attempts.js';
 import {
   getFavorite,
@@ -93,6 +94,18 @@ import {
   setUnfamiliarButton,
 } from '../ui/practice.js';
 import { renderReviewCenter } from '../ui/review-center.js';
+import {
+  GLOBAL_SCOPE,
+  createLearningGoalSaveInput,
+  learningGoalIdForScope,
+} from '../ui/learning-goals.js';
+import {
+  GLOBAL_GOAL_ID,
+  listLearningGoals,
+  normalizeLearningGoal,
+  saveLearningGoal,
+} from '../storage/repositories/goals.js';
+import { buildLearningGoalProgress } from '../learning/goal-progress.js';
 import { renderLearningStats } from '../ui/stats.js';
 import { renderExamCenter } from '../ui/exam-center.js';
 import {
@@ -125,6 +138,7 @@ const state = {
   practiceQuestionMap: new Map(),
   assetUrls: [],
   reviewGroups: [],
+  learningGoalScope: GLOBAL_SCOPE,
   exam: null,
   examQuestionMap: new Map(),
   examTimerId: null,
@@ -316,6 +330,36 @@ function bindEvents() {
       downloadTextFile('moxin-quiz-schema-v2-ai-prompt.txt', QUESTION_BANK_AI_PROMPT);
       showToast(elements.toastRegion, '提示詞已下載。', 'success');
     }
+  });
+
+  elements.reviewArea.addEventListener('change', async event => {
+    const scope = event.target.closest('[data-learning-goal-scope]');
+    if (!scope) return;
+    state.learningGoalScope = scope.value || GLOBAL_SCOPE;
+    await openReviewCenter();
+  });
+
+  elements.reviewArea.addEventListener('submit', async event => {
+    const form = event.target.closest('[data-learning-goal-form]');
+    if (!form) return;
+    event.preventDefault();
+
+    const scope =
+      form.querySelector('[data-learning-goal-form-scope]')?.value ||
+      state.learningGoalScope ||
+      GLOBAL_SCOPE;
+
+    const payload = createLearningGoalSaveInput({
+      scope,
+      enabled: form.querySelector('[data-learning-goal-enabled]')?.checked === true,
+      dailyPracticeTarget: form.querySelector('[data-learning-goal-practice]')?.value,
+      dailyReviewTarget: form.querySelector('[data-learning-goal-review]')?.value,
+    });
+
+    await saveLearningGoal(payload);
+    state.learningGoalScope = scope;
+    showToast(elements.toastRegion, '學習目標已儲存。', 'success');
+    await openReviewCenter();
   });
 
   elements.reviewArea.addEventListener('click', async event => {
@@ -808,36 +852,70 @@ function applyDetailFilters() {
 
 async function openReviewCenter() {
   await refreshBanks();
-  const groups = await Promise.all(state.banks.map(async bank => {
-    const [questions, progress, favorites, unfamiliar, due] = await Promise.all([
-      getQuestionsByBank(bank.id),
-      listQuestionProgress(bank.id),
-      listFavorites(bank.id),
-      listUnfamiliar(bank.id),
-      listDueReviews(bank.id),
-    ]);
 
-    const validIds = new Set(questions.map(question => question.id));
-    const wrongIds = new Set(
-      progress
-        .filter(item => item?.lastResult === 'wrong' && validIds.has(item.questionId))
-        .map(item => item.questionId)
-    );
+  const [goals, attempts, groups] = await Promise.all([
+    listLearningGoals(),
+    listAllAttempts(),
+    Promise.all(state.banks.map(async bank => {
+      const [questions, progress, favorites, unfamiliar, due] = await Promise.all([
+        getQuestionsByBank(bank.id),
+        listQuestionProgress(bank.id),
+        listFavorites(bank.id),
+        listUnfamiliar(bank.id),
+        listDueReviews(bank.id),
+      ]);
 
-    return {
-      bank,
-      questionCount: questions.length,
-      counts: {
-        due: due.filter(item => validIds.has(item.questionId)).length,
-        wrong: wrongIds.size,
-        favorite: favorites.filter(item => validIds.has(item.questionId)).length,
-        unfamiliar: unfamiliar.filter(item => validIds.has(item.questionId)).length,
-      },
-    };
-  }));
+      const validIds = new Set(questions.map(question => question.id));
+      const wrongIds = new Set(
+        progress
+          .filter(item => item?.lastResult === 'wrong' && validIds.has(item.questionId))
+          .map(item => item.questionId)
+      );
+
+      return {
+        bank,
+        questionCount: questions.length,
+        counts: {
+          due: due.filter(item => validIds.has(item.questionId)).length,
+          wrong: wrongIds.size,
+          favorite: favorites.filter(item => validIds.has(item.questionId)).length,
+          unfamiliar: unfamiliar.filter(item => validIds.has(item.questionId)).length,
+        },
+      };
+    })),
+  ]);
+
+  const validScopes = new Set([GLOBAL_SCOPE, ...state.banks.map(bank => String(bank.id))]);
+  if (!validScopes.has(state.learningGoalScope)) {
+    state.learningGoalScope = GLOBAL_SCOPE;
+  }
+
+  const selectedScope = state.learningGoalScope;
+  const goalId = learningGoalIdForScope(selectedScope);
+  const existingGoal = goals.find(goal => goal.id === goalId) || null;
+  const bankId = selectedScope === GLOBAL_SCOPE ? null : selectedScope;
+  const goal = existingGoal || normalizeLearningGoal({
+    id: selectedScope === GLOBAL_SCOPE ? GLOBAL_GOAL_ID : goalId,
+    bankId,
+    enabled: false,
+    dailyPracticeTarget: 0,
+    dailyReviewTarget: 0,
+  });
+
+  const progress = buildLearningGoalProgress(goal, attempts, {
+    historyDays: 7,
+  });
 
   state.reviewGroups = groups;
-  renderReviewCenter(elements.reviewArea, groups);
+  renderReviewCenter(elements.reviewArea, groups, {
+    goalModel: {
+      banks: state.banks,
+      selectedScope,
+      configured: Boolean(existingGoal),
+      goal,
+      progress,
+    },
+  });
   showView('review');
 }
 

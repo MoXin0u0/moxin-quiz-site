@@ -2,6 +2,15 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P3.1 — Learning Goal UI
+- 「今日複習」頁新增學習目標 Dashboard，不增加主導覽負擔。
+- 可設定全部題庫或指定題庫的每日一般刷題 / 每日複習目標。
+- 顯示今日整體進度、practice / review 個別進度、連續學習天數與最近 7 日達成狀況。
+- Scope 採 global / bank:<bankId>，可同時保存多組目標。
+- UI 只呈現 P3 Core 結果，不重複實作統計邏輯。
+- 新增 Desktop / Tablet / Mobile RWD，並加入 P3.1 regression。
+- APP cache 更新至 r2k.5-9。
+
 ## P3 — Learning Goal Progress Core
 - 將 learningGoals 與 attempts 正式接成每日目標進度引擎。
 - 一般練習 / 複習 / 模擬考採明確分類；exam 不灌入每日刷題或複習目標。
