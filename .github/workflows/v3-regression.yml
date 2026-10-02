@@ -6,6 +6,7 @@ on:
       - main
       - next-v3
       - "v3.*"
+      - "v4.*"
     paths:
       - "index.html"
       - "author-banks.json"
@@ -17,8 +18,11 @@ on:
       - "package.json"
       - "src/**"
       - "styles/v3*.css"
+      - "styles/v4*.css"
+      - "assets/learning/**"
       - "tests/**"
       - "scripts/v3-release-preflight.mjs"
+      - "scripts/audit-scene-assets.mjs"
       - ".github/workflows/v3-regression.yml"
   pull_request:
     paths:
@@ -32,8 +36,11 @@ on:
       - "package.json"
       - "src/**"
       - "styles/v3*.css"
+      - "styles/v4*.css"
+      - "assets/learning/**"
       - "tests/**"
       - "scripts/v3-release-preflight.mjs"
+      - "scripts/audit-scene-assets.mjs"
       - ".github/workflows/v3-regression.yml"
   workflow_dispatch:
 

@@ -15,6 +15,10 @@ assert.match(review, /data-scene-art="review"/);
 assert.match(exam, /data-scene-art="exam"/);
 assert.match(stats, /data-scene-art="stats"/);
 
+const sceneRuntimeCache =
+  sw.includes('cacheFirstScene') &&
+  sw.includes('/assets/learning/scenes/');
+
 for (const name of [
   'library-light.webp', 'library-dark.webp',
   'review-light.webp', 'review-dark.webp',
@@ -26,7 +30,10 @@ for (const name of [
   const size = fs.statSync(path).size;
   assert.ok(size > 20_000, `${path} should contain a real scene asset`);
   assert.ok(size < 180_000, `${path} should stay lightweight for GitHub Pages/PWA`);
-  assert.ok(sw.includes(`./${path}`), `${path} should be in APP_SHELL`);
+  assert.ok(
+    sw.includes(`./${path}`) || sceneRuntimeCache,
+    `${path} should be offline-capable via APP_SHELL or the runtime scene cache`,
+  );
 }
 
 assert.match(css, /v4\.0 R2G — Learning Scene Integration/);

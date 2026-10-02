@@ -47,13 +47,21 @@ assert.match(css, /\.learning-hero-data-visual/);
 assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.learning-hero-art[\s\S]*height: 54%/);
 assert.match(css, /prefers-reduced-data: reduce/);
 
+const sceneRuntimeCache =
+  sw.includes('cacheFirstScene') &&
+  sw.includes('/assets/learning/scenes/');
+
 for (const name of [
   'library-light.webp', 'library-dark.webp',
   'review-light.webp', 'review-dark.webp',
   'exam-light.webp', 'exam-dark.webp',
   'stats-light.webp', 'stats-dark.webp',
 ]) {
-  assert.ok(sw.includes(`./assets/learning/scenes/${name}`));
+  const path = `./assets/learning/scenes/${name}`;
+  assert.ok(
+    sw.includes(path) || sceneRuntimeCache,
+    `${path} should be offline-capable via APP_SHELL or the runtime scene cache`,
+  );
 }
 
 assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
