@@ -30,6 +30,11 @@ assert.match(batchUi, /includeReview/);
 
 assert.match(batchCss, /v4\.0 P2B\.1 — Studio Batch Import/);
 assert.match(batchCss, /\.studio-r1-batch-dialog/);
+assert.match(batchCss, /grid-template-rows: auto auto minmax\(0, 1fr\) auto/);
+assert.match(batchCss, /\.studio-r1-batch-results[\s\S]*min-height: 0/);
+assert.match(batchCss, /\.studio-r1-batch-results[\s\S]*overflow-y: auto/);
+assert.match(batchCss, /overscroll-behavior: contain/);
+assert.match(batchCss, /scrollbar-gutter: stable/);
 assert.match(batchCss, /\.studio-r1-batch-item\.is-ready/);
 assert.match(batchCss, /\.studio-r1-batch-item\.is-review/);
 assert.match(batchCss, /\.studio-r1-batch-item\.is-unparsed/);

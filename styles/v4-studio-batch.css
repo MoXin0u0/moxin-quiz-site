@@ -9,13 +9,19 @@
 
 .studio-r1-batch-dialog {
   width: min(1080px, calc(100vw - 2rem));
+  height: min(90vh, 920px);
+  height: min(90dvh, 920px);
   max-height: min(90vh, 920px);
+  max-height: min(90dvh, 920px);
+  overflow: hidden;
 }
 
 .studio-r1-batch-card {
   display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 1rem;
-  max-height: min(90vh, 920px);
+  height: 100%;
+  max-height: none;
   overflow: hidden;
   padding: 1rem;
   border: 1px solid var(--line);
@@ -95,9 +101,12 @@
 }
 
 .studio-r1-batch-results {
-  min-height: 120px;
-  overflow: auto;
-  padding-right: .15rem;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding-right: .35rem;
 }
 
 .studio-r1-batch-summary {
@@ -357,5 +366,21 @@
 
   .studio-r1-batch-footer-actions {
     width: 100%;
+  }
+}
+
+
+@media (max-height: 760px) {
+  .studio-r1-batch-dialog {
+    height: min(94vh, 920px);
+    height: min(94dvh, 920px);
+    max-height: min(94vh, 920px);
+    max-height: min(94dvh, 920px);
+  }
+
+  .studio-r1-batch-source textarea {
+    min-height: 110px;
+    max-height: 24vh;
+    max-height: 24dvh;
   }
 }

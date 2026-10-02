@@ -2,6 +2,13 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P2B.1.1 — Batch Preview Scroll Fix
+- 批次貼題視窗改為固定可用高度的四列 Grid：標題、輸入區、可捲動預覽、底部操作列。
+- 題目預覽區加入獨立垂直捲動，不再因多題內容超出視窗而看不到後續題目。
+- 小高度螢幕會自動縮短原始文字輸入區，優先保留預覽空間。
+- APP cache revision 更新，避免舊 CSS 持續被 Service Worker 使用。
+- 加入 scrollbar / overscroll regression，避免後續樣式調整再次破壞捲動。
+
 ## P2B.1 — Studio Batch Import UI
 - P2B Parser Core 接入題庫工作室。
 - 工作室首頁與編輯器新增「批次貼題」入口。
