@@ -5,6 +5,7 @@ import fs from 'node:fs';
 const css = fs.readFileSync('styles/v4-learning-styles.css', 'utf8');
 const settingsUi = fs.readFileSync('src/ui/settings.js', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
+const sceneLoader = fs.readFileSync('src/ui/scene-assets.js', 'utf8');
 
 const pages = ['library', 'review', 'exam', 'stats'];
 const themes = ['light', 'dark'];
@@ -45,9 +46,10 @@ assert.match(css, /radial-gradient\(circle, rgba\(255,255,255/);
 assert.match(settingsUi, /古典書庫、手稿、黃銅儀器與學院考場/);
 assert.match(settingsUi, /漂浮魔導書、符文星圖、記憶水晶與試煉殿堂/);
 
-assert.match(sw, /assets\/learning\/styles\/academy\/library-light\.webp/);
-assert.match(sw, /assets\/learning\/styles\/academy\/stats-dark\.webp/);
-assert.match(sw, /assets\/learning\/styles\/epic\/library-light\.webp/);
+assert.match(sceneLoader, /styles\/academy\/library-light\.webp/);
+assert.match(sceneLoader, /styles\/academy\/stats-dark\.webp/);
+assert.match(sceneLoader, /styles\/epic\/library-light\.webp/);
+assert.match(sw, /cacheFirstScene/);
 assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-1/);
 
 console.log('MoXin Quiz v4.0 R2K style differentiation tests passed.');

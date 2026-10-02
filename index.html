@@ -33,6 +33,16 @@
       document.documentElement.dataset.sceneIntensity = ['full', 'reduced', 'off'].includes(settings.sceneIntensity)
         ? settings.sceneIntensity
         : 'full';
+
+      if (document.documentElement.dataset.sceneIntensity === 'full' &&
+          ['academy', 'epic'].includes(document.documentElement.dataset.learningStyle)) {
+        const preload = document.createElement('link');
+        preload.rel = 'preload';
+        preload.as = 'image';
+        preload.fetchPriority = 'high';
+        preload.href = `assets/learning/styles/${document.documentElement.dataset.learningStyle}/library-${theme}.webp`;
+        document.head.append(preload);
+      }
     } catch {}
   </script>
 
@@ -199,6 +209,7 @@
   </main>
 
   <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="src/ui/scene-assets.js"></script>
   <script type="module" src="src/app/main.js"></script>
   <script type="module" src="src/app/p7.js"></script>
 </body>

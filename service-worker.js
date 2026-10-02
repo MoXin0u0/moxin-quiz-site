@@ -1,4 +1,5 @@
-const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.2-1';
+const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.3-1';
+const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.3-1';
 const APP_SHELL = [
   './index.html',
   './v3.html',
@@ -24,30 +25,6 @@ const APP_SHELL = [
   './assets/learning/light-books-side.svg',
   './assets/learning/dark-moon-lantern.svg',
   './assets/learning/dark-desk-side.svg',
-  './assets/learning/scenes/library-light.webp',
-  './assets/learning/scenes/library-dark.webp',
-  './assets/learning/scenes/review-light.webp',
-  './assets/learning/scenes/review-dark.webp',
-  './assets/learning/scenes/exam-light.webp',
-  './assets/learning/scenes/exam-dark.webp',
-  './assets/learning/scenes/stats-light.webp',
-  './assets/learning/scenes/stats-dark.webp',
-  './assets/learning/styles/academy/library-light.webp',
-  './assets/learning/styles/academy/library-dark.webp',
-  './assets/learning/styles/academy/review-light.webp',
-  './assets/learning/styles/academy/review-dark.webp',
-  './assets/learning/styles/academy/exam-light.webp',
-  './assets/learning/styles/academy/exam-dark.webp',
-  './assets/learning/styles/academy/stats-light.webp',
-  './assets/learning/styles/academy/stats-dark.webp',
-  './assets/learning/styles/epic/library-light.webp',
-  './assets/learning/styles/epic/library-dark.webp',
-  './assets/learning/styles/epic/review-light.webp',
-  './assets/learning/styles/epic/review-dark.webp',
-  './assets/learning/styles/epic/exam-light.webp',
-  './assets/learning/styles/epic/exam-dark.webp',
-  './assets/learning/styles/epic/stats-light.webp',
-  './assets/learning/styles/epic/stats-dark.webp',
 
   './src/app/config.js',
   './src/app/main.js',
@@ -93,6 +70,7 @@ const APP_SHELL = [
   './src/ui/practice.js',
   './src/ui/review-center.js',
   './src/ui/settings.js',
+  './src/ui/scene-assets.js',
   './src/ui/stats.js',
   './src/ui/studio.js',
   './src/ui/studio-r1.js',
@@ -116,7 +94,7 @@ self.addEventListener('activate', event => {
     caches.keys()
       .then(keys => Promise.all(
         keys
-          .filter(key => key.startsWith('moxin-quiz-v3-') && key !== CACHE_VERSION)
+          .filter(key => (key.startsWith('moxin-quiz-v3-') && key !== CACHE_VERSION) || (key.startsWith('moxin-quiz-scenes-') && key !== SCENE_CACHE_VERSION))
           .map(key => caches.delete(key)),
       ))
       .then(() => self.clients.claim()),
@@ -132,6 +110,11 @@ self.addEventListener('fetch', event => {
 
   if (request.mode === 'navigate') {
     event.respondWith(networkFirstNavigation(request));
+    return;
+  }
+
+  if (isLearningScene(url)) {
+    event.respondWith(cacheFirstScene(request));
     return;
   }
 
@@ -172,4 +155,23 @@ async function staleWhileRevalidate(event) {
   }
 
   return (await networkPromise) || Response.error();
+}
+
+function isLearningScene(url) {
+  return url.pathname.includes('/assets/learning/styles/') ||
+    url.pathname.includes('/assets/learning/scenes/');
+}
+
+async function cacheFirstScene(request) {
+  const cache = await caches.open(SCENE_CACHE_VERSION);
+  const cached = await cache.match(request);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) await cache.put(request, response.clone());
+    return response;
+  } catch {
+    return Response.error();
+  }
 }

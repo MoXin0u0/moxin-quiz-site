@@ -9,6 +9,7 @@ const index = fs.readFileSync('index.html', 'utf8');
 const settingsUi = fs.readFileSync('src/ui/settings.js', 'utf8');
 const css = fs.readFileSync('styles/v4-learning-styles.css', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
+const sceneLoader = fs.readFileSync('src/ui/scene-assets.js', 'utf8');
 
 assert.equal(DEFAULT_SETTINGS.learningStyle, 'academy');
 assert.equal(normalizeSettings({ learningStyle: 'epic' }).learningStyle, 'epic');
@@ -42,8 +43,10 @@ for (const asset of [
   assert.ok(fs.statSync(path).size > 20_000, `${path} must contain a real scene asset`);
 }
 
-assert.match(sw, /assets\/learning\/styles\/epic\/library-light\.webp/);
-assert.match(sw, /assets\/learning\/styles\/epic\/stats-dark\.webp/);
+assert.match(sceneLoader, /styles\/epic\/library-light\.webp/);
+assert.match(sceneLoader, /styles\/epic\/stats-dark\.webp/);
+assert.match(sw, /cacheFirstScene/);
+assert.match(sw, /moxin-quiz-scenes-/);
 assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-1/);
 
 console.log('MoXin Quiz v4.0 R2J epic fantasy style tests passed.');

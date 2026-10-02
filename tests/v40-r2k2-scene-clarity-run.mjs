@@ -23,6 +23,6 @@ assert.match(css, /data-learning-style="academy"\]\[data-scene-intensity="full"/
 assert.match(css, /data-learning-style="epic"\]\[data-scene-intensity="full"/);
 assert.match(css, /@media \(max-width: 760px\)/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2k\.2-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-1/);
 
 console.log('MoXin Quiz v4.0 R2K.2 scene clarity tests passed.');

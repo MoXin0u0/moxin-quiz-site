@@ -1419,3 +1419,32 @@ html[data-scene-intensity="reduced"] .learning-hero-whole::before {
     opacity: .16 !important;
   }
 }
+
+/* ============================================================
+ * v4.0 R2K.3 — High-Fidelity Scene Delivery Pipeline
+ * Scene URLs are attached at runtime so unused style packs are not fetched.
+ * ========================================================== */
+
+.learning-hero-art {
+  background-image: none;
+  image-rendering: auto;
+}
+
+html[data-scene-intensity="full"] .learning-hero-art {
+  transform: none;
+}
+
+.learning-hero-art[data-scene-state="loading"] {
+  opacity: 0 !important;
+}
+
+.learning-hero-art[data-scene-state="ready"] {
+  transition: opacity .22s ease;
+}
+
+html[data-reduce-motion="true"] .learning-hero-art,
+@media (prefers-reduced-motion: reduce) {
+  .learning-hero-art {
+    transition: none !important;
+  }
+}
