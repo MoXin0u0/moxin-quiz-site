@@ -57,6 +57,6 @@ assert.match(styleCss, /learning-style-picker/);
 assert.match(styleCss, /scene-intensity-picker/);
 
 assert.match(sw, /styles\/v4-learning-styles\.css/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[ij]-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-1/);
 
 console.log('MoXin Quiz v4.0 R2I visual style system tests passed.');

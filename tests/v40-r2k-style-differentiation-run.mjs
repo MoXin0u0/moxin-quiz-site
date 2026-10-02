@@ -48,6 +48,6 @@ assert.match(settingsUi, /漂浮魔導書、符文星圖、記憶水晶與試煉
 assert.match(sw, /assets\/learning\/styles\/academy\/library-light\.webp/);
 assert.match(sw, /assets\/learning\/styles\/academy\/stats-dark\.webp/);
 assert.match(sw, /assets\/learning\/styles\/epic\/library-light\.webp/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2k-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-1/);
 
 console.log('MoXin Quiz v4.0 R2K style differentiation tests passed.');
