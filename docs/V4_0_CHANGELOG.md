@@ -2,6 +2,17 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P4 — Exam Sprint Core
+- 正式進入 v4.0 考前衝刺主線；此 P4 與舊 v3 docs/P4_LEARNING.md 不同。
+- 選題優先序固定為：目前錯題 → 不熟題 → 到期題 → 低熟練題 → 未作答 → 其他。
+- 每題只進入最高優先 tier，一律以 bankId + permanent questionId 去重。
+- dailyPracticeTarget 有設定時尊重使用者值；未設定時才依候選題數 / 剩餘學習日推導 fallback。
+- 額外計算 recommendedDailyTarget / projectedCoverage / coverageGap，不偷偷提高使用者每日目標。
+- 今日已完成一般 practice 會扣除，產生真正剩餘的 sprint queue。
+- 支援 Global / Bank scope；Global 保留跨題庫 key，P4.1 再依 bank 分組啟動 Session。
+- 新增 26 組 regression；P4 engine 加入 APP_SHELL。
+- APP cache 更新至 r2k.5-11。
+
 ## P3.1.1 — Learning Goal Activity UX
 - 未啟用有效 target 時，「今日整體進度」顯示「尚未設定」，近 7 日達成顯示「—」。
 - 最近 7 日有作答日期改顯示「有學習」，並保留實際題數。
