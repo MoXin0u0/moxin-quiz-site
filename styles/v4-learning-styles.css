@@ -1308,3 +1308,114 @@ html[data-theme="dark"] .learning-style-preview.academy {
     filter: saturate(1.06) contrast(1.02);
   }
 }
+
+
+/* ============================================================
+ * v4.0 R2K.2 — Scene Clarity
+ * Full must be genuinely clear; Reduced must visibly step back.
+ * ========================================================== */
+
+/* Full: preserve the artwork instead of treating it like atmosphere. */
+html[data-scene-intensity="full"] .learning-hero-art {
+  opacity: 1 !important;
+  filter: none;
+  transform: scale(1.006);
+}
+
+html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-art {
+  opacity: 1 !important;
+  filter: none;
+}
+
+/* Keep only the content-safe mask. It fades out before the art focal area. */
+html[data-scene-intensity="full"] .learning-hero-whole::before {
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, transparent) 0%,
+      color-mix(in srgb, var(--learn-surface-strong) 92%, transparent) 22%,
+      color-mix(in srgb, var(--learn-surface-strong) 72%, transparent) 34%,
+      color-mix(in srgb, var(--learn-surface-strong) 42%, transparent) 44%,
+      color-mix(in srgb, var(--learn-surface-strong) 12%, transparent) 54%,
+      transparent 64%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--learn-surface-strong) 6%, transparent),
+      transparent 58%,
+      color-mix(in srgb, var(--learn-surface-strong) 10%, transparent) 100%
+    );
+}
+
+/* Academy Full: classical color grading, but no artificial dimming. */
+html[data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art,
+html[data-theme="dark"][data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art {
+  opacity: 1 !important;
+  filter: saturate(.98) contrast(1.055) brightness(.98);
+  transform: scale(1.006);
+}
+
+/* Epic Full: retain fantasy color, without the old hazy grading. */
+html[data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art,
+html[data-theme="dark"][data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art {
+  opacity: 1 !important;
+  filter: saturate(1.10) contrast(1.055) brightness(1);
+  transform: scale(1.008);
+}
+
+/* Epic particles are accents, not a veil over the artwork. */
+html[data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-whole::after {
+  opacity: .42;
+}
+
+html[data-theme="dark"][data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-whole::after {
+  opacity: .5;
+}
+
+/* Reduced: deliberately step the scene back so the modes are unmistakable. */
+html[data-scene-intensity="reduced"] .learning-hero-art,
+html[data-theme="dark"][data-scene-intensity="reduced"] .learning-hero-art {
+  opacity: .24 !important;
+  filter: saturate(.62) contrast(.90) brightness(.92) !important;
+  transform: scale(1.012);
+}
+
+html[data-scene-intensity="reduced"] .learning-hero-whole::before {
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--learn-surface-strong) 98%, transparent) 0%,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, transparent) 30%,
+      color-mix(in srgb, var(--learn-surface-strong) 86%, transparent) 47%,
+      color-mix(in srgb, var(--learn-surface-strong) 58%, transparent) 65%,
+      color-mix(in srgb, var(--learn-surface-strong) 24%, transparent) 82%,
+      transparent 100%
+    );
+}
+
+/* Mobile remains content-first, but Full is still visibly clearer than Reduced. */
+@media (max-width: 760px) {
+  html[data-scene-intensity="full"] .learning-hero-art,
+  html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .62 !important;
+    filter: saturate(1.02) contrast(1.035) !important;
+  }
+
+  html[data-scene-intensity="reduced"] .learning-hero-art,
+  html[data-theme="dark"][data-scene-intensity="reduced"] .learning-hero-art {
+    opacity: .20 !important;
+    filter: saturate(.58) contrast(.90) brightness(.94) !important;
+  }
+}
+
+@media (max-width: 420px) {
+  html[data-scene-intensity="full"] .learning-hero-art,
+  html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .54 !important;
+  }
+
+  html[data-scene-intensity="reduced"] .learning-hero-art,
+  html[data-theme="dark"][data-scene-intensity="reduced"] .learning-hero-art {
+    opacity: .16 !important;
+  }
+}
