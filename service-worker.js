@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.5-5';
+const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.5-6';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
@@ -62,6 +62,7 @@ const APP_SHELL = [
 
   './src/studio/asset-manager.js',
   './src/studio/editor-model.js',
+  './src/studio/package-to-draft.js',
   './src/studio/question-draft.js',
 
   './src/ui/bank-detail.js',

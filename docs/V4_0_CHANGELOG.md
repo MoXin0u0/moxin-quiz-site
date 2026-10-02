@@ -2,6 +2,14 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P2C — Package → Studio Draft Core
+- 新增 ZIP / JSON inspected package → Studio Draft 的正式轉換層。
+- 重新執行 canonical validator，不信任過期 pkg.report。
+- 外部 package 永遠建立未連結的工作草稿，不直接覆寫已安裝題庫。
+- 題庫 ID 衝突時自動建立 -copy / -copy-2… 安全 ID。
+- 保留 Question ID、圖片引用與 ZIP Blob assets。
+- 新增 16 組 regression；P2C Core 加入 APP_SHELL。
+
 ## P2B.1.1 — Batch Preview Scroll Fix
 - 批次貼題視窗改為固定可用高度的四列 Grid：標題、輸入區、可捲動預覽、底部操作列。
 - 題目預覽區加入獨立垂直捲動，不再因多題內容超出視窗而看不到後續題目。
