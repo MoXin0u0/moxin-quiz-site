@@ -1,0 +1,130 @@
+[
+  {
+    "path": "assets/learning/styles/academy/library-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 859216,
+    "sha256": "f47957c19897996e40f154b28d17d16b9942b6deeacadb5a2f5c16619080cd5e",
+    "source": "陽光灑落的魔法學院圖書館.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/library-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 421662,
+    "sha256": "b5a995e01ddfe878442074bcf80e86ed9df98dfe4fae260158baa4c2d87097ce",
+    "source": "陽光灑落的魔法學院圖書館.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/library-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 799802,
+    "sha256": "2492c1d40cf1167d70fcc9e7395b6fe4085aef5835ad1a01abd201882050cb0d",
+    "source": "月夜魔法學院圖書室.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/library-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 402482,
+    "sha256": "31ac93b83eb8ed45f31131d8a28d802febc45d363ef088c4f6768f176474901b",
+    "source": "月夜魔法學院圖書室.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/review-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 882368,
+    "sha256": "b06bf0707f611d8b4925fb2a8823d990d919f3aa1af95b2adc750b987ae65955",
+    "source": "陽光下的星辰學者書房.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/review-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 434354,
+    "sha256": "14595717b29142035b4d94600549ca0abe74f807b7c4b5ce02582c10d4dd6e5c",
+    "source": "陽光下的星辰學者書房.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/review-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 814572,
+    "sha256": "2e4d49b86f617bfc83384ce91fc1b4ffa2daad9add34c18892d1d4708230a25d",
+    "source": "月下哥德學院書房.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/review-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 460776,
+    "sha256": "ee1d53c748fff599d215f3d6dd4fd462a7c91ef5c1ffe50f542c11644a51a7d1",
+    "source": "月下哥德學院書房.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/exam-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 920418,
+    "sha256": "d0583cad9dc6a131d3f9695e716973a1c2ed25fb9c41fcb037b098e2364640d0",
+    "source": "陽光下的星象學院考場.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/exam-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 453882,
+    "sha256": "3976ad375eb144d3d3c61387598d0f5a788ef5cea3b9d601e1d8a19b9f85ef68",
+    "source": "陽光下的星象學院考場.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/exam-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 919030,
+    "sha256": "d23f2ccea7e538b8b55e21aeb3e8172ad6c0492c8c5f5a2b7d5f0a87ec310455",
+    "source": "月光下的星辰學院試煉廳.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/exam-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 454064,
+    "sha256": "d744320e22f4322a74104ab7e92c0e509cc74244a678400a1f4e87f278f783b0",
+    "source": "月光下的星辰學院試煉廳.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/stats-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 903848,
+    "sha256": "b3dc649152caf2d8c471a37f38f6ca32fe01da405d028f3448d9c00b18a91882",
+    "source": "陽光下的奇幻學院觀星書房.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/stats-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 473266,
+    "sha256": "7311d53ba3206805fa626bb5bbf38168d43913b3b6e20a1a5ddb39a3cdc2b14d",
+    "source": "陽光下的奇幻學院觀星書房.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/stats-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 765956,
+    "sha256": "a4bd54eefed756750177fd5347b2848c731eb5bba7bb0baf1664b8922aafadc5",
+    "source": "月映星图的学院观测室.png"
+  },
+  {
+    "path": "assets/learning/styles/academy/stats-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 412566,
+    "sha256": "341897f5beaab0477c557b909efeb4d870eb4b9dda71c1307ff78947ee0c83b8",
+    "source": "月映星图的学院观测室.png"
+  }
+]

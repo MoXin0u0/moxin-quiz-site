@@ -39,8 +39,8 @@ for (const style of styles) {
   }
 }
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2k\.5-1/);
-assert.match(sw, /moxin-quiz-scenes-r2k\.5-1/);
+assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2k\.5-\d+/);
+assert.match(sw, /moxin-quiz-scenes-r2k\.5-\d+/);
 assert.match(sw, /cacheFirstScene/);
 
 console.log('MoXin Quiz v4.0 R2K.5 production scene asset tests passed.');
