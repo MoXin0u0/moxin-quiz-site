@@ -2,6 +2,16 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P3 — Learning Goal Progress Core
+- 將 learningGoals 與 attempts 正式接成每日目標進度引擎。
+- 一般練習 / 複習 / 模擬考採明確分類；exam 不灌入每日刷題或複習目標。
+- 同題同日 retry 去重，避免答錯重做造成目標數字失真。
+- 使用瀏覽器本機日界線，並加入 Asia/Taipei 跨 UTC regression。
+- 新增最近 7 日達成狀況、全域 / 題庫 scope 與連續學習 streak。
+- 最近 7 日以「目前 target」回看，規格明確記錄，不假裝有歷史 goal snapshot。
+- attempts repository 新增 listAllAttempts()，P3 engine 加入 APP_SHELL。
+- 新增 24 組 regression。
+
 ## P2C.1 — Import → Studio UI Integration
 - ZIP / JSON / 資料夾檢查結果新增「在題庫工作室中開啟」。
 - 檢查畫面顯示 P2C 的目標題庫 ID；同 ID 已存在時明確顯示安全 copy ID。

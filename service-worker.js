@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.5-7';
+const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.5-8';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
@@ -47,6 +47,8 @@ const APP_SHELL = [
   './src/quiz/scoring.js',
   './src/quiz/session-engine.js',
   './src/quiz/shuffle.js',
+
+  './src/learning/goal-progress.js',
 
   './src/storage/backup.js',
   './src/storage/db.js',
