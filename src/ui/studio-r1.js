@@ -48,6 +48,10 @@ import {
   replaceQuestionImage,
 } from '../studio/asset-manager.js';
 
+import {
+  openStudioBatchImportDialog,
+} from './studio-batch-import.js';
+
 const TYPE_LABELS = Object.freeze({
   'single-choice': '單選題',
   'multiple-choice': '複選題',
@@ -100,7 +104,10 @@ async function renderHome() {
           <h2>建立自己的題庫</h2>
           <p>直接在瀏覽器內建立、編輯、驗證與匯出題庫。草稿保存在本機，不會自動上傳。</p>
         </div>
-        <button class="button primary" type="button" data-studio-new>＋ 建立新題庫</button>
+        <div class="studio-r1-home-actions">
+          <button class="button secondary" type="button" data-studio-new-batch>批次貼題</button>
+          <button class="button primary" type="button" data-studio-new>＋ 建立新題庫</button>
+        </div>
       </header>
 
       <div class="studio-r1-status" data-studio-status>正在讀取本機資料…</div>
@@ -160,6 +167,12 @@ function bindWorkspace(mount) {
     const copyBank = event.target.closest('[data-studio-copy-bank]');
     if (copyBank) return openBankForEditing(copyBank.dataset.studioCopyBank, true);
 
+    if (event.target.closest('[data-studio-new-batch]')) {
+      await createNewDraft();
+      await importBatchQuestions({ replaceStarter: true });
+      return;
+    }
+
     if (event.target.closest('[data-studio-new]')) return createNewDraft();
 
     if (event.target.closest('[data-studio-back]')) {
@@ -170,6 +183,11 @@ function bindWorkspace(mount) {
     if (event.target.closest('[data-studio-save-draft]')) {
       await persistDraftNow();
       setStatus('草稿已儲存。', 'ok');
+      return;
+    }
+
+    if (event.target.closest('[data-studio-batch-import]')) {
+      await importBatchQuestions();
       return;
     }
 
@@ -501,6 +519,53 @@ async function openBankForEditing(bankId, forceCopy) {
   if (mustCopy) setStatus('已建立可編輯副本；原作者題庫不會被修改。', 'ok');
 }
 
+
+async function importBatchQuestions({ replaceStarter = false } = {}) {
+  if (!state.draft) return;
+
+  const canReplaceStarter =
+    replaceStarter &&
+    state.draft.questions.length === 1 &&
+    isPristineStarterQuestion(state.draft.questions[0]);
+
+  const existingQuestions = canReplaceStarter ? [] : state.draft.questions;
+  const additions = await openStudioBatchImportDialog({
+    existingQuestions,
+    typeLabels: TYPE_LABELS,
+  });
+
+  if (!additions?.length) return;
+
+  clearUndoState();
+
+  if (canReplaceStarter) {
+    state.draft.questions = additions;
+  } else {
+    state.draft.questions.push(...additions);
+  }
+
+  state.activeQuestionId = additions[0].id;
+  await persistDraftNow();
+  renderEditor();
+  setStatus(
+    `已從批次文字加入 ${additions.length} 題。需確認的題目仍會由工作室驗證標示。`,
+    'ok',
+  );
+}
+
+function isPristineStarterQuestion(question) {
+  if (!question || question.type !== 'single-choice') return false;
+  if (String(question.question || '').trim()) return false;
+  if (String(question.explanation || '').trim()) return false;
+  if ((question.answer || []).length) return false;
+  if ((question.images || []).length || (question.explanationImages || []).length) return false;
+  if (String(question.chapter || '').trim()) return false;
+  if ((question.tags || []).length) return false;
+
+  const options = Array.isArray(question.options) ? question.options : [];
+  return options.length === 2 && options.every(option => !String(option.text || '').trim());
+}
+
 async function changeCurrentQuestionType(targetType) {
   const current = getActiveQuestion();
   if (!current || current.type === targetType) return;
@@ -704,6 +769,7 @@ function renderEditor() {
 
         <div class="studio-r1-top-actions">
           <span class="studio-r1-save-state" data-studio-status>${formatSaveState(state.draft.updatedAt)}</span>
+          <button class="button secondary compact" type="button" data-studio-batch-import>批次貼題</button>
           <button class="button secondary compact" type="button" data-studio-validate>檢查</button>
           <button class="button primary compact" type="button" data-studio-save-library ${report.valid ? '' : 'disabled'}>儲存到我的題庫</button>
         </div>

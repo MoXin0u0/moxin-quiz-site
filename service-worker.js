@@ -18,6 +18,7 @@ const APP_SHELL = [
   './styles/v4-learning-styles.css',
   './styles/v4-studio.css',
   './styles/v4-studio-r1.css',
+  './styles/v4-studio-batch.css',
   './assets/pwa/icon-192.png',
   './assets/pwa/icon-512.png',
   './assets/pwa/icon-maskable-512.png',
@@ -74,6 +75,7 @@ const APP_SHELL = [
   './src/ui/stats.js',
   './src/ui/studio.js',
   './src/ui/studio-r1.js',
+  './src/ui/studio-batch-import.js',
   './src/ui/tools.js',
 
   './src/utils/ids.js',
