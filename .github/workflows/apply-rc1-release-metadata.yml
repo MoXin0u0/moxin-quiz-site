@@ -42,8 +42,12 @@ jobs:
         run: |
           node --check src/app/config.js
           node --check scripts/v4-release-preflight.mjs
+          node --check scripts/v4-regression-sweep.mjs
           node --check tests/v40-rc1-release-metadata-run.mjs
           node --check service-worker.js
+
+      - name: Run every regression command independently
+        run: node scripts/v4-regression-sweep.mjs
 
       - name: Full repository regression and v4 preflight
         run: npm run ci
