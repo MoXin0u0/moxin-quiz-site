@@ -34,6 +34,7 @@ import {
 } from '../storage/repositories/review.js';
 import {
   getLatestUnfinishedExamForBank,
+  getLatestUnfinishedPracticeSession,
   getLatestUnfinishedSessionForBank,
   saveSession,
 } from '../storage/repositories/sessions.js';
@@ -107,12 +108,15 @@ import {
 } from '../storage/repositories/goals.js';
 import { buildLearningGoalProgress } from '../learning/goal-progress.js';
 import { buildLearningAnalytics } from '../learning/analytics.js';
+import { buildHomeDashboard } from '../learning/home-dashboard.js';
+import { getLastFullBackupAt } from '../storage/backup-meta.js';
 import {
   EXAM_SPRINT_GOAL_ID,
   buildExamSprintPlan,
 } from '../learning/exam-sprint.js';
 import { createExamSprintSaveInput } from '../ui/exam-sprint.js';
 import { renderLearningStats } from '../ui/stats.js';
+import { renderHomeDashboard } from '../ui/home-dashboard.js';
 import { renderExamCenter } from '../ui/exam-center.js';
 import {
   collectExamAnswer,
@@ -173,6 +177,7 @@ const elements = {
   examCenterArea: document.querySelector('#examCenterArea'),
   examArea: document.querySelector('#examArea'),
   statsArea: document.querySelector('#statsArea'),
+  homeDashboardArea: document.querySelector('#homeDashboardArea'),
   toolsArea: document.querySelector('#toolsArea'),
   bankDetailArea: document.querySelector('#bankDetailArea'),
   practiceArea: document.querySelector('#practiceArea'),
@@ -209,6 +214,7 @@ async function bootstrap() {
   });
   await refreshBanks();
   await refreshAuthorCatalog();
+  await refreshHomeDashboard();
   setLibrarySourceTab(state.librarySourceTab);
   showView('library');
 }
@@ -223,6 +229,7 @@ function bindEvents() {
 
     if (event.target.closest('[data-nav-library]')) {
       stopExamTimer();
+      await refreshHomeDashboard();
       showView('library');
       return;
     }
@@ -342,6 +349,38 @@ function bindEvents() {
     if (event.target.closest('[data-download-ai-prompt]')) {
       downloadTextFile('moxin-quiz-schema-v2-ai-prompt.txt', QUESTION_BANK_AI_PROMPT);
       showToast(elements.toastRegion, '提示詞已下載。', 'success');
+    }
+  });
+
+  elements.homeDashboardArea?.addEventListener('click', async event => {
+    const resume = event.target.closest('[data-home-resume-bank]');
+    if (resume) {
+      await openBankDetail(resume.dataset.homeResumeBank);
+      await resumePractice();
+      return;
+    }
+
+    if (event.target.closest('[data-home-goals]')) {
+      state.learningHubTab = 'goals';
+      await openReviewCenter();
+      return;
+    }
+
+    if (event.target.closest('[data-home-review]')) {
+      state.learningHubTab = 'review';
+      await openReviewCenter();
+      return;
+    }
+
+    const wrong = event.target.closest('[data-home-wrong-bank]');
+    if (wrong) {
+      await startDedicatedReview(wrong.dataset.homeWrongBank, 'wrong');
+      return;
+    }
+
+    if (event.target.closest('[data-home-sprint]')) {
+      state.learningHubTab = 'sprint';
+      await openReviewCenter();
     }
   });
 
@@ -833,6 +872,46 @@ async function refreshBanks() {
     state.banks.filter(bank => bank.sourceType !== 'author'),
   );
   renderAuthorCatalog();
+}
+
+async function refreshHomeDashboard() {
+  if (!elements.homeDashboardArea) return;
+
+  const [goals, attempts, resumeSession, summaries] = await Promise.all([
+    listLearningGoals(),
+    listAllAttempts(),
+    getLatestUnfinishedPracticeSession({
+      bankIds: state.banks.map(bank => bank.id),
+    }),
+    Promise.all(state.banks.map(async bank => {
+      const [questions, progress, due] = await Promise.all([
+        getQuestionsByBank(bank.id),
+        listQuestionProgress(bank.id),
+        listDueReviews(bank.id),
+      ]);
+
+      const validIds = new Set(questions.map(question => question.id));
+      const wrong = progress.filter(item =>
+        item?.lastResult === 'wrong' &&
+        validIds.has(item.questionId)
+      ).length;
+
+      return {
+        bank,
+        due: due.filter(item => validIds.has(item.questionId)).length,
+        wrong,
+      };
+    })),
+  ]);
+
+  renderHomeDashboard(elements.homeDashboardArea, buildHomeDashboard({
+    banks: state.banks,
+    goals,
+    attempts,
+    summaries,
+    resumeSession,
+    lastBackupAt: getLastFullBackupAt(),
+  }));
 }
 
 async function exportCurrentBank() {

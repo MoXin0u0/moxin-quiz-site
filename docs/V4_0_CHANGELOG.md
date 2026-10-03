@@ -2,6 +2,16 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P5.2 — Home Actions
+- 「我的題庫」Hero 下方新增今日概況，不新增新的主導覽層級。
+- 顯示主要學習目標、全站 streak、今日碰觸題數與未完成 Practice Session。
+- 新增今日複習、快速錯題、考前衝刺快捷入口；直接重用既有 P3/P4/Review 流程。
+- Sessions repository 新增全站最新未完成 Practice Session 查詢，並排除已刪除題庫。
+- 完整備份成功後記錄 lastFullBackupAt；首頁對從未備份與 >= 7 天未備份給出提醒。
+- Backup metadata 僅存在 localStorage，不改動既有 Backup Format。
+- 新增 Desktop / Tablet / Mobile RWD 與 P5.2 regression。
+- APP cache 更新至 r2k.5-17。
+
 ## P5.1 — Statistics IA & UI
 - 學習統計正式拆成「總覽 / 趨勢 / 弱點分析 / 題庫分析」第二層，不再使用超長單頁。
 - Hero 維持 Global 總作答與整體正確率；scope 只影響深入分析，避免語意混淆。

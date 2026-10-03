@@ -1,4 +1,4 @@
-import { deleteRecord, getAllByIndex, getRecord, putRecord } from '../db.js';
+import { deleteRecord, getAllByIndex, getAllRecords, getRecord, putRecord } from '../db.js';
 import { createSessionId } from '../../utils/ids.js';
 
 export async function saveSession(session) {
@@ -19,6 +19,26 @@ export function getSession(sessionId) {
 
 export function listSessionsForBank(bankId) {
   return getAllByIndex('sessions', 'bankId', bankId);
+}
+
+export function listAllSessions() {
+  return getAllRecords('sessions');
+}
+
+export async function getLatestUnfinishedPracticeSession({ bankIds = null } = {}) {
+  const sessions = await listAllSessions();
+  const allowed = Array.isArray(bankIds)
+    ? new Set(bankIds.map(String))
+    : null;
+
+  return sessions
+    .filter(session =>
+      isUnfinishedPractice(session) &&
+      (!allowed || allowed.has(String(session.bankId || '')))
+    )
+    .sort((a, b) =>
+      String(b.updatedAt || '').localeCompare(String(a.updatedAt || ''))
+    )[0] || null;
 }
 
 export async function getLatestUnfinishedSessionForBank(bankId) {

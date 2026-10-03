@@ -6,6 +6,7 @@ import {
   restoreBackupSnapshot,
   summarizeSnapshot,
 } from '../storage/backup.js';
+import { markFullBackupCompleted } from '../storage/backup-meta.js';
 import {
   loadSettings,
   resetSettings,
@@ -178,6 +179,7 @@ async function exportBackup() {
     const snapshot = await createBackupSnapshot();
     const blob = await backupSnapshotToBlob(snapshot);
     downloadBlob(blob, createBackupFilename());
+    markFullBackupCompleted(snapshot.exportedAt || new Date());
 
     const summary = summarizeSnapshot(snapshot);
     showToast(toastRegion, `備份完成，共 ${summary.totalRecords} 筆本機資料。`, 'success');
