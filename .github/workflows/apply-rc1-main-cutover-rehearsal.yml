@@ -1,0 +1,196 @@
+name: Apply RC1 Main Cutover Rehearsal
+
+on:
+  push:
+    branches:
+      - v4.0-learning-studio
+    paths:
+      - ".github/workflows/apply-rc1-main-cutover-rehearsal.yml"
+      - "scripts/apply-rc1-main-cutover-rehearsal.mjs"
+
+permissions:
+  contents: write
+
+jobs:
+  rehearsal:
+    name: Main cutover rehearsal
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout release candidate
+        uses: actions/checkout@v4
+        with:
+          ref: v4.0-learning-studio
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch main
+        run: git fetch origin main v4.0-learning-studio --prune
+
+      - name: Apply rehearsal contract
+        run: node scripts/apply-rc1-main-cutover-rehearsal.mjs
+
+      - name: Remove one-time installer files
+        run: |
+          rm -f .github/workflows/apply-rc1-main-cutover-rehearsal.yml
+          rm -f scripts/apply-rc1-main-cutover-rehearsal.mjs
+
+      - name: Syntax checks
+        run: |
+          node --check scripts/v4-cutover-rehearsal.mjs
+          node --check tests/v40-rc1-cutover-contract-run.mjs
+          node --check scripts/v4-release-preflight.mjs
+          node --check service-worker.js
+
+      - name: Candidate regression before merge simulation
+        run: npm run ci
+
+      - name: Create local-only release candidate commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "test(v4.0): complete RC1 main cutover rehearsal"
+          echo "CANDIDATE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "MAIN_SHA=$(git rev-parse origin/main)" >> "$GITHUB_ENV"
+
+      - name: Audit git cutover state
+        env:
+          CUTOVER_MAIN_REF: origin/main
+          CUTOVER_CANDIDATE_REF: HEAD
+          CUTOVER_REPORT_DIR: artifacts/rc1-main-cutover-rehearsal
+        run: node scripts/v4-cutover-rehearsal.mjs
+
+      - name: Inspect current GitHub Pages source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p artifacts/rc1-main-cutover-rehearsal
+          status=$(curl -sS -o /tmp/pages.json -w "%{http_code}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages" || true)
+
+          if [ "$status" = "200" ]; then
+            cp /tmp/pages.json artifacts/rc1-main-cutover-rehearsal/pages-source.json
+            node - <<'NODE' > artifacts/rc1-main-cutover-rehearsal/pages-source.md
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('/tmp/pages.json', 'utf8'));
+          console.log('# GitHub Pages Source');
+          console.log('');
+          console.log(`- Branch: \`${data.source?.branch ?? 'unknown'}\``);
+          console.log(`- Path: \`${data.source?.path ?? 'unknown'}\``);
+          console.log(`- URL: ${data.html_url ?? 'unknown'}`);
+          console.log('');
+          console.log('Production cutover target: `main` + `/`.');
+          NODE
+          else
+            printf '# GitHub Pages Source\n\nREST lookup unavailable in this workflow (HTTP %s).\n' "$status" \
+              > artifacts/rc1-main-cutover-rehearsal/pages-source.md
+          fi
+
+      - name: Build synthetic main merge commit
+        run: |
+          rm -rf /tmp/moxin-cutover-rehearsal
+          git worktree add --detach /tmp/moxin-cutover-rehearsal origin/main
+
+          cd /tmp/moxin-cutover-rehearsal
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge --no-ff "${CANDIDATE_SHA}" -m "rehearsal: merge v4.0 RC1 into main"
+          echo "REHEARSAL_MERGE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Full regression on synthetic post-merge tree
+        working-directory: /tmp/moxin-cutover-rehearsal
+        run: npm run ci
+
+      - name: HTTP smoke on synthetic production root
+        working-directory: /tmp/moxin-cutover-rehearsal
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/moxin-cutover-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill ${server_pid} 2>/dev/null || true' EXIT
+
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ >/tmp/root.html; then
+              break
+            fi
+            sleep 1
+          done
+
+          curl -fsS http://127.0.0.1:4173/v3.html -o /tmp/v3.html
+          curl -fsS http://127.0.0.1:4173/manifest.webmanifest -o /tmp/manifest.webmanifest
+          curl -fsS http://127.0.0.1:4173/service-worker.js -o /tmp/service-worker.js
+          curl -fsS http://127.0.0.1:4173/legacy-v2.html -o /tmp/legacy-v2.html
+
+          cmp /tmp/root.html /tmp/v3.html
+          grep -F '<title>墨忻刷題網 v4.0 RC1</title>' /tmp/root.html
+          grep -F "CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.5-20'" /tmp/service-worker.js
+
+          node - <<'NODE'
+          const fs = require('fs');
+          const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.webmanifest', 'utf8'));
+          if (manifest.start_url !== './') throw new Error('manifest start_url changed');
+          if (manifest.scope !== './') throw new Error('manifest scope changed');
+          console.log('Synthetic production HTTP smoke: PASS');
+          NODE
+
+      - name: Simulate non-destructive rollback
+        working-directory: /tmp/moxin-cutover-rehearsal
+        run: |
+          git revert -m 1 --no-edit "${REHEARSAL_MERGE_SHA}"
+
+          if ! git diff --quiet "${MAIN_SHA}" HEAD; then
+            echo "Rollback tree does not match current origin/main."
+            git diff --stat "${MAIN_SHA}" HEAD
+            exit 1
+          fi
+
+          printf '# Rollback Rehearsal\n\n- Release merge: `%s`\n- Rollback tree equals pre-cutover main: **YES**\n- Strategy: `git revert -m 1 <release-merge-commit>`\n' \
+            "${REHEARSAL_MERGE_SHA}" \
+            > "${GITHUB_WORKSPACE}/artifacts/rc1-main-cutover-rehearsal/rollback.md"
+
+      - name: Build rehearsal summary
+        run: |
+          {
+            echo "# RC1 Main Cutover Rehearsal"
+            echo
+            echo "- Current main: \`${MAIN_SHA}\`"
+            echo "- Candidate: \`${CANDIDATE_SHA}\`"
+            echo "- Synthetic merge: \`${REHEARSAL_MERGE_SHA}\`"
+            echo "- Candidate npm run ci: PASS"
+            echo "- Synthetic post-merge npm run ci: PASS"
+            echo "- Production-root HTTP smoke: PASS"
+            echo "- Merge-commit rollback simulation: PASS"
+            echo
+            echo "Remote main was not modified."
+          } > artifacts/rc1-main-cutover-rehearsal/summary.md
+          cat artifacts/rc1-main-cutover-rehearsal/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload rehearsal artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc1-main-cutover-rehearsal
+          path: artifacts/rc1-main-cutover-rehearsal
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Remove generated artifact directory
+        run: rm -rf artifacts/rc1-main-cutover-rehearsal
+
+      - name: Remove temporary worktree
+        if: always()
+        run: |
+          git worktree remove --force /tmp/moxin-cutover-rehearsal 2>/dev/null || true
+          git worktree prune
+
+      - name: Push rehearsal contract only after all gates are green
+        run: git push origin HEAD:v4.0-learning-studio
