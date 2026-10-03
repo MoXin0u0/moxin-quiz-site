@@ -127,7 +127,7 @@ IndexedDB version 2 → 3，只新增：
 
 ## RC1 — v4.0 Release Readiness
 
-**狀態：In Progress（僅剩 Main Cutover Rehearsal）**
+**狀態：Stable（Main Cutover Rehearsal）**
 
 - ✅ v3.3 → v4.0 IndexedDB upgrade simulation
 - ✅ 完整備份 export / restore round trip
@@ -138,7 +138,7 @@ IndexedDB version 2 → 3，只新增：
 - ✅ Accessibility / horizontal overflow / runtime error audit
 - ✅ Offline PWA reload
 - ✅ Release metadata cleanup
-- ⏳ Main cutover rehearsal
+- ✅ Main cutover rehearsal
 
 ## 相容性要求
 

@@ -2,6 +2,16 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## RC1 — Main Cutover Rehearsal
+- 驗證 main 為 release candidate 祖先，candidate 不得 behind main。
+- 使用 temporary worktree + --no-ff merge 模擬正式 PR merge commit。
+- 在 synthetic post-merge tree 重跑完整 npm run ci / v4 preflight。
+- 對合併後 root、v3.html、manifest、service worker、legacy-v2.html 做 HTTP smoke。
+- 使用 git revert -m 1 模擬非破壞性 rollback，並要求 rollback tree 等同 origin/main。
+- 新增 durable cutover contract regression 與 git-state artifact。
+- 記錄 Pages deployment source 與 main/root 正式部署要求。
+- RC1 標記 Stable；下一步為 Production Cutover。
+
 ## RC1 — Release Metadata Cleanup
 - 使用者可見版本由 v3.3 + v4 preview 整理為 v4.0 RC1。
 - 更新 title、meta description、PWA manifest 與 README。
