@@ -1,0 +1,98 @@
+name: Apply RC1 Browser UX Audit
+
+on:
+  push:
+    branches:
+      - v4.0-learning-studio
+    paths:
+      - ".github/workflows/apply-rc1-browser-ux-audit.yml"
+      - "scripts/apply-rc1-browser-ux-audit.mjs"
+
+permissions:
+  contents: write
+
+jobs:
+  browser-audit:
+    name: Real browser user simulation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout v4 branch
+        uses: actions/checkout@v4
+        with:
+          ref: v4.0-learning-studio
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Apply RC1 browser audit files
+        run: node scripts/apply-rc1-browser-ux-audit.mjs
+
+      - name: Syntax checks
+        run: |
+          node --check tests/v40-rc1-browser-ux-run.mjs
+          node --check scripts/apply-rc1-browser-ux-audit.mjs
+
+      - name: Install temporary browser audit dependencies
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0 @axe-core/playwright@4.10.2
+          npx playwright install chromium
+
+      - name: Start local production-like server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/moxin-rc1-http.log 2>&1 &
+          echo $! > /tmp/moxin-rc1-http.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/moxin-rc1-http.log
+          exit 1
+
+      - name: Run real Chromium user simulations
+        id: browser_audit
+        env:
+          BASE_URL: http://127.0.0.1:4173/
+        run: node tests/v40-rc1-browser-ux-run.mjs
+
+      - name: Add browser report to job summary
+        if: always()
+        run: |
+          if [ -f artifacts/rc1-browser-ux/report.md ]; then
+            cat artifacts/rc1-browser-ux/report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload browser audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc1-browser-ux-audit
+          path: artifacts/rc1-browser-ux
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Full repository regression
+        run: npm run ci
+
+      - name: Remove temporary audit artifacts, node_modules and one-time installer
+        run: |
+          rm -rf artifacts/rc1-browser-ux
+          rm -rf node_modules
+          rm -f .github/workflows/apply-rc1-browser-ux-audit.yml
+          rm -f scripts/apply-rc1-browser-ux-audit.mjs
+
+      - name: Commit only after browser audit and CI are green
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --stat
+          git commit -m "test(v4.0): add RC1 real-browser UX audit"
+          git push origin HEAD:v4.0-learning-studio
