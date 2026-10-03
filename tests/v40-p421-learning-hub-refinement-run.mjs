@@ -123,6 +123,6 @@ assert.ok(
 assert.match(hubCss, /\.learning-hub-global-strip/);
 assert.match(hubCss, /#reviewView \.learning-review-hero/);
 assert.match(sprintCss, /\.exam-sprint-bank-search/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-14'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
 
 console.log('MoXin Quiz v4.0 P4.2.1 Learning Hub refinement tests passed.');

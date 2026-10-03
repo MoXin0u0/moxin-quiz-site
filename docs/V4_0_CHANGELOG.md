@@ -2,6 +2,17 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P5 — Analytics Core
+- 正式進入 v4.0 統計與首頁主線，先完成統計 Core，再接分層 UI。
+- 新增 7 / 30 日作答趨勢與正確率。
+- 新增題型正確率、章節正確率與弱點章節排序。
+- 趨勢採 attempt 次數；與 P3 unique-question 每日目標語義明確分離。
+- 題型 / 章節由 bankId + questionId 回查目前題目 metadata；刪題歷史不 silent drop。
+- 弱點章節預設至少 3 次作答；樣本不足時回傳 provisional 結果。
+- Global / Bank scope 共用同一套 Core；日期沿用 P3 localDateKey。
+- 新增 16 組 regression；analytics engine 加入 APP_SHELL。
+- APP cache 更新至 r2k.5-15。
+
 ## P4.2.1 — Learning Hub Refinement
 - Hero 與總覽新增真正 Global 今日摘要，不再誤用目前 P3 題庫 scope。
 - P3 目標卡仍保留自己的單題庫 / Global scope，並明確顯示目前目標範圍。
