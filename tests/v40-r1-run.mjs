@@ -9,8 +9,8 @@ const studio = fs.readFileSync('src/ui/studio-r1.js', 'utf8');
 
 assert.equal(index, v3);
 assert.match(index, /styles\/v4-design\.css/);
-assert.match(index, /v3\.3/);
-assert.match(index, /v4 preview/);
+assert.match(index, /<span class="version-badge">v[0-9][^<]*<\/span>/);
+assert.doesNotMatch(index, /v4 preview/i);
 
 for (const nav of [
   'data-nav-library',

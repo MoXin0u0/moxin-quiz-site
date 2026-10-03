@@ -2,6 +2,16 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## RC1 — Release Metadata Cleanup
+- 使用者可見版本由 v3.3 + v4 preview 整理為 v4.0 RC1。
+- 更新 title、meta description、PWA manifest 與 README。
+- APP_CONFIG 新增 appVersion=4.0.0-rc.1 / releaseChannel=rc1。
+- package metadata 升級為 moxin-quiz-site-v4-rc1；npm preflight 改用 v4 release preflight。
+- 保留 moxin-quiz-v3 IndexedDB、moxin.v3.settings 與 v3.html 作相容 namespace / entry，不做高風險重新命名。
+- 新增 RC1 release metadata regression。
+- APP cache 更新至 r2k.5-20。
+- RC1 僅剩 Main Cutover Rehearsal。
+
 ## RC1 — Browser UX Audit
 - 正式進入 v4.0 Release Readiness，不再新增功能主線。
 - 新增真實 Chromium + Playwright 使用者流程 audit。

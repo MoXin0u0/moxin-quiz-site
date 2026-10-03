@@ -75,7 +75,7 @@ const sw = fs.readFileSync('service-worker.js', 'utf8');
 const redirect = fs.readFileSync('legacy-v2.html', 'utf8');
 
 assert.equal(index, v3);
-assert.match(index, /v3\.3/);
+assert.match(index, /<span class="version-badge">v[0-9][^<]*<\/span>/);
 assert.match(index, /data-nav-tools/);
 assert.match(index, /id="toolsView"/);
 

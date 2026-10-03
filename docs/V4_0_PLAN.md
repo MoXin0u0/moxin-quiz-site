@@ -127,18 +127,18 @@ IndexedDB version 2 → 3，只新增：
 
 ## RC1 — v4.0 Release Readiness
 
-**狀態：In Progress**
+**狀態：In Progress（僅剩 Main Cutover Rehearsal）**
 
-- v3.3 → v4.0 IndexedDB upgrade simulation
-- 完整備份 export / restore round trip
-- 真實 Chromium 使用者流程
-- Desktop / Tablet / Mobile viewport matrix
-- Light / Dark × Academy / Epic / Focus visual matrix
-- 大量題庫 / 長文字 / Empty State
-- Accessibility / horizontal overflow / runtime error audit
-- Offline PWA reload
-- Release metadata cleanup
-- Main cutover rehearsal
+- ✅ v3.3 → v4.0 IndexedDB upgrade simulation
+- ✅ 完整備份 export / restore round trip
+- ✅ 真實 Chromium 使用者流程
+- ✅ Desktop / Tablet / Mobile viewport matrix
+- ✅ Light / Dark × Academy / Epic / Focus visual matrix
+- ✅ 大量題庫 / 長文字 / Empty State
+- ✅ Accessibility / horizontal overflow / runtime error audit
+- ✅ Offline PWA reload
+- ✅ Release metadata cleanup
+- ⏳ Main cutover rehearsal
 
 ## 相容性要求
 
