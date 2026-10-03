@@ -2,6 +2,16 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P4.1 — Exam Sprint UI & Session Integration
+- 「今日複習」頁在 P3 學習目標後新增考前衝刺 Dashboard。
+- 支援 Global / Bank scope 的考試名稱、日期與 sprintEnabled 設定。
+- 顯示倒數、今日剩餘題數、六層題源、coverage gap 與建議每日題數。
+- Global 今日清單依 bank 分組啟動；維持單題庫 Practice Session，避免跨題庫 assets 混用。
+- Sprint Session 使用 mode=sprint 並保留 P4 priority 順序，不套用一般練習 shuffle。
+- 今日已算入 P3 unique practice 的題目會從 P4 今日 selection pool 排除，避免重做後目標數字不前進。
+- 新增 P4.1 regression 與 Desktop / Tablet / Mobile RWD。
+- APP cache 更新至 r2k.5-12。
+
 ## P4 — Exam Sprint Core
 - 正式進入 v4.0 考前衝刺主線；此 P4 與舊 v3 docs/P4_LEARNING.md 不同。
 - 選題優先序固定為：目前錯題 → 不熟題 → 到期題 → 低熟練題 → 未作答 → 其他。

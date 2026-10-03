@@ -1,7 +1,14 @@
 import { createSessionId } from '../utils/ids.js';
 import { shuffle } from './shuffle.js';
 
-export function createPracticeSession({ bankId, bankName, questions, mode = 'filtered', random = Math.random }) {
+export function createPracticeSession({
+  bankId,
+  bankName,
+  questions,
+  mode = 'filtered',
+  random = Math.random,
+  shuffleQuestions = true,
+}) {
   const ids = questions.map(question => question.id);
   return {
     id: createSessionId('practice'),
@@ -9,7 +16,7 @@ export function createPracticeSession({ bankId, bankName, questions, mode = 'fil
     bankName,
     mode,
     sourceQuestionIds: [...ids],
-    queue: shuffle(ids, random),
+    queue: shuffleQuestions ? shuffle(ids, random) : [...ids],
     completedIds: [],
     errorsByQuestion: {},
     attemptCount: 0,

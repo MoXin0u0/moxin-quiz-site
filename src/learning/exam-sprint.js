@@ -1,4 +1,8 @@
-import { localDateKey } from './goal-progress.js';
+import {
+  LEARNING_ATTEMPT_KIND,
+  classifyLearningAttempt,
+  localDateKey,
+} from './goal-progress.js';
 
 export const SPRINT_PRIORITY = Object.freeze({
   WRONG: 'wrong',
@@ -44,6 +48,15 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
     .map(question => buildCandidate(question, indexes, now))
     .sort(compareSprintCandidates);
 
+  const completedTodayKeys = buildTodayPracticeKeySet(data?.attempts, {
+    now,
+    timeZone,
+    bankId: goal?.bankId,
+  });
+  const availableToday = ranked.filter(
+    candidate => !completedTodayKeys.has(questionKey(candidate.bankId, candidate.questionId)),
+  );
+
   const priorityCounts = Object.fromEntries(
     SPRINT_PRIORITY_ORDER.map(priority => [priority, 0]),
   );
@@ -69,8 +82,9 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
   );
 
   const remainingToday = Math.max(0, dailyTarget - completedPracticeToday);
-  const selectionTarget = Math.min(candidateCount, remainingToday);
-  const selected = ranked.slice(0, selectionTarget);
+  const availableTodayCount = availableToday.length;
+  const selectionTarget = Math.min(availableTodayCount, remainingToday);
+  const selected = availableToday.slice(0, selectionTarget);
 
   const projectedCoverage = Math.min(
     candidateCount,
@@ -100,10 +114,12 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
       examPassed,
       candidateCount,
       remainingToday,
+      availableTodayCount,
     }),
     daysUntilExam,
     remainingStudyDays,
     candidateCount,
+    availableTodayCount,
     configuredDailyTarget,
     recommendedDailyTarget,
     dailyTarget,
@@ -155,6 +171,30 @@ export function recommendedSprintDailyTarget({
   const days = Math.max(0, Math.round(Number(remainingStudyDays) || 0));
   if (!count || !days) return 0;
   return Math.ceil(count / days);
+}
+
+export function buildTodayPracticeKeySet(attempts = [], {
+  now = new Date(),
+  timeZone = null,
+  bankId = null,
+} = {}) {
+  const todayKey = localDateKey(now, { timeZone });
+  const scopedBankId = bankId ? String(bankId) : null;
+  const keys = new Set();
+
+  for (const attempt of Array.isArray(attempts) ? attempts : []) {
+    if (!attempt?.timestamp) continue;
+    if (scopedBankId && String(attempt.bankId || '') !== scopedBankId) continue;
+    if (classifyLearningAttempt(attempt) !== LEARNING_ATTEMPT_KIND.PRACTICE) continue;
+    if (localDateKey(attempt.timestamp, { timeZone }) !== todayKey) continue;
+
+    const attemptBankId = String(attempt.bankId || '');
+    const questionId = String(attempt.questionId || '');
+    if (!attemptBankId || !questionId) continue;
+    keys.add(questionKey(attemptBankId, questionId));
+  }
+
+  return keys;
 }
 
 export function normalizeExamDateKey(value) {
@@ -332,12 +372,14 @@ function sprintStatus({
   examPassed,
   candidateCount,
   remainingToday,
+  availableTodayCount,
 }) {
   if (!enabled) return 'disabled';
   if (!hasExamDate) return 'missing-exam-date';
   if (examPassed) return 'exam-passed';
   if (!candidateCount) return 'no-questions';
   if (!remainingToday) return 'today-complete';
+  if (!availableTodayCount) return 'today-exhausted';
   return 'ready';
 }
 

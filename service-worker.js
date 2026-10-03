@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.5-11';
+const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.5-12';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
@@ -17,6 +17,7 @@ const APP_SHELL = [
   './styles/v4-learning.css',
   './styles/v4-learning-styles.css',
   './styles/v4-learning-goals.css',
+  './styles/v4-exam-sprint.css',
   './styles/v4-studio.css',
   './styles/v4-studio-r1.css',
   './styles/v4-studio-batch.css',
@@ -74,6 +75,7 @@ const APP_SHELL = [
   './src/ui/exam.js',
   './src/ui/library.js',
   './src/ui/learning-goals.js',
+  './src/ui/exam-sprint.js',
   './src/ui/practice.js',
   './src/ui/review-center.js',
   './src/ui/settings.js',

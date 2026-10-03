@@ -1,4 +1,5 @@
 import { renderLearningGoalPanel } from './learning-goals.js';
+import { renderExamSprintPanel } from './exam-sprint.js';
 
 export function renderReviewCenter(container, groups, options = {}) {
   const totalDue = groups.reduce((sum, group) => sum + group.counts.due, 0);
@@ -53,6 +54,8 @@ export function renderReviewCenter(container, groups, options = {}) {
     </section>
 
     ${renderLearningGoalPanel(options.goalModel || {})}
+
+    ${renderExamSprintPanel(options.sprintModel || {})}
 
     <section class="learning-section-head">
       <div>
