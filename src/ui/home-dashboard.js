@@ -135,7 +135,7 @@ function renderSprintAction(sprint) {
     else if (Number(sprint.daysUntilExam) > 0) value = `${Number(sprint.daysUntilExam)} 天`;
     else value = '已到期';
 
-    note = `${escapeHtml(sprint.label || '考前衝刺')} · ${Number(sprint.bankCount || 0)} 個題庫`;
+    note = `${sprint.label || '考前衝刺'} · ${Number(sprint.bankCount || 0)} 個題庫`;
   }
 
   return renderAction({
@@ -177,7 +177,7 @@ function renderAction({ kind, kicker, value, note, attrs, label }) {
     <article class="home-action-card ${escapeAttr(kind)}">
       <span>${escapeHtml(kicker)}</span>
       <strong>${escapeHtml(String(value))}</strong>
-      <p>${note}</p>
+      <p>${escapeHtml(note)}</p>
       <button type="button" class="button secondary" ${attrs}>${escapeHtml(label)}</button>
     </article>
   `;

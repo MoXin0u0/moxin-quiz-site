@@ -110,6 +110,8 @@ IndexedDB version 2 → 3，只新增：
 
 ## P5 — 統計與首頁
 
+**狀態：Stable（P5 Final Audit）**
+
 - 7 / 30 日作答趨勢
 - 7 / 30 日正確率
 - 題型正確率

@@ -2,6 +2,17 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P5 Final Audit — Stable
+- 首頁 / 今日學習 / 學習統計完成跨頁資料口徑與 Empty State 回歸。
+- 驗證 Home 今日目標直接共用 P3 engine；Home / Learning Hub Global 摘要不受 bank scope 汙染。
+- 驗證 P3 unique-question 與 P5 attempt-count 的刻意差異，避免未來誤合併統計口徑。
+- 驗證首頁 due / wrong、resume session、sprint、backup 與既有流程一致。
+- Home Action 動態 note 改為統一 HTML escape，補強匯入題庫名稱的輸出安全。
+- 加入 Desktop / Tablet / Mobile、theme token、offline APP_SHELL、release equality final gates。
+- 新增 16 組 P5 cross-page audit regression。
+- P5「統計與首頁」正式標記 Stable / Maintenance Only。
+- APP cache 更新至 r2k.5-18。
+
 ## P5.2 — Home Actions
 - 「我的題庫」Hero 下方新增今日概況，不新增新的主導覽層級。
 - 顯示主要學習目標、全站 streak、今日碰觸題數與未完成 Practice Session。
