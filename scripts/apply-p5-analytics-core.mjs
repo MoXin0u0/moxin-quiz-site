@@ -24,6 +24,33 @@ write('src/learning/analytics.js', CORE_CODE);
 write('tests/v40-p5-analytics-core-run.mjs', TEST_CODE);
 write('docs/V4_0_P5_ANALYTICS_CORE.md', DOC_CODE);
 
+// P4.2.1 regression must not freeze one exact APP cache revision.
+// P5 intentionally bumps r2k.5-14 -> r2k.5-15.
+{
+  const path = 'tests/v40-p421-learning-hub-refinement-run.mjs';
+  let test = read(path);
+
+  const frozen =
+    "assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\\.0\\.0-r2k\\.5-14'/);";
+  const flexible =
+    "assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\\.0\\.0-r2k\\.5-\\d+'/);";
+
+  if (test.includes(frozen)) {
+    test = replaceOne(
+      test,
+      frozen,
+      flexible,
+      'P4.2.1 flexible cache regression',
+    );
+  } else if (!test.includes(flexible)) {
+    throw new Error(
+      'P4.2.1 cache assertion is neither the expected frozen form nor the flexible form',
+    );
+  }
+
+  write(path, test);
+}
+
 {
   const path = 'service-worker.js';
   let sw = read(path);
