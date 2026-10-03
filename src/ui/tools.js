@@ -1,3 +1,5 @@
+import { mountStudioWorkspace } from './studio.js';
+
 export const QUESTION_BANK_AI_PROMPT = `
 你是一位題庫資料整理與 JSON 結構化助手。
 
@@ -90,7 +92,7 @@ questions.json 的 images 與 explanationImages 只放相對路徑字串，例�
 輸出後，再另外列出「人工核對清單」，只指出需要人工確認的題號、原因與欄位，不要擅自修正來源沒有證據支持的內容。
 `.trim();
 
-export function renderQuestionBankTools(container) {
+export function renderQuestionBankTools(container, options = {}) {
   if (!container) return;
 
   container.innerHTML = `
@@ -98,9 +100,11 @@ export function renderQuestionBankTools(container) {
       <div>
         <p class="eyebrow">Question Bank Tools</p>
         <h2>題庫工具</h2>
-        <p>製作、檢查與分享題庫的輔助中心。網站不會把你的題目上傳到伺服器，也不內建任何 AI API Key。</p>
+        <p>現在除了 AI Schema v2 工作流，也可以直接在瀏覽器內建立與編輯題庫。</p>
       </div>
     </section>
+
+    <div id="studioWorkspaceMount"></div>
 
     <section class="panel">
       <div class="section-heading">
@@ -115,7 +119,7 @@ export function renderQuestionBankTools(container) {
         <li>貼到你使用的 AI 工具，再提供 PDF、Word、圖片辨識文字或題庫原文。</li>
         <li>讓 AI 依 Schema 2.0 輸出題庫，但答案與官方內容仍需人工核對。</li>
         <li>文字題庫可輸出單一 JSON；含圖片題庫建議整理成正式 package 資料夾。</li>
-        <li>回到「我的題庫 → 自行新增」匯入，網站會先驗證再寫入 IndexedDB。</li>
+        <li>匯入網站後，可以再到上方「題庫工作室」編輯與驗證。</li>
       </ol>
 
       <div class="tools-actions">
@@ -144,16 +148,34 @@ export function renderQuestionBankTools(container) {
       <article class="panel tool-card">
         <p class="eyebrow">Share</p>
         <h2>分享自己的題庫</h2>
-        <p>進入任一已加入的題庫，使用「匯出題庫 ZIP」即可把題目與題庫內圖片打包。匯出的 ZIP 不包含錯題、收藏、筆記、熟練度或其他個人學習資料。</p>
+        <p>工作室與題庫詳情都可以匯出題庫。ZIP 會保留 assets；單一 JSON 不包含圖片檔。</p>
       </article>
 
       <article class="panel tool-card">
         <p class="eyebrow">Privacy</p>
         <h2>本機優先</h2>
-        <p>自行新增的題庫、學習紀錄與筆記都保存在瀏覽器 IndexedDB。完整備份仍請使用「設定 → 匯出完整備份」。</p>
+        <p>題庫、工作室草稿與學習資料都保存在瀏覽器 IndexedDB。完整備份仍請使用「設定 → 匯出完整備份」。</p>
       </article>
     </section>
   `;
+
+  mountStudioWorkspace(
+    container.querySelector('#studioWorkspaceMount'),
+    { draftId: options.draftId || null },
+  ).catch(error => {
+    console.error('Question Bank Studio failed to mount.', error);
+    const mount = container.querySelector('#studioWorkspaceMount');
+    if (mount) {
+      mount.innerHTML = `
+        <section class="panel">
+          <div class="empty-state">
+            <strong>題庫工作室載入失敗</strong>
+            <p>${escapeHtml(error.message)}</p>
+          </div>
+        </section>
+      `;
+    }
+  });
 }
 
 function escapeHtml(value) {

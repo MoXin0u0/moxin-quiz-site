@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="墨忻刷題網 v3 題庫、複習、模擬考、統計與本機學習介面" />
+  <meta name="description" content="墨忻刷題網 v4.0 本機優先個人學習平台：題庫工作室、練習、複習、學習目標、考前衝刺、模擬考與統計" />
   <meta name="theme-color" content="#3559d9" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="墨忻刷題" />
-  <title>墨忻刷題網 v3.3</title>
+  <title>墨忻刷題網 v4.0</title>
 
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/pwa/icon-192.png" sizes="192x192" />
@@ -27,6 +27,22 @@
       document.documentElement.dataset.fontScale = ['normal', 'large', 'x-large'].includes(settings.fontScale) ? settings.fontScale : 'normal';
       document.documentElement.dataset.optionSpacing = ['compact', 'normal', 'comfortable'].includes(settings.optionSpacing) ? settings.optionSpacing : 'normal';
       document.documentElement.dataset.reduceMotion = settings.reduceMotion === true ? 'true' : 'false';
+      document.documentElement.dataset.learningStyle = ['academy', 'epic', 'focus'].includes(settings.learningStyle)
+        ? settings.learningStyle
+        : 'academy';
+      document.documentElement.dataset.sceneIntensity = ['full', 'reduced', 'off'].includes(settings.sceneIntensity)
+        ? settings.sceneIntensity
+        : 'full';
+
+      if (document.documentElement.dataset.sceneIntensity === 'full' &&
+          ['academy', 'epic'].includes(document.documentElement.dataset.learningStyle)) {
+        const preload = document.createElement('link');
+        preload.rel = 'preload';
+        preload.as = 'image';
+        preload.fetchPriority = 'high';
+        preload.href = `assets/learning/styles/${document.documentElement.dataset.learningStyle}/library-${theme}.webp`;
+        document.head.append(preload);
+      }
     } catch {}
   </script>
 
@@ -38,62 +54,90 @@
   <link rel="stylesheet" href="styles/v3-p7.css" />
   <link rel="stylesheet" href="styles/v3-v31.css" />
   <link rel="stylesheet" href="styles/v3-v33.css" />
+  <link rel="stylesheet" href="styles/v4-design.css" />
+  <link rel="stylesheet" href="styles/v4-learning.css" />
+  <link rel="stylesheet" href="styles/v4-learning-styles.css" />
+  <link rel="stylesheet" href="styles/v4-learning-hub.css" />
+  <link rel="stylesheet" href="styles/v4-stats.css" />
+  <link rel="stylesheet" href="styles/v4-home.css" />
+  <link rel="stylesheet" href="styles/v4-learning-goals.css" />
+  <link rel="stylesheet" href="styles/v4-exam-sprint.css" />
 </head>
 <body>
   <header class="app-header">
     <div class="brand-block">
       <div class="brand-mark" aria-hidden="true">墨</div>
       <div>
-        <h1>墨忻刷題網 <span class="version-badge">v3.3</span></h1>
-        <p>本機優先的題庫練習平台</p>
+        <h1>墨忻刷題網 <span class="version-badge">v4.0</span></h1>
+        <p>你的本機學習空間</p>
       </div>
     </div>
     <nav class="main-nav" aria-label="主要導覽">
       <button class="nav-item is-active" type="button" data-nav-library>我的題庫</button>
-      <button class="nav-item" type="button" data-nav-review>今日複習</button>
+      <button class="nav-item" type="button" data-nav-review>今日學習</button>
       <button class="nav-item" type="button" data-nav-exam>模擬考</button>
       <button class="nav-item" type="button" data-nav-stats>學習統計</button>
-      <button class="nav-item" type="button" data-nav-tools>題庫工具</button>
+      <button class="nav-item" type="button" data-nav-tools>題庫工作室</button>
       <button class="nav-item" type="button" data-nav-settings>設定</button>
     </nav>
   </header>
 
   <main class="app-main">
     <section id="libraryView" data-view="library">
-      <section class="hero-card">
-        <div>
-          <p class="eyebrow">Question Bank Package</p>
-          <h2>我的題庫</h2>
-          <p>依題庫來源分成作者提供與自行新增；加入後都儲存在瀏覽器 IndexedDB，可離線練習。</p>
-        </div>
-        <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
-      </section>
+      <section class="learning-hero learning-hero-library learning-hero-whole" data-learning-scene="library">
+        <div class="learning-hero-art learning-hero-art-library" data-scene-art="library" aria-hidden="true"></div>
+        <div class="learning-hero-content">
+          <span class="learning-kicker">我的學習空間</span>
+          <h2>從一個題庫開始，建立今天的學習節奏</h2>
+          <p>挑選想練習的內容，完成題目後再回到複習與統計，讓每一次作答都留下進步的軌跡。</p>
 
-      <section class="panel library-source-panel" aria-labelledby="librarySourceTitle">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Library Source</p>
-            <h2 id="librarySourceTitle">題庫來源</h2>
+          <div class="learning-hero-cta-row">
+            <a class="button primary learning-hero-primary-cta" href="#librarySourceTitle">選擇題庫開始練習</a>
+            <button class="button secondary learning-hero-secondary-cta" type="button" data-nav-review>今日學習</button>
+          </div>
+
+          <div class="learning-hero-quick-links" aria-label="其他學習入口">
+            <button type="button" data-nav-exam><span aria-hidden="true">▣</span> 模擬考</button>
+            <button type="button" data-nav-stats><span aria-hidden="true">▥</span> 學習統計</button>
+          </div>
+
+          <div class="learning-storage-row">
+            <span class="learning-storage-dot" aria-hidden="true"></span>
+            <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
           </div>
         </div>
 
-        <div class="library-source-tabs" role="tablist" aria-label="題庫來源">
+        <div class="learning-hero-journey" aria-hidden="true">
+          <span>選題庫</span><i></i><span>練習</span><i></i><span>複習</span>
+        </div>
+      </section>
+
+      <div id="homeDashboardArea" aria-live="polite"></div>
+
+      <section class="learning-section-head" aria-labelledby="librarySourceTitle">
+        <div>
+          <span class="learning-kicker">題庫收藏</span>
+          <h2 id="librarySourceTitle">選擇今天要學的內容</h2>
+          <p>作者提供的題庫可以直接加入；自己整理的題庫則保存在「自行新增」。</p>
+        </div>
+
+        <div class="library-source-tabs learning-source-tabs" role="tablist" aria-label="題庫來源">
           <button class="source-tab is-active" type="button" role="tab" aria-selected="true" data-library-source-tab="author">作者題庫</button>
           <button class="source-tab" type="button" role="tab" aria-selected="false" data-library-source-tab="user">自行新增</button>
         </div>
       </section>
 
       <div id="authorLibraryPanel" data-library-source-panel="author">
-        <section class="panel" aria-labelledby="authorLibraryTitle">
-          <div class="section-heading">
+        <section class="learning-content-card learning-bank-section" aria-labelledby="authorLibraryTitle">
+          <div class="section-heading learning-card-heading">
             <div>
-              <p class="eyebrow">Curated by Author</p>
+              <span class="learning-kicker">推薦題庫</span>
               <h2 id="authorLibraryTitle">作者題庫</h2>
+              <p class="section-note source-description">由網站維護者整理。加入後會保存在本機，即使離線也能繼續練習。</p>
             </div>
-            <button id="refreshAuthorBanksButton" type="button" class="button secondary">重新整理清單</button>
+            <button id="refreshAuthorBanksButton" type="button" class="button secondary">重新整理</button>
           </div>
-          <p class="section-note source-description">作者題庫由網站維護者整理。只有按下「加入我的題庫」後才會寫入本機 IndexedDB。</p>
-          <div id="authorBankList" class="bank-grid" aria-live="polite"></div>
+          <div id="authorBankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
         </section>
       </div>
 
@@ -101,17 +145,16 @@
         <section class="panel import-panel" aria-labelledby="importTitle">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">匯入中心</p>
-              <h2 id="importTitle">自行新增題庫</h2>
+              <h2 id="importTitle">加入自己的題庫</h2>
+              <p class="section-note">匯入前會先驗證格式；有問題的題庫不會寫入資料庫。</p>
             </div>
-            <p class="section-note">匯入前先驗證；驗證未通過的題庫不會寫入資料庫。</p>
           </div>
 
           <div class="import-grid">
             <label class="import-tile">
               <span class="import-icon" aria-hidden="true">ZIP</span>
               <strong>ZIP / JSON</strong>
-              <span>推薦使用 ZIP，可連同 assets 圖片一起匯入。</span>
+              <span>推薦 ZIP，可連同 assets 圖片一起匯入。</span>
               <input id="bankFileInput" type="file" accept=".zip,.json,application/zip,application/json" />
             </label>
 
@@ -126,18 +169,17 @@
           <div id="inspectionArea" class="inspection-area" aria-live="polite"></div>
         </section>
 
-        <section class="panel" aria-labelledby="libraryTitle">
-          <div class="section-heading">
+        <section class="learning-content-card learning-bank-section" aria-labelledby="libraryTitle">
+          <div class="section-heading learning-card-heading">
             <div>
-              <p class="eyebrow">User Library</p>
+              <span class="learning-kicker">我的收藏</span>
               <h2 id="libraryTitle">自行新增的題庫</h2>
             </div>
             <button id="refreshBanksButton" type="button" class="button secondary">重新整理</button>
           </div>
-          <div id="bankList" class="bank-grid" aria-live="polite"></div>
+          <div id="bankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
         </section>
       </div>
-      </section>
     </section>
 
     <section id="reviewView" data-view="review" hidden>
@@ -174,6 +216,7 @@
   </main>
 
   <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="src/ui/scene-assets.js"></script>
   <script type="module" src="src/app/main.js"></script>
   <script type="module" src="src/app/p7.js"></script>
 </body>

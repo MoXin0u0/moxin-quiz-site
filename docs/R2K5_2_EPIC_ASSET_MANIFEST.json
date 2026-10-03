@@ -1,0 +1,178 @@
+[
+  {
+    "path": "assets/learning/styles/epic/library-light.webp",
+    "scene": "library",
+    "theme": "light",
+    "variant": "desktop",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 311528,
+    "sha256": "13bed536d252c6ce2c4b5224039256cca754e74f06a53169f5048490705700e3",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/library-light-mobile.webp",
+    "scene": "library",
+    "theme": "light",
+    "variant": "mobile",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 219298,
+    "sha256": "815f8f68a6c5319ea684514dda9b1979391304b2d163bdb3ed229c3092e346a0",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/library-dark.webp",
+    "scene": "library",
+    "theme": "dark",
+    "variant": "desktop",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 295924,
+    "sha256": "dc06a1e3c8fd37d16172e995092070c7503fd08a11f10e4a1fbd5e253f1801b0",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/library-dark-mobile.webp",
+    "scene": "library",
+    "theme": "dark",
+    "variant": "mobile",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 197966,
+    "sha256": "acc73f665d30d56a67aa89eb73129a9fe0a2be9fe32a93e78c7dbac2160a205f",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/review-light.webp",
+    "scene": "review",
+    "theme": "light",
+    "variant": "desktop",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 302544,
+    "sha256": "3aff6aabbb80db5549530b95ecbe85ad6124293eebb379f74165b990978a2c4a",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/review-light-mobile.webp",
+    "scene": "review",
+    "theme": "light",
+    "variant": "mobile",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 199422,
+    "sha256": "8ebf7fb8ecb527450dd5c458a96784946a01eae85f80b75425aed019b3ff51a4",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/review-dark.webp",
+    "scene": "review",
+    "theme": "dark",
+    "variant": "desktop",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 294892,
+    "sha256": "3233d921d8534e6f0a715974cff7c8fe5baaa19899e65ddae7b5d30230ca0ee7",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/review-dark-mobile.webp",
+    "scene": "review",
+    "theme": "dark",
+    "variant": "mobile",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 207494,
+    "sha256": "57160c2d8ff4d920f20e486fd62a47dfcce9fc3d52ffd6e867b92db05a83a69f",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/exam-light.webp",
+    "scene": "exam",
+    "theme": "light",
+    "variant": "desktop",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 304620,
+    "sha256": "6334189d3480554e295568ab00f8dcd227449eee37ea7266b6a46487772c7496",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/exam-light-mobile.webp",
+    "scene": "exam",
+    "theme": "light",
+    "variant": "mobile",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 198240,
+    "sha256": "4ffaa343537ed718dcf9f2dc680f877ea4af518af16cbfd397342e713db4a2f9",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/exam-dark.webp",
+    "scene": "exam",
+    "theme": "dark",
+    "variant": "desktop",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 297884,
+    "sha256": "d6a528195146c95933efaf0a489877e263607e4c4d2a55c61fa29124310dd1e2",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/exam-dark-mobile.webp",
+    "scene": "exam",
+    "theme": "dark",
+    "variant": "mobile",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 202724,
+    "sha256": "f039756628beb3a5ea510d6fbfc56ef84f407cbd92959d361f0dab7152c70f32",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/stats-light.webp",
+    "scene": "stats",
+    "theme": "light",
+    "variant": "desktop",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 284144,
+    "sha256": "4b9342d5297f408bf5e04f40cb0a453efe6aa14dcc341f124de02196a778c418",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/stats-light-mobile.webp",
+    "scene": "stats",
+    "theme": "light",
+    "variant": "mobile",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 187124,
+    "sha256": "2e317477c003c11713b701406fa11e5481371ccfd87d035253206c68557a68a3",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/stats-dark.webp",
+    "scene": "stats",
+    "theme": "dark",
+    "variant": "desktop",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 283594,
+    "sha256": "e64c8c39647adb9e2785c6b7135ee460f15c91d9e44a32339366f02ae9253b57",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  },
+  {
+    "path": "assets/learning/styles/epic/stats-dark-mobile.webp",
+    "scene": "stats",
+    "theme": "dark",
+    "variant": "mobile",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 189510,
+    "sha256": "cd291ffef4c0611c158fe703beef14507811629e9042833305cd08ad338d7335",
+    "source": "a_wide_cinematic_high_detail_fantasy_academy_vs.png"
+  }
+]

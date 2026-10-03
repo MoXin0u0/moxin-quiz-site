@@ -1,0 +1,226 @@
+[
+  {
+    "path": "assets/learning/styles/academy/exam-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 362986,
+    "sha256": "fdceb20cfb1d8d36665fc3109157e05e59f5fcaa9e43c8b15f9ecd313cb6e507"
+  },
+  {
+    "path": "assets/learning/styles/academy/exam-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 279440,
+    "sha256": "04b8633db1a6c1c7cc5ed6be687512f473b9589dfe2751882c838dd437dcc44c"
+  },
+  {
+    "path": "assets/learning/styles/academy/exam-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 367636,
+    "sha256": "0476c7a4bacdd8cbca4f91ddd6fb46a66c27679bf0366944481424e7730f0953"
+  },
+  {
+    "path": "assets/learning/styles/academy/exam-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 302384,
+    "sha256": "2f02c733b15348734f34de1f537d5a0f78c7f246626a6d70f96d1f5ffd7382bc"
+  },
+  {
+    "path": "assets/learning/styles/academy/library-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 356214,
+    "sha256": "b174e2a643e7c030e7054c8d4450b82bf7c695519da21e3e1cb6d1846097553e"
+  },
+  {
+    "path": "assets/learning/styles/academy/library-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 274568,
+    "sha256": "639acd7c4a5b5cf80997c3e5db68a8a33d4aeb05a1faf273b169637474cc7f52"
+  },
+  {
+    "path": "assets/learning/styles/academy/library-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 359556,
+    "sha256": "508d19343588977ed08c2ccac00b9d37915e8c060d89f5f3c1f9bb458ab0ef57"
+  },
+  {
+    "path": "assets/learning/styles/academy/library-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 298846,
+    "sha256": "935218097ed2d120431bdebc80b84d578a5a5d4e86576beadf45d65aae5ed793"
+  },
+  {
+    "path": "assets/learning/styles/academy/review-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 346212,
+    "sha256": "d2830bb7b5633d404b7402bad9ca8535be3ff04852ed9adba20b394772591fb6"
+  },
+  {
+    "path": "assets/learning/styles/academy/review-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 269378,
+    "sha256": "6aa069399b9da90b320e0ef2ac5542c944a3100d9caf480a496e26ece302e657"
+  },
+  {
+    "path": "assets/learning/styles/academy/review-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 359870,
+    "sha256": "a1d1ebd03e29c788c12a4278acdebeb21c33fedce9c5799f98c5ab96e6cad40e"
+  },
+  {
+    "path": "assets/learning/styles/academy/review-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 293376,
+    "sha256": "09bdc8244583906f18c6243220f0e7915bf00a951cf8e92e487124b5a3f9db88"
+  },
+  {
+    "path": "assets/learning/styles/academy/stats-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 354902,
+    "sha256": "b19537ef895dbd1404dd54e1a8091a22f2a0a15b0825906f6d2dae50136dac70"
+  },
+  {
+    "path": "assets/learning/styles/academy/stats-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 272902,
+    "sha256": "665be20a1f16ecda37caa7e5bc3cb9b13e50af6ec92840edc7521e79773ce7ab"
+  },
+  {
+    "path": "assets/learning/styles/academy/stats-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 358224,
+    "sha256": "f021a744564682ae2ee5a2e8edd73e1cb353a67b5b1cc94365319d29776310a3"
+  },
+  {
+    "path": "assets/learning/styles/academy/stats-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 299982,
+    "sha256": "c0a568872f60688a24f1c658891c5fbf877e866fb99fc348fc0db052c03804de"
+  },
+  {
+    "path": "assets/learning/styles/epic/exam-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 184562,
+    "sha256": "f207086f04651a78cd765733f0337a3bd366a11d7a4b107e56f57444a39ef0dc"
+  },
+  {
+    "path": "assets/learning/styles/epic/exam-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 310832,
+    "sha256": "8e3bb87765e9661475127d775f6b26aefd8e5fab993637eee566a93bd31a6782"
+  },
+  {
+    "path": "assets/learning/styles/epic/exam-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 183270,
+    "sha256": "449fc7d7c48e11e1fe00426abcdd500b244bb9d5c92c01c0140fa2edf7cdc36f"
+  },
+  {
+    "path": "assets/learning/styles/epic/exam-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 331566,
+    "sha256": "f6297f1bf016d24818b5539edb8805ed6532bcc809cd8bf5816edc1387f57ffe"
+  },
+  {
+    "path": "assets/learning/styles/epic/library-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 170286,
+    "sha256": "1af34ecf651156a79dc355837e81d33dcc5360c46c72ab7d3a58ca306ef84b0c"
+  },
+  {
+    "path": "assets/learning/styles/epic/library-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 299574,
+    "sha256": "8b32040235901d39675ad676f4b6d6c12b0ebc3160c1d842dad2d7d99b085133"
+  },
+  {
+    "path": "assets/learning/styles/epic/library-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 174336,
+    "sha256": "c69b54ceb9259887e1c75a86e7869f8027f8939f09389a6da109cc1e18adca6d"
+  },
+  {
+    "path": "assets/learning/styles/epic/library-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 323608,
+    "sha256": "121e9a1383ab40df4676025e4a2f99a2736686bb26a862357e7823ee3f587d47"
+  },
+  {
+    "path": "assets/learning/styles/epic/review-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 172056,
+    "sha256": "b3784935d83ed2674d541dc63b49e81500f7c396262e4cac047f5219d06cde7d"
+  },
+  {
+    "path": "assets/learning/styles/epic/review-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 300752,
+    "sha256": "68539f9a310dff9aab0bf2adf0bf9b336a35b14523f3ceb1b8f7c3fd632f39c3"
+  },
+  {
+    "path": "assets/learning/styles/epic/review-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 174112,
+    "sha256": "ed7d16c939af6b677b11f2197d87cf52b7b3f464637b0720aad694d54aa18197"
+  },
+  {
+    "path": "assets/learning/styles/epic/review-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 320686,
+    "sha256": "2e471fca17074d193e78b4eec50d6726bc7e71cfa050427d05a7d929c4cf41ee"
+  },
+  {
+    "path": "assets/learning/styles/epic/stats-dark-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 371930,
+    "sha256": "7e8476da29d3e79357ff8388ecb8bfb6f46d94c273865538676f45cf73e2ca9a"
+  },
+  {
+    "path": "assets/learning/styles/epic/stats-dark.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 285032,
+    "sha256": "5b7b93a1e60c8166712f7af844691e030f48c381817649200a6bdc2edce6a9c4"
+  },
+  {
+    "path": "assets/learning/styles/epic/stats-light-mobile.webp",
+    "width": 1080,
+    "height": 1440,
+    "bytes": 371864,
+    "sha256": "6996f84374fd96f5050dc38ba02ee2419dcf5eb0cafb4c8e8db80f9b85fc8ade"
+  },
+  {
+    "path": "assets/learning/styles/epic/stats-light.webp",
+    "width": 2560,
+    "height": 1440,
+    "bytes": 312488,
+    "sha256": "6d519f7c9411165045c3699c3e44da71486eccaf56365278126ea86705c6df2d"
+  }
+]

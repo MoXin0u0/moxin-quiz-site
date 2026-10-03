@@ -1,10 +1,12 @@
 {
-  "name": "moxin-quiz-site-v3-dev",
+  "name": "moxin-quiz-site-v4",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/run.mjs && node tests/p3-run.mjs && node tests/p4-run.mjs && node tests/p5-run.mjs && node tests/p6-run.mjs && node tests/p7-run.mjs && node tests/rc1-run.mjs && node tests/rc2-run.mjs && node tests/release-cutover-run.mjs && node tests/v31-run.mjs && node tests/v32-run.mjs && node tests/v33-run.mjs",
-    "preflight": "node scripts/v3-release-preflight.mjs",
-    "ci": "npm test && npm run preflight"
+    "test": "node tests/run.mjs && node tests/p3-run.mjs && node tests/p4-run.mjs && node tests/p5-run.mjs && node tests/p6-run.mjs && node tests/p7-run.mjs && node tests/rc1-run.mjs && node tests/rc2-run.mjs && node tests/release-cutover-run.mjs && node tests/v31-run.mjs && node tests/v32-run.mjs && node tests/v33-run.mjs && node tests/v40-foundation-run.mjs && node tests/v40-r1-question-core-run.mjs && node tests/v40-studio-run.mjs && node tests/v40-r1-run.mjs && node tests/v40-r1-refinement-run.mjs && node tests/v40-p2a-image-assets-run.mjs && node tests/v40-p2b-batch-parser-run.mjs && node tests/v40-p2b1-studio-batch-ui-run.mjs && node tests/v40-p2c-package-to-draft-run.mjs && node tests/v40-p2c1-package-studio-ui-run.mjs && node tests/v40-p3-learning-goals-core-run.mjs && node tests/v40-p31-learning-goals-ui-run.mjs && node tests/v40-p311-learning-goal-activity-ux-run.mjs && node tests/v40-p4-exam-sprint-core-run.mjs && node tests/v40-p41-exam-sprint-ui-run.mjs && node tests/v40-p42-learning-hub-ia-run.mjs && node tests/v40-p421-learning-hub-refinement-run.mjs && node tests/v40-p5-analytics-core-run.mjs && node tests/v40-p51-statistics-ia-ui-run.mjs && node tests/v40-p52-home-actions-run.mjs && node tests/v40-p5-final-audit-run.mjs && node tests/v40-production-release-run.mjs && node tests/v40-r2a-learning-experience-run.mjs && node tests/v40-r2b-learning-pages-run.mjs && node tests/v40-r2c-learning-decor-run.mjs && node tests/v40-r2d-layout-polish-run.mjs && node tests/v40-r2d1-scene-path-run.mjs && node tests/v40-r2e-practice-experience-run.mjs && node tests/v40-r2f-page-personality-run.mjs && node tests/v40-r2g-scene-integration-run.mjs && node tests/v40-r2h-whole-page-composition-run.mjs && node tests/v40-r2i-visual-style-system-run.mjs && node tests/v40-r2j-epic-style-run.mjs && node tests/v40-r2k-style-differentiation-run.mjs && node tests/v40-r2k2-scene-clarity-run.mjs && node tests/v40-r2k3-scene-pipeline-run.mjs && node tests/v40-r2k4-responsive-scene-runtime-run.mjs && node tests/v40-r2k5-production-assets-run.mjs && node tests/v40-r2k51-academy-style-correction-run.mjs && node tests/v40-r2k52-epic-style-correction-run.mjs && node tests/v40-r2k53-native-epic-assets-run.mjs && node tests/v40-r2k54-true-epic-world-separation-run.mjs",
+    "preflight": "node scripts/v4-release-preflight.mjs",
+    "ci": "npm test && npm run preflight",
+    "audit:scenes": "node scripts/audit-scene-assets.mjs",
+    "audit:browser": "node tests/v40-rc1-browser-ux-run.mjs"
   }
 }

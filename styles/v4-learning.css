@@ -1,0 +1,5027 @@
+/*
+ * v4.0 R2B — Learning Experience
+ *
+ * Learner-facing pages use a dedicated visual language.
+ * Tooling and settings pages intentionally remain backend-like.
+ */
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #eef5ff;
+  --learn-canvas-2: #fbfdff;
+  --learn-surface: rgba(255, 255, 255, .92);
+  --learn-surface-strong: #ffffff;
+  --learn-surface-soft: #f3f7fd;
+  --learn-surface-tint: #eaf1ff;
+  --learn-text: #13203a;
+  --learn-muted: #65738f;
+  --learn-line: #d9e2ef;
+  --learn-line-strong: #c4d0e1;
+  --learn-primary: #4c63ed;
+  --learn-primary-2: #7558ef;
+  --learn-cyan: #2ca8c7;
+  --learn-teal: #1ca77b;
+  --learn-gold: #d58b20;
+  --learn-rose: #d75982;
+  --learn-danger: #c93c4b;
+  --learn-shadow: 0 22px 55px rgba(72, 92, 129, .13);
+  --learn-shadow-soft: 0 10px 28px rgba(72, 92, 129, .09);
+  --learn-decor-a: url('../assets/learning/light-sun-corner.svg');
+  --learn-decor-b: url('../assets/learning/light-books-side.svg');
+  --learn-decor-opacity: .6;
+  --learn-decor-a-size: min(22vw, 320px);
+  --learn-decor-b-size: min(14vw, 230px);
+
+  position: relative;
+  isolation: isolate;
+  min-height: calc(100vh - 4.5rem);
+  padding: clamp(.85rem, 2vw, 1.25rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 74%, transparent);
+  border-radius: 28px;
+  color: var(--learn-text);
+  background:
+    radial-gradient(circle at 94% -4%, rgba(106, 132, 255, .16), transparent 30rem),
+    radial-gradient(circle at -4% 94%, rgba(69, 190, 167, .10), transparent 28rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="light"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  color-scheme: light;
+  --learn-canvas: #eef5ff;
+  --learn-canvas-2: #fbfdff;
+  --learn-surface: rgba(255, 255, 255, .92);
+  --learn-surface-strong: #ffffff;
+  --learn-surface-soft: #f3f7fd;
+  --learn-surface-tint: #eaf1ff;
+  --learn-text: #13203a;
+  --learn-muted: #65738f;
+  --learn-line: #d9e2ef;
+  --learn-line-strong: #c4d0e1;
+  --learn-decor-a: url('../assets/learning/light-sun-corner.svg');
+  --learn-decor-b: url('../assets/learning/light-books-side.svg');
+  --learn-decor-opacity: .72;
+}
+
+html[data-theme="dark"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #081225;
+  --learn-canvas-2: #0d1a31;
+  --learn-surface: rgba(14, 29, 52, .92);
+  --learn-surface-strong: #122541;
+  --learn-surface-soft: #172d4b;
+  --learn-surface-tint: #1c3457;
+  --learn-text: #f5f7ff;
+  --learn-muted: #adbad0;
+  --learn-line: #2f486b;
+  --learn-line-strong: #405b80;
+  --learn-primary: #7f8cff;
+  --learn-primary-2: #ac71ff;
+  --learn-cyan: #48cae5;
+  --learn-teal: #55d7ad;
+  --learn-gold: #f0b85e;
+  --learn-rose: #ff8eb4;
+  --learn-danger: #ff858f;
+  --learn-shadow: 0 24px 64px rgba(0, 0, 0, .28);
+  --learn-shadow-soft: 0 10px 30px rgba(0, 0, 0, .20);
+  --learn-decor-a: url('../assets/learning/dark-moon-lantern.svg');
+  --learn-decor-b: url('../assets/learning/dark-desk-side.svg');
+  --learn-decor-opacity: .5;
+
+  border-color: rgba(69, 98, 139, .42);
+  background:
+    radial-gradient(circle at 92% -8%, rgba(91, 108, 255, .19), transparent 32rem),
+    radial-gradient(circle at 8% 96%, rgba(55, 201, 170, .10), transparent 30rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: .36;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--learn-line) 24%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--learn-line) 15%, transparent) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.36), transparent 68%);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) > * {
+  position: relative;
+  z-index: 1;
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--learn-decor-opacity);
+  background-image: var(--learn-decor-a), var(--learn-decor-b);
+  background-repeat: no-repeat, no-repeat;
+  background-size: var(--learn-decor-a-size) auto, var(--learn-decor-b-size) auto;
+  background-position: calc(100% - 1.25rem) 8rem, 1.1rem calc(100% - 1.2rem);
+  filter: saturate(1.02);
+}
+
+/* ------------------------------------------------------------
+ * Navigation: learning group vs tools group
+ * ---------------------------------------------------------- */
+
+.main-nav .nav-item:is(
+  [data-nav-library],
+  [data-nav-review],
+  [data-nav-exam],
+  [data-nav-stats]
+) {
+  position: relative;
+  overflow: hidden;
+  transition:
+    background .18s ease,
+    color .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.main-nav .nav-item:is(
+  [data-nav-library],
+  [data-nav-review],
+  [data-nav-exam],
+  [data-nav-stats]
+):hover {
+  transform: translateX(2px);
+}
+
+.main-nav .nav-item:is(
+  [data-nav-library],
+  [data-nav-review],
+  [data-nav-exam],
+  [data-nav-stats]
+).is-active {
+  color: var(--primary);
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--primary) 22%, var(--surface)),
+      color-mix(in srgb, var(--accent) 10%, var(--surface))
+    );
+  box-shadow:
+    inset 3px 0 0 var(--primary),
+    0 8px 22px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+html[data-theme="dark"] .main-nav .nav-item:is(
+  [data-nav-library],
+  [data-nav-review],
+  [data-nav-exam],
+  [data-nav-stats]
+).is-active {
+  color: #aeb7ff;
+  background: linear-gradient(105deg, rgba(86, 93, 214, .34), rgba(44, 130, 151, .13));
+}
+
+.main-nav .nav-item[data-nav-tools] {
+  margin-top: .8rem;
+}
+
+.main-nav .nav-item[data-nav-tools]::after {
+  content: "";
+  position: absolute;
+  top: -.48rem;
+  right: .45rem;
+  left: .45rem;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ------------------------------------------------------------
+ * Shared learning primitives
+ * ---------------------------------------------------------- */
+
+.learning-kicker {
+  color: var(--learn-primary);
+  font-size: .78rem;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+
+.learning-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, .75fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: stretch;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 95% 0%, color-mix(in srgb, var(--learn-cyan) 14%, transparent), transparent 18rem),
+    radial-gradient(circle at 70% 110%, color-mix(in srgb, var(--learn-primary-2) 15%, transparent), transparent 18rem),
+    linear-gradient(135deg, var(--learn-surface-strong), var(--learn-surface));
+  box-shadow: var(--learn-shadow);
+  backdrop-filter: blur(18px);
+}
+
+html[data-theme="dark"] .learning-hero {
+  background:
+    radial-gradient(circle at 94% -4%, rgba(74, 138, 190, .18), transparent 18rem),
+    radial-gradient(circle at 70% 110%, rgba(126, 86, 255, .20), transparent 18rem),
+    linear-gradient(135deg, #11233e, #0f2038);
+}
+
+.learning-hero-copy {
+  min-width: 0;
+  align-self: center;
+}
+
+.learning-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.learning-hero-copy h2 {
+  max-width: 19ch;
+  margin: .38rem 0 .6rem;
+  color: var(--learn-text);
+  font-size: clamp(1.7rem, 3.8vw, 2.55rem);
+  letter-spacing: -.045em;
+  line-height: 1.16;
+}
+
+.learning-hero-copy > p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: .98rem;
+  line-height: 1.75;
+}
+
+.learning-section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0 .7rem;
+  padding: .2rem .2rem 0;
+}
+
+.learning-section-head h2 {
+  margin: .2rem 0 .22rem;
+  color: var(--learn-text);
+  font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+  letter-spacing: -.025em;
+}
+
+.learning-section-head p {
+  margin: 0;
+  color: var(--learn-muted);
+  line-height: 1.6;
+}
+
+.learning-content-card {
+  padding: clamp(.9rem, 2vw, 1.15rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+  backdrop-filter: blur(14px);
+}
+
+.learning-card-heading {
+  margin-bottom: .85rem;
+}
+
+.learning-card-heading .section-note {
+  margin-top: .3rem;
+}
+
+.learning-empty {
+  display: grid;
+  place-items: center;
+  gap: .4rem;
+  min-height: 210px;
+  padding: 1.4rem;
+  border: 1px dashed var(--learn-line-strong);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--learn-surface-soft) 82%, transparent);
+  text-align: center;
+}
+
+.learning-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 3.3rem;
+  height: 3.3rem;
+  border-radius: 16px;
+  background: var(--learn-surface-tint);
+  color: var(--learn-primary);
+  font-size: 1.35rem;
+}
+
+.learning-empty p {
+  max-width: 48ch;
+  margin: 0;
+  color: var(--learn-muted);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) :is(
+  .panel,
+  .detail-hero,
+  .practice-shell,
+  .filter-panel,
+  .exam-shell
+) {
+  border-color: var(--learn-line);
+  background: var(--learn-surface);
+  color: var(--learn-text);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
+  border: 0;
+  background: linear-gradient(105deg, var(--learn-primary), var(--learn-primary-2));
+  color: #fff;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--learn-primary) 24%, transparent);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.secondary {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+/* ------------------------------------------------------------
+ * 我的題庫
+ * ---------------------------------------------------------- */
+
+.learning-hero-library {
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, .72fr);
+  padding-bottom: 3.7rem;
+}
+
+.learning-hero-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .65rem;
+  margin-top: 1.1rem;
+}
+
+.learning-action {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .6rem;
+  align-items: center;
+  min-height: 70px;
+  padding: .72rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.learning-action:hover {
+  border-color: color-mix(in srgb, var(--learn-primary) 40%, var(--learn-line));
+  transform: translateY(-1px);
+}
+
+.learning-action.primary {
+  border-color: color-mix(in srgb, var(--learn-primary) 38%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+}
+
+.learning-action-icon {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 10px;
+  background: var(--learn-surface-strong);
+  color: var(--learn-primary);
+  font-weight: 900;
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.learning-action > span:last-child {
+  display: grid;
+  gap: .15rem;
+}
+
+.learning-action small {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.learning-hero-scene {
+  position: relative;
+  min-height: 220px;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 84%, transparent);
+  border-radius: 20px;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--learn-primary) 8%, var(--learn-surface)), var(--learn-surface-soft));
+}
+
+html[data-theme="dark"] .learning-hero-scene {
+  background:
+    radial-gradient(circle at 70% 25%, rgba(85, 216, 173, .09), transparent 9rem),
+    linear-gradient(160deg, #183250, #10233e);
+}
+
+.learning-scene-glow {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 86px;
+  height: 86px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--learn-gold) 45%, transparent), transparent 67%);
+  filter: blur(1px);
+}
+
+.learning-scene-note {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  max-width: 12rem;
+  padding: .6rem .72rem;
+  border: 1px solid color-mix(in srgb, var(--learn-primary) 24%, var(--learn-line));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 92%, transparent);
+  color: var(--learn-muted);
+  font-size: .78rem;
+  transform: rotate(-2deg);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.learning-book-stack {
+  position: absolute;
+  right: 28px;
+  bottom: 55px;
+  left: 28px;
+  display: grid;
+  align-content: end;
+  justify-items: center;
+  gap: .38rem;
+}
+
+.learning-book {
+  display: flex;
+  align-items: center;
+  height: 35px;
+  padding: 0 1rem;
+  border-radius: 7px 12px 12px 7px;
+  color: #fff;
+  font-weight: 850;
+  box-shadow: 0 7px 18px rgba(30, 45, 77, .15);
+}
+
+.book-a {
+  width: 74%;
+  background: linear-gradient(90deg, #4867ef, #7293ff);
+  transform: rotate(-1deg);
+}
+
+.book-b {
+  width: 86%;
+  background: linear-gradient(90deg, #6f52d9, #aa74ef);
+  transform: rotate(1deg);
+}
+
+.book-c {
+  width: 66%;
+  background: linear-gradient(90deg, #159f81, #53c9a9);
+  transform: rotate(-.6deg);
+}
+
+.learning-scene-path {
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  left: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  color: var(--learn-muted);
+  font-size: .7rem;
+  font-weight: 760;
+}
+
+.learning-scene-path i {
+  flex: 1 1 auto;
+  max-width: 34px;
+  height: 1px;
+  background: var(--learn-line-strong);
+}
+
+.learning-storage-row {
+  position: absolute;
+  z-index: 2;
+  right: 1.35rem;
+  bottom: 1rem;
+  left: 1.35rem;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.learning-storage-dot {
+  width: .55rem;
+  height: .55rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--learn-teal);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--learn-teal) 12%, transparent);
+}
+
+.learning-storage-row .storage-status {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--learn-muted);
+  font-size: .74rem;
+}
+
+.learning-source-tabs {
+  flex: 0 0 auto;
+  padding: .3rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 13px;
+  background: var(--learn-surface-soft);
+}
+
+#libraryView .source-tab {
+  color: var(--learn-muted);
+}
+
+#libraryView .source-tab.is-active {
+  background: var(--learn-surface-strong);
+  color: var(--learn-primary);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.learning-bank-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+#libraryView .bank-card,
+#libraryView .author-bank-card {
+  position: relative;
+  min-height: 0;
+  padding: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--learn-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--card-accent, var(--learn-primary)) 13%, transparent), transparent 11rem),
+    var(--learn-surface-strong);
+  color: var(--learn-text);
+  box-shadow: var(--learn-shadow-soft);
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+#libraryView .bank-card::before {
+  width: 4px;
+  background: linear-gradient(to bottom, var(--card-accent, var(--learn-primary)), transparent 92%);
+}
+
+#libraryView .bank-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--card-accent, var(--learn-primary)) 46%, var(--learn-line));
+  box-shadow: var(--learn-shadow);
+}
+
+#libraryView .bank-card h3 {
+  margin-top: .75rem;
+  font-size: 1.15rem;
+}
+
+#libraryView .bank-card > p {
+  min-height: 2.8em;
+  color: var(--learn-muted);
+}
+
+#libraryView .bank-meta {
+  gap: .48rem;
+}
+
+#libraryView .bank-meta div {
+  border: 1px solid var(--learn-line);
+  border-radius: 11px;
+  background: var(--learn-surface-soft);
+}
+
+#libraryView .bank-meta dt {
+  color: var(--learn-muted);
+}
+
+#libraryView .bank-meta dd {
+  color: var(--learn-text);
+}
+
+#libraryView .import-panel {
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+#libraryView .import-panel .section-note {
+  color: var(--text-muted);
+}
+
+
+/* R2A compatibility selectors retained as part of the learning contract. */
+#reviewView .review-mode-card {
+  color: var(--learn-text);
+}
+
+#examCenterView .exam-bank-card {
+  color: var(--learn-text);
+}
+
+/* ------------------------------------------------------------
+ * 今日複習
+ * ---------------------------------------------------------- */
+
+.learning-review-hero,
+.learning-stats-hero {
+  grid-template-columns: minmax(0, 1.45fr) minmax(270px, .65fr);
+}
+
+.learning-focus-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .55rem;
+  margin-top: 1.05rem;
+}
+
+.learning-focus-strip.exam,
+.learning-focus-strip.stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.learning-focus-item {
+  min-width: 0;
+  padding: .65rem .72rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 13px;
+  background: var(--learn-surface-soft);
+}
+
+.learning-focus-item span {
+  display: block;
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.learning-focus-item strong {
+  display: block;
+  margin-top: .12rem;
+  color: var(--learn-text);
+  font-size: 1.25rem;
+}
+
+.learning-focus-item.due {
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+}
+
+.learning-focus-item.wrong {
+  background: color-mix(in srgb, var(--learn-rose) 9%, var(--learn-surface));
+}
+
+.learning-focus-item.unfamiliar {
+  background: color-mix(in srgb, var(--learn-gold) 10%, var(--learn-surface));
+}
+
+.learning-focus-item.favorite {
+  background: color-mix(in srgb, var(--learn-cyan) 9%, var(--learn-surface));
+}
+
+.learning-review-focus {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: .75rem;
+  min-height: 230px;
+  padding: 1rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--learn-primary) 15%, transparent), transparent 9rem),
+    var(--learn-surface-soft);
+  text-align: center;
+}
+
+.learning-review-orbit {
+  display: grid;
+  place-items: center;
+  width: 148px;
+  height: 148px;
+  border-radius: 999px;
+  background:
+    conic-gradient(
+      var(--learn-primary) 0 31%,
+      var(--learn-cyan) 31% 53%,
+      var(--learn-gold) 53% 69%,
+      color-mix(in srgb, var(--learn-line) 60%, transparent) 69% 100%
+    );
+  box-shadow: 0 0 0 9px color-mix(in srgb, var(--learn-primary) 6%, transparent);
+}
+
+.learning-review-orbit-core {
+  display: grid;
+  place-items: center;
+  width: 118px;
+  height: 118px;
+  border-radius: 999px;
+  background: var(--learn-surface-strong);
+}
+
+.learning-review-orbit-core span,
+.learning-review-orbit-core small {
+  color: var(--learn-muted);
+  font-size: .7rem;
+}
+
+.learning-review-orbit-core strong {
+  color: var(--learn-text);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.learning-review-focus > p {
+  max-width: 25ch;
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: .78rem;
+  line-height: 1.5;
+}
+
+.learning-review-list,
+.learning-exam-list,
+.learning-stats-list {
+  display: grid;
+  gap: .8rem;
+}
+
+.learning-review-bank,
+.learning-exam-card,
+.learning-stats-card {
+  padding: 1rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--learn-primary) 8%, transparent), transparent 13rem),
+    var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.learning-bank-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: .75rem;
+  align-items: center;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--learn-line);
+}
+
+.learning-bank-symbol {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--learn-primary) 12%, var(--learn-surface));
+  color: var(--learn-primary);
+  font-size: 1.18rem;
+  font-weight: 900;
+}
+
+.learning-bank-symbol.exam {
+  color: var(--learn-gold);
+  background: color-mix(in srgb, var(--learn-gold) 12%, var(--learn-surface));
+}
+
+.learning-bank-symbol.stats {
+  color: var(--learn-cyan);
+  background: color-mix(in srgb, var(--learn-cyan) 12%, var(--learn-surface));
+}
+
+.learning-bank-header h3 {
+  margin: .1rem 0;
+}
+
+.learning-bank-header p {
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: .8rem;
+}
+
+.learning-bank-id {
+  color: var(--learn-muted);
+  font: 700 .68rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.learning-review-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .62rem;
+  margin-top: .8rem;
+}
+
+.learning-review-mode {
+  min-height: 0;
+  padding: .75rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+.learning-review-mode.due {
+  background: color-mix(in srgb, var(--learn-primary) 9%, var(--learn-surface));
+}
+
+.learning-review-mode.wrong {
+  background: color-mix(in srgb, var(--learn-rose) 8%, var(--learn-surface));
+}
+
+.learning-review-mode.unfamiliar {
+  background: color-mix(in srgb, var(--learn-gold) 9%, var(--learn-surface));
+}
+
+.learning-review-mode.favorite {
+  background: color-mix(in srgb, var(--learn-cyan) 8%, var(--learn-surface));
+}
+
+.learning-review-mode-top {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .55rem;
+  align-items: center;
+}
+
+.learning-mode-icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9px;
+  background: var(--learn-surface-strong);
+  color: var(--learn-primary);
+  font-weight: 900;
+}
+
+.learning-review-mode-top > div {
+  display: grid;
+}
+
+.learning-review-mode-top span {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.learning-review-mode-top strong {
+  color: var(--learn-text);
+  font-size: 1.35rem;
+}
+
+.learning-review-mode > small {
+  display: block;
+  min-height: 2.5em;
+  margin: .45rem 0 .65rem;
+  color: var(--learn-muted);
+  line-height: 1.45;
+}
+
+.learning-mini-progress {
+  overflow: hidden;
+  height: 5px;
+  margin-top: .55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--learn-line) 68%, transparent);
+}
+
+.learning-mini-progress i {
+  display: block;
+  width: var(--review-ratio);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--learn-primary), var(--learn-cyan));
+}
+
+/* ------------------------------------------------------------
+ * 模擬考
+ * ---------------------------------------------------------- */
+
+.learning-exam-hero {
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
+}
+
+.learning-exam-flow {
+  display: grid;
+  align-content: center;
+  gap: .55rem;
+  padding: .9rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-gold) 7%, var(--learn-surface)), var(--learn-surface-soft));
+}
+
+.learning-flow-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .65rem;
+  align-items: center;
+  padding: .62rem .7rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 72%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 72%, transparent);
+}
+
+.learning-flow-step span {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--learn-primary) 12%, var(--learn-surface));
+  color: var(--learn-primary);
+  font-size: .68rem;
+  font-weight: 900;
+}
+
+.learning-flow-step strong {
+  color: var(--learn-text);
+}
+
+.learning-exam-card {
+  display: grid;
+  grid-template-columns: minmax(220px, .7fr) minmax(360px, 1.3fr);
+  gap: 1rem;
+}
+
+.learning-exam-card-summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .75rem;
+  align-content: start;
+  padding: .8rem;
+  border-radius: 15px;
+  background: var(--learn-surface-soft);
+}
+
+.learning-exam-card-summary h3 {
+  margin: .15rem 0 .25rem;
+}
+
+.learning-exam-card-summary p {
+  margin: 0;
+  color: var(--learn-muted);
+  line-height: 1.5;
+}
+
+.learning-exam-resume {
+  grid-column: 1 / -1;
+  margin: 0;
+  border-color: color-mix(in srgb, var(--learn-gold) 32%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-gold) 9%, var(--learn-surface));
+}
+
+.learning-exam-resume > div {
+  display: grid;
+  gap: .1rem;
+}
+
+.learning-exam-resume span,
+.learning-exam-resume small {
+  color: var(--learn-muted);
+}
+
+.learning-exam-config {
+  display: grid;
+  grid-template-columns: minmax(120px, .8fr) minmax(160px, 1fr) auto;
+  gap: .65rem;
+  align-items: end;
+}
+
+.learning-field {
+  display: grid;
+  gap: .28rem;
+  color: var(--learn-text);
+}
+
+.learning-field > span {
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.learning-field > small {
+  color: var(--learn-muted);
+  font-size: .68rem;
+}
+
+.learning-field :is(input, select) {
+  width: 100%;
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.learning-exam-start {
+  display: grid;
+  gap: .3rem;
+}
+
+.learning-exam-start > span {
+  color: var(--learn-muted);
+  font-size: .7rem;
+}
+
+/* ------------------------------------------------------------
+ * 學習統計
+ * ---------------------------------------------------------- */
+
+.learning-accuracy-card {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: .7rem;
+  min-height: 230px;
+  padding: 1rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background: var(--learn-surface-soft);
+  text-align: center;
+}
+
+.learning-accuracy-ring {
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 150px;
+  border-radius: 999px;
+  background:
+    conic-gradient(
+      var(--learn-teal) 0 var(--accuracy),
+      color-mix(in srgb, var(--learn-line) 62%, transparent) var(--accuracy) 360deg
+    );
+  box-shadow: 0 0 0 9px color-mix(in srgb, var(--learn-teal) 6%, transparent);
+}
+
+.learning-accuracy-ring > div {
+  display: grid;
+  place-items: center;
+  width: 118px;
+  height: 118px;
+  border-radius: 999px;
+  background: var(--learn-surface-strong);
+}
+
+.learning-accuracy-ring strong {
+  color: var(--learn-text);
+  font-size: 1.85rem;
+  line-height: 1;
+}
+
+.learning-accuracy-ring span {
+  margin-top: .2rem;
+  color: var(--learn-muted);
+  font-size: .7rem;
+}
+
+.learning-accuracy-card > p {
+  max-width: 29ch;
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: .78rem;
+  line-height: 1.55;
+}
+
+.learning-metric-icon {
+  float: left;
+  margin-right: .4rem;
+  color: var(--learn-primary) !important;
+  font-size: .9rem !important;
+  font-weight: 900;
+}
+
+.learning-bank-accuracy {
+  display: grid;
+  justify-items: end;
+}
+
+.learning-bank-accuracy strong {
+  color: var(--learn-teal);
+  font-size: 1.55rem;
+}
+
+.learning-bank-accuracy span {
+  color: var(--learn-muted);
+  font-size: .7rem;
+}
+
+.learning-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .55rem;
+  margin-top: .75rem;
+}
+
+.learning-stat-row > div {
+  padding: .65rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 12px;
+  background: var(--learn-surface-soft);
+}
+
+.learning-stat-row span {
+  display: block;
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.learning-stat-row strong {
+  display: block;
+  margin-top: .14rem;
+  color: var(--learn-text);
+  font-size: 1.15rem;
+}
+
+.learning-mastery-block {
+  margin-top: .75rem;
+  padding: .8rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+.learning-mastery-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: .6rem;
+}
+
+.learning-mastery-heading > div {
+  display: grid;
+  gap: .1rem;
+}
+
+.learning-mastery-heading span {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.learning-mastery-heading strong {
+  color: var(--learn-text);
+}
+
+.learning-mastery-bar {
+  display: flex;
+  overflow: hidden;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--learn-line);
+}
+
+.learning-mastery-bar .new {
+  background: #8795aa;
+}
+
+.learning-mastery-bar .learning {
+  background: var(--learn-gold);
+}
+
+.learning-mastery-bar .familiar {
+  background: var(--learn-cyan);
+}
+
+.learning-mastery-bar .mastered {
+  background: var(--learn-teal);
+}
+
+.learning-mastery-legend {
+  margin-top: .65rem;
+}
+
+#statsView .mastery-cell {
+  border-color: var(--learn-line);
+  color: var(--learn-text);
+}
+
+#statsView .mastery-cell.new {
+  background: var(--learn-surface-strong);
+}
+
+#statsView .mastery-cell.learning {
+  background: color-mix(in srgb, var(--learn-gold) 12%, var(--learn-surface));
+}
+
+#statsView .mastery-cell.familiar {
+  background: color-mix(in srgb, var(--learn-cyan) 11%, var(--learn-surface));
+}
+
+#statsView .mastery-cell.mastered {
+  background: color-mix(in srgb, var(--learn-teal) 12%, var(--learn-surface));
+}
+
+/* ------------------------------------------------------------
+ * 題庫詳情 / 刷題 / 考試
+ * ---------------------------------------------------------- */
+
+#bankDetailView .detail-hero {
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--learn-primary) 13%, transparent), transparent 15rem),
+    var(--learn-surface-strong);
+}
+
+#bankDetailView .detail-meta div,
+#practiceView .question-card,
+#practiceView .answer-option,
+#practiceView .note-editor,
+#practiceView .feedback-panel,
+#examView .exam-timer,
+#examView .exam-status-row,
+#examView .exam-navigator,
+#examView .exam-result-stats div,
+#examView .exam-analysis-item summary {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+#practiceView .practice-shell,
+#examView .exam-shell {
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 92% 4%, color-mix(in srgb, var(--learn-primary) 10%, transparent), transparent 17rem),
+    var(--learn-surface);
+}
+
+#practiceView .question-card {
+  background: var(--learn-surface-strong);
+}
+
+#practiceView .answer-option:hover {
+  border-color: var(--learn-primary);
+  background: color-mix(in srgb, var(--learn-primary) 9%, var(--learn-surface));
+}
+
+#practiceView .answer-option.is-correct {
+  border-color: color-mix(in srgb, var(--learn-teal) 38%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-teal) 12%, var(--learn-surface));
+}
+
+#practiceView .answer-option.is-wrong {
+  border-color: color-mix(in srgb, var(--learn-rose) 38%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-rose) 12%, var(--learn-surface));
+}
+
+
+/* ------------------------------------------------------------
+ * Decorative imagery
+ * ---------------------------------------------------------- */
+
+#libraryView {
+  --learn-decor-a-size: min(24vw, 340px);
+  --learn-decor-b-size: min(14vw, 235px);
+}
+
+#reviewView,
+#statsView {
+  --learn-decor-a-size: min(21vw, 300px);
+  --learn-decor-b-size: min(13vw, 210px);
+}
+
+#examCenterView,
+#examView,
+#bankDetailView,
+#practiceView {
+  --learn-decor-a-size: min(18vw, 260px);
+  --learn-decor-b-size: min(12vw, 180px);
+}
+
+.learning-hero-scene::before,
+.learning-review-focus::before,
+.learning-accuracy-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: .24;
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: min(62%, 220px) auto;
+}
+
+html[data-theme="light"] .learning-hero-scene::before {
+  background-image: url('../assets/learning/light-books-side.svg');
+}
+
+html[data-theme="dark"] .learning-hero-scene::before {
+  background-image: url('../assets/learning/dark-desk-side.svg');
+  opacity: .18;
+}
+
+html[data-theme="light"] .learning-review-focus::before,
+html[data-theme="light"] .learning-accuracy-card::before {
+  background-image: url('../assets/learning/light-sun-corner.svg');
+  background-size: min(54%, 180px) auto;
+  opacity: .16;
+}
+
+html[data-theme="dark"] .learning-review-focus::before,
+html[data-theme="dark"] .learning-accuracy-card::before {
+  background-image: url('../assets/learning/dark-moon-lantern.svg');
+  background-size: min(56%, 190px) auto;
+  opacity: .14;
+}
+
+.learning-hero-scene > *,
+.learning-review-focus > *,
+.learning-accuracy-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------
+ * Responsive
+ * ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::after {
+    background-position: calc(100% - .75rem) 7rem, .75rem calc(100% - .75rem);
+    background-size: min(26vw, 280px) auto, min(16vw, 200px) auto;
+    opacity: calc(var(--learn-decor-opacity) - .08);
+  }
+
+  .learning-hero,
+  .learning-hero-library,
+  .learning-review-hero,
+  .learning-exam-hero,
+  .learning-stats-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-hero-scene {
+    min-height: 190px;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    min-height: 200px;
+  }
+
+  .learning-exam-card {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-exam-config {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learning-exam-start {
+    grid-column: 1 / -1;
+  }
+
+  .learning-exam-start .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 940px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  ) {
+    min-height: calc(100vh - 8rem);
+    padding: .65rem;
+    border-radius: 20px;
+  }
+
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::after {
+    background-position: calc(100% - .55rem) 6.5rem, .65rem calc(100% - .65rem);
+    background-size: min(31vw, 250px) auto, min(21vw, 160px) auto;
+    opacity: .34;
+  }
+
+  .main-nav .nav-item[data-nav-tools] {
+    margin-top: 0;
+  }
+
+  .main-nav .nav-item[data-nav-tools]::after {
+    display: none;
+  }
+
+  .main-nav .nav-item:is(
+    [data-nav-library],
+    [data-nav-review],
+    [data-nav-exam],
+    [data-nav-stats]
+  ):hover {
+    transform: none;
+  }
+
+  .main-nav .nav-item:is(
+    [data-nav-library],
+    [data-nav-review],
+    [data-nav-exam],
+    [data-nav-stats]
+  ).is-active {
+    box-shadow:
+      inset 0 3px 0 var(--primary),
+      0 8px 18px color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+
+  .learning-hero-library {
+    padding-bottom: 1.2rem;
+  }
+
+  .learning-storage-row {
+    position: static;
+    grid-column: 1 / -1;
+    margin-top: -.35rem;
+  }
+}
+
+@media (max-width: 760px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::after {
+    background-image: var(--learn-decor-a);
+    background-position: calc(100% - .5rem) calc(100% - .5rem);
+    background-size: min(42vw, 220px) auto;
+    opacity: .2;
+  }
+
+  .learning-hero {
+    padding: 1rem;
+    border-radius: 19px;
+  }
+
+  .learning-hero-copy h2 {
+    max-width: none;
+  }
+
+  .learning-hero-scene {
+    order: 3;
+    min-height: 175px;
+  }
+
+  .learning-scene-note {
+    top: 16px;
+    left: 16px;
+    max-width: 9.5rem;
+  }
+
+  .learning-book-stack {
+    right: 18px;
+    bottom: 44px;
+    left: 18px;
+  }
+
+  .learning-hero-actions,
+  .learning-focus-strip,
+  .learning-focus-strip.exam,
+  .learning-focus-strip.stats,
+  .learning-review-mode-grid,
+  .learning-stat-row,
+  .learning-exam-config {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .learning-action:last-child,
+  .learning-focus-strip.exam .learning-focus-item:last-child,
+  .learning-focus-strip.stats .learning-focus-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .learning-section-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .learning-source-tabs {
+    width: 100%;
+  }
+
+  .learning-source-tabs .source-tab {
+    flex: 1 1 0;
+  }
+
+  .learning-action {
+    min-height: 64px;
+  }
+
+  .learning-review-focus {
+    min-height: 0;
+    padding-block: 1.2rem;
+  }
+}
+
+@media (max-width: 520px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::after {
+    display: none;
+  }
+
+  .learning-hero-actions,
+  .learning-focus-strip,
+  .learning-focus-strip.exam,
+  .learning-focus-strip.stats,
+  .learning-review-mode-grid,
+  .learning-stat-row,
+  .learning-exam-config {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-action:last-child,
+  .learning-focus-strip.exam .learning-focus-item:last-child,
+  .learning-focus-strip.stats .learning-focus-item:last-child {
+    grid-column: auto;
+  }
+
+  .learning-hero-scene {
+    min-height: 160px;
+  }
+
+  .learning-hero-scene::before {
+    background-size: min(48%, 140px) auto;
+    opacity: .14;
+  }
+
+  .learning-scene-note {
+    top: 12px;
+    left: 12px;
+    padding: .45rem .55rem;
+    max-width: 8rem;
+    font-size: .67rem;
+  }
+
+  .learning-book-stack {
+    right: 12px;
+    bottom: 36px;
+    left: 12px;
+    gap: .3rem;
+  }
+
+  .learning-book {
+    height: 29px;
+    padding: 0 .8rem;
+    font-size: .95rem;
+  }
+
+  .learning-scene-path {
+    right: 12px;
+    bottom: 10px;
+    left: 12px;
+    gap: .3rem;
+    font-size: .62rem;
+  }
+
+  .learning-review-orbit,
+  .learning-accuracy-ring {
+    width: 132px;
+    height: 132px;
+  }
+
+  .learning-review-orbit-core,
+  .learning-accuracy-ring > div {
+    width: 104px;
+    height: 104px;
+  }
+
+  .learning-bank-header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .learning-bank-accuracy {
+    grid-column: 1 / -1;
+    justify-items: start;
+    padding-left: 3.55rem;
+  }
+
+  .learning-exam-start {
+    grid-column: auto;
+  }
+}
+
+/* ============================================================
+ * v4.0 R2D — Learning Layout Polish
+ * Layout first: full-width desktop composition, stable art slots,
+ * and mobile-first reflow. Legacy R2C decorative SVG layers are
+ * intentionally suppressed until final illustration assets land.
+ * ========================================================== */
+
+/* Give learner-facing pages the available desktop canvas instead of
+ * stopping at the old 1500px app shell. Tooling keeps its old width. */
+@media (min-width: 941px) {
+  .app-main {
+    width: calc(100% - var(--sidebar-width));
+    max-width: none;
+    box-sizing: border-box;
+    padding: clamp(.9rem, 1.35vw, 1.5rem);
+  }
+
+  [data-view="tools"],
+  [data-view="settings"] {
+    width: 100%;
+    max-width: 1500px;
+    margin-right: auto;
+  }
+
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  ) {
+    width: 100%;
+    max-width: 1800px;
+    margin-inline: auto;
+  }
+}
+
+/* R2C's temporary page-background illustrations are kept in the repo for
+ * compatibility, but no longer painted behind the page. Final artwork will
+ * enter through a bounded .learning-art-slot instead. */
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after,
+.learning-hero-scene::before,
+.learning-review-focus::before,
+.learning-accuracy-card::before {
+  display: none;
+}
+
+/* ------------------------------------------------------------
+ * Hero composition and future-proof art slot
+ * ---------------------------------------------------------- */
+
+.learning-hero {
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, .72fr);
+  min-height: 278px;
+  gap: clamp(1.1rem, 2.4vw, 2.25rem);
+  padding: clamp(1.25rem, 2.35vw, 2.15rem);
+}
+
+.learning-hero-copy {
+  max-width: 860px;
+}
+
+.learning-hero-copy h2 {
+  max-width: 21ch;
+  font-size: clamp(1.8rem, 2.55vw, 2.72rem);
+}
+
+.learning-hero-copy > p {
+  max-width: 68ch;
+}
+
+.learning-hero-library {
+  grid-template-columns: minmax(0, 1.5fr) clamp(320px, 27vw, 450px);
+  padding-bottom: clamp(3.3rem, 4vw, 4rem);
+}
+
+.learning-art-slot {
+  --learning-art-image: none;
+  position: relative;
+  isolation: isolate;
+  min-height: 232px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 86%, transparent);
+  border-radius: 22px;
+  background-image:
+    var(--learning-art-image),
+    radial-gradient(circle at 74% 27%, color-mix(in srgb, var(--learn-gold) 20%, transparent), transparent 22%),
+    radial-gradient(circle at 30% 74%, color-mix(in srgb, var(--learn-primary) 17%, transparent), transparent 31%),
+    linear-gradient(145deg, var(--learn-surface-tint), var(--learn-surface-soft));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 30%, transparent);
+}
+
+html[data-theme="dark"] .learning-art-slot {
+  background-image:
+    var(--learning-art-image),
+    radial-gradient(circle at 75% 28%, rgba(238, 183, 92, .13), transparent 23%),
+    radial-gradient(circle at 30% 76%, rgba(99, 121, 255, .20), transparent 32%),
+    linear-gradient(145deg, #173354, #10233e);
+}
+
+.learning-art-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.learning-art-ambient::before,
+.learning-art-ambient::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(1px);
+}
+
+.learning-art-ambient::before {
+  top: 16%;
+  right: 12%;
+  width: clamp(72px, 8vw, 116px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, color-mix(in srgb, var(--learn-gold) 24%, transparent), transparent 68%);
+}
+
+.learning-art-ambient::after {
+  bottom: 21%;
+  left: 11%;
+  width: clamp(120px, 13vw, 190px);
+  height: 54px;
+  border: 1px solid color-mix(in srgb, var(--learn-primary) 22%, transparent);
+  background: color-mix(in srgb, var(--learn-primary) 7%, transparent);
+  transform: rotate(-8deg);
+}
+
+.learning-art-focus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(88px, 8vw, 126px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -54%);
+}
+
+.learning-art-focus-dot,
+.learning-art-focus-ring {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.learning-art-focus-dot {
+  width: 22%;
+  aspect-ratio: 1;
+  background: linear-gradient(145deg, var(--learn-primary), var(--learn-primary-2));
+  box-shadow: 0 0 30px color-mix(in srgb, var(--learn-primary) 35%, transparent);
+}
+
+.learning-art-focus-ring {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--learn-primary) 34%, transparent);
+  box-shadow:
+    0 0 0 18px color-mix(in srgb, var(--learn-primary) 5%, transparent),
+    0 0 0 40px color-mix(in srgb, var(--learn-cyan) 3%, transparent);
+}
+
+.learning-scene-path {
+  position: absolute;
+  z-index: 2;
+  right: clamp(1rem, 2vw, 1.4rem);
+  bottom: 1rem;
+  left: clamp(1rem, 2vw, 1.4rem);
+  padding: .42rem .58rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 78%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 74%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.learning-art-slot .learning-scene-path {
+  max-width: calc(100% - 2rem);
+  margin-inline: auto;
+  pointer-events: none;
+}
+
+/* Old bar/book placeholder no longer participates in layout. */
+.learning-scene-glow,
+.learning-scene-note,
+.learning-book-stack {
+  display: none;
+}
+
+/* ------------------------------------------------------------
+ * Desktop density: use horizontal room instead of tall stacking
+ * ---------------------------------------------------------- */
+
+@media (min-width: 1280px) {
+  .learning-section-head {
+    margin-top: 1.2rem;
+  }
+
+  .learning-exam-list {
+    grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+    align-items: start;
+  }
+
+  .learning-stats-list {
+    grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
+    align-items: start;
+  }
+
+  .learning-exam-card {
+    grid-template-columns: minmax(210px, .72fr) minmax(340px, 1.28fr);
+  }
+}
+
+@media (min-width: 1500px) {
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card {
+    border-radius: 22px;
+  }
+
+  .learning-bank-grid {
+    gap: 1rem;
+  }
+}
+
+/* ------------------------------------------------------------
+ * Tablet: keep hierarchy, reduce art dominance
+ * ---------------------------------------------------------- */
+
+@media (max-width: 1180px) and (min-width: 761px) {
+  .learning-hero,
+  .learning-hero-library,
+  .learning-review-hero,
+  .learning-exam-hero,
+  .learning-stats-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 34%);
+  }
+
+  .learning-hero {
+    min-height: 244px;
+    padding: 1.25rem;
+  }
+
+  .learning-hero-copy h2 {
+    font-size: clamp(1.65rem, 3vw, 2.15rem);
+  }
+
+  .learning-hero-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .learning-action {
+    padding: .62rem;
+  }
+
+  .learning-action small {
+    display: none;
+  }
+
+  .learning-art-slot {
+    min-height: 190px;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    min-height: 190px;
+  }
+
+  .learning-review-mode-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learning-exam-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------
+ * Mobile shell: bottom navigation and content-first composition
+ * ---------------------------------------------------------- */
+
+@media (max-width: 940px) {
+  .app-header {
+    transform: none;
+    filter: none;
+    perspective: none;
+    contain: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--surface);
+  }
+
+  .main-nav {
+    position: fixed !important;
+    z-index: 200;
+    inset: auto 0 0 0 !important;
+    top: auto !important;
+    bottom: 0 !important;
+    transform: none !important;
+    border-top: 1px solid var(--line);
+    border-bottom: 0;
+    background: color-mix(in srgb, var(--surface) 98%, transparent);
+    box-shadow: 0 -10px 30px rgba(12, 20, 35, .12);
+  }
+
+  .app-main {
+    width: min(100% - .75rem, 1180px);
+    padding-top: .55rem;
+  }
+}
+
+@media (max-width: 760px) {
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  ) {
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :is(
+    #libraryView,
+    #reviewView,
+    #examCenterView,
+    #examView,
+    #statsView,
+    #bankDetailView,
+    #practiceView
+  )::before {
+    display: none;
+  }
+
+  .learning-hero,
+  .learning-hero-library,
+  .learning-review-hero,
+  .learning-exam-hero,
+  .learning-stats-hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: .8rem;
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .learning-hero-copy {
+    max-width: none;
+  }
+
+  .learning-hero-copy h2 {
+    max-width: none;
+    margin-top: .3rem;
+    font-size: clamp(1.58rem, 7.2vw, 2rem);
+    line-height: 1.18;
+  }
+
+  .learning-hero-copy > p {
+    font-size: .88rem;
+    line-height: 1.66;
+  }
+
+  .learning-art-slot {
+    display: none;
+  }
+
+  .learning-hero-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .4rem;
+    margin-top: .85rem;
+  }
+
+  .learning-action,
+  .learning-action:last-child {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    place-items: center;
+    min-height: 78px;
+    padding: .5rem .35rem;
+    text-align: center;
+  }
+
+  .learning-action-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .learning-action > span:last-child {
+    justify-items: center;
+  }
+
+  .learning-action strong {
+    font-size: .78rem;
+    white-space: nowrap;
+  }
+
+  .learning-action small {
+    display: none;
+  }
+
+  .learning-storage-row {
+    position: static;
+    grid-column: auto;
+    margin-top: .1rem;
+    padding-top: .65rem;
+    border-top: 1px solid color-mix(in srgb, var(--learn-line) 78%, transparent);
+  }
+
+  .learning-section-head {
+    gap: .65rem;
+    margin: 1rem 0 .6rem;
+    padding-inline: .15rem;
+  }
+
+  .learning-section-head h2 {
+    font-size: 1.25rem;
+  }
+
+  .learning-section-head p {
+    font-size: .82rem;
+  }
+
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card {
+    padding: .8rem;
+    border-radius: 16px;
+  }
+
+  .learning-focus-strip,
+  .learning-focus-strip.exam,
+  .learning-focus-strip.stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .42rem;
+  }
+
+  .learning-focus-strip.exam .learning-focus-item:last-child,
+  .learning-focus-strip.stats .learning-focus-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    min-height: 0;
+    gap: .85rem;
+    padding: .85rem;
+    text-align: left;
+  }
+
+  .learning-review-orbit,
+  .learning-accuracy-ring {
+    width: 116px;
+    height: 116px;
+    flex: 0 0 auto;
+  }
+
+  .learning-review-orbit-core,
+  .learning-accuracy-ring > div {
+    width: 92px;
+    height: 92px;
+  }
+
+  .learning-review-orbit-core strong,
+  .learning-accuracy-ring strong {
+    font-size: 1.55rem;
+  }
+
+  .learning-review-focus > p,
+  .learning-accuracy-card > p {
+    max-width: none;
+    font-size: .76rem;
+    line-height: 1.55;
+  }
+
+  .learning-review-mode-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .48rem;
+  }
+
+  .learning-review-mode {
+    padding: .65rem;
+  }
+
+  .learning-review-mode > small {
+    min-height: 0;
+    font-size: .7rem;
+  }
+
+  .learning-exam-flow {
+    display: flex;
+    gap: .45rem;
+    overflow-x: auto;
+    padding: .65rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .learning-exam-flow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .learning-flow-step {
+    min-width: 128px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .learning-exam-config {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
+  }
+
+  .learning-exam-start {
+    grid-column: 1 / -1;
+  }
+
+  .learning-exam-start .button {
+    width: 100%;
+  }
+
+  .learning-stat-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .learning-mastery-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .app-header {
+    min-height: 60px;
+    padding: .55rem .65rem;
+  }
+
+  .brand-mark {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .brand-block h1 {
+    font-size: .88rem;
+  }
+
+  .main-nav {
+    padding-top: .28rem;
+  }
+
+  .nav-item {
+    min-height: 51px;
+    padding-inline: .1rem;
+    font-size: clamp(.54rem, 2.2vw, .61rem);
+  }
+
+  .nav-item::before {
+    font-size: .95rem;
+  }
+
+  .app-main {
+    width: min(100% - .5rem, 1180px);
+    padding-top: .4rem;
+  }
+
+  .learning-hero {
+    padding: .9rem;
+  }
+
+  .learning-kicker {
+    font-size: .7rem;
+  }
+
+  .learning-hero-copy h2 {
+    font-size: clamp(1.48rem, 7.6vw, 1.82rem);
+  }
+
+  .learning-hero-actions {
+    gap: .32rem;
+  }
+
+  .learning-action {
+    min-height: 72px;
+  }
+
+  .learning-action strong {
+    font-size: .73rem;
+  }
+
+  .learning-focus-strip,
+  .learning-focus-strip.exam,
+  .learning-focus-strip.stats {
+    gap: .34rem;
+  }
+
+  .learning-focus-item {
+    padding: .55rem .58rem;
+  }
+
+  .learning-focus-item strong {
+    font-size: 1.1rem;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .learning-review-orbit,
+  .learning-accuracy-ring {
+    width: 96px;
+    height: 96px;
+  }
+
+  .learning-review-orbit-core,
+  .learning-accuracy-ring > div {
+    width: 76px;
+    height: 76px;
+  }
+
+  .learning-review-orbit-core strong,
+  .learning-accuracy-ring strong {
+    font-size: 1.3rem;
+  }
+
+  .learning-review-orbit-core span,
+  .learning-review-orbit-core small,
+  .learning-accuracy-ring span {
+    font-size: .6rem;
+  }
+
+  .learning-review-mode-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learning-bank-header {
+    gap: .58rem;
+  }
+
+  .learning-bank-symbol {
+    width: 2.45rem;
+    height: 2.45rem;
+  }
+
+  .learning-stat-row {
+    gap: .35rem;
+  }
+
+  .learning-stat-row > div {
+    padding: .5rem;
+  }
+
+  .learning-stat-row span {
+    font-size: .64rem;
+  }
+
+  .learning-stat-row strong {
+    font-size: .98rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .learning-review-mode-grid,
+  .learning-exam-config,
+  .learning-mastery-legend {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-stat-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .learning-stat-row > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .learning-review-focus,
+  .learning-accuracy-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+ * v4.0 R2E — Practice Experience Redesign
+ * Learner-facing detail, practice and active exam views.
+ * ========================================================== */
+
+/* ------------------------------------------------------------
+ * Bank detail / practice planning
+ * ---------------------------------------------------------- */
+
+.bank-study-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.bank-study-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.bank-study-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, .55fr);
+  gap: 1rem;
+  padding: clamp(1.15rem, 2.4vw, 1.8rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 94% 8%, color-mix(in srgb, var(--learn-primary) 14%, transparent), transparent 17rem),
+    radial-gradient(circle at 72% 108%, color-mix(in srgb, var(--learn-cyan) 10%, transparent), transparent 18rem),
+    var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow);
+}
+
+.bank-study-hero-copy h2 {
+  max-width: 26ch;
+  margin: .35rem 0 .55rem;
+  color: var(--learn-text);
+  font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+  letter-spacing: -.035em;
+  line-height: 1.2;
+}
+
+.bank-study-hero-copy > p {
+  max-width: 70ch;
+  margin: 0;
+  color: var(--learn-muted);
+  line-height: 1.7;
+}
+
+.bank-study-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .55rem;
+  margin-top: 1rem;
+}
+
+.bank-study-summary > div {
+  padding: .7rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 13px;
+  background: var(--learn-surface-soft);
+}
+
+.bank-study-summary span,
+.bank-study-summary small {
+  display: block;
+  color: var(--learn-muted);
+}
+
+.bank-study-summary span {
+  font-size: .7rem;
+}
+
+.bank-study-summary strong {
+  display: block;
+  margin: .12rem 0 .05rem;
+  color: var(--learn-text);
+  font-size: 1.28rem;
+}
+
+.bank-study-summary small {
+  font-size: .66rem;
+}
+
+.bank-study-hero-panel {
+  display: grid;
+  align-content: center;
+  gap: .7rem;
+  padding: 1rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 18px;
+  background:
+    linear-gradient(150deg, color-mix(in srgb, var(--learn-primary) 9%, var(--learn-surface)), var(--learn-surface-soft));
+}
+
+.bank-study-hero-panel-top {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.bank-study-hero-panel-top span {
+  color: var(--learn-muted);
+  font-size: .76rem;
+}
+
+.bank-study-hero-panel-top strong {
+  color: var(--learn-text);
+  font-size: 1.65rem;
+}
+
+.bank-study-hero-panel > p {
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: .8rem;
+  line-height: 1.55;
+}
+
+.bank-study-start {
+  width: 100%;
+  min-height: 46px;
+}
+
+.bank-study-resume {
+  margin: 0;
+  border-color: color-mix(in srgb, var(--learn-primary) 30%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 7%, var(--learn-surface));
+  color: var(--learn-text);
+}
+
+.bank-study-resume h3 {
+  margin: .18rem 0 .2rem;
+}
+
+.bank-study-resume p {
+  color: var(--learn-muted);
+}
+
+.bank-study-planner,
+.bank-study-preview {
+  padding: clamp(.9rem, 2vw, 1.15rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.bank-study-section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .8rem;
+}
+
+.bank-study-section-head h2 {
+  margin: .2rem 0 0;
+  color: var(--learn-text);
+  font-size: 1.25rem;
+}
+
+.bank-study-hint,
+.bank-study-preview-note {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.bank-study-learning-strip {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: .5rem;
+  margin: 0 0 .75rem;
+}
+
+.bank-study-learning-strip .learning-filter {
+  min-height: 76px;
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.bank-study-learning-strip .learning-filter.is-active {
+  border-color: color-mix(in srgb, var(--learn-primary) 42%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 11%, var(--learn-surface));
+  color: var(--learn-primary);
+}
+
+.bank-study-learning-strip .learning-filter span {
+  color: var(--learn-muted);
+}
+
+.bank-study-filter-details {
+  overflow: hidden;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+.bank-study-filter-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .72rem .8rem;
+  cursor: pointer;
+  color: var(--learn-text);
+  font-weight: 800;
+  list-style: none;
+}
+
+.bank-study-filter-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.bank-study-filter-details > summary small {
+  color: var(--learn-muted);
+  font-weight: 600;
+}
+
+.bank-study-filter-grid {
+  padding: .8rem;
+  border-top: 1px solid var(--learn-line);
+}
+
+.bank-study-filter-grid label {
+  color: var(--learn-muted);
+}
+
+.bank-study-filter-grid :is(input, select) {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-strong);
+  color: var(--learn-text);
+}
+
+.bank-study-question-list {
+  gap: .55rem;
+}
+
+.bank-study-question-preview {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .8rem;
+  padding: .75rem .85rem;
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.bank-study-question-number {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+  color: var(--learn-primary);
+  font: 850 .74rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.bank-study-question-body {
+  min-width: 0;
+}
+
+.bank-study-question-body > p {
+  color: var(--learn-text);
+}
+
+.learning-empty.compact {
+  min-height: 120px;
+}
+
+/* ------------------------------------------------------------
+ * Practice focus mode
+ * ---------------------------------------------------------- */
+
+.practice-focus-shell,
+.exam-focus-shell,
+.exam-result-shell {
+  width: 100%;
+  max-width: 1500px;
+  margin-inline: auto;
+}
+
+.practice-focus-topbar,
+.exam-focus-topbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(220px, 330px);
+  gap: .85rem;
+  align-items: center;
+  padding: .75rem .8rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 16px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.practice-focus-bank,
+.exam-focus-title {
+  min-width: 0;
+  display: grid;
+  gap: .08rem;
+}
+
+.practice-focus-bank strong,
+.exam-focus-title strong {
+  overflow: hidden;
+  color: var(--learn-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.practice-focus-progress,
+.exam-focus-progress {
+  min-width: 0;
+}
+
+.practice-focus-progress .progress-track,
+.exam-focus-progress .progress-track {
+  background: color-mix(in srgb, var(--learn-line) 66%, transparent);
+}
+
+.practice-focus-progress .progress-label,
+.exam-focus-progress .progress-label {
+  color: var(--learn-muted);
+}
+
+.practice-focus-stage {
+  display: grid;
+  place-items: start center;
+  padding: clamp(1rem, 2.5vw, 2rem) 0;
+}
+
+.practice-focus-question,
+.exam-focus-question {
+  width: min(100%, 980px);
+  padding: clamp(1rem, 2.6vw, 1.6rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--learn-primary) 7%, transparent), transparent 13rem),
+    var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow);
+}
+
+.practice-focus-question-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.practice-error-badge {
+  flex: 0 0 auto;
+}
+
+.practice-focus-title,
+.exam-focus-question-title {
+  max-width: 44ch;
+  margin: .9rem 0 0;
+  color: var(--learn-text);
+  font-size: clamp(1.25rem, 2.3vw, 1.65rem);
+  line-height: 1.68;
+}
+
+.practice-focus-images,
+.exam-focus-question .question-images {
+  margin-top: 1rem;
+}
+
+.practice-focus-answer,
+.exam-focus-answer {
+  gap: .7rem;
+  margin-top: 1.25rem;
+}
+
+.practice-focus-option,
+.exam-focus-option {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: .7rem;
+  align-items: center;
+  min-height: 60px;
+  padding: .72rem .8rem;
+  border-color: var(--learn-line);
+  border-radius: 15px;
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+  transition:
+    border-color .16s ease,
+    background .16s ease,
+    transform .16s ease;
+}
+
+.practice-focus-option:hover,
+.exam-focus-option:hover {
+  border-color: color-mix(in srgb, var(--learn-primary) 44%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 7%, var(--learn-surface));
+  transform: translateY(-1px);
+}
+
+.practice-option-key {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 9px;
+  background: var(--learn-surface-strong);
+  color: var(--learn-primary);
+  font-weight: 900;
+}
+
+.practice-option-text {
+  min-width: 0;
+  line-height: 1.55;
+}
+
+.practice-fill-answer {
+  gap: .45rem;
+  color: var(--learn-muted);
+}
+
+.practice-fill-answer input {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.practice-focus-primary-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.practice-submit {
+  min-width: 150px;
+}
+
+.practice-focus-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .7rem;
+  padding-top: .7rem;
+  border-top: 1px solid var(--learn-line);
+}
+
+.practice-note-details {
+  margin-top: .7rem;
+  overflow: hidden;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: var(--learn-surface-soft);
+}
+
+.practice-note-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .7rem .8rem;
+  cursor: pointer;
+  color: var(--learn-text);
+  font-weight: 800;
+  list-style: none;
+}
+
+.practice-note-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.practice-note-details > summary small {
+  color: var(--learn-muted);
+  font-weight: 600;
+}
+
+.practice-focus-note {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--learn-line);
+  border-radius: 0;
+  background: var(--learn-surface-strong);
+}
+
+.practice-focus-note textarea {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.practice-focus-feedback {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 18px;
+}
+
+.practice-feedback-heading {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+
+.practice-feedback-heading h3 {
+  margin: .08rem 0 0;
+}
+
+.practice-feedback-icon {
+  display: grid;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--learn-teal) 13%, var(--learn-surface));
+  color: var(--learn-teal);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.practice-focus-feedback.wrong .practice-feedback-icon {
+  background: color-mix(in srgb, var(--learn-rose) 13%, var(--learn-surface));
+  color: var(--learn-rose);
+}
+
+.practice-feedback-grid,
+.exam-analysis-answer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  margin-top: .8rem;
+}
+
+.practice-feedback-grid > div,
+.exam-analysis-answer-grid > div {
+  padding: .7rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 82%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 78%, transparent);
+}
+
+.practice-feedback-grid span,
+.exam-analysis-answer-grid span,
+.practice-feedback-explanation > span,
+.exam-analysis-explanation > span {
+  display: block;
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.practice-feedback-grid strong,
+.exam-analysis-answer-grid strong {
+  display: block;
+  margin-top: .18rem;
+  color: var(--learn-text);
+  line-height: 1.5;
+}
+
+.practice-feedback-explanation,
+.exam-analysis-explanation {
+  margin-top: .7rem;
+  padding: .75rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 76%, transparent);
+}
+
+.practice-feedback-explanation p,
+.exam-analysis-explanation p {
+  margin: .3rem 0 0;
+  color: var(--learn-text);
+  line-height: 1.7;
+}
+
+.practice-focus-next {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: .8rem;
+}
+
+.practice-finish-shell {
+  display: grid;
+  place-items: center;
+  min-height: min(70vh, 720px);
+}
+
+.practice-focus-finish {
+  width: min(100%, 760px);
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 24px;
+  background: var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow);
+}
+
+.practice-focus-finish h2 {
+  margin: .35rem 0 .45rem;
+  color: var(--learn-text);
+}
+
+.practice-finish-score {
+  display: grid;
+  place-items: center;
+  width: 148px;
+  height: 148px;
+  margin: 1.1rem auto;
+  border: 10px solid color-mix(in srgb, var(--learn-primary) 16%, var(--learn-line));
+  border-radius: 999px;
+  background: var(--learn-surface-soft);
+}
+
+.practice-finish-score strong {
+  color: var(--learn-primary);
+  font-size: 2rem;
+}
+
+.practice-finish-score span {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.practice-finish-stats {
+  max-width: none;
+}
+
+.practice-finish-stats > div {
+  border: 1px solid var(--learn-line);
+  background: var(--learn-surface-soft);
+}
+
+.practice-finish-actions {
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------
+ * Active exam focus mode
+ * ---------------------------------------------------------- */
+
+.exam-focus-topbar {
+  grid-template-columns: minmax(190px, .8fr) minmax(240px, 1fr) auto;
+}
+
+.exam-focus-time-block {
+  display: grid;
+  justify-items: end;
+  gap: .2rem;
+}
+
+.exam-focus-time-block > span {
+  color: var(--learn-muted);
+  font-size: .7rem;
+}
+
+.exam-focus-time-block .exam-timer {
+  min-width: 110px;
+  padding: .45rem .65rem;
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+  font-size: 1.3rem;
+}
+
+.exam-focus-layout {
+  display: grid;
+  grid-template-columns: minmax(170px, 210px) minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.exam-focus-navigator {
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  display: grid;
+  gap: .7rem;
+  padding: .75rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 16px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.exam-focus-navigator-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.exam-focus-navigator-head span {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.exam-focus-navigator-head strong {
+  color: var(--learn-text);
+}
+
+.exam-focus-navigator .exam-navigator {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-height: calc(100vh - 240px);
+  overflow: auto;
+  padding: .2rem;
+  border: 0;
+  background: transparent;
+}
+
+.exam-focus-navigator .exam-number {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-soft);
+  color: var(--learn-muted);
+}
+
+.exam-focus-navigator .exam-number.is-answered {
+  border-color: color-mix(in srgb, var(--learn-primary) 40%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+  color: var(--learn-primary);
+}
+
+.exam-focus-navigator .exam-number.is-current {
+  outline-color: var(--learn-primary);
+  background: var(--learn-primary);
+  color: #fff;
+}
+
+.exam-submit-button {
+  width: 100%;
+}
+
+.exam-focus-main {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.exam-focus-question {
+  width: min(100%, 1040px);
+}
+
+.exam-focus-question-actions {
+  display: grid;
+  grid-template-columns: minmax(120px, auto) 1fr minmax(120px, auto);
+  align-items: center;
+  gap: .7rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--learn-line);
+}
+
+.exam-focus-question-actions > span {
+  color: var(--learn-muted);
+  font-size: .76rem;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------
+ * Exam result
+ * ---------------------------------------------------------- */
+
+.exam-result-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.exam-focus-result-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr);
+  gap: 1rem;
+  align-items: center;
+  padding: clamp(1.2rem, 2.5vw, 1.8rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 92% 7%, color-mix(in srgb, var(--learn-teal) 13%, transparent), transparent 17rem),
+    var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow);
+  text-align: left;
+}
+
+.exam-result-copy h2 {
+  margin: .3rem 0 .35rem;
+  color: var(--learn-text);
+}
+
+.exam-result-copy > p {
+  margin: 0;
+  color: var(--learn-muted);
+}
+
+.exam-focus-result-stats {
+  max-width: none;
+  margin: 1rem 0 0;
+}
+
+.exam-focus-result-stats > div {
+  border: 1px solid var(--learn-line);
+  background: var(--learn-surface-soft);
+}
+
+.exam-result-actions {
+  justify-content: flex-start;
+}
+
+.exam-result-score-card {
+  display: grid;
+  justify-items: center;
+  gap: .7rem;
+  padding: 1rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 18px;
+  background: var(--learn-surface-soft);
+  text-align: center;
+}
+
+.exam-result-score-ring {
+  display: grid;
+  place-items: center;
+  width: 160px;
+  height: 160px;
+  border-radius: 999px;
+  background:
+    conic-gradient(
+      var(--learn-teal) 0 var(--exam-score),
+      color-mix(in srgb, var(--learn-line) 64%, transparent) var(--exam-score) 360deg
+    );
+}
+
+.exam-result-score-ring > div {
+  display: grid;
+  place-items: center;
+  width: 126px;
+  height: 126px;
+  border-radius: 999px;
+  background: var(--learn-surface-strong);
+}
+
+.exam-result-score-ring strong {
+  color: var(--learn-text);
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.exam-result-score-ring span {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.exam-result-score-card > p {
+  max-width: 28ch;
+  margin: 0;
+  color: var(--learn-muted);
+  line-height: 1.55;
+}
+
+.exam-focus-analysis {
+  margin: 0;
+  padding: clamp(.9rem, 2vw, 1.15rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 20px;
+  background: var(--learn-surface);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+.exam-focus-analysis .exam-analysis-list {
+  gap: .5rem;
+}
+
+.exam-focus-analysis .exam-analysis-item {
+  border-color: var(--learn-line);
+  background: var(--learn-surface-strong);
+}
+
+.exam-focus-analysis .exam-analysis-item summary {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  background: var(--learn-surface-soft);
+  color: var(--learn-text);
+}
+
+.exam-analysis-number {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9px;
+  background: var(--learn-surface-strong);
+  color: var(--learn-muted);
+  font: 850 .7rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.exam-analysis-body {
+  background: var(--learn-surface-strong);
+}
+
+/* ------------------------------------------------------------
+ * R2E responsive behavior
+ * ---------------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .bank-study-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-hero-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .bank-study-hero-panel > p {
+    grid-column: 1;
+  }
+
+  .bank-study-start {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    min-width: 160px;
+  }
+
+  .bank-study-learning-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .practice-focus-topbar,
+  .exam-focus-topbar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .practice-focus-progress,
+  .exam-focus-progress {
+    grid-column: 1 / -1;
+  }
+
+  .exam-focus-time-block {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .bank-study-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bank-study-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exam-focus-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-focus-navigator {
+    position: static;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .exam-focus-navigator-head {
+    display: grid;
+  }
+
+  .exam-focus-navigator .exam-navigator {
+    display: flex;
+    gap: .4rem;
+    max-height: none;
+    overflow-x: auto;
+    padding-bottom: .25rem;
+  }
+
+  .exam-focus-navigator .exam-number {
+    width: 2.35rem;
+    min-width: 2.35rem;
+    aspect-ratio: 1;
+  }
+
+  .exam-submit-button {
+    width: auto;
+    min-width: 90px;
+  }
+
+  .exam-focus-result-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-result-score-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    text-align: left;
+  }
+
+  .exam-result-score-card > p {
+    max-width: 45ch;
+  }
+}
+
+@media (max-width: 700px) {
+  .bank-study-toolbar {
+    align-items: stretch;
+  }
+
+  .bank-study-toolbar .button,
+  .bank-study-toolbar .back-button {
+    flex: 1 1 0;
+    text-align: center;
+  }
+
+  .bank-study-hero,
+  .bank-study-planner,
+  .bank-study-preview {
+    padding: .85rem;
+    border-radius: 17px;
+  }
+
+  .bank-study-hero-copy h2 {
+    font-size: 1.55rem;
+  }
+
+  .bank-study-hero-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-hero-panel > p,
+  .bank-study-start {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .bank-study-learning-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bank-study-section-head {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .bank-study-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-filter-details > summary,
+  .practice-note-details > summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .bank-study-question-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-question-number {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .practice-focus-topbar,
+  .exam-focus-topbar {
+    grid-template-columns: 1fr auto;
+    padding: .65rem;
+  }
+
+  .practice-focus-bank,
+  .exam-focus-title {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .practice-focus-topbar .back-button {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .practice-focus-progress,
+  .exam-focus-progress {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .exam-focus-time-block {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .practice-focus-stage {
+    padding: .7rem 0;
+  }
+
+  .practice-focus-question,
+  .exam-focus-question {
+    padding: .9rem;
+    border-radius: 17px;
+  }
+
+  .practice-focus-question-head {
+    display: grid;
+  }
+
+  .practice-error-badge {
+    justify-self: start;
+  }
+
+  .practice-focus-option,
+  .exam-focus-option {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: .55rem;
+    min-height: 56px;
+    padding: .65rem;
+  }
+
+  .practice-focus-primary-actions,
+  .practice-focus-next {
+    justify-content: stretch;
+  }
+
+  .practice-focus-primary-actions .button,
+  .practice-focus-next .button {
+    width: 100%;
+  }
+
+  .practice-focus-tools {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .practice-feedback-grid,
+  .exam-analysis-answer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-focus-navigator {
+    grid-template-columns: 1fr auto;
+  }
+
+  .exam-focus-navigator-head {
+    grid-column: 1;
+  }
+
+  .exam-focus-navigator .exam-navigator {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .exam-submit-button {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .exam-focus-question-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .exam-focus-question-actions > span {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .exam-focus-question-actions [data-exam-prev] {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .exam-focus-question-actions [data-exam-next] {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .exam-focus-result-hero {
+    padding: .9rem;
+    border-radius: 18px;
+  }
+
+  .exam-focus-result-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exam-result-score-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .exam-result-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .exam-focus-analysis .exam-analysis-item summary {
+    grid-template-columns: auto auto;
+  }
+
+  .exam-focus-analysis .exam-analysis-item summary > span:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 460px) {
+  .bank-study-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .bank-study-summary,
+  .bank-study-learning-strip,
+  .practice-focus-tools,
+  .exam-focus-result-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .practice-focus-option,
+  .exam-focus-option {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .practice-focus-option input,
+  .exam-focus-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .practice-option-key {
+    grid-column: 1;
+  }
+
+  .practice-option-text {
+    grid-column: 2;
+  }
+
+  .exam-focus-time-block .exam-timer {
+    min-width: 96px;
+    font-size: 1.15rem;
+  }
+
+  .exam-result-score-ring {
+    width: 138px;
+    height: 138px;
+  }
+
+  .exam-result-score-ring > div {
+    width: 108px;
+    height: 108px;
+  }
+}
+
+/* ============================================================
+ * v4.0 R2F — Learning Page Personality & Scene Framework
+ * Distinct page identity without coupling layout to final artwork.
+ * Final epic-animation artwork can be mounted into the bounded
+ * scene slots later without changing the information architecture.
+ * ========================================================== */
+
+/* ------------------------------------------------------------
+ * Page-level identity tokens
+ * ---------------------------------------------------------- */
+
+#libraryView,
+#bankDetailView,
+#practiceView {
+  --learn-page-accent: #6477f2;
+  --learn-page-accent-2: #3fbda7;
+  --learn-page-warm: #e0a14b;
+}
+
+#reviewView {
+  --learn-page-accent: #2da992;
+  --learn-page-accent-2: #49a9df;
+  --learn-page-warm: #e7b053;
+}
+
+#examCenterView,
+#examView {
+  --learn-page-accent: #815fe6;
+  --learn-page-accent-2: #d8943d;
+  --learn-page-warm: #efba58;
+}
+
+#statsView {
+  --learn-page-accent: #3b91d8;
+  --learn-page-accent-2: #36b89a;
+  --learn-page-warm: #d9a64b;
+}
+
+html[data-theme="dark"] #libraryView,
+html[data-theme="dark"] #bankDetailView,
+html[data-theme="dark"] #practiceView {
+  --learn-page-accent: #8b95ff;
+  --learn-page-accent-2: #56d3b8;
+  --learn-page-warm: #efbd67;
+}
+
+html[data-theme="dark"] #reviewView {
+  --learn-page-accent: #58d0b5;
+  --learn-page-accent-2: #64c7ef;
+  --learn-page-warm: #f1c16d;
+}
+
+html[data-theme="dark"] #examCenterView,
+html[data-theme="dark"] #examView {
+  --learn-page-accent: #ad85ff;
+  --learn-page-accent-2: #efa650;
+  --learn-page-warm: #f4c86f;
+}
+
+html[data-theme="dark"] #statsView {
+  --learn-page-accent: #65b8ef;
+  --learn-page-accent-2: #59d1b2;
+  --learn-page-warm: #eec16c;
+}
+
+/* Every learning page keeps the same design language but gets a distinct
+ * atmospheric edge. No bitmap/SVG scene is painted at page level. */
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) {
+  background:
+    radial-gradient(circle at 92% 4%, color-mix(in srgb, var(--learn-page-accent) 10%, transparent), transparent 27rem),
+    radial-gradient(circle at 7% 96%, color-mix(in srgb, var(--learn-page-accent-2) 7%, transparent), transparent 30rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .learning-kicker {
+  color: var(--learn-page-accent);
+}
+
+:is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .learning-hero {
+  border-color: color-mix(in srgb, var(--learn-page-accent) 22%, var(--learn-line));
+  background:
+    radial-gradient(circle at 90% 5%, color-mix(in srgb, var(--learn-page-accent-2) 13%, transparent), transparent 18rem),
+    radial-gradient(circle at 63% 112%, color-mix(in srgb, var(--learn-page-accent) 13%, transparent), transparent 20rem),
+    linear-gradient(135deg, var(--learn-surface-strong), var(--learn-surface));
+}
+
+html[data-theme="dark"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .learning-hero {
+  background:
+    radial-gradient(circle at 91% 3%, color-mix(in srgb, var(--learn-page-accent-2) 18%, transparent), transparent 18rem),
+    radial-gradient(circle at 64% 112%, color-mix(in srgb, var(--learn-page-accent) 18%, transparent), transparent 20rem),
+    linear-gradient(135deg, #11233e, #0f2038);
+}
+
+/* Page-level primary CTA personality. */
+#reviewView .button.primary {
+  background: linear-gradient(105deg, #2c9d8b, #3b9fd0);
+}
+
+#examCenterView .button.primary,
+#examView .button.primary {
+  background: linear-gradient(105deg, #7557d7, #b87145);
+}
+
+#statsView .button.primary {
+  background: linear-gradient(105deg, #3d8fd0, #2ca88e);
+}
+
+/* ------------------------------------------------------------
+ * Shared scene panel: functional content + atmosphere
+ * ---------------------------------------------------------- */
+
+.learning-scene-panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.learning-scene-panel::before,
+.learning-scene-panel::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+.learning-scene-panel::before {
+  top: -24%;
+  right: -14%;
+  width: clamp(150px, 18vw, 260px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--learn-page-accent) 18%, transparent) 0 18%,
+      color-mix(in srgb, var(--learn-page-accent-2) 8%, transparent) 38%,
+      transparent 70%
+    );
+  filter: blur(1px);
+  animation: learning-scene-breathe 8s ease-in-out infinite;
+}
+
+.learning-scene-panel::after {
+  right: -10%;
+  bottom: 12%;
+  width: 72%;
+  height: 1px;
+  opacity: .7;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--learn-page-accent) 30%, transparent),
+    color-mix(in srgb, var(--learn-page-accent-2) 24%, transparent),
+    transparent
+  );
+  transform: rotate(-8deg);
+}
+
+.learning-scene-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.learning-scene-panel-heading {
+  display: grid;
+  gap: .12rem;
+  width: 100%;
+  margin-bottom: .2rem;
+  text-align: left;
+}
+
+.learning-scene-panel-heading > span {
+  color: var(--learn-text);
+  font-size: .78rem;
+  font-weight: 850;
+  letter-spacing: .02em;
+}
+
+.learning-scene-panel-heading > small {
+  color: var(--learn-muted);
+  font-size: .66rem;
+  line-height: 1.45;
+}
+
+@keyframes learning-scene-breathe {
+  0%, 100% {
+    opacity: .72;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    opacity: .95;
+    transform: translate3d(-8px, 6px, 0) scale(1.04);
+  }
+}
+
+/* ------------------------------------------------------------
+ * 我的題庫: calm launch point
+ * ---------------------------------------------------------- */
+
+#libraryView .learning-art-slot {
+  --learning-library-art: none;
+  --learning-art-image: var(--learning-library-art);
+  border-color: color-mix(in srgb, var(--learn-page-accent) 24%, var(--learn-line));
+  background-image:
+    var(--learning-art-image),
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-page-accent) 8%, transparent), transparent 50%),
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--learn-page-warm) 18%, transparent), transparent 24%),
+    linear-gradient(145deg, var(--learn-surface-tint), var(--learn-surface-soft));
+}
+
+html[data-theme="dark"] #libraryView .learning-art-slot {
+  background-image:
+    var(--learning-art-image),
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-page-accent) 10%, transparent), transparent 52%),
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--learn-page-warm) 12%, transparent), transparent 24%),
+    linear-gradient(145deg, #173354, #10233e);
+}
+
+/* R2D abstract focus indicator is deliberately softened. The slot should
+ * read as a place for atmosphere/artwork, not as a mysterious control. */
+#libraryView .learning-art-focus {
+  opacity: .34;
+  transform: translate(-50%, -50%) scale(.82);
+}
+
+#libraryView .learning-art-ambient::after {
+  opacity: .35;
+}
+
+#libraryView .learning-scene-path {
+  border-color: color-mix(in srgb, var(--learn-page-accent) 18%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 82%, transparent);
+}
+
+/* ------------------------------------------------------------
+ * 今日複習: memory / recovery language
+ * ---------------------------------------------------------- */
+
+.learning-review-focus.learning-scene-review {
+  grid-template-rows: auto 1fr auto;
+  border-color: color-mix(in srgb, var(--learn-page-accent) 24%, var(--learn-line));
+  background:
+    radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--learn-page-accent) 11%, transparent), transparent 9rem),
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-page-accent-2) 5%, var(--learn-surface-soft)), var(--learn-surface-soft));
+}
+
+.learning-scene-review::after {
+  right: 10%;
+  bottom: 20%;
+  width: 80%;
+  height: 80%;
+  border: 1px solid color-mix(in srgb, var(--learn-page-accent) 10%, transparent);
+  border-radius: 999px;
+  background: none;
+  transform: rotate(-12deg) scaleY(.45);
+}
+
+#reviewView .learning-review-orbit {
+  background:
+    conic-gradient(
+      var(--learn-page-accent) 0 31%,
+      var(--learn-page-accent-2) 31% 53%,
+      var(--learn-page-warm) 53% 69%,
+      color-mix(in srgb, var(--learn-line) 60%, transparent) 69% 100%
+    );
+}
+
+#reviewView .learning-mini-progress i {
+  background: linear-gradient(90deg, var(--learn-page-accent), var(--learn-page-accent-2));
+}
+
+/* ------------------------------------------------------------
+ * 模擬考: deliberate, staged progression
+ * ---------------------------------------------------------- */
+
+.learning-exam-flow.learning-scene-exam {
+  display: grid;
+  align-content: center;
+  gap: .65rem;
+  border-color: color-mix(in srgb, var(--learn-page-accent) 24%, var(--learn-line));
+  background:
+    radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--learn-page-warm) 12%, transparent), transparent 10rem),
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-page-accent) 6%, var(--learn-surface)), var(--learn-surface-soft));
+}
+
+.learning-exam-flow-steps {
+  display: grid;
+  gap: .5rem;
+}
+
+#examCenterView .learning-flow-step {
+  border-color: color-mix(in srgb, var(--learn-page-accent) 14%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 78%, transparent);
+}
+
+#examCenterView .learning-flow-step span {
+  background: color-mix(in srgb, var(--learn-page-accent) 12%, var(--learn-surface));
+  color: var(--learn-page-accent);
+}
+
+.learning-scene-exam::after {
+  right: -4%;
+  bottom: 14%;
+  width: 68%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--learn-page-warm) 38%, transparent),
+    color-mix(in srgb, var(--learn-page-accent) 24%, transparent),
+    transparent
+  );
+  transform: rotate(-18deg);
+}
+
+/* ------------------------------------------------------------
+ * 學習統計: analytical / forward-looking language
+ * ---------------------------------------------------------- */
+
+.learning-accuracy-card.learning-scene-stats {
+  grid-template-rows: auto 1fr auto;
+  border-color: color-mix(in srgb, var(--learn-page-accent) 24%, var(--learn-line));
+  background:
+    linear-gradient(color-mix(in srgb, var(--learn-line) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--learn-line) 12%, transparent) 1px, transparent 1px),
+    radial-gradient(circle at 55% 45%, color-mix(in srgb, var(--learn-page-accent-2) 9%, transparent), transparent 10rem),
+    var(--learn-surface-soft);
+  background-size: 26px 26px, 26px 26px, auto, auto;
+}
+
+#statsView .learning-accuracy-ring {
+  background:
+    conic-gradient(
+      var(--learn-page-accent-2) 0 var(--accuracy),
+      color-mix(in srgb, var(--learn-line) 62%, transparent) var(--accuracy) 360deg
+    );
+}
+
+#statsView .learning-mastery-bar .familiar {
+  background: var(--learn-page-accent);
+}
+
+#statsView .learning-mastery-bar .mastered {
+  background: var(--learn-page-accent-2);
+}
+
+.learning-scene-stats::after {
+  right: 8%;
+  bottom: 18%;
+  width: 72%;
+  height: 34%;
+  border: 0;
+  opacity: .24;
+  background:
+    linear-gradient(
+      135deg,
+      transparent 0 12%,
+      var(--learn-page-accent) 12% 14%,
+      transparent 14% 30%,
+      var(--learn-page-accent-2) 30% 32%,
+      transparent 32% 48%,
+      var(--learn-page-accent) 48% 50%,
+      transparent 50% 66%,
+      var(--learn-page-accent-2) 66% 68%,
+      transparent 68%
+    );
+  transform: none;
+}
+
+/* ------------------------------------------------------------
+ * Desktop polish
+ * ---------------------------------------------------------- */
+
+@media (min-width: 1181px) {
+  .learning-scene-panel-heading {
+    padding-inline: .15rem;
+  }
+
+  .learning-review-focus,
+  .learning-exam-flow,
+  .learning-accuracy-card {
+    min-height: 244px;
+  }
+
+  #reviewView .learning-review-orbit,
+  #statsView .learning-accuracy-ring {
+    transition: transform .22s ease, box-shadow .22s ease;
+  }
+
+  #reviewView .learning-review-focus:hover .learning-review-orbit,
+  #statsView .learning-accuracy-card:hover .learning-accuracy-ring {
+    transform: translateY(-2px);
+  }
+}
+
+/* ------------------------------------------------------------
+ * Tablet / mobile: personality stays, decoration steps back
+ * ---------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .learning-scene-panel-heading {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  .learning-scene-panel-heading > small {
+    font-size: .63rem;
+  }
+
+  .learning-review-focus.learning-scene-review,
+  .learning-accuracy-card.learning-scene-stats {
+    grid-template-rows: auto auto;
+  }
+
+  .learning-review-focus.learning-scene-review > p,
+  .learning-accuracy-card.learning-scene-stats > p {
+    align-self: center;
+  }
+
+  .learning-exam-flow.learning-scene-exam {
+    display: grid;
+    overflow: hidden;
+    padding: .7rem;
+    scroll-snap-type: none;
+  }
+
+  .learning-exam-flow-steps {
+    display: flex;
+    gap: .45rem;
+    overflow-x: auto;
+    padding-bottom: .2rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .learning-exam-flow-steps::-webkit-scrollbar {
+    display: none;
+  }
+
+  .learning-exam-flow-steps .learning-flow-step {
+    min-width: 128px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .learning-scene-panel::before {
+    width: 160px;
+    opacity: .58;
+    animation: none;
+  }
+
+  .learning-scene-panel::after {
+    opacity: .36;
+  }
+}
+
+@media (max-width: 520px) {
+  .learning-scene-panel-heading > small {
+    display: none;
+  }
+
+  .learning-scene-panel::before,
+  .learning-scene-panel::after {
+    opacity: .22;
+  }
+}
+
+@media (max-width: 390px) {
+  .learning-scene-panel-heading {
+    text-align: center;
+  }
+}
+
+/* Respect both OS motion preference and the app-level reduce-motion setting. */
+@media (prefers-reduced-motion: reduce) {
+  .learning-scene-panel::before {
+    animation: none !important;
+  }
+}
+
+html[data-reduce-motion="true"] .learning-scene-panel::before {
+  animation: none !important;
+}
+
+/* ============================================================
+ * v4.0 R2G — Learning Scene Integration
+ * Real scene assets enter only through the bounded scene slots.
+ * ========================================================== */
+
+html[data-theme="light"] #libraryView {
+  --learning-scene-image: url('../assets/learning/scenes/library-light.webp');
+}
+
+html[data-theme="dark"] #libraryView {
+  --learning-scene-image: url('../assets/learning/scenes/library-dark.webp');
+}
+
+html[data-theme="light"] #reviewView {
+  --learning-scene-image: url('../assets/learning/scenes/review-light.webp');
+}
+
+html[data-theme="dark"] #reviewView {
+  --learning-scene-image: url('../assets/learning/scenes/review-dark.webp');
+}
+
+html[data-theme="light"] #examCenterView {
+  --learning-scene-image: url('../assets/learning/scenes/exam-light.webp');
+}
+
+html[data-theme="dark"] #examCenterView {
+  --learning-scene-image: url('../assets/learning/scenes/exam-dark.webp');
+}
+
+html[data-theme="light"] #statsView {
+  --learning-scene-image: url('../assets/learning/scenes/stats-light.webp');
+}
+
+html[data-theme="dark"] #statsView {
+  --learning-scene-image: url('../assets/learning/scenes/stats-dark.webp');
+}
+
+.learning-scene-art {
+  position: absolute;
+  z-index: 0 !important;
+  pointer-events: none;
+  user-select: none;
+  background-image: var(--learning-scene-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transform: translateZ(0);
+}
+
+/* Library gets the strongest artwork because this slot contains no data
+ * that needs to be read through the image. */
+#libraryView .learning-art-slot .learning-scene-art {
+  inset: .45rem .45rem 2.9rem;
+  border-radius: calc(20px - .35rem);
+  background-position: center bottom;
+  background-size: contain;
+  opacity: .94;
+  filter: saturate(1.03) contrast(1.02);
+}
+
+#libraryView .learning-art-ambient,
+#libraryView .learning-art-focus {
+  display: none;
+}
+
+#libraryView .learning-art-slot {
+  background-image:
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-page-accent) 8%, transparent), transparent 52%),
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--learn-page-warm) 13%, transparent), transparent 26%),
+    linear-gradient(145deg, var(--learn-surface-tint), var(--learn-surface-soft));
+}
+
+html[data-theme="dark"] #libraryView .learning-art-slot {
+  background-image:
+    linear-gradient(155deg, color-mix(in srgb, var(--learn-page-accent) 10%, transparent), transparent 54%),
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--learn-page-warm) 10%, transparent), transparent 25%),
+    linear-gradient(145deg, #173354, #10233e);
+}
+
+#libraryView .learning-scene-path {
+  z-index: 3;
+  background: color-mix(in srgb, var(--learn-surface-strong) 88%, transparent);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--learn-page-accent) 9%, transparent);
+}
+
+html[data-theme="dark"] #libraryView .learning-scene-path {
+  background: color-mix(in srgb, #10233e 86%, transparent);
+}
+
+/* Review / exam / stats keep their real data as the foreground. The artwork
+ * lives on the right side with a fade mask, so readability always wins. */
+.learning-scene-panel .learning-scene-art {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 64%;
+  opacity: .3;
+  background-position: center;
+  background-size: cover;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.28) 24%, #000 68%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.28) 24%, #000 68%);
+  filter: saturate(.95) contrast(1.02);
+}
+
+html[data-theme="dark"] .learning-scene-panel .learning-scene-art {
+  opacity: .34;
+  filter: saturate(1.05) contrast(1.04) brightness(.92);
+}
+
+.learning-scene-panel > :not(.learning-scene-art) {
+  position: relative;
+  z-index: 2;
+}
+
+.learning-scene-review .learning-scene-art {
+  width: 68%;
+  background-position: 62% center;
+}
+
+.learning-scene-exam .learning-scene-art {
+  width: 72%;
+  background-position: 54% center;
+  opacity: .27;
+}
+
+html[data-theme="dark"] .learning-scene-exam .learning-scene-art {
+  opacity: .31;
+}
+
+.learning-scene-stats .learning-scene-art {
+  width: 66%;
+  background-position: 54% center;
+  opacity: .23;
+}
+
+html[data-theme="dark"] .learning-scene-stats .learning-scene-art {
+  opacity: .28;
+}
+
+/* Functional elements receive just enough surface opacity to remain clear
+ * over the art without feeling like opaque admin cards. */
+#reviewView .learning-review-orbit-core,
+#statsView .learning-accuracy-ring > div {
+  background: color-mix(in srgb, var(--learn-surface-strong) 94%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+#examCenterView .learning-flow-step {
+  background: color-mix(in srgb, var(--learn-surface-strong) 90%, transparent);
+  backdrop-filter: blur(7px);
+}
+
+.learning-scene-panel-heading {
+  max-width: 22rem;
+  padding: .42rem .5rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--learn-surface-strong) 84%, transparent), transparent);
+}
+
+/* Tablet: show the art, but let it step back. */
+@media (max-width: 1180px) and (min-width: 761px) {
+  #libraryView .learning-art-slot .learning-scene-art {
+    inset: .45rem .35rem 2.75rem;
+    opacity: .84;
+  }
+
+  .learning-scene-panel .learning-scene-art {
+    width: 58%;
+    opacity: .21;
+  }
+
+  html[data-theme="dark"] .learning-scene-panel .learning-scene-art {
+    opacity: .25;
+  }
+}
+
+/* Mobile stays content-first. The library art slot is already removed by
+ * R2D, and secondary scene art is hidden to prevent clipping or layout noise. */
+@media (max-width: 760px) {
+  .learning-scene-panel .learning-scene-art {
+    display: none;
+  }
+
+  .learning-scene-panel-heading {
+    max-width: none;
+    padding: 0;
+    background: none;
+  }
+}
+
+@media (prefers-reduced-data: reduce) {
+  .learning-scene-art {
+    display: none !important;
+  }
+}
+
+/* ============================================================
+ * v4.0 R2H — Whole-page Learning Composition
+ * Retires the small framed scene-card presentation in runtime DOM.
+ * Hero itself becomes the visual canvas with explicit content/art safe areas.
+ * ========================================================== */
+
+/* ------------------------------------------------------------
+ * Shared full-bleed hero composition
+ * ---------------------------------------------------------- */
+
+.learning-hero-whole {
+  --hero-content-width: min(62%, 880px);
+  --hero-art-opacity: .96;
+  --hero-art-position: 76% center;
+  --hero-art-size: cover;
+  position: relative;
+  display: block;
+  min-height: clamp(360px, 31vw, 470px);
+  overflow: hidden;
+  padding: clamp(1.5rem, 3vw, 2.7rem);
+  border-radius: 26px;
+  isolation: isolate;
+  background: var(--learn-surface-strong);
+}
+
+.learning-hero-whole::before,
+.learning-hero-whole::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.learning-hero-whole::before {
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(249, 252, 255, .99) 0%,
+      rgba(249, 252, 255, .97) 30%,
+      rgba(249, 252, 255, .9) 43%,
+      rgba(249, 252, 255, .7) 55%,
+      rgba(249, 252, 255, .24) 72%,
+      rgba(249, 252, 255, .04) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(249, 252, 255, .12),
+      rgba(249, 252, 255, 0) 58%,
+      rgba(249, 252, 255, .22) 100%
+    );
+}
+
+.learning-hero-whole::after {
+  z-index: 2;
+  border: 1px solid color-mix(in srgb, var(--learn-page-accent, var(--learn-primary)) 20%, var(--learn-line));
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .4),
+    inset 0 -60px 120px color-mix(in srgb, var(--learn-page-accent, var(--learn-primary)) 4%, transparent);
+}
+
+html[data-theme="dark"] .learning-hero-whole {
+  background: #10213a;
+}
+
+html[data-theme="dark"] .learning-hero-whole::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(12, 27, 49, .99) 0%,
+      rgba(12, 27, 49, .97) 30%,
+      rgba(12, 27, 49, .9) 43%,
+      rgba(12, 27, 49, .72) 56%,
+      rgba(12, 27, 49, .28) 74%,
+      rgba(12, 27, 49, .05) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 23, 42, .12),
+      rgba(10, 23, 42, 0) 60%,
+      rgba(10, 23, 42, .24) 100%
+    );
+}
+
+.learning-hero-art {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  background-image: var(--learning-scene-image);
+  background-repeat: no-repeat;
+  background-position: var(--hero-art-position);
+  background-size: var(--hero-art-size);
+  opacity: var(--hero-art-opacity);
+  filter: saturate(1.04) contrast(1.02);
+  transform: scale(1.015);
+  transform-origin: center;
+}
+
+html[data-theme="dark"] .learning-hero-art {
+  filter: saturate(1.05) contrast(1.04) brightness(.9);
+}
+
+.learning-hero-content {
+  position: relative;
+  z-index: 3;
+  width: var(--hero-content-width);
+  max-width: 900px;
+}
+
+.learning-hero-whole .learning-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-bottom: .2rem;
+}
+
+.learning-hero-whole .learning-hero-content h2 {
+  max-width: 18ch;
+  margin: .42rem 0 .7rem;
+  color: var(--learn-text);
+  font-size: clamp(2rem, 3vw, 3.15rem);
+  line-height: 1.1;
+  letter-spacing: -.05em;
+  text-wrap: balance;
+}
+
+.learning-hero-whole .learning-hero-content > p {
+  max-width: 61ch;
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: clamp(.92rem, 1.15vw, 1.04rem);
+  line-height: 1.72;
+}
+
+.learning-hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem;
+  margin-top: 1.25rem;
+}
+
+.learning-hero-primary-cta,
+.learning-hero-secondary-cta {
+  min-height: 44px;
+  padding-inline: 1.05rem;
+}
+
+.learning-hero-cta-note {
+  color: var(--learn-muted);
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+.learning-hero-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin-top: .7rem;
+}
+
+.learning-hero-quick-links button {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 36px;
+  padding: .42rem .62rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 82%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 72%, transparent);
+  color: var(--learn-muted);
+  font: inherit;
+  font-size: .74rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.learning-hero-quick-links button:hover {
+  border-color: color-mix(in srgb, var(--learn-page-accent, var(--learn-primary)) 38%, var(--learn-line));
+  color: var(--learn-text);
+}
+
+.learning-hero-whole .learning-storage-row {
+  position: static;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 1rem;
+  padding: .42rem .58rem;
+  border: 1px solid color-mix(in srgb, var(--learn-line) 72%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--learn-surface-strong) 68%, transparent);
+  backdrop-filter: blur(9px);
+}
+
+.learning-hero-whole .learning-storage-row .storage-status {
+  color: var(--learn-muted);
+}
+
+.learning-hero-stat-strip {
+  max-width: 760px;
+  margin-top: 1rem;
+}
+
+/* ------------------------------------------------------------
+ * Page-specific art direction / safe areas
+ * ---------------------------------------------------------- */
+
+#libraryView .learning-hero-whole {
+  --hero-content-width: min(58%, 820px);
+  --hero-art-position: 78% center;
+  min-height: clamp(390px, 32vw, 500px);
+}
+
+#libraryView .learning-hero-art {
+  background-position: 78% center;
+}
+
+.learning-hero-journey {
+  position: absolute;
+  z-index: 3;
+  right: clamp(1.4rem, 3vw, 3rem);
+  bottom: clamp(1.2rem, 2.4vw, 2rem);
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  color: color-mix(in srgb, var(--learn-text) 70%, transparent);
+  font-size: .7rem;
+  font-weight: 780;
+  text-shadow: 0 1px 8px color-mix(in srgb, var(--learn-surface-strong) 75%, transparent);
+}
+
+.learning-hero-journey i {
+  width: clamp(28px, 3vw, 48px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--learn-page-accent, var(--learn-primary)), color-mix(in srgb, var(--learn-page-accent-2, var(--learn-cyan)) 58%, transparent));
+}
+
+#reviewView .learning-hero-whole {
+  --hero-content-width: min(61%, 850px);
+  --hero-art-position: 78% center;
+}
+
+#examCenterView .learning-hero-whole {
+  --hero-content-width: min(64%, 920px);
+  --hero-art-position: 80% center;
+  min-height: clamp(400px, 33vw, 510px);
+}
+
+#statsView .learning-hero-whole {
+  --hero-content-width: min(59%, 820px);
+  --hero-art-position: 80% center;
+  --hero-art-opacity: .78;
+}
+
+.learning-hero-floating-stat {
+  position: absolute;
+  z-index: 3;
+  right: clamp(2rem, 7vw, 7.5rem);
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  min-width: 150px;
+  transform: translateY(-46%);
+  text-align: center;
+  color: var(--learn-text);
+  text-shadow: 0 2px 18px color-mix(in srgb, var(--learn-surface-strong) 75%, transparent);
+}
+
+.learning-hero-floating-stat::before {
+  content: "";
+  position: absolute;
+  inset: -1.4rem -2rem;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--learn-surface-strong) 66%, transparent), transparent 68%);
+  filter: blur(1px);
+}
+
+.learning-hero-floating-stat span,
+.learning-hero-floating-stat small {
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.learning-hero-floating-stat strong {
+  margin: .1rem 0;
+  color: var(--learn-page-accent-2, var(--learn-cyan));
+  font-size: clamp(2.8rem, 4vw, 4.1rem);
+  line-height: 1;
+}
+
+.learning-hero-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .45rem;
+  max-width: 760px;
+  margin-top: .85rem;
+}
+
+.learning-hero-flow .learning-flow-step {
+  min-width: 0;
+  padding: .5rem .58rem;
+  border-color: color-mix(in srgb, var(--learn-page-accent) 18%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 74%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.learning-hero-flow .learning-flow-step span {
+  width: 1.7rem;
+  height: 1.7rem;
+  font-size: .62rem;
+}
+
+.learning-hero-flow .learning-flow-step strong {
+  font-size: .74rem;
+}
+
+.learning-hero-data-visual {
+  position: absolute;
+  z-index: 3;
+  right: clamp(1.8rem, 6vw, 6.5rem);
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  gap: .65rem;
+  width: min(250px, 25%);
+  transform: translateY(-47%);
+  text-align: center;
+}
+
+.learning-hero-data-visual .learning-accuracy-ring {
+  width: clamp(145px, 12vw, 190px);
+  height: clamp(145px, 12vw, 190px);
+  box-shadow:
+    0 0 0 10px color-mix(in srgb, var(--learn-page-accent-2, var(--learn-teal)) 5%, transparent),
+    0 18px 48px rgba(0, 0, 0, .1);
+}
+
+.learning-hero-data-visual .learning-accuracy-ring > div {
+  width: 78%;
+  height: 78%;
+  background: color-mix(in srgb, var(--learn-surface-strong) 90%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.learning-hero-data-visual > p {
+  max-width: 27ch;
+  margin: 0;
+  color: var(--learn-muted);
+  font-size: .76rem;
+  line-height: 1.5;
+  text-shadow: 0 1px 10px color-mix(in srgb, var(--learn-surface-strong) 65%, transparent);
+}
+
+/* ------------------------------------------------------------
+ * Page flow: hero leads naturally into actionable content
+ * ---------------------------------------------------------- */
+
+.learning-hero-whole + .learning-section-head {
+  margin-top: clamp(1.25rem, 2.2vw, 2rem);
+}
+
+.learning-hero-whole + .learning-section-head::before {
+  content: "";
+  align-self: stretch;
+  width: 3px;
+  margin-right: .1rem;
+  border-radius: 999px;
+  background: linear-gradient(var(--learn-page-accent, var(--learn-primary)), var(--learn-page-accent-2, var(--learn-cyan)));
+}
+
+.learning-hero-whole + .learning-section-head > div:first-child {
+  flex: 1 1 auto;
+}
+
+/* ------------------------------------------------------------
+ * Tablet safe areas
+ * ---------------------------------------------------------- */
+
+@media (max-width: 1180px) and (min-width: 761px) {
+  .learning-hero-whole {
+    --hero-content-width: min(67%, 720px);
+    min-height: 350px;
+    padding: 1.45rem;
+  }
+
+  .learning-hero-whole::before {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(249, 252, 255, .99) 0%,
+        rgba(249, 252, 255, .95) 38%,
+        rgba(249, 252, 255, .78) 57%,
+        rgba(249, 252, 255, .28) 79%,
+        rgba(249, 252, 255, .06) 100%
+      );
+  }
+
+  html[data-theme="dark"] .learning-hero-whole::before {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(12, 27, 49, .99) 0%,
+        rgba(12, 27, 49, .95) 38%,
+        rgba(12, 27, 49, .8) 58%,
+        rgba(12, 27, 49, .3) 80%,
+        rgba(12, 27, 49, .06) 100%
+      );
+  }
+
+  .learning-hero-whole .learning-hero-content h2 {
+    font-size: clamp(1.8rem, 3.8vw, 2.55rem);
+  }
+
+  .learning-hero-floating-stat {
+    right: 3rem;
+  }
+
+  .learning-hero-data-visual {
+    right: 2.5rem;
+    width: 24%;
+  }
+
+  .learning-hero-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 560px;
+  }
+}
+
+/* ------------------------------------------------------------
+ * Mobile: content first, art becomes a cropped atmospheric layer
+ * ---------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .learning-hero-whole,
+  #libraryView .learning-hero-whole,
+  #reviewView .learning-hero-whole,
+  #examCenterView .learning-hero-whole,
+  #statsView .learning-hero-whole {
+    --hero-content-width: 100%;
+    min-height: 0;
+    padding: 1.05rem;
+    border-radius: 19px;
+    background: var(--learn-surface-strong);
+  }
+
+  .learning-hero-whole::before {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(249, 252, 255, .92) 0%,
+        rgba(249, 252, 255, .96) 43%,
+        rgba(249, 252, 255, .99) 75%,
+        rgba(249, 252, 255, 1) 100%
+      );
+  }
+
+  html[data-theme="dark"] .learning-hero-whole::before {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(12, 27, 49, .82) 0%,
+        rgba(12, 27, 49, .93) 43%,
+        rgba(12, 27, 49, .98) 74%,
+        rgba(12, 27, 49, 1) 100%
+      );
+  }
+
+  .learning-hero-art {
+    inset: 0;
+    height: 54%;
+    background-position: 72% 28%;
+    background-size: cover;
+    opacity: .46;
+    transform: none;
+  }
+
+  html[data-theme="dark"] .learning-hero-art {
+    opacity: .5;
+  }
+
+  .learning-hero-content {
+    width: 100%;
+    max-width: none;
+    padding-top: clamp(5.4rem, 23vw, 7.5rem);
+  }
+
+  .learning-hero-whole .learning-hero-content h2 {
+    max-width: none;
+    font-size: clamp(1.6rem, 7.2vw, 2.05rem);
+    line-height: 1.17;
+  }
+
+  .learning-hero-whole .learning-hero-content > p {
+    max-width: none;
+    font-size: .86rem;
+  }
+
+  .learning-hero-cta-row {
+    align-items: stretch;
+    margin-top: 1rem;
+  }
+
+  .learning-hero-primary-cta,
+  .learning-hero-secondary-cta {
+    flex: 1 1 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .learning-hero-quick-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learning-hero-quick-links button {
+    justify-content: center;
+  }
+
+  .learning-hero-whole .learning-storage-row {
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  .learning-hero-journey {
+    display: none;
+  }
+
+  .learning-hero-floating-stat {
+    display: none;
+  }
+
+  .learning-hero-stat-strip,
+  .learning-focus-strip.exam.learning-hero-stat-strip,
+  .learning-focus-strip.stats.learning-hero-stat-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+
+  .learning-focus-strip.exam.learning-hero-stat-strip .learning-focus-item:last-child,
+  .learning-focus-strip.stats.learning-hero-stat-strip .learning-focus-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .learning-hero-flow {
+    display: flex;
+    gap: .42rem;
+    max-width: none;
+    overflow-x: auto;
+    padding-bottom: .2rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .learning-hero-flow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .learning-hero-flow .learning-flow-step {
+    flex: 0 0 132px;
+    scroll-snap-align: start;
+  }
+
+  .learning-hero-data-visual {
+    position: relative;
+    right: auto;
+    top: auto;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    align-items: center;
+    width: 100%;
+    margin-top: .9rem;
+    padding: .75rem;
+    transform: none;
+    border: 1px solid color-mix(in srgb, var(--learn-line) 78%, transparent);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--learn-surface-strong) 82%, transparent);
+    backdrop-filter: blur(8px);
+    text-align: left;
+  }
+
+  .learning-hero-data-visual .learning-accuracy-ring {
+    width: 104px;
+    height: 104px;
+  }
+
+  .learning-hero-data-visual > p {
+    max-width: none;
+    font-size: .73rem;
+  }
+
+  .learning-hero-whole + .learning-section-head::before {
+    width: 2px;
+  }
+}
+
+@media (max-width: 420px) {
+  .learning-hero-art {
+    height: 48%;
+    background-position: 70% 24%;
+    opacity: .38;
+  }
+
+  html[data-theme="dark"] .learning-hero-art {
+    opacity: .42;
+  }
+
+  .learning-hero-content {
+    padding-top: 4.8rem;
+  }
+
+  .learning-hero-whole .learning-hero-content h2 {
+    font-size: clamp(1.48rem, 7.4vw, 1.85rem);
+  }
+
+  .learning-hero-cta-note {
+    width: 100%;
+    text-align: center;
+  }
+
+  .learning-hero-data-visual {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-data: reduce) {
+  .learning-hero-art {
+    display: none !important;
+  }
+
+  .learning-hero-content {
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .learning-hero-whole::before {
+    background: transparent;
+  }
+}

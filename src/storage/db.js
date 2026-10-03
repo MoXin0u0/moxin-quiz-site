@@ -24,6 +24,14 @@ const STORE_DEFINITIONS = Object.freeze({
   mastery: { keyPath: 'key', indexes: [['bankId', 'bankId']] },
   reviewSchedule: { keyPath: 'key', indexes: [['bankId', 'bankId'], ['dueAt', 'dueAt']] },
   sessions: { keyPath: 'id', indexes: [['bankId', 'bankId'], ['updatedAt', 'updatedAt']] },
+  studioDrafts: {
+    keyPath: 'id',
+    indexes: [['bankId', 'bankId'], ['updatedAt', 'updatedAt'], ['status', 'status']],
+  },
+  learningGoals: {
+    keyPath: 'id',
+    indexes: [['bankId', 'bankId'], ['updatedAt', 'updatedAt'], ['examDate', 'examDate']],
+  },
 });
 
 let dbPromise = null;

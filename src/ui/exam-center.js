@@ -1,35 +1,53 @@
 export function renderExamCenter(container, groups) {
-  container.innerHTML = `
-    <section class="hero-card">
-      <div>
-        <p class="eyebrow">Mock Exam</p>
-        <h2>模擬考</h2>
-        <p>選擇題庫、題數與作答時間。考試期間不顯示正誤，交卷後才一次判分與顯示詳解。</p>
-      </div>
-      <div class="exam-rules">
-        <span>最多 100 題</span>
-        <span>倒數自動交卷</span>
-        <span>進度本機保存</span>
-      </div>
-    </section>
+  const totalBanks = groups.length;
+  const totalQuestions = groups.reduce((sum, group) => sum + Number(group.questionCount || 0), 0);
+  const resumable = groups.filter(group => group.resumeExam).length;
 
-    <section class="panel">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Exam Setup</p>
-          <h2>建立模擬考</h2>
+  container.innerHTML = `
+    <section class="learning-hero learning-exam-hero learning-hero-whole" data-learning-scene="exam">
+      <div class="learning-hero-art learning-hero-art-exam" data-scene-art="exam" aria-hidden="true"></div>
+      <div class="learning-hero-content">
+        <span class="learning-kicker">模擬考場</span>
+        <h2>用一場完整測驗，確認現在真正掌握多少</h2>
+        <p>考試期間不顯示正誤；交卷後一次判分與檢討。題數與時間都由你決定。</p>
+
+        <div class="learning-hero-cta-row">
+          <a class="button primary learning-hero-primary-cta" href="#examBankList">建立模擬考</a>
+          ${resumable ? `<span class="learning-hero-cta-note">有 ${resumable} 場未完成考試</span>` : '<span class="learning-hero-cta-note">設定題數與時間後即可開始</span>'}
+        </div>
+
+        <div class="learning-focus-strip exam learning-hero-stat-strip">
+          ${examStat('可用題庫', totalBanks)}
+          ${examStat('可抽題目', totalQuestions)}
+          ${examStat('未完成考試', resumable)}
+        </div>
+
+        <div class="learning-hero-flow" aria-label="模擬考流程">
+          ${flowStep('01', '選題庫')}
+          ${flowStep('02', '設定題數')}
+          ${flowStep('03', '專心作答')}
+          ${flowStep('04', '交卷檢討')}
         </div>
       </div>
+    </section>
 
-      <div class="exam-bank-list">
-        ${groups.length ? groups.map(renderGroup).join('') : `
-          <div class="empty-state">
-            <strong>目前沒有本機題庫</strong>
-            <p>請先到「我的題庫」匯入題庫。</p>
-          </div>
-        `}
+    <section class="learning-section-head">
+      <div>
+        <span class="learning-kicker">建立考卷</span>
+        <h2>選擇要測驗的題庫</h2>
+        <p>每一份題庫都能獨立設定題數與作答時間。</p>
       </div>
     </section>
+
+    <div id="examBankList" class="exam-bank-list learning-exam-list">
+      ${groups.length ? groups.map(renderGroup).join('') : `
+        <div class="learning-empty">
+          <div class="learning-empty-icon" aria-hidden="true">▣</div>
+          <strong>目前沒有本機題庫</strong>
+          <p>先到「我的題庫」加入或匯入一份題庫，再回來建立模擬考。</p>
+        </div>
+      `}
+    </div>
   `;
 }
 
@@ -39,40 +57,37 @@ function renderGroup(group) {
   const resume = group.resumeExam;
 
   return `
-    <article class="exam-bank-card" data-exam-bank-card="${escapeAttr(group.bank.id)}">
-      <div class="exam-bank-heading">
+    <article class="exam-bank-card learning-exam-card" data-exam-bank-card="${escapeAttr(group.bank.id)}">
+      <div class="learning-exam-card-summary">
+        <div class="learning-bank-symbol exam" aria-hidden="true">▣</div>
         <div>
-          <span class="bank-id">${escapeHtml(group.bank.id)}</span>
+          <span class="learning-bank-id">${escapeHtml(group.bank.id)}</span>
           <h3>${escapeHtml(group.bank.name || group.bank.title || group.bank.id)}</h3>
-          <p>${group.questionCount} 題可用</p>
+          <p>${group.questionCount} 題可抽選 · Schema ${escapeHtml(group.bank.schemaVersion || '2.0')}</p>
         </div>
-        <span class="schema-chip">Schema ${escapeHtml(group.bank.schemaVersion || '2.0')}</span>
       </div>
 
       ${resume ? `
-        <div class="exam-resume-banner">
+        <div class="exam-resume-banner learning-exam-resume">
           <div>
-            <strong>有未完成的模擬考</strong>
-            <span>${resume.questionCount || resume.questionIds?.length || 0} 題 · ${formatRemaining(resume.deadlineAt)}</span>
+            <span>未完成</span>
+            <strong>上一場模擬考還在</strong>
+            <small>${resume.questionCount || resume.questionIds?.length || 0} 題 · ${formatRemaining(resume.deadlineAt)}</small>
           </div>
           <button class="button primary" type="button" data-resume-exam="${escapeAttr(group.bank.id)}">繼續考試</button>
         </div>
       ` : ''}
 
-      <div class="exam-setup-grid">
-        <label>
-          題數
-          <input
-            type="number"
-            min="1"
-            max="${maxQuestions}"
-            value="${defaultQuestions}"
-            data-exam-question-count
-          />
+      <div class="learning-exam-config">
+        <label class="learning-field">
+          <span>題數</span>
+          <small>最多 ${maxQuestions} 題</small>
+          <input type="number" min="1" max="${maxQuestions}" value="${defaultQuestions}" data-exam-question-count />
         </label>
 
-        <label>
-          作答時間
+        <label class="learning-field">
+          <span>作答時間</span>
+          <small>時間到會自動交卷</small>
           <select data-exam-duration>
             <option value="10">10 分鐘</option>
             <option value="20">20 分鐘</option>
@@ -84,11 +99,27 @@ function renderGroup(group) {
           </select>
         </label>
 
-        <button class="button secondary exam-start-button" type="button" data-start-exam="${escapeAttr(group.bank.id)}">
-          開始新模擬考
-        </button>
+        <div class="learning-exam-start">
+          <span>準備好了？</span>
+          <button class="button primary exam-start-button" type="button" data-start-exam="${escapeAttr(group.bank.id)}">
+            開始模擬考
+          </button>
+        </div>
       </div>
     </article>
+  `;
+}
+
+function flowStep(number, label) {
+  return `<div class="learning-flow-step"><span>${number}</span><strong>${label}</strong></div>`;
+}
+
+function examStat(label, value) {
+  return `
+    <div class="learning-focus-item">
+      <span>${escapeHtml(label)}</span>
+      <strong>${new Intl.NumberFormat('zh-TW').format(Number(value) || 0)}</strong>
+    </div>
   `;
 }
 

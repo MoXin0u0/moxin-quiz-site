@@ -1,0 +1,386 @@
+/* v4.0 P2B.1 — Studio Batch Import */
+
+.studio-r1-home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: .55rem;
+}
+
+.studio-r1-batch-dialog {
+  width: min(1080px, calc(100vw - 2rem));
+  height: min(90vh, 920px);
+  height: min(90dvh, 920px);
+  max-height: min(90vh, 920px);
+  max-height: min(90dvh, 920px);
+  overflow: hidden;
+}
+
+.studio-r1-batch-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  height: 100%;
+  max-height: none;
+  overflow: hidden;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-elevated);
+  color: var(--text);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, .30);
+}
+
+.studio-r1-batch-head,
+.studio-r1-batch-source-actions,
+.studio-r1-batch-footer,
+.studio-r1-batch-footer-actions,
+.studio-r1-batch-item-head,
+.studio-r1-batch-select {
+  display: flex;
+  align-items: center;
+}
+
+.studio-r1-batch-head {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.studio-r1-batch-head h3 {
+  margin: .18rem 0 .35rem;
+}
+
+.studio-r1-batch-head p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.studio-r1-batch-close {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.studio-r1-batch-source {
+  display: grid;
+  gap: .5rem;
+}
+
+.studio-r1-batch-source > label {
+  font-size: .82rem;
+  font-weight: 800;
+}
+
+.studio-r1-batch-source textarea {
+  width: 100%;
+  min-height: 190px;
+  resize: vertical;
+  font: 500 .88rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.studio-r1-batch-source-actions {
+  justify-content: space-between;
+  gap: .8rem;
+}
+
+.studio-r1-batch-source-actions small,
+.studio-r1-batch-footer > div:first-child {
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.studio-r1-batch-results {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding-right: .35rem;
+}
+
+.studio-r1-batch-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .55rem;
+  margin-bottom: .7rem;
+}
+
+.studio-r1-batch-summary > div {
+  display: grid;
+  gap: .12rem;
+  padding: .65rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface-2);
+}
+
+.studio-r1-batch-summary span {
+  color: var(--text-muted);
+  font-size: .73rem;
+}
+
+.studio-r1-batch-summary strong {
+  font-size: 1.1rem;
+}
+
+.studio-r1-batch-summary .is-ready strong { color: var(--success); }
+.studio-r1-batch-summary .is-review strong { color: var(--warning); }
+.studio-r1-batch-summary .is-unparsed strong { color: var(--danger); }
+
+.studio-r1-batch-list {
+  display: grid;
+  gap: .65rem;
+}
+
+.studio-r1-batch-item {
+  display: grid;
+  gap: .65rem;
+  padding: .8rem;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+}
+
+.studio-r1-batch-item.is-ready {
+  border-color: color-mix(in srgb, var(--success) 34%, var(--line));
+}
+
+.studio-r1-batch-item.is-review {
+  border-color: color-mix(in srgb, var(--warning) 40%, var(--line));
+}
+
+.studio-r1-batch-item.is-unparsed {
+  border-color: color-mix(in srgb, var(--danger) 34%, var(--line));
+  opacity: .88;
+}
+
+.studio-r1-batch-item-head {
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.studio-r1-batch-select {
+  gap: .55rem;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.studio-r1-batch-select input {
+  min-height: 0;
+}
+
+.studio-r1-batch-select > span {
+  display: grid;
+  gap: .05rem;
+}
+
+.studio-r1-batch-select small {
+  color: var(--text-muted);
+}
+
+.studio-r1-batch-status {
+  flex: 0 0 auto;
+  padding: .25rem .52rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 850;
+}
+
+.studio-r1-batch-status.is-ready {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.studio-r1-batch-status.is-review {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.studio-r1-batch-status.is-unparsed {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.studio-r1-batch-question {
+  display: grid;
+  gap: .55rem;
+  padding: .7rem;
+  border-radius: 11px;
+  background: var(--surface-2);
+}
+
+.studio-r1-batch-question > div:first-child {
+  display: grid;
+  gap: .2rem;
+}
+
+.studio-r1-batch-question > div:first-child span {
+  color: var(--primary);
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.studio-r1-batch-question > div:first-child strong {
+  line-height: 1.5;
+}
+
+.studio-r1-batch-question dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .45rem;
+  margin: 0;
+}
+
+.studio-r1-batch-question dl > div {
+  min-width: 0;
+}
+
+.studio-r1-batch-question dt {
+  color: var(--text-muted);
+  font-size: .68rem;
+}
+
+.studio-r1-batch-question dd {
+  overflow: hidden;
+  margin: .08rem 0 0;
+  font-size: .78rem;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studio-r1-batch-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .35rem;
+}
+
+.studio-r1-batch-options span {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .4rem;
+  padding: .4rem .5rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: .76rem;
+}
+
+.studio-r1-batch-issues {
+  display: grid;
+  gap: .28rem;
+  margin: 0;
+  padding: 0 0 0 1.15rem;
+  color: var(--warning);
+  font-size: .78rem;
+  line-height: 1.45;
+}
+
+.studio-r1-batch-raw summary,
+.studio-r1-batch-preamble summary {
+  color: var(--text-muted);
+  font-size: .76rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.studio-r1-batch-raw pre,
+.studio-r1-batch-preamble pre {
+  overflow: auto;
+  margin: .45rem 0 0;
+  padding: .65rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-3);
+  color: var(--text);
+  font: 500 .74rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+}
+
+.studio-r1-batch-preamble {
+  margin-bottom: .7rem;
+  padding: .65rem;
+  border: 1px solid var(--warning);
+  border-radius: 10px;
+  background: var(--warning-soft);
+}
+
+.studio-r1-batch-message {
+  padding: .8rem;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface-2);
+}
+
+.studio-r1-batch-message.is-warning {
+  border-color: color-mix(in srgb, var(--warning) 42%, var(--line));
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.studio-r1-batch-footer {
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--line);
+}
+
+.studio-r1-batch-footer-actions {
+  gap: .55rem;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+  .studio-r1-home-actions,
+  .studio-r1-batch-source-actions,
+  .studio-r1-batch-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .studio-r1-home-actions .button,
+  .studio-r1-batch-source-actions .button,
+  .studio-r1-batch-footer-actions .button {
+    width: 100%;
+  }
+
+  .studio-r1-batch-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-r1-batch-question dl,
+  .studio-r1-batch-options {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-r1-batch-footer-actions {
+    width: 100%;
+  }
+}
+
+
+@media (max-height: 760px) {
+  .studio-r1-batch-dialog {
+    height: min(94vh, 920px);
+    height: min(94dvh, 920px);
+    max-height: min(94vh, 920px);
+    max-height: min(94dvh, 920px);
+  }
+
+  .studio-r1-batch-source textarea {
+    min-height: 110px;
+    max-height: 24vh;
+    max-height: 24dvh;
+  }
+}

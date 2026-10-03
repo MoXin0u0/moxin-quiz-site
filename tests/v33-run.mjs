@@ -75,11 +75,12 @@ const sw = fs.readFileSync('service-worker.js', 'utf8');
 const redirect = fs.readFileSync('legacy-v2.html', 'utf8');
 
 assert.equal(index, v3);
-assert.match(index, /v3\.3/);
+assert.match(index, /<span class="version-badge">v[0-9][^<]*<\/span>/);
 assert.match(index, /data-nav-tools/);
 assert.match(index, /id="toolsView"/);
 
-assert.match(sw, /moxin-quiz-v3-3\.3\.0-1/);
+// Cache version must remain versioned, but later releases are allowed to advance it.
+assert.match(sw, /const CACHE_VERSION = 'moxin-quiz-v3-[^']+';/);
 assert.match(sw, /src\/question-bank\/zip-writer\.js/);
 assert.match(sw, /src\/ui\/tools\.js/);
 assert.match(sw, /styles\/v3-v33\.css/);

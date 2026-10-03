@@ -1,0 +1,1450 @@
+/*
+ * v4.0 R2I — Learning Visual Style System
+ *
+ * Theme (light / dark), learning style and scene intensity are independent.
+ * Tooling pages intentionally keep the existing backend-like design.
+ */
+
+/* ------------------------------------------------------------
+ * Style Pack: Classic Academy (default)
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="academy"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --style-card-radius: 20px;
+  --style-hero-radius: 24px;
+  --style-shadow-factor: 1;
+}
+
+/* ------------------------------------------------------------
+ * Style Pack: Epic Fantasy
+ * A dramatic knowledge-world visual pack. Information architecture
+ * and interaction contracts remain identical to Classic Academy.
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #f4f0fb;
+  --learn-canvas-2: #f8f4ff;
+  --learn-surface: rgba(255, 252, 255, .91);
+  --learn-surface-strong: #fffafd;
+  --learn-surface-soft: #f2ebfb;
+  --learn-surface-tint: #ece3f8;
+  --learn-text: #241b3b;
+  --learn-muted: #746883;
+  --learn-line: #d9cce8;
+  --learn-line-strong: #c6b3dd;
+  --learn-primary: #7452c8;
+  --learn-primary-2: #a765c8;
+  --learn-cyan: #4f9fc4;
+  --learn-teal: #4d9d8d;
+  --learn-gold: #b8812f;
+  --learn-rose: #bd6688;
+  --learn-shadow: 0 24px 58px rgba(78, 54, 112, .16);
+  --learn-shadow-soft: 0 10px 28px rgba(78, 54, 112, .11);
+  --style-card-radius: 22px;
+  --style-hero-radius: 28px;
+  --epic-gold: #d7a651;
+  --epic-violet: #7759d6;
+  --epic-glow: rgba(155, 102, 222, .2);
+
+  border-color: color-mix(in srgb, var(--learn-primary) 22%, var(--learn-line));
+  background:
+    radial-gradient(circle at 88% 0%, rgba(181, 126, 231, .14), transparent 28rem),
+    radial-gradient(circle at 8% 92%, rgba(79, 159, 196, .08), transparent 27rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="dark"][data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #0b0b1d;
+  --learn-canvas-2: #16102b;
+  --learn-surface: rgba(26, 20, 48, .90);
+  --learn-surface-strong: #21183b;
+  --learn-surface-soft: #2a2048;
+  --learn-surface-tint: #342655;
+  --learn-text: #fbf7ff;
+  --learn-muted: #bcb1cb;
+  --learn-line: #4d3c6c;
+  --learn-line-strong: #665082;
+  --learn-primary: #aa83ff;
+  --learn-primary-2: #e18be2;
+  --learn-cyan: #72c5e7;
+  --learn-teal: #72ceb6;
+  --learn-gold: #f0c272;
+  --learn-rose: #f293b2;
+  --learn-shadow: 0 28px 68px rgba(0, 0, 0, .34);
+  --learn-shadow-soft: 0 12px 32px rgba(0, 0, 0, .24);
+  --epic-gold: #f1c36d;
+  --epic-violet: #a881ff;
+  --epic-glow: rgba(156, 112, 255, .28);
+
+  border-color: rgba(105, 77, 146, .58);
+  background:
+    radial-gradient(circle at 88% -8%, rgba(132, 86, 214, .24), transparent 32rem),
+    radial-gradient(circle at 12% 96%, rgba(44, 151, 183, .10), transparent 28rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+/* Epic scene asset mapping */
+html[data-learning-style="epic"][data-theme="light"] #libraryView { --learning-scene-image: url('../assets/learning/styles/epic/library-light.webp'); }
+html[data-learning-style="epic"][data-theme="dark"] #libraryView { --learning-scene-image: url('../assets/learning/styles/epic/library-dark.webp'); }
+html[data-learning-style="epic"][data-theme="light"] #reviewView { --learning-scene-image: url('../assets/learning/styles/epic/review-light.webp'); }
+html[data-learning-style="epic"][data-theme="dark"] #reviewView { --learning-scene-image: url('../assets/learning/styles/epic/review-dark.webp'); }
+html[data-learning-style="epic"][data-theme="light"] #examCenterView { --learning-scene-image: url('../assets/learning/styles/epic/exam-light.webp'); }
+html[data-learning-style="epic"][data-theme="dark"] #examCenterView { --learning-scene-image: url('../assets/learning/styles/epic/exam-dark.webp'); }
+html[data-learning-style="epic"][data-theme="light"] #statsView { --learning-scene-image: url('../assets/learning/styles/epic/stats-light.webp'); }
+html[data-learning-style="epic"][data-theme="dark"] #statsView { --learning-scene-image: url('../assets/learning/styles/epic/stats-dark.webp'); }
+
+/* Page accent direction within the same world */
+html[data-learning-style="epic"] #libraryView {
+  --learn-page-accent: #825fd4;
+  --learn-page-accent-2: #d39b4c;
+}
+html[data-learning-style="epic"] #reviewView {
+  --learn-page-accent: #42a69e;
+  --learn-page-accent-2: #7396e8;
+}
+html[data-learning-style="epic"] #examCenterView,
+html[data-learning-style="epic"] #examView {
+  --learn-page-accent: #a260cf;
+  --learn-page-accent-2: #d79443;
+}
+html[data-learning-style="epic"] #statsView {
+  --learn-page-accent: #579fd2;
+  --learn-page-accent-2: #8c6be3;
+}
+
+html[data-theme="dark"][data-learning-style="epic"] #libraryView {
+  --learn-page-accent: #ae89ff;
+  --learn-page-accent-2: #efbd67;
+}
+html[data-theme="dark"][data-learning-style="epic"] #reviewView {
+  --learn-page-accent: #63d1c0;
+  --learn-page-accent-2: #8aa7ff;
+}
+html[data-theme="dark"][data-learning-style="epic"] #examCenterView,
+html[data-theme="dark"][data-learning-style="epic"] #examView {
+  --learn-page-accent: #d48aff;
+  --learn-page-accent-2: #f0ae57;
+}
+html[data-theme="dark"][data-learning-style="epic"] #statsView {
+  --learn-page-accent: #74c1f3;
+  --learn-page-accent-2: #b08cff;
+}
+
+html[data-learning-style="epic"] .learning-hero-whole {
+  border-radius: 28px;
+  border-color: color-mix(in srgb, var(--epic-gold) 26%, var(--learn-line));
+  box-shadow:
+    0 30px 70px color-mix(in srgb, var(--learn-primary) 15%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+html[data-learning-style="epic"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(255,252,250,.99) 0%,
+      rgba(255,252,250,.96) 29%,
+      rgba(249,244,252,.87) 44%,
+      rgba(238,226,248,.58) 59%,
+      rgba(225,207,243,.18) 76%,
+      rgba(225,207,243,.03) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.08), transparent 56%, rgba(125,83,165,.08));
+}
+
+html[data-theme="dark"][data-learning-style="epic"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(15,11,34,.99) 0%,
+      rgba(15,11,34,.97) 29%,
+      rgba(20,14,43,.89) 44%,
+      rgba(34,22,61,.68) 58%,
+      rgba(46,28,78,.28) 76%,
+      rgba(46,28,78,.04) 100%),
+    linear-gradient(180deg, rgba(9,7,24,.08), transparent 58%, rgba(5,4,18,.28));
+}
+
+html[data-learning-style="epic"] .learning-hero-whole::after {
+  border-color: color-mix(in srgb, var(--epic-gold) 34%, var(--learn-line));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.45),
+    inset 0 -80px 140px color-mix(in srgb, var(--learn-page-accent) 9%, transparent),
+    inset 0 0 90px color-mix(in srgb, var(--epic-gold) 4%, transparent);
+}
+
+html[data-learning-style="epic"] .learning-hero-art {
+  filter: saturate(1.12) contrast(1.04);
+  transform: scale(1.025);
+}
+
+html[data-theme="dark"][data-learning-style="epic"] .learning-hero-art {
+  filter: saturate(1.16) contrast(1.07) brightness(.92);
+}
+
+html[data-learning-style="epic"] :is(
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card,
+  #bankDetailView .detail-hero,
+  #bankDetailView .filter-panel,
+  #practiceView .practice-shell,
+  #examView .exam-shell
+) {
+  border-color: color-mix(in srgb, var(--learn-primary) 20%, var(--learn-line));
+  border-radius: 20px;
+  background:
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, var(--learn-primary)),
+      var(--learn-surface));
+  box-shadow: var(--learn-shadow-soft);
+}
+
+html[data-learning-style="epic"] .learning-hero-primary-cta,
+html[data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
+  background: linear-gradient(105deg, var(--learn-page-accent, var(--learn-primary)), var(--learn-primary-2));
+  color: #fff;
+  box-shadow:
+    0 10px 26px color-mix(in srgb, var(--learn-primary) 25%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--epic-gold) 18%, transparent);
+}
+
+html[data-theme="dark"][data-learning-style="epic"] .learning-hero-primary-cta,
+html[data-theme="dark"][data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
+  color: #fff;
+}
+
+html[data-learning-style="epic"] .learning-kicker {
+  color: var(--learn-page-accent, var(--learn-primary));
+  text-shadow: 0 0 18px color-mix(in srgb, var(--learn-page-accent) 18%, transparent);
+}
+
+html[data-learning-style="epic"] .learning-hero-quick-links button,
+html[data-learning-style="epic"] .learning-hero-whole .learning-storage-row {
+  border-color: color-mix(in srgb, var(--epic-gold) 24%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 72%, transparent);
+}
+
+html[data-learning-style="epic"] .learning-mastery-bar,
+html[data-learning-style="epic"] .learning-mini-progress {
+  box-shadow: 0 0 16px color-mix(in srgb, var(--learn-page-accent) 11%, transparent);
+}
+
+html[data-learning-style="epic"] .answer-option:hover {
+  border-color: color-mix(in srgb, var(--learn-primary) 52%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-primary) 10%, var(--learn-surface));
+}
+
+@media (max-width: 760px) {
+  html[data-learning-style="epic"] .learning-hero-whole {
+    border-radius: 20px;
+    box-shadow: 0 16px 36px color-mix(in srgb, var(--learn-primary) 13%, transparent);
+  }
+
+  html[data-learning-style="epic"] .learning-hero-art {
+    opacity: .38;
+    filter: saturate(.96) contrast(.98);
+  }
+
+  html[data-theme="dark"][data-learning-style="epic"] .learning-hero-art {
+    opacity: .42;
+  }
+}
+
+/* ------------------------------------------------------------
+ * Style Pack: Pure Focus
+ * Same information architecture; substantially quieter visuals.
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #f5f6f8;
+  --learn-canvas-2: #fbfcfd;
+  --learn-surface: #ffffff;
+  --learn-surface-strong: #ffffff;
+  --learn-surface-soft: #f3f5f7;
+  --learn-surface-tint: #eef1f4;
+  --learn-text: #182132;
+  --learn-muted: #687386;
+  --learn-line: #dce1e8;
+  --learn-line-strong: #c7cfd9;
+  --learn-primary: #4f65b7;
+  --learn-primary-2: #6779c7;
+  --learn-cyan: #4d8796;
+  --learn-teal: #478576;
+  --learn-gold: #a97f43;
+  --learn-rose: #a9677d;
+  --learn-shadow: 0 10px 28px rgba(44, 55, 77, .08);
+  --learn-shadow-soft: 0 4px 14px rgba(44, 55, 77, .06);
+  --learn-decor-opacity: 0;
+
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="dark"][data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #10141c;
+  --learn-canvas-2: #131923;
+  --learn-surface: #171e29;
+  --learn-surface-strong: #1a2230;
+  --learn-surface-soft: #202938;
+  --learn-surface-tint: #253043;
+  --learn-text: #f3f5f8;
+  --learn-muted: #a9b2c0;
+  --learn-line: #354052;
+  --learn-line-strong: #46536a;
+  --learn-primary: #98a6df;
+  --learn-primary-2: #a9b5e9;
+  --learn-cyan: #80aeb9;
+  --learn-teal: #83b3a6;
+  --learn-gold: #c8a773;
+  --learn-rose: #c492a5;
+  --learn-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+  --learn-shadow-soft: 0 5px 16px rgba(0, 0, 0, .14);
+
+  border-color: #303b4d;
+  background: linear-gradient(180deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::before {
+  opacity: .12;
+}
+
+html[data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after {
+  display: none;
+}
+
+html[data-learning-style="focus"] .learning-hero-whole {
+  min-height: 0;
+  border-radius: 18px;
+  background: var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+html[data-learning-style="focus"] .learning-hero-whole::before {
+  background: linear-gradient(90deg, var(--learn-surface-strong), color-mix(in srgb, var(--learn-surface-strong) 92%, transparent));
+}
+
+html[data-learning-style="focus"] .learning-hero-art,
+html[data-learning-style="focus"] .learning-hero-journey {
+  display: none;
+}
+
+html[data-learning-style="focus"] .learning-hero-content {
+  width: min(100%, 980px);
+  max-width: 980px;
+}
+
+html[data-learning-style="focus"] .learning-content-card,
+html[data-learning-style="focus"] .learning-review-bank,
+html[data-learning-style="focus"] .learning-exam-card,
+html[data-learning-style="focus"] .learning-stats-card,
+html[data-learning-style="focus"] #bankDetailView :is(.detail-hero, .filter-panel),
+html[data-learning-style="focus"] #practiceView .practice-shell,
+html[data-learning-style="focus"] #examView .exam-shell {
+  border-radius: 14px;
+  box-shadow: var(--learn-shadow-soft);
+  backdrop-filter: none;
+}
+
+html[data-learning-style="focus"] .learning-hero-primary-cta,
+html[data-learning-style="focus"] .button.primary {
+  background: var(--learn-primary);
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------
+ * Scene intensity — independent from Style Pack
+ * ---------------------------------------------------------- */
+
+html[data-scene-intensity="reduced"] .learning-hero-art {
+  opacity: .28 !important;
+  filter: saturate(.72) contrast(.94) brightness(.96);
+}
+
+html[data-theme="dark"][data-scene-intensity="reduced"] .learning-hero-art {
+  opacity: .32 !important;
+}
+
+html[data-scene-intensity="reduced"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after {
+  opacity: .12;
+}
+
+html[data-scene-intensity="off"] .learning-hero-art,
+html[data-scene-intensity="off"] .learning-hero-journey {
+  display: none !important;
+}
+
+html[data-scene-intensity="off"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+)::after {
+  display: none !important;
+}
+
+html[data-scene-intensity="off"] .learning-hero-content {
+  width: min(100%, 1040px);
+  max-width: 1040px;
+}
+
+html[data-scene-intensity="off"] .learning-hero-whole::before {
+  background: linear-gradient(110deg, var(--learn-surface-strong), color-mix(in srgb, var(--learn-surface-soft) 72%, var(--learn-surface-strong)));
+}
+
+/* ------------------------------------------------------------
+ * Settings UI
+ * ---------------------------------------------------------- */
+
+.learning-style-settings,
+.scene-intensity-settings {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: .2rem 0;
+  padding: 0;
+  border: 0;
+}
+
+.learning-style-settings legend,
+.scene-intensity-settings legend {
+  margin-bottom: .2rem;
+  color: var(--text);
+  font-size: .9rem;
+  font-weight: 820;
+}
+
+.learning-style-settings > p,
+.scene-intensity-settings > p {
+  margin: 0 0 .7rem;
+  color: var(--text-muted);
+  font-size: .76rem;
+  line-height: 1.55;
+}
+
+.learning-style-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem;
+}
+
+.learning-style-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) auto;
+  gap: .7rem;
+  align-items: center;
+  min-width: 0;
+  padding: .65rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+
+.learning-style-option:hover:not(.is-future) {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.learning-style-option:has(input:checked) {
+  border-color: color-mix(in srgb, var(--primary) 58%, var(--line));
+  background: color-mix(in srgb, var(--primary-soft) 55%, var(--surface));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.learning-style-option > input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.learning-style-preview {
+  position: relative;
+  display: block;
+  width: 78px;
+  height: 52px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.learning-style-preview i {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+}
+
+.learning-style-preview.academy {
+  background: linear-gradient(145deg, #102544 0 48%, #26396e 100%);
+}
+
+.learning-style-preview.academy i:nth-child(1) {
+  inset: 8px 8px auto auto;
+  width: 25px;
+  height: 25px;
+  background: radial-gradient(circle, #e6b863, transparent 70%);
+}
+
+.learning-style-preview.academy i:nth-child(2) {
+  left: 9px;
+  bottom: 11px;
+  width: 45px;
+  height: 7px;
+  background: #6e79f4;
+}
+
+.learning-style-preview.academy i:nth-child(3) {
+  left: 16px;
+  bottom: 5px;
+  width: 39px;
+  height: 5px;
+  background: #46b8a4;
+}
+
+.learning-style-preview.focus {
+  background: linear-gradient(180deg, #fafbfc, #eef1f5);
+}
+
+html[data-theme="dark"] .learning-style-preview.focus {
+  background: linear-gradient(180deg, #1a2230, #121821);
+}
+
+.learning-style-preview.focus i:nth-child(1) {
+  inset: 9px 10px auto 10px;
+  height: 4px;
+  background: #7786c8;
+}
+
+.learning-style-preview.focus i:nth-child(2) {
+  left: 10px;
+  top: 21px;
+  width: 48px;
+  height: 3px;
+  background: #9da6b4;
+}
+
+.learning-style-preview.focus i:nth-child(3) {
+  left: 10px;
+  top: 31px;
+  width: 36px;
+  height: 3px;
+  background: #c1c7d0;
+}
+
+.learning-style-preview.epic {
+  background:
+    radial-gradient(circle at 72% 24%, rgba(247, 197, 100, .92), transparent 21%),
+    radial-gradient(circle at 38% 74%, rgba(126, 104, 255, .55), transparent 32%),
+    linear-gradient(145deg, #17112e, #5a347e);
+}
+
+.learning-style-preview.epic i:nth-child(1) {
+  right: 10px;
+  top: 8px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(255, 222, 153, .72);
+  background: transparent;
+}
+
+.learning-style-preview.epic i:nth-child(2) {
+  left: 10px;
+  bottom: 10px;
+  width: 45px;
+  height: 7px;
+  background: linear-gradient(90deg, #8e72ff, #c981e0);
+}
+
+.learning-style-preview.epic i:nth-child(3) {
+  left: 18px;
+  bottom: 4px;
+  width: 36px;
+  height: 4px;
+  background: #e2ad59;
+}
+
+.learning-style-preview.nature {
+  background: radial-gradient(circle at 68% 24%, #ffe7a4, transparent 30%), linear-gradient(145deg, #cce8e1, #8ec5a7);
+}
+
+.learning-style-copy {
+  min-width: 0;
+  display: grid;
+  gap: .15rem;
+}
+
+.learning-style-copy strong {
+  font-size: .86rem;
+}
+
+.learning-style-copy small {
+  color: var(--text-muted);
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+.learning-style-check {
+  display: none;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.learning-style-option:has(input:checked) .learning-style-check {
+  display: grid;
+}
+
+.learning-style-option.is-future {
+  opacity: .68;
+  cursor: default;
+}
+
+.learning-style-soon {
+  padding: .2rem .42rem;
+  border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--text-muted);
+  font-size: .62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.scene-intensity-picker {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  padding: .25rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.scene-intensity-option {
+  position: relative;
+  cursor: pointer;
+}
+
+.scene-intensity-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene-intensity-option span {
+  display: block;
+  padding: .48rem .75rem;
+  border-radius: 9px;
+  color: var(--text-muted);
+  font-size: .76rem;
+  font-weight: 760;
+}
+
+.scene-intensity-option:has(input:checked) span {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: var(--shadow-xs);
+}
+
+@media (max-width: 680px) {
+  .learning-style-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-style-option {
+    grid-template-columns: 70px minmax(0, 1fr) auto;
+  }
+
+  .learning-style-preview {
+    width: 70px;
+    height: 48px;
+  }
+
+  .scene-intensity-picker {
+    width: 100%;
+  }
+
+  .scene-intensity-option {
+    flex: 1 1 0;
+  }
+
+  .scene-intensity-option span {
+    text-align: center;
+  }
+}
+
+
+/* ============================================================
+ * v4.0 R2K — Style Differentiation
+ *
+ * Academy and Epic must differ in object language, material,
+ * typography, light behavior and scene composition — not only hue.
+ * ========================================================== */
+
+/* ------------------------------------------------------------
+ * Classic Academy — heritage scholarship
+ * Object language: leather-bound books, brass globe/astrolabe,
+ * manuscripts, ink, hourglass, exam hall, research blackboard.
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="academy"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #f1e9dc;
+  --learn-canvas-2: #faf5ec;
+  --learn-surface: rgba(255, 250, 240, .93);
+  --learn-surface-strong: #fffaf0;
+  --learn-surface-soft: #f4eadb;
+  --learn-surface-tint: #eadac4;
+  --learn-text: #30261d;
+  --learn-muted: #746454;
+  --learn-line: #d5c2a7;
+  --learn-line-strong: #bfa27f;
+  --learn-primary: #6d4b30;
+  --learn-primary-2: #a77a43;
+  --learn-cyan: #527f79;
+  --learn-teal: #567963;
+  --learn-gold: #b98745;
+  --learn-rose: #96636b;
+  --learn-shadow: 0 24px 58px rgba(78, 58, 38, .14);
+  --learn-shadow-soft: 0 9px 25px rgba(78, 58, 38, .09);
+  --academy-brass: #b88948;
+  --academy-walnut: #67462f;
+  --academy-parchment: #efe0c6;
+  --style-card-radius: 14px;
+  --style-hero-radius: 18px;
+
+  border-color: color-mix(in srgb, var(--academy-brass) 28%, var(--learn-line));
+  background:
+    radial-gradient(circle at 88% 2%, rgba(188, 142, 77, .12), transparent 28rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="dark"][data-learning-style="academy"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #14110e;
+  --learn-canvas-2: #201811;
+  --learn-surface: rgba(35, 28, 22, .93);
+  --learn-surface-strong: #2a2119;
+  --learn-surface-soft: #33281e;
+  --learn-surface-tint: #403125;
+  --learn-text: #f5ecdc;
+  --learn-muted: #c2b19c;
+  --learn-line: #594634;
+  --learn-line-strong: #735b42;
+  --learn-primary: #d0ad72;
+  --learn-primary-2: #9e7045;
+  --learn-cyan: #79a49a;
+  --learn-teal: #84a58a;
+  --learn-gold: #d9ae68;
+  --learn-rose: #c48d91;
+  --learn-shadow: 0 28px 66px rgba(0,0,0,.34);
+  --learn-shadow-soft: 0 12px 30px rgba(0,0,0,.24);
+  --academy-brass: #d5ad6a;
+  --academy-walnut: #9a6b43;
+  --academy-parchment: #57432f;
+
+  border-color: rgba(117, 91, 62, .72);
+  background:
+    radial-gradient(circle at 86% -8%, rgba(181, 126, 62, .12), transparent 30rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+/* Academy scene assets — deliberately different objects per page. */
+html[data-learning-style="academy"][data-theme="light"] #libraryView { --learning-scene-image: url('../assets/learning/styles/academy/library-light.webp'); }
+html[data-learning-style="academy"][data-theme="dark"] #libraryView { --learning-scene-image: url('../assets/learning/styles/academy/library-dark.webp'); }
+html[data-learning-style="academy"][data-theme="light"] #reviewView { --learning-scene-image: url('../assets/learning/styles/academy/review-light.webp'); }
+html[data-learning-style="academy"][data-theme="dark"] #reviewView { --learning-scene-image: url('../assets/learning/styles/academy/review-dark.webp'); }
+html[data-learning-style="academy"][data-theme="light"] #examCenterView { --learning-scene-image: url('../assets/learning/styles/academy/exam-light.webp'); }
+html[data-learning-style="academy"][data-theme="dark"] #examCenterView { --learning-scene-image: url('../assets/learning/styles/academy/exam-dark.webp'); }
+html[data-learning-style="academy"][data-theme="light"] #statsView { --learning-scene-image: url('../assets/learning/styles/academy/stats-light.webp'); }
+html[data-learning-style="academy"][data-theme="dark"] #statsView { --learning-scene-image: url('../assets/learning/styles/academy/stats-dark.webp'); }
+
+html[data-learning-style="academy"] #libraryView { --learn-page-accent: #7b5537; --learn-page-accent-2: #b08750; }
+html[data-learning-style="academy"] #reviewView { --learn-page-accent: #67714d; --learn-page-accent-2: #a4814c; }
+html[data-learning-style="academy"] #examCenterView,
+html[data-learning-style="academy"] #examView { --learn-page-accent: #844f43; --learn-page-accent-2: #b6874a; }
+html[data-learning-style="academy"] #statsView { --learn-page-accent: #4e7774; --learn-page-accent-2: #a27a48; }
+
+html[data-learning-style="academy"] .learning-hero-whole {
+  border-radius: 18px;
+  border-color: color-mix(in srgb, var(--academy-brass) 42%, var(--learn-line));
+  box-shadow:
+    0 24px 54px rgba(67, 46, 27, .14),
+    inset 0 0 0 1px color-mix(in srgb, var(--academy-parchment) 72%, transparent);
+}
+
+html[data-learning-style="academy"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(255,250,239,.995) 0%,
+      rgba(255,250,239,.98) 30%,
+      rgba(248,239,223,.90) 44%,
+      rgba(238,221,195,.64) 59%,
+      rgba(228,203,168,.22) 77%,
+      rgba(228,203,168,.03) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.06), transparent 60%, rgba(92,57,31,.09));
+}
+
+html[data-theme="dark"][data-learning-style="academy"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(29,23,18,.995) 0%,
+      rgba(29,23,18,.98) 30%,
+      rgba(38,29,21,.91) 44%,
+      rgba(54,39,27,.68) 59%,
+      rgba(72,48,29,.24) 78%,
+      rgba(72,48,29,.04) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.08), transparent 58%, rgba(0,0,0,.26));
+}
+
+html[data-learning-style="academy"] .learning-hero-whole::after {
+  border-color: color-mix(in srgb, var(--academy-brass) 48%, var(--learn-line));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.42),
+    inset 0 -70px 120px color-mix(in srgb, var(--academy-walnut) 8%, transparent);
+}
+
+html[data-learning-style="academy"] :is(
+  .learning-hero-whole h2,
+  .learning-section-head h2,
+  .learning-bank-header h3,
+  .detail-hero h2
+) {
+  font-family: "Songti TC", "PMingLiU", Georgia, serif;
+  letter-spacing: -.028em;
+}
+
+html[data-learning-style="academy"] :is(
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card,
+  #bankDetailView .detail-hero,
+  #bankDetailView .filter-panel,
+  #practiceView .practice-shell,
+  #examView .exam-shell
+) {
+  border-radius: 14px;
+  border-color: color-mix(in srgb, var(--academy-brass) 26%, var(--learn-line));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, var(--academy-parchment)),
+      var(--learn-surface));
+  box-shadow:
+    var(--learn-shadow-soft),
+    inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
+}
+
+html[data-theme="dark"][data-learning-style="academy"] :is(
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card,
+  #bankDetailView .detail-hero,
+  #bankDetailView .filter-panel,
+  #practiceView .practice-shell,
+  #examView .exam-shell
+) {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, var(--academy-walnut)),
+      var(--learn-surface));
+}
+
+html[data-learning-style="academy"] .learning-hero-primary-cta,
+html[data-learning-style="academy"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
+  background: linear-gradient(105deg, var(--academy-walnut), var(--academy-brass));
+  color: #fffaf0;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--academy-walnut) 22%, transparent);
+}
+
+html[data-learning-style="academy"] :is(
+  .learning-hero-quick-links button,
+  .learning-hero-whole .learning-storage-row,
+  .learning-source-tabs
+) {
+  border-color: color-mix(in srgb, var(--academy-brass) 30%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 88%, var(--academy-parchment));
+}
+
+html[data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art {
+  filter: saturate(.86) contrast(1.05) sepia(.08);
+  transform: scale(1.018);
+}
+
+html[data-theme="dark"][data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art {
+  filter: saturate(.78) contrast(1.1) brightness(.82) sepia(.1);
+}
+
+/* ------------------------------------------------------------
+ * Epic Fantasy — arcane knowledge world
+ * Object language: floating grimoires, runic spheres, celestial
+ * instruments, portals, crystals, magical trial architecture.
+ * ---------------------------------------------------------- */
+
+html[data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #eee9ff;
+  --learn-canvas-2: #f8f3ff;
+  --learn-surface: rgba(252, 249, 255, .88);
+  --learn-surface-strong: rgba(255, 252, 255, .94);
+  --learn-surface-soft: rgba(237, 229, 251, .88);
+  --learn-surface-tint: #e6daf7;
+  --learn-text: #23153b;
+  --learn-muted: #716183;
+  --learn-line: #d4c0ec;
+  --learn-line-strong: #b79bd9;
+  --learn-primary: #714fd5;
+  --learn-primary-2: #c15bd6;
+  --learn-cyan: #3ca8d0;
+  --learn-teal: #47b9a5;
+  --learn-gold: #d3a34f;
+  --learn-rose: #d36f9f;
+  --learn-shadow: 0 28px 72px rgba(77, 42, 130, .20);
+  --learn-shadow-soft: 0 12px 34px rgba(77, 42, 130, .13);
+  --epic-gold: #e0af53;
+  --epic-violet: #815cff;
+  --epic-cyan: #4ac4eb;
+  --epic-glow: rgba(132, 85, 246, .30);
+  --style-card-radius: 24px;
+  --style-hero-radius: 30px;
+
+  border-color: color-mix(in srgb, var(--epic-violet) 28%, var(--learn-line));
+  background:
+    radial-gradient(circle at 88% -2%, rgba(125, 88, 230, .18), transparent 30rem),
+    radial-gradient(circle at 12% 96%, rgba(52, 176, 205, .10), transparent 28rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-theme="dark"][data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) {
+  --learn-canvas: #080818;
+  --learn-canvas-2: #130c2a;
+  --learn-surface: rgba(19, 15, 42, .86);
+  --learn-surface-strong: rgba(27, 19, 55, .92);
+  --learn-surface-soft: rgba(37, 27, 70, .88);
+  --learn-surface-tint: #302254;
+  --learn-text: #fbf8ff;
+  --learn-muted: #c1b4d2;
+  --learn-line: #4d3975;
+  --learn-line-strong: #6e51a0;
+  --learn-primary: #aa7cff;
+  --learn-primary-2: #ec7fe7;
+  --learn-cyan: #65d6ff;
+  --learn-teal: #68ddc2;
+  --learn-gold: #f2c56f;
+  --learn-rose: #ff91bd;
+  --learn-shadow: 0 32px 80px rgba(0,0,0,.40);
+  --learn-shadow-soft: 0 14px 38px rgba(0,0,0,.28);
+  --epic-gold: #f1c56f;
+  --epic-violet: #ad85ff;
+  --epic-cyan: #72dcff;
+  --epic-glow: rgba(139, 91, 255, .36);
+
+  border-color: rgba(105, 76, 166, .70);
+  background:
+    radial-gradient(circle at 88% -8%, rgba(118, 69, 222, .30), transparent 33rem),
+    radial-gradient(circle at 10% 96%, rgba(45, 169, 209, .12), transparent 30rem),
+    linear-gradient(145deg, var(--learn-canvas), var(--learn-canvas-2));
+}
+
+html[data-learning-style="epic"] .learning-hero-whole {
+  border-radius: 30px;
+  border-color: color-mix(in srgb, var(--epic-violet) 44%, var(--epic-gold));
+  box-shadow:
+    0 32px 76px color-mix(in srgb, var(--epic-violet) 22%, transparent),
+    0 0 42px color-mix(in srgb, var(--epic-cyan) 8%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+html[data-learning-style="epic"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(250,247,255,.995) 0%,
+      rgba(250,247,255,.97) 27%,
+      rgba(242,234,252,.86) 42%,
+      rgba(218,198,245,.52) 57%,
+      rgba(171,128,231,.16) 76%,
+      rgba(113,72,196,.02) 100%),
+    radial-gradient(circle at 82% 30%, rgba(106,82,220,.10), transparent 34%);
+}
+
+html[data-theme="dark"][data-learning-style="epic"] .learning-hero-whole::before {
+  background:
+    linear-gradient(90deg,
+      rgba(10,8,28,.995) 0%,
+      rgba(10,8,28,.98) 27%,
+      rgba(16,11,38,.89) 42%,
+      rgba(31,18,66,.62) 57%,
+      rgba(62,32,116,.22) 77%,
+      rgba(74,38,134,.03) 100%),
+    radial-gradient(circle at 82% 28%, rgba(85,108,255,.12), transparent 34%);
+}
+
+html[data-learning-style="epic"] .learning-hero-whole::after {
+  border-color: color-mix(in srgb, var(--epic-violet) 46%, var(--epic-gold));
+  background:
+    radial-gradient(circle, rgba(255,255,255,.72) 0 1px, transparent 1.4px) 0 0 / 44px 44px,
+    radial-gradient(circle, color-mix(in srgb, var(--epic-cyan) 55%, transparent) 0 1px, transparent 1.7px) 17px 21px / 61px 61px;
+  opacity: .75;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.46),
+    inset 0 -90px 160px color-mix(in srgb, var(--learn-page-accent) 12%, transparent),
+    inset 0 0 110px color-mix(in srgb, var(--epic-violet) 7%, transparent);
+}
+
+html[data-theme="dark"][data-learning-style="epic"] .learning-hero-whole::after {
+  opacity: .9;
+}
+
+html[data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art {
+  filter: saturate(1.26) contrast(1.08) brightness(1.02);
+  transform: scale(1.045);
+}
+
+html[data-theme="dark"][data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art {
+  filter: saturate(1.30) contrast(1.12) brightness(.92);
+}
+
+html[data-learning-style="epic"] .learning-hero-whole h2 {
+  letter-spacing: -.045em;
+  text-shadow: 0 2px 28px color-mix(in srgb, var(--epic-violet) 10%, transparent);
+}
+
+html[data-learning-style="epic"] :is(
+  .learning-content-card,
+  .learning-review-bank,
+  .learning-exam-card,
+  .learning-stats-card,
+  #bankDetailView .detail-hero,
+  #bankDetailView .filter-panel,
+  #practiceView .practice-shell,
+  #examView .exam-shell
+) {
+  border-radius: 22px;
+  border-color: color-mix(in srgb, var(--epic-violet) 26%, var(--learn-line));
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--epic-cyan) 7%, transparent), transparent 14rem),
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--learn-surface-strong) 94%, var(--epic-violet)),
+      var(--learn-surface));
+  box-shadow:
+    var(--learn-shadow-soft),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  backdrop-filter: blur(16px);
+}
+
+html[data-learning-style="epic"] .learning-hero-primary-cta,
+html[data-learning-style="epic"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
+  background: linear-gradient(105deg,
+    var(--learn-page-accent, var(--epic-violet)),
+    var(--epic-violet) 52%,
+    var(--epic-cyan));
+  color: #fff;
+  box-shadow:
+    0 12px 30px color-mix(in srgb, var(--epic-violet) 30%, transparent),
+    0 0 22px color-mix(in srgb, var(--epic-cyan) 13%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--epic-gold) 22%, transparent);
+}
+
+html[data-learning-style="epic"] :is(
+  .learning-hero-quick-links button,
+  .learning-hero-whole .learning-storage-row,
+  .learning-source-tabs
+) {
+  border-color: color-mix(in srgb, var(--epic-violet) 28%, var(--learn-line));
+  background: color-mix(in srgb, var(--learn-surface-strong) 66%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+html[data-learning-style="epic"] .learning-kicker {
+  color: var(--learn-page-accent, var(--epic-violet));
+  text-shadow: 0 0 22px color-mix(in srgb, var(--epic-violet) 34%, transparent);
+}
+
+html[data-learning-style="epic"] :is(.learning-mastery-bar, .learning-mini-progress) {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--epic-cyan) 16%, transparent);
+}
+
+html[data-learning-style="epic"] .answer-option:hover {
+  border-color: color-mix(in srgb, var(--epic-violet) 58%, var(--learn-line));
+  background: color-mix(in srgb, var(--epic-violet) 11%, var(--learn-surface));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--epic-cyan) 8%, transparent);
+}
+
+/* Settings previews now communicate object language, not only hue. */
+.learning-style-preview.academy {
+  background:
+    linear-gradient(90deg, transparent 0 56%, rgba(217,174,104,.22) 56% 58%, transparent 58%),
+    linear-gradient(145deg, #efe1ca 0 48%, #76513a 48% 100%);
+}
+
+html[data-theme="dark"] .learning-style-preview.academy {
+  background: linear-gradient(145deg, #1d1712 0 48%, #5d412f 100%);
+}
+
+.learning-style-preview.academy i:nth-child(1) {
+  inset: 7px 8px auto auto;
+  width: 27px;
+  height: 27px;
+  border: 2px solid #c99c58;
+  background: radial-gradient(circle at 50% 50%, transparent 0 42%, #c99c58 44% 47%, transparent 49%);
+}
+
+.learning-style-preview.academy i:nth-child(2) {
+  left: 8px;
+  bottom: 11px;
+  width: 43px;
+  height: 8px;
+  border-radius: 2px 5px 5px 2px;
+  background: #76513a;
+  box-shadow: 0 -9px 0 #9a7550;
+}
+
+.learning-style-preview.academy i:nth-child(3) {
+  left: 11px;
+  bottom: 4px;
+  width: 33px;
+  height: 4px;
+  border-radius: 1px;
+  background: #c99c58;
+}
+
+.learning-style-preview.epic {
+  background:
+    radial-gradient(circle at 72% 24%, rgba(120,216,255,.82), transparent 18%),
+    radial-gradient(circle at 48% 66%, rgba(177,101,255,.72), transparent 30%),
+    linear-gradient(145deg, #100d31, #48247c);
+}
+
+.learning-style-preview.epic i:nth-child(1) {
+  right: 9px;
+  top: 7px;
+  width: 27px;
+  height: 27px;
+  border: 2px solid #8bdcff;
+  background:
+    radial-gradient(circle, #efeaff 0 10%, transparent 12%),
+    conic-gradient(from 45deg, transparent 0 10%, #8bdcff 10% 12%, transparent 12% 23%, #bc7cff 23% 25%, transparent 25% 100%);
+  box-shadow: 0 0 10px rgba(100,190,255,.5);
+}
+
+.learning-style-preview.epic i:nth-child(2) {
+  left: 9px;
+  bottom: 9px;
+  width: 46px;
+  height: 8px;
+  background: linear-gradient(90deg, #815cff, #d36fe6, #65d6ff);
+  box-shadow: 0 0 9px rgba(131,93,255,.55);
+}
+
+.learning-style-preview.epic i:nth-child(3) {
+  left: 18px;
+  bottom: 3px;
+  width: 34px;
+  height: 4px;
+  background: #e2b45e;
+}
+
+@media (max-width: 760px) {
+  html[data-learning-style="academy"] .learning-hero-whole {
+    border-radius: 16px;
+  }
+
+  html[data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .30;
+    filter: saturate(.72) contrast(.98) sepia(.06);
+  }
+
+  html[data-learning-style="epic"] .learning-hero-whole {
+    border-radius: 22px;
+  }
+
+  html[data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .44;
+    filter: saturate(1.06) contrast(1.02);
+  }
+}
+
+
+/* ============================================================
+ * v4.0 R2K.2 — Scene Clarity
+ * Full must be genuinely clear; Reduced must visibly step back.
+ * ========================================================== */
+
+/* Full: preserve the artwork instead of treating it like atmosphere. */
+html[data-scene-intensity="full"] .learning-hero-art {
+  opacity: 1 !important;
+  filter: none;
+  transform: scale(1.006);
+}
+
+html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-art {
+  opacity: 1 !important;
+  filter: none;
+}
+
+/* Keep only the content-safe mask. It fades out before the art focal area. */
+html[data-scene-intensity="full"] .learning-hero-whole::before {
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, transparent) 0%,
+      color-mix(in srgb, var(--learn-surface-strong) 92%, transparent) 22%,
+      color-mix(in srgb, var(--learn-surface-strong) 72%, transparent) 34%,
+      color-mix(in srgb, var(--learn-surface-strong) 42%, transparent) 44%,
+      color-mix(in srgb, var(--learn-surface-strong) 12%, transparent) 54%,
+      transparent 64%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--learn-surface-strong) 6%, transparent),
+      transparent 58%,
+      color-mix(in srgb, var(--learn-surface-strong) 10%, transparent) 100%
+    );
+}
+
+/* Academy Full: classical color grading, but no artificial dimming. */
+html[data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art,
+html[data-theme="dark"][data-learning-style="academy"][data-scene-intensity="full"] .learning-hero-art {
+  opacity: 1 !important;
+  filter: saturate(.98) contrast(1.055) brightness(.98);
+  transform: scale(1.006);
+}
+
+/* Epic Full: retain fantasy color, without the old hazy grading. */
+html[data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art,
+html[data-theme="dark"][data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-art {
+  opacity: 1 !important;
+  filter: saturate(1.10) contrast(1.055) brightness(1);
+  transform: scale(1.008);
+}
+
+/* Epic particles are accents, not a veil over the artwork. */
+html[data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-whole::after {
+  opacity: .42;
+}
+
+html[data-theme="dark"][data-learning-style="epic"][data-scene-intensity="full"] .learning-hero-whole::after {
+  opacity: .5;
+}
+
+/* Reduced: deliberately step the scene back so the modes are unmistakable. */
+html[data-scene-intensity="reduced"] .learning-hero-art,
+html[data-theme="dark"][data-scene-intensity="reduced"] .learning-hero-art {
+  opacity: .24 !important;
+  filter: saturate(.62) contrast(.90) brightness(.92) !important;
+  transform: scale(1.012);
+}
+
+html[data-scene-intensity="reduced"] .learning-hero-whole::before {
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--learn-surface-strong) 98%, transparent) 0%,
+      color-mix(in srgb, var(--learn-surface-strong) 96%, transparent) 30%,
+      color-mix(in srgb, var(--learn-surface-strong) 86%, transparent) 47%,
+      color-mix(in srgb, var(--learn-surface-strong) 58%, transparent) 65%,
+      color-mix(in srgb, var(--learn-surface-strong) 24%, transparent) 82%,
+      transparent 100%
+    );
+}
+
+/* Mobile remains content-first, but Full is still visibly clearer than Reduced. */
+@media (max-width: 760px) {
+  html[data-scene-intensity="full"] .learning-hero-art,
+  html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .62 !important;
+    filter: saturate(1.02) contrast(1.035) !important;
+  }
+
+  html[data-scene-intensity="reduced"] .learning-hero-art,
+  html[data-theme="dark"][data-scene-intensity="reduced"] .learning-hero-art {
+    opacity: .20 !important;
+    filter: saturate(.58) contrast(.90) brightness(.94) !important;
+  }
+}
+
+@media (max-width: 420px) {
+  html[data-scene-intensity="full"] .learning-hero-art,
+  html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .54 !important;
+  }
+
+  html[data-scene-intensity="reduced"] .learning-hero-art,
+  html[data-theme="dark"][data-scene-intensity="reduced"] .learning-hero-art {
+    opacity: .16 !important;
+  }
+}
+
+/* ============================================================
+ * v4.0 R2K.3 — High-Fidelity Scene Delivery Pipeline
+ * Scene URLs are attached at runtime so unused style packs are not fetched.
+ * ========================================================== */
+
+.learning-hero-art {
+  background-image: none;
+  image-rendering: auto;
+}
+
+html[data-scene-intensity="full"] .learning-hero-art {
+  transform: none;
+}
+
+.learning-hero-art[data-scene-state="loading"] {
+  opacity: 0 !important;
+}
+
+.learning-hero-art[data-scene-state="ready"] {
+  transition: opacity .22s ease;
+}
+
+html[data-reduce-motion="true"] .learning-hero-art,
+@media (prefers-reduced-motion: reduce) {
+  .learning-hero-art {
+    transition: none !important;
+  }
+}

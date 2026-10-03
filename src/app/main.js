@@ -10,6 +10,7 @@ import {
 import {
   addAttempt,
   getAttemptsByBank,
+  listAllAttempts,
 } from '../storage/repositories/attempts.js';
 import {
   getFavorite,
@@ -33,6 +34,7 @@ import {
 } from '../storage/repositories/review.js';
 import {
   getLatestUnfinishedExamForBank,
+  getLatestUnfinishedPracticeSession,
   getLatestUnfinishedSessionForBank,
   saveSession,
 } from '../storage/repositories/sessions.js';
@@ -42,6 +44,11 @@ import {
   inspectQuestionBankFile,
   inspectQuestionBankFolder,
 } from '../question-bank/importer.js';
+import { saveStudioDraft } from '../storage/repositories/studio.js';
+import {
+  createStudioDraftFromInspectedPackage,
+  inspectStudioPackagePlan,
+} from '../studio/package-to-draft.js';
 import {
   compareVersions,
   inspectAuthorBank,
@@ -88,7 +95,28 @@ import {
   setUnfamiliarButton,
 } from '../ui/practice.js';
 import { renderReviewCenter } from '../ui/review-center.js';
+import {
+  GLOBAL_SCOPE,
+  createLearningGoalSaveInput,
+  learningGoalIdForScope,
+} from '../ui/learning-goals.js';
+import {
+  GLOBAL_GOAL_ID,
+  listLearningGoals,
+  normalizeLearningGoal,
+  saveLearningGoal,
+} from '../storage/repositories/goals.js';
+import { buildLearningGoalProgress } from '../learning/goal-progress.js';
+import { buildLearningAnalytics } from '../learning/analytics.js';
+import { buildHomeDashboard } from '../learning/home-dashboard.js';
+import { getLastFullBackupAt } from '../storage/backup-meta.js';
+import {
+  EXAM_SPRINT_GOAL_ID,
+  buildExamSprintPlan,
+} from '../learning/exam-sprint.js';
+import { createExamSprintSaveInput } from '../ui/exam-sprint.js';
 import { renderLearningStats } from '../ui/stats.js';
+import { renderHomeDashboard } from '../ui/home-dashboard.js';
 import { renderExamCenter } from '../ui/exam-center.js';
 import {
   collectExamAnswer,
@@ -120,6 +148,14 @@ const state = {
   practiceQuestionMap: new Map(),
   assetUrls: [],
   reviewGroups: [],
+  learningGoalScope: null,
+  learningHubTab: 'overview',
+  learningHubModel: null,
+  sprintPlan: null,
+  statsTab: 'overview',
+  statsScope: 'global',
+  statsWindowDays: 7,
+  statsModel: null,
   exam: null,
   examQuestionMap: new Map(),
   examTimerId: null,
@@ -141,6 +177,7 @@ const elements = {
   examCenterArea: document.querySelector('#examCenterArea'),
   examArea: document.querySelector('#examArea'),
   statsArea: document.querySelector('#statsArea'),
+  homeDashboardArea: document.querySelector('#homeDashboardArea'),
   toolsArea: document.querySelector('#toolsArea'),
   bankDetailArea: document.querySelector('#bankDetailArea'),
   practiceArea: document.querySelector('#practiceArea'),
@@ -177,6 +214,7 @@ async function bootstrap() {
   });
   await refreshBanks();
   await refreshAuthorCatalog();
+  await refreshHomeDashboard();
   setLibrarySourceTab(state.librarySourceTab);
   showView('library');
 }
@@ -191,6 +229,7 @@ function bindEvents() {
 
     if (event.target.closest('[data-nav-library]')) {
       stopExamTimer();
+      await refreshHomeDashboard();
       showView('library');
       return;
     }
@@ -233,8 +272,17 @@ function bindEvents() {
   elements.refreshAuthorBanksButton.addEventListener('click', refreshAuthorCatalog);
 
   elements.inspectionArea.addEventListener('click', async event => {
+    const studioButton = event.target.closest('[data-open-inspected-studio]');
+    if (studioButton) {
+      await openCurrentPackageInStudio();
+      return;
+    }
+
     const importButton = event.target.closest('[data-import-inspected]');
-    if (importButton) await importCurrentPackage();
+    if (importButton) {
+      await importCurrentPackage();
+      return;
+    }
 
     const dismissButton = event.target.closest('[data-dismiss-inspection]');
     if (dismissButton) {
@@ -304,10 +352,153 @@ function bindEvents() {
     }
   });
 
+  elements.homeDashboardArea?.addEventListener('click', async event => {
+    const resume = event.target.closest('[data-home-resume-bank]');
+    if (resume) {
+      await openBankDetail(resume.dataset.homeResumeBank);
+      await resumePractice();
+      return;
+    }
+
+    if (event.target.closest('[data-home-goals]')) {
+      state.learningHubTab = 'goals';
+      await openReviewCenter();
+      return;
+    }
+
+    if (event.target.closest('[data-home-review]')) {
+      state.learningHubTab = 'review';
+      await openReviewCenter();
+      return;
+    }
+
+    const wrong = event.target.closest('[data-home-wrong-bank]');
+    if (wrong) {
+      await startDedicatedReview(wrong.dataset.homeWrongBank, 'wrong');
+      return;
+    }
+
+    if (event.target.closest('[data-home-sprint]')) {
+      state.learningHubTab = 'sprint';
+      await openReviewCenter();
+    }
+  });
+
+  elements.reviewArea.addEventListener('click', async event => {
+    const tab = event.target.closest('[data-learning-hub-tab]');
+    if (!tab) return;
+    state.learningHubTab = tab.dataset.learningHubTab || 'overview';
+    if (!renderLearningHubFromCache()) {
+      await openReviewCenter();
+    }
+  });
+
+  elements.reviewArea.addEventListener('input', event => {
+    const search = event.target.closest('[data-exam-sprint-bank-search]');
+    if (!search) return;
+
+    const query = String(search.value || '').trim().toLocaleLowerCase();
+    elements.reviewArea
+      .querySelectorAll('[data-exam-sprint-bank-option]')
+      .forEach(option => {
+        const text = String(option.dataset.sprintBankSearchText || option.textContent || '')
+          .toLocaleLowerCase();
+        option.hidden = Boolean(query) && !text.includes(query);
+      });
+  });
+
+  elements.reviewArea.addEventListener('change', async event => {
+    const scope = event.target.closest('[data-learning-goal-scope]');
+    if (!scope) return;
+    state.learningGoalScope = scope.value || GLOBAL_SCOPE;
+    await openReviewCenter();
+  });
+
+  elements.reviewArea.addEventListener('submit', async event => {
+    const sprintForm = event.target.closest('[data-exam-sprint-form]');
+    if (!sprintForm) return;
+    event.preventDefault();
+
+    const bankIds = [...sprintForm.querySelectorAll('[data-exam-sprint-bank]:checked')]
+      .map(input => input.value)
+      .filter(Boolean);
+    const sprintEnabled =
+      sprintForm.querySelector('[data-exam-sprint-enabled]')?.checked === true;
+
+    if (sprintEnabled && !bankIds.length) {
+      showToast(elements.toastRegion, '請至少選擇一個這場考試要使用的題庫。', 'error');
+      return;
+    }
+
+    const payload = createExamSprintSaveInput({
+      bankIds,
+      examLabel: sprintForm.querySelector('[data-exam-sprint-label]')?.value,
+      examDate: sprintForm.querySelector('[data-exam-sprint-date]')?.value,
+      sprintEnabled,
+      sprintDailyTarget: sprintForm.querySelector('[data-exam-sprint-daily-target]')?.value,
+    });
+
+    await saveLearningGoal(payload);
+    state.learningHubTab = 'sprint';
+    showToast(elements.toastRegion, '考前衝刺設定已儲存。', 'success');
+    await openReviewCenter();
+  });
+
+  elements.reviewArea.addEventListener('click', async event => {
+    const sprint = event.target.closest('[data-start-sprint-bank]');
+    if (!sprint) return;
+    await startExamSprint(sprint.dataset.startSprintBank);
+  });
+
+  elements.reviewArea.addEventListener('submit', async event => {
+    const form = event.target.closest('[data-learning-goal-form]');
+    if (!form) return;
+    event.preventDefault();
+
+    const scope =
+      form.querySelector('[data-learning-goal-form-scope]')?.value ||
+      state.learningGoalScope ||
+      GLOBAL_SCOPE;
+
+    const payload = createLearningGoalSaveInput({
+      scope,
+      enabled: form.querySelector('[data-learning-goal-enabled]')?.checked === true,
+      dailyPracticeTarget: form.querySelector('[data-learning-goal-practice]')?.value,
+      dailyReviewTarget: form.querySelector('[data-learning-goal-review]')?.value,
+    });
+
+    await saveLearningGoal(payload);
+    state.learningGoalScope = scope;
+    showToast(elements.toastRegion, '學習目標已儲存。', 'success');
+    await openReviewCenter();
+  });
+
   elements.reviewArea.addEventListener('click', async event => {
     const button = event.target.closest('[data-review-bank][data-review-mode]');
     if (!button) return;
     await startDedicatedReview(button.dataset.reviewBank, button.dataset.reviewMode);
+  });
+
+  elements.statsArea.addEventListener('click', event => {
+    const statsTab = event.target.closest('[data-stats-tab]');
+    if (statsTab) {
+      state.statsTab = statsTab.dataset.statsTab || 'overview';
+      renderStatsFromCache();
+      return;
+    }
+
+    const windowButton = event.target.closest('[data-stats-window]');
+    if (windowButton) {
+      state.statsWindowDays = Number(windowButton.dataset.statsWindow) === 30 ? 30 : 7;
+      renderStatsFromCache();
+    }
+  });
+
+  elements.statsArea.addEventListener('change', event => {
+    const scope = event.target.closest('[data-stats-scope]');
+    if (!scope) return;
+    state.statsScope = scope.value || 'global';
+    renderStatsFromCache();
   });
 
   elements.examCenterArea.addEventListener('click', async event => {
@@ -555,8 +746,11 @@ async function inspectFile(file) {
   try {
     const pkg = await inspectQuestionBankFile(file);
     state.inspectedPackage = pkg;
+    const existingBankIds = new Set(state.banks.map(bank => bank.id));
+    const studioPlan = inspectStudioPackagePlan(pkg, { existingBankIds });
     renderInspection(elements.inspectionArea, pkg, {
-      existingBankIds: new Set(state.banks.map(bank => bank.id)),
+      existingBankIds,
+      studioPlan,
     });
   } catch (error) {
     state.inspectedPackage = null;
@@ -574,8 +768,11 @@ async function inspectFolder(files) {
   try {
     const pkg = await inspectQuestionBankFolder(files);
     state.inspectedPackage = pkg;
+    const existingBankIds = new Set(state.banks.map(bank => bank.id));
+    const studioPlan = inspectStudioPackagePlan(pkg, { existingBankIds });
     renderInspection(elements.inspectionArea, pkg, {
-      existingBankIds: new Set(state.banks.map(bank => bank.id)),
+      existingBankIds,
+      studioPlan,
     });
   } catch (error) {
     state.inspectedPackage = null;
@@ -583,6 +780,43 @@ async function inspectFolder(files) {
       fatalError: error.message,
       source: { name: '題庫資料夾', kind: 'folder' },
     });
+  } finally {
+    setBusy(false);
+  }
+}
+
+async function openCurrentPackageInStudio() {
+  const pkg = state.inspectedPackage;
+  if (!pkg) return;
+
+  setBusy(true, '正在建立題庫工作室草稿…');
+
+  try {
+    const existingBankIds = state.banks.map(bank => bank.id);
+    const { draft, plan } = createStudioDraftFromInspectedPackage(pkg, {
+      existingBankIds,
+    });
+
+    const saved = await saveStudioDraft(draft);
+
+    state.inspectedPackage = null;
+    renderInspection(elements.inspectionArea, null);
+
+    renderQuestionBankTools(elements.toolsArea, {
+      draftId: saved.id,
+    });
+    showView('tools');
+
+    showToast(
+      elements.toastRegion,
+      plan.hasCollision
+        ? `已建立工作室副本「${saved.manifest.name}」，ID：${saved.manifest.id}`
+        : `已在題庫工作室開啟「${saved.manifest.name}」。`,
+      'success',
+    );
+  } catch (error) {
+    console.error(error);
+    showToast(elements.toastRegion, `無法開啟題庫工作室：${error.message}`, 'error');
   } finally {
     setBusy(false);
   }
@@ -638,6 +872,46 @@ async function refreshBanks() {
     state.banks.filter(bank => bank.sourceType !== 'author'),
   );
   renderAuthorCatalog();
+}
+
+async function refreshHomeDashboard() {
+  if (!elements.homeDashboardArea) return;
+
+  const [goals, attempts, resumeSession, summaries] = await Promise.all([
+    listLearningGoals(),
+    listAllAttempts(),
+    getLatestUnfinishedPracticeSession({
+      bankIds: state.banks.map(bank => bank.id),
+    }),
+    Promise.all(state.banks.map(async bank => {
+      const [questions, progress, due] = await Promise.all([
+        getQuestionsByBank(bank.id),
+        listQuestionProgress(bank.id),
+        listDueReviews(bank.id),
+      ]);
+
+      const validIds = new Set(questions.map(question => question.id));
+      const wrong = progress.filter(item =>
+        item?.lastResult === 'wrong' &&
+        validIds.has(item.questionId)
+      ).length;
+
+      return {
+        bank,
+        due: due.filter(item => validIds.has(item.questionId)).length,
+        wrong,
+      };
+    })),
+  ]);
+
+  renderHomeDashboard(elements.homeDashboardArea, buildHomeDashboard({
+    banks: state.banks,
+    goals,
+    attempts,
+    summaries,
+    resumeSession,
+    lastBackupAt: getLastFullBackupAt(),
+  }));
 }
 
 async function exportCurrentBank() {
@@ -751,38 +1025,223 @@ function applyDetailFilters() {
 
 async function openReviewCenter() {
   await refreshBanks();
-  const groups = await Promise.all(state.banks.map(async bank => {
-    const [questions, progress, favorites, unfamiliar, due] = await Promise.all([
+
+  const [goals, attempts, groups] = await Promise.all([
+    listLearningGoals(),
+    listAllAttempts(),
+    Promise.all(state.banks.map(async bank => {
+      const [questions, progress, favorites, unfamiliar, due] = await Promise.all([
+        getQuestionsByBank(bank.id),
+        listQuestionProgress(bank.id),
+        listFavorites(bank.id),
+        listUnfamiliar(bank.id),
+        listDueReviews(bank.id),
+      ]);
+
+      const validIds = new Set(questions.map(question => question.id));
+      const wrongIds = new Set(
+        progress
+          .filter(item => item?.lastResult === 'wrong' && validIds.has(item.questionId))
+          .map(item => item.questionId)
+      );
+
+      return {
+        bank,
+        questionCount: questions.length,
+        counts: {
+          due: due.filter(item => validIds.has(item.questionId)).length,
+          wrong: wrongIds.size,
+          favorite: favorites.filter(item => validIds.has(item.questionId)).length,
+          unfamiliar: unfamiliar.filter(item => validIds.has(item.questionId)).length,
+        },
+      };
+    })),
+  ]);
+
+  const p3Goals = goals.filter(goal => goal.id !== EXAM_SPRINT_GOAL_ID);
+  const validScopes = new Set([GLOBAL_SCOPE, ...state.banks.map(bank => String(bank.id))]);
+
+  if (!state.learningGoalScope || !validScopes.has(state.learningGoalScope)) {
+    const configuredGoal = p3Goals.find(goal =>
+      goal.enabled === true &&
+      (!goal.bankId || validScopes.has(String(goal.bankId)))
+    );
+    state.learningGoalScope = configuredGoal
+      ? configuredGoal.bankId || GLOBAL_SCOPE
+      : state.banks[0]?.id || GLOBAL_SCOPE;
+  }
+
+  const selectedScope = state.learningGoalScope;
+  const goalId = learningGoalIdForScope(selectedScope);
+  const existingGoal = p3Goals.find(goal => goal.id === goalId) || null;
+  const bankId = selectedScope === GLOBAL_SCOPE ? null : selectedScope;
+  const goal = existingGoal || normalizeLearningGoal({
+    id: selectedScope === GLOBAL_SCOPE ? GLOBAL_GOAL_ID : goalId,
+    bankId,
+    enabled: false,
+    dailyPracticeTarget: 0,
+    dailyReviewTarget: 0,
+  });
+
+  const progress = buildLearningGoalProgress(goal, attempts, { historyDays: 7 });
+  const summaryProgress = buildLearningGoalProgress({
+    id: GLOBAL_GOAL_ID,
+    bankId: null,
+    enabled: false,
+    dailyPracticeTarget: 0,
+    dailyReviewTarget: 0,
+  }, attempts, { historyDays: 7 });
+
+  const explicitSprintGoal = goals.find(item => item.id === EXAM_SPRINT_GOAL_ID) || null;
+  const legacySprintGoal = explicitSprintGoal
+    ? null
+    : goals.find(item =>
+        item.id !== EXAM_SPRINT_GOAL_ID &&
+        (item.sprintEnabled === true || item.examDate || item.examLabel)
+      ) || null;
+
+  const sprintGoal = normalizeLearningGoal(
+    explicitSprintGoal || {
+      id: EXAM_SPRINT_GOAL_ID,
+      bankId: null,
+      sprintEnabled: legacySprintGoal?.sprintEnabled === true,
+      examDate: legacySprintGoal?.examDate || null,
+      examLabel: legacySprintGoal?.examLabel || '',
+      sprintBankIds: legacySprintGoal?.bankId ? [legacySprintGoal.bankId] : [],
+      sprintDailyTarget: legacySprintGoal?.dailyPracticeTarget || 0,
+    }
+  );
+
+  const sprintData = await collectSprintData(sprintGoal.sprintBankIds);
+  sprintData.attempts = attempts;
+  const sprintPlan = buildExamSprintPlan(sprintGoal, sprintData);
+
+  state.reviewGroups = groups;
+  state.sprintPlan = sprintPlan;
+  state.learningHubModel = {
+    summaryModel: {
+      progress: summaryProgress,
+    },
+    goalModel: {
+      banks: state.banks,
+      selectedScope,
+      configured: Boolean(existingGoal),
+      goal,
+      progress,
+    },
+    sprintModel: {
+      banks: state.banks,
+      goal: sprintGoal,
+      plan: sprintPlan,
+    },
+  };
+
+  renderLearningHubFromCache();
+  showView('review');
+}
+
+function renderLearningHubFromCache() {
+  if (!state.learningHubModel) return false;
+
+  renderReviewCenter(elements.reviewArea, state.reviewGroups, {
+    activeTab: state.learningHubTab,
+    ...state.learningHubModel,
+  });
+  return true;
+}
+
+async function collectSprintData(bankIds = []) {
+  const selected = new Set(
+    (Array.isArray(bankIds) ? bankIds : [])
+      .map(value => String(value))
+      .filter(Boolean)
+  );
+  const targetBanks = state.banks.filter(bank => selected.has(String(bank.id)));
+
+  const chunks = await Promise.all(targetBanks.map(async bank => {
+    const [questions, progressRecords, unfamiliarRecords, reviewRecords] = await Promise.all([
       getQuestionsByBank(bank.id),
       listQuestionProgress(bank.id),
-      listFavorites(bank.id),
       listUnfamiliar(bank.id),
-      listDueReviews(bank.id),
+      listReviewSchedules(bank.id),
     ]);
 
-    const validIds = new Set(questions.map(question => question.id));
-    const wrongIds = new Set(
-      progress
-        .filter(item => item?.lastResult === 'wrong' && validIds.has(item.questionId))
-        .map(item => item.questionId)
-    );
-
     return {
-      bank,
-      questionCount: questions.length,
-      counts: {
-        due: due.filter(item => validIds.has(item.questionId)).length,
-        wrong: wrongIds.size,
-        favorite: favorites.filter(item => validIds.has(item.questionId)).length,
-        unfamiliar: unfamiliar.filter(item => validIds.has(item.questionId)).length,
-      },
+      questions: questions.map(question => ({
+        ...question,
+        bankId: bank.id,
+        questionId: question.id || question.questionId,
+      })),
+      progressRecords,
+      unfamiliarRecords,
+      reviewRecords,
     };
   }));
 
-  state.reviewGroups = groups;
-  renderReviewCenter(elements.reviewArea, groups);
-  showView('review');
+  return {
+    questions: chunks.flatMap(chunk => chunk.questions),
+    progressRecords: chunks.flatMap(chunk => chunk.progressRecords),
+    unfamiliarRecords: chunks.flatMap(chunk => chunk.unfamiliarRecords),
+    reviewRecords: chunks.flatMap(chunk => chunk.reviewRecords),
+  };
 }
+
+async function startExamSprint(bankId) {
+  const plan = state.sprintPlan;
+  if (!plan) {
+    showToast(elements.toastRegion, '請先重新整理考前衝刺計畫。', 'error');
+    state.learningHubTab = 'sprint';
+    await openReviewCenter();
+    return;
+  }
+
+  const selectedIds = new Set(
+    (plan.selected || [])
+      .filter(item => String(item.bankId) === String(bankId))
+      .map(item => item.questionId),
+  );
+
+  if (!selectedIds.size) {
+    showToast(elements.toastRegion, '這個題庫目前沒有待衝刺題目。', 'info');
+    state.learningHubTab = 'sprint';
+    await openReviewCenter();
+    return;
+  }
+
+  const [bank, questions] = await Promise.all([
+    getBank(bankId),
+    getQuestionsByBank(bankId),
+  ]);
+
+  if (!bank) {
+    showToast(elements.toastRegion, '找不到這個題庫。', 'error');
+    state.learningHubTab = 'sprint';
+    await openReviewCenter();
+    return;
+  }
+
+  const byId = new Map(questions.map(question => [question.id, question]));
+  const selectedQuestions = (plan.selected || [])
+    .filter(item => String(item.bankId) === String(bankId))
+    .map(item => byId.get(item.questionId))
+    .filter(Boolean);
+
+  if (!selectedQuestions.length) {
+    showToast(elements.toastRegion, '衝刺題目已不存在，已重新計算。', 'info');
+    state.learningHubTab = 'sprint';
+    await openReviewCenter();
+    return;
+  }
+
+  state.currentBank = bank;
+  state.allQuestions = questions;
+  state.filteredQuestions = selectedQuestions;
+  state.learningFilter = 'all';
+  state.learning = createEmptyLearningState();
+
+  await startPractice(selectedQuestions, 'sprint', { shuffleQuestions: false });
+}
+
 
 async function startDedicatedReview(bankId, mode) {
   const [bank, questions, progress, favorites, unfamiliar, due] = await Promise.all([
@@ -820,47 +1279,119 @@ async function startDedicatedReview(bankId, mode) {
 async function openStats() {
   await refreshBanks();
 
-  const bankStats = await Promise.all(state.banks.map(async bank => {
-    const [questions, attempts, progress, due, schedules] = await Promise.all([
+  const attempts = await listAllAttempts();
+
+  const bankChunks = await Promise.all(state.banks.map(async bank => {
+    const [questions, progress, due, schedules] = await Promise.all([
       getQuestionsByBank(bank.id),
-      getAttemptsByBank(bank.id),
       listQuestionProgress(bank.id),
       listDueReviews(bank.id),
       listReviewSchedules(bank.id),
     ]);
 
-    const correct = attempts.filter(item => item.correct).length;
-    const accuracy = attempts.length ? Math.round((correct / attempts.length) * 100) : 0;
-    const answered = new Set(attempts.map(item => item.questionId)).size;
-    const wrong = progress.filter(item => item.lastResult === 'wrong').length;
-
     return {
       bank,
-      questionCount: questions.length,
-      attempts: attempts.length,
+      questions,
+      progress,
+      due,
+      schedules,
+    };
+  }));
+
+  const questions = bankChunks.flatMap(chunk =>
+    chunk.questions.map(question => ({
+      ...question,
+      bankId: chunk.bank.id,
+      questionId: question.id || question.questionId,
+    }))
+  );
+
+  const attemptsByBank = new Map();
+  for (const attempt of attempts) {
+    const bankId = String(attempt.bankId || '');
+    if (!attemptsByBank.has(bankId)) attemptsByBank.set(bankId, []);
+    attemptsByBank.get(bankId).push(attempt);
+  }
+
+  const bankStats = bankChunks.map(chunk => {
+    const bankAttempts = attemptsByBank.get(String(chunk.bank.id)) || [];
+    const correct = bankAttempts.filter(item => item.correct).length;
+    const accuracy = bankAttempts.length
+      ? Math.round((correct / bankAttempts.length) * 100)
+      : 0;
+    const answered = new Set(bankAttempts.map(item => item.questionId)).size;
+    const wrong = chunk.progress.filter(item => item.lastResult === 'wrong').length;
+
+    return {
+      bank: chunk.bank,
+      questionCount: chunk.questions.length,
+      attempts: bankAttempts.length,
       correct,
       accuracy,
       answered,
       wrong,
-      due: due.length,
-      mastery: summarizeMastery(questions.map(question => question.id), schedules),
+      due: chunk.due.length,
+      mastery: summarizeMastery(
+        chunk.questions.map(question => question.id),
+        chunk.schedules,
+      ),
     };
-  }));
+  });
 
   const totalAttempts = bankStats.reduce((sum, item) => sum + item.attempts, 0);
   const totalCorrect = bankStats.reduce((sum, item) => sum + item.correct, 0);
 
-  renderLearningStats(elements.statsArea, {
+  state.statsModel = {
+    attempts,
+    questions,
+    banks: bankStats,
     overall: {
       attempts: totalAttempts,
-      accuracy: totalAttempts ? Math.round((totalCorrect / totalAttempts) * 100) : 0,
+      accuracy: totalAttempts
+        ? Math.round((totalCorrect / totalAttempts) * 100)
+        : 0,
       answeredQuestions: bankStats.reduce((sum, item) => sum + item.answered, 0),
       due: bankStats.reduce((sum, item) => sum + item.due, 0),
     },
-    banks: bankStats,
-  });
+    globalAnalytics: buildLearningAnalytics({
+      attempts,
+      questions,
+    }),
+  };
+
+  const validScopes = new Set(['global', ...state.banks.map(bank => String(bank.id))]);
+  if (!validScopes.has(state.statsScope)) state.statsScope = 'global';
+
+  renderStatsFromCache();
   showView('stats');
 }
+
+function renderStatsFromCache() {
+  if (!state.statsModel) return false;
+
+  const scope = state.statsScope || 'global';
+  const analytics = scope === 'global'
+    ? state.statsModel.globalAnalytics
+    : buildLearningAnalytics({
+        attempts: state.statsModel.attempts,
+        questions: state.statsModel.questions,
+      }, {
+        bankId: scope,
+      });
+
+  renderLearningStats(elements.statsArea, {
+    activeTab: state.statsTab,
+    scope,
+    windowDays: state.statsWindowDays,
+    overall: state.statsModel.overall,
+    globalAnalytics: state.statsModel.globalAnalytics,
+    analytics,
+    banks: state.statsModel.banks,
+  });
+
+  return true;
+}
+
 
 async function openExamCenter() {
   stopExamTimer();
@@ -1153,7 +1684,7 @@ async function reopenCurrentBank() {
   await openBankDetail(bankId);
 }
 
-async function startPractice(questions, modeOverride = null) {
+async function startPractice(questions, modeOverride = null, options = {}) {
   if (!state.currentBank || !questions?.length) return;
 
   revokeAssetUrls();
@@ -1163,6 +1694,7 @@ async function startPractice(questions, modeOverride = null) {
     bankName: state.currentBank.name || state.currentBank.title || state.currentBank.id,
     questions,
     mode: modeOverride || (state.learningFilter === 'all' ? 'filtered' : state.learningFilter),
+    shuffleQuestions: options.shuffleQuestions !== false,
   });
 
   await persistPracticeSession();

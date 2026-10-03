@@ -17,6 +17,8 @@ const STORE_NAMES = Object.freeze([
   'mastery',
   'reviewSchedule',
   'sessions',
+  'studioDrafts',
+  'learningGoals',
 ]);
 
 export async function createBackupSnapshot() {

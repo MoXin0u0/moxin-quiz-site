@@ -1,0 +1,82 @@
+[
+  {
+    "scene": "library",
+    "theme": "light",
+    "sourceFile": "陽光灑落的魔法學院圖書館.png",
+    "sourceKind": "single-scene",
+    "width": 1672,
+    "height": 941,
+    "bytes": 2612130,
+    "sha256": "4b519e4d90b23e80db28fa80d64d6d5f4723474bba992cde4a143863d400eb1c"
+  },
+  {
+    "scene": "library",
+    "theme": "dark",
+    "sourceFile": "月夜魔法學院圖書室.png",
+    "sourceKind": "single-scene",
+    "width": 1672,
+    "height": 941,
+    "bytes": 2524663,
+    "sha256": "15befdf502c23ed7f72489fd4bb78bcf1b98293058a216cae3b8a273d58df208"
+  },
+  {
+    "scene": "review",
+    "theme": "light",
+    "sourceFile": "陽光下的星辰學者書房.png",
+    "sourceKind": "single-scene",
+    "width": 1672,
+    "height": 941,
+    "bytes": 2639526,
+    "sha256": "70a930fef63079b3178e068fea0f75e30d7484718c4f54e3ebf8c9de0bdc4b16"
+  },
+  {
+    "scene": "review",
+    "theme": "dark",
+    "sourceFile": "月下哥德學院書房.png",
+    "sourceKind": "single-scene",
+    "width": 1672,
+    "height": 941,
+    "bytes": 2591173,
+    "sha256": "f0d860a0fc4cdd266b59ed23f54436f81472d611e2157ec0a00b769c6f9facb3"
+  },
+  {
+    "scene": "exam",
+    "theme": "light",
+    "sourceFile": "陽光下的星象學院考場.png",
+    "sourceKind": "single-scene",
+    "width": 1672,
+    "height": 941,
+    "bytes": 2687695,
+    "sha256": "ba874f371b514dd1989675c3741d9006ae794d60110a846f77fe6d95b2f82913"
+  },
+  {
+    "scene": "exam",
+    "theme": "dark",
+    "sourceFile": "月光下的星辰學院試煉廳.png",
+    "sourceKind": "single-scene",
+    "width": 1672,
+    "height": 941,
+    "bytes": 2703858,
+    "sha256": "86ed7095f34110ce73370ac2fc3ce3769bce2100acb8027c43248a4741be8675"
+  },
+  {
+    "scene": "stats",
+    "theme": "light",
+    "sourceFile": "陽光下的奇幻學院觀星書房.png",
+    "sourceKind": "single-scene",
+    "width": 1672,
+    "height": 941,
+    "bytes": 2632677,
+    "sha256": "a2be978321bab5394837732b00aebc210a33a899f6d788b4f26257290344b57e"
+  },
+  {
+    "scene": "stats",
+    "theme": "dark",
+    "sourceFile": "月映星图的学院观测室.png",
+    "sourceKind": "single-scene",
+    "width": 1672,
+    "height": 941,
+    "bytes": 2471379,
+    "sha256": "329ff2342e58c8fa6380922f07976035d4654f1a4cc25a1c238d76d4a6030d87"
+  }
+]

@@ -1,4 +1,4 @@
-import { openDatabase, requestToPromise, transactionDone } from '../db.js';
+import { getAllRecords, openDatabase, requestToPromise, transactionDone } from '../db.js';
 import { questionKey } from '../../utils/ids.js';
 
 export async function addAttempt({ bankId, questionId, selectedAnswer, correct, responseTime, mode }) {
@@ -30,4 +30,9 @@ export async function getAttemptsByQuestion(bankId, questionId) {
   const db = await openDatabase();
   const tx = db.transaction('attempts', 'readonly');
   return (await requestToPromise(tx.objectStore('attempts').index('questionKey').getAll(IDBKeyRange.only(questionKey(bankId, questionId))))) ?? [];
+}
+
+
+export function listAllAttempts() {
+  return getAllRecords('attempts');
 }

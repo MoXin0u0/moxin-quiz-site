@@ -1,0 +1,162 @@
+[
+  {
+    "scene": "library",
+    "theme": "light",
+    "world": "epic",
+    "sourceFamily": "true-epic-v1",
+    "sourceFile": "雲端星穹魔法圖書館.png",
+    "sourceKind": "single-scene",
+    "derivedFromAcademy": false,
+    "concept": "floating-library-city",
+    "semanticTags": [
+      "floating-library",
+      "levitating-books",
+      "sky-bridges",
+      "knowledge-crystals"
+    ],
+    "width": 1672,
+    "height": 941,
+    "bytes": 2519642,
+    "sha256": "97601ee421fa2acbcff8e0433086c634ee842fe1097741bc422ab1499b0c901a"
+  },
+  {
+    "scene": "library",
+    "theme": "dark",
+    "world": "epic",
+    "sourceFamily": "true-epic-v1",
+    "sourceFile": "星海浮空圖書城.png",
+    "sourceKind": "single-scene",
+    "derivedFromAcademy": false,
+    "concept": "floating-library-city",
+    "semanticTags": [
+      "floating-library",
+      "levitating-books",
+      "moonlit-sky-city",
+      "knowledge-crystals"
+    ],
+    "width": 1672,
+    "height": 941,
+    "bytes": 2924342,
+    "sha256": "b7f3d9b906fb1e44f86c96bbc132aa63ce195e2a2623e8ca55f98de7ceb7f929"
+  },
+  {
+    "scene": "review",
+    "theme": "light",
+    "world": "epic",
+    "sourceFamily": "true-epic-v1",
+    "sourceFile": "雲海中的水晶記憶聖殿.png",
+    "sourceKind": "single-scene",
+    "derivedFromAcademy": false,
+    "concept": "memory-sanctum",
+    "semanticTags": [
+      "memory-sanctum",
+      "floating-memory-panels",
+      "crystal-archive",
+      "recall-runes"
+    ],
+    "width": 1672,
+    "height": 941,
+    "bytes": 2553842,
+    "sha256": "c2f517a3d88411a46ff22506420ddf281ef0bad930cce9a14ed40bed22c2f9ab"
+  },
+  {
+    "scene": "review",
+    "theme": "dark",
+    "world": "epic",
+    "sourceFamily": "true-epic-v1",
+    "sourceFile": "月下星穹記憶聖殿.png",
+    "sourceKind": "single-scene",
+    "derivedFromAcademy": false,
+    "concept": "memory-sanctum",
+    "semanticTags": [
+      "memory-sanctum",
+      "floating-memory-panels",
+      "moonlit-crystals",
+      "recall-runes"
+    ],
+    "width": 1672,
+    "height": 941,
+    "bytes": 2754980,
+    "sha256": "28684db85d83a6e6202ce67fa893099366808f658748511921aadf59c77f81be"
+  },
+  {
+    "scene": "exam",
+    "theme": "light",
+    "world": "epic",
+    "sourceFamily": "true-epic-v1",
+    "sourceFile": "雲海天穹的星環聖殿.png",
+    "sourceKind": "single-scene",
+    "derivedFromAcademy": false,
+    "concept": "sky-trial-arena",
+    "semanticTags": [
+      "trial-arena",
+      "rune-circle",
+      "trial-crystal",
+      "floating-temple"
+    ],
+    "width": 1672,
+    "height": 941,
+    "bytes": 2538014,
+    "sha256": "e08e1d1b76a7fb47ae290276f072a7380eb043b5e064088377fb2febe970a1ba"
+  },
+  {
+    "scene": "exam",
+    "theme": "dark",
+    "world": "epic",
+    "sourceFamily": "true-epic-v1",
+    "sourceFile": "月下星環浮空神殿.png",
+    "sourceKind": "single-scene",
+    "derivedFromAcademy": false,
+    "concept": "sky-trial-arena",
+    "semanticTags": [
+      "trial-arena",
+      "rune-circle",
+      "moonlit-trial-crystal",
+      "floating-temple"
+    ],
+    "width": 1672,
+    "height": 941,
+    "bytes": 2601478,
+    "sha256": "692882d42b8641eeafcbdb13119b90558e8c10929ef8c90fc93fe2dfcb6e5f95"
+  },
+  {
+    "scene": "stats",
+    "theme": "light",
+    "world": "epic",
+    "sourceFamily": "true-epic-v1",
+    "sourceFile": "雲海星穹天文殿.png",
+    "sourceKind": "single-scene",
+    "derivedFromAcademy": false,
+    "concept": "astral-observatory",
+    "semanticTags": [
+      "astral-observatory",
+      "celestial-orrery",
+      "holographic-star-map",
+      "data-crystals"
+    ],
+    "width": 1672,
+    "height": 941,
+    "bytes": 2686343,
+    "sha256": "f2c26c12439ccf14b1d3e16b452cb76ddff56d4372002036c3d850e8ba63262b"
+  },
+  {
+    "scene": "stats",
+    "theme": "dark",
+    "world": "epic",
+    "sourceFamily": "true-epic-v1",
+    "sourceFile": "雲海中的星界天文圖書館.png",
+    "sourceKind": "single-scene",
+    "derivedFromAcademy": false,
+    "concept": "astral-observatory",
+    "semanticTags": [
+      "astral-observatory",
+      "celestial-orrery",
+      "moonlit-star-map",
+      "data-crystals"
+    ],
+    "width": 1672,
+    "height": 941,
+    "bytes": 2883177,
+    "sha256": "24a289340250ef69b75c493ab89f003fb0a427826dc720ec97cd4cec38f6604e"
+  }
+]

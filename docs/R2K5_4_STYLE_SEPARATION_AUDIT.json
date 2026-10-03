@@ -1,0 +1,74 @@
+[
+  {
+    "scene": "library",
+    "theme": "light",
+    "academyAsset": "assets/learning/styles/academy/library-light.webp",
+    "epicAsset": "assets/learning/styles/epic/library-light.webp",
+    "normalizedPixelDifference": 0.3769,
+    "threshold": 0.12,
+    "passes": true
+  },
+  {
+    "scene": "library",
+    "theme": "dark",
+    "academyAsset": "assets/learning/styles/academy/library-dark.webp",
+    "epicAsset": "assets/learning/styles/epic/library-dark.webp",
+    "normalizedPixelDifference": 0.2923,
+    "threshold": 0.12,
+    "passes": true
+  },
+  {
+    "scene": "review",
+    "theme": "light",
+    "academyAsset": "assets/learning/styles/academy/review-light.webp",
+    "epicAsset": "assets/learning/styles/epic/review-light.webp",
+    "normalizedPixelDifference": 0.3601,
+    "threshold": 0.12,
+    "passes": true
+  },
+  {
+    "scene": "review",
+    "theme": "dark",
+    "academyAsset": "assets/learning/styles/academy/review-dark.webp",
+    "epicAsset": "assets/learning/styles/epic/review-dark.webp",
+    "normalizedPixelDifference": 0.2646,
+    "threshold": 0.12,
+    "passes": true
+  },
+  {
+    "scene": "exam",
+    "theme": "light",
+    "academyAsset": "assets/learning/styles/academy/exam-light.webp",
+    "epicAsset": "assets/learning/styles/epic/exam-light.webp",
+    "normalizedPixelDifference": 0.3457,
+    "threshold": 0.12,
+    "passes": true
+  },
+  {
+    "scene": "exam",
+    "theme": "dark",
+    "academyAsset": "assets/learning/styles/academy/exam-dark.webp",
+    "epicAsset": "assets/learning/styles/epic/exam-dark.webp",
+    "normalizedPixelDifference": 0.2556,
+    "threshold": 0.12,
+    "passes": true
+  },
+  {
+    "scene": "stats",
+    "theme": "light",
+    "academyAsset": "assets/learning/styles/academy/stats-light.webp",
+    "epicAsset": "assets/learning/styles/epic/stats-light.webp",
+    "normalizedPixelDifference": 0.3832,
+    "threshold": 0.12,
+    "passes": true
+  },
+  {
+    "scene": "stats",
+    "theme": "dark",
+    "academyAsset": "assets/learning/styles/academy/stats-dark.webp",
+    "epicAsset": "assets/learning/styles/epic/stats-dark.webp",
+    "normalizedPixelDifference": 0.2595,
+    "threshold": 0.12,
+    "passes": true
+  }
+]
