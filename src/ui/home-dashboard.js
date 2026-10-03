@@ -66,7 +66,14 @@ function renderGoalCard(goal) {
         <strong>${goal.configured ? `${percent}%` : '尚未設定'}</strong>
         <small>${escapeHtml(goal.scopeLabel || '尚未設定')}</small>
       </div>
-      <div class="home-goal-progress" aria-label="今日目標進度 ${percent}%">
+      <div
+        class="home-goal-progress"
+        role="progressbar"
+        aria-label="今日目標進度"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="${goal.configured ? percent : 0}"
+      >
         <i style="width:${goal.configured ? percent : 0}%"></i>
       </div>
       <div class="home-inline-metrics">

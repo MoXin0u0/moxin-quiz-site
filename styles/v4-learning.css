@@ -4546,6 +4546,7 @@ html[data-theme="dark"] .learning-hero-art {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
+  min-height: 36px;
   padding: .42rem .62rem;
   border: 1px solid color-mix(in srgb, var(--learn-line) 82%, transparent);
   border-radius: 999px;

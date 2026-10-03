@@ -2,6 +2,18 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## RC1 — Browser UX Audit
+- 正式進入 v4.0 Release Readiness，不再新增功能主線。
+- 新增真實 Chromium + Playwright 使用者流程 audit。
+- 覆蓋 Empty / Returning / Heavy Library / Backup / Migration / Offline PWA。
+- 建立 320×568 到 1920×1080 的 7 組 viewport matrix。
+- 建立 Academy / Epic / Focus 與 Light / Dark / scene intensity 代表組合。
+- 加入水平 overflow、主要區塊 viewport、runtime error、network error 與 axe-core accessibility gates。
+- Browser audit screenshots / JSON / Markdown report 由 GitHub Actions artifact 保留。
+- 第一輪 Browser Audit 修正 preview badge / active nav 對比、Home progressbar ARIA 與多個行動目標尺寸。
+- Audit runner 改為單一 scenario 失敗不阻斷其餘 viewport / visual / migration / offline 測試。
+- APP cache 更新至 r2k.5-19。
+
 ## P5 Final Audit — Stable
 - 首頁 / 今日學習 / 學習統計完成跨頁資料口徑與 Empty State 回歸。
 - 驗證 Home 今日目標直接共用 P3 engine；Home / Learning Hub Global 摘要不受 bank scope 汙染。

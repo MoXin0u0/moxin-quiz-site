@@ -50,6 +50,8 @@
 }
 
 .home-card-head button {
+  min-height: 32px;
+  padding: .32rem .28rem;
   border: 0;
   background: transparent;
   color: var(--learn-primary);

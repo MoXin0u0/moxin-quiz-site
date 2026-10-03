@@ -186,7 +186,7 @@ textarea:focus {
   padding: .12rem .38rem;
   border-radius: 999px;
   background: var(--accent-soft);
-  color: var(--accent);
+  color: color-mix(in srgb, var(--accent) 75%, var(--text));
   font-size: .62rem;
   vertical-align: middle;
 }
@@ -233,11 +233,11 @@ textarea:focus {
 
 .nav-item.is-active {
   background: var(--primary-soft);
-  color: var(--primary);
+  color: color-mix(in srgb, var(--primary) 75%, var(--text));
 }
 
 .nav-item.is-active::before {
-  color: var(--primary);
+  color: color-mix(in srgb, var(--primary) 75%, var(--text));
 }
 
 .app-main {

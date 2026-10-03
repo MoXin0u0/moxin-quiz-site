@@ -373,7 +373,7 @@ function renderBankStats(item) {
           </div>
         </div>
 
-        <div class="learning-mastery-bar" aria-label="熟練度分布">
+        <div class="learning-mastery-bar" aria-hidden="true">
           ${masterySegment('new', m.new, total)}
           ${masterySegment('learning', m.learning, total)}
           ${masterySegment('familiar', m.familiar, total)}

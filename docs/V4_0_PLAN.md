@@ -125,6 +125,21 @@ IndexedDB version 2 → 3，只新增：
 - 考前衝刺快捷入口
 - 最近完整備份時間與過久未備份提醒
 
+## RC1 — v4.0 Release Readiness
+
+**狀態：In Progress**
+
+- v3.3 → v4.0 IndexedDB upgrade simulation
+- 完整備份 export / restore round trip
+- 真實 Chromium 使用者流程
+- Desktop / Tablet / Mobile viewport matrix
+- Light / Dark × Academy / Epic / Focus visual matrix
+- 大量題庫 / 長文字 / Empty State
+- Accessibility / horizontal overflow / runtime error audit
+- Offline PWA reload
+- Release metadata cleanup
+- Main cutover rehearsal
+
 ## 相容性要求
 
 v3.3 的以下資料必須無損保留：

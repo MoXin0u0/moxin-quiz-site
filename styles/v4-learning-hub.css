@@ -52,7 +52,7 @@
 .learning-hub-overview-card.sprint { background: linear-gradient(135deg, color-mix(in srgb, var(--learn-gold) 8%, var(--learn-surface)), var(--learn-surface-strong)); }
 .learning-hub-card-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
 .learning-hub-card-head > span { color: var(--learn-muted); font-size: .76rem; font-weight: 800; }
-.learning-hub-card-head button { border: 0; background: transparent; color: var(--learn-primary); font: inherit; font-size: .72rem; font-weight: 800; cursor: pointer; }
+.learning-hub-card-head button { min-height: 32px; padding: .32rem .28rem; border: 0; background: transparent; color: var(--learn-primary); font: inherit; font-size: .72rem; font-weight: 800; cursor: pointer; }
 .learning-hub-overview-card > strong { color: var(--learn-text); font-size: clamp(1.45rem, 3vw, 2rem); }
 .learning-hub-overview-card > small { color: var(--learn-muted); line-height: 1.5; }
 .learning-hub-inline-metrics { display: flex; flex-wrap: wrap; gap: .45rem; }

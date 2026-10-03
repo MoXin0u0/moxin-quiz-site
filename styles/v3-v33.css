@@ -32,6 +32,8 @@
 }
 
 .tools-prompt-details summary {
+  min-height: 32px;
+  padding: .35rem 0;
   cursor: pointer;
   font-weight: 800;
 }
