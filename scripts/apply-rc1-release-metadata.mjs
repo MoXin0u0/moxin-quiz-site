@@ -25,30 +25,57 @@ write('README.md', NEW_README);
 write('tests/v40-rc1-release-metadata-run.mjs', METADATA_TEST);
 write('docs/V4_0_RC1_RELEASE_METADATA.md', METADATA_DOC);
 
-// Legacy v3.3 milestone regression must not freeze the public version badge.
-// Its purpose is tools/export/legacy compatibility; RC1 now owns release-version assertions.
+// Historical milestone tests may verify the feature introduced in that milestone,
+// but they must not freeze the current public release label.
+// RC1 metadata regression is the single owner of the visible version contract.
 {
-  const path = 'tests/v33-run.mjs';
-  let source = read(path);
-
-  const frozen = 'assert.match(index, /v3\\.3/);';
-  const flexible =
+  const testDir = 'tests';
+  const staleV33 = 'assert.match(index, /v3\\.3/);';
+  const stalePreview = 'assert.match(index, /v4 preview/);';
+  const flexibleVersion =
     'assert.match(index, /<span class="version-badge">v[0-9][^<]*<\\/span>/);';
+  const noPreview =
+    'assert.doesNotMatch(index, /v4 preview/i);';
 
-  if (source.includes(frozen)) {
-    source = replaceOne(
-      source,
-      frozen,
-      flexible,
-      'v3.3 milestone release-version assertion',
-    );
-  } else if (!source.includes(flexible)) {
+  let migratedV33 = 0;
+  let migratedPreview = 0;
+
+  for (const name of fs.readdirSync(testDir)) {
+    if (!name.endsWith('.mjs')) continue;
+    const path = `${testDir}/${name}`;
+    let source = read(path);
+    let changed = false;
+
+    if (source.includes(staleV33)) {
+      source = source.replaceAll(staleV33, flexibleVersion);
+      migratedV33 += 1;
+      changed = true;
+    }
+
+    if (source.includes(stalePreview)) {
+      source = source.replaceAll(stalePreview, noPreview);
+      migratedPreview += 1;
+      changed = true;
+    }
+
+    if (changed) write(path, source);
+  }
+
+  if (migratedV33 < 2) {
     throw new Error(
-      'tests/v33-run.mjs version assertion is neither expected frozen nor flexible form',
+      `Expected to migrate at least 2 stale v3.3 public-version assertions, migrated ${migratedV33}`,
     );
   }
 
-  write(path, source);
+  if (migratedPreview < 1) {
+    throw new Error(
+      `Expected to migrate at least 1 stale v4 preview assertion, migrated ${migratedPreview}`,
+    );
+  }
+
+  console.log(
+    `Migrated stale public-version assertions: v3.3=${migratedV33}, preview=${migratedPreview}`,
+  );
 }
 
 for (const item of REPLACEMENTS) {
