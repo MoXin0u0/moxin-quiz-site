@@ -2,6 +2,16 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P5.1 — Statistics IA & UI
+- 學習統計正式拆成「總覽 / 趨勢 / 弱點分析 / 題庫分析」第二層，不再使用超長單頁。
+- Hero 維持 Global 總作答與整體正確率；scope 只影響深入分析，避免語意混淆。
+- 趨勢頁支援 Global / Bank scope 與 7 / 30 日切換，顯示每日作答量與正確率。
+- 弱點頁顯示弱點章節、樣本不足標記、題型正確率、章節正確率與資料品質提醒。
+- 題庫分析保留既有熟練度卡片，但移到獨立頁籤。
+- 新增 statsModel cache；切 Tab、期間或 scope 不重新查 IndexedDB。
+- 新增 P5.1 Desktop / Tablet / Mobile RWD 與 regression。
+- APP cache 更新至 r2k.5-16。
+
 ## P5 — Analytics Core
 - 正式進入 v4.0 統計與首頁主線，先完成統計 Core，再接分層 UI。
 - 新增 7 / 30 日作答趨勢與正確率。

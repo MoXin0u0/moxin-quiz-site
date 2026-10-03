@@ -106,6 +106,7 @@ import {
   saveLearningGoal,
 } from '../storage/repositories/goals.js';
 import { buildLearningGoalProgress } from '../learning/goal-progress.js';
+import { buildLearningAnalytics } from '../learning/analytics.js';
 import {
   EXAM_SPRINT_GOAL_ID,
   buildExamSprintPlan,
@@ -147,6 +148,10 @@ const state = {
   learningHubTab: 'overview',
   learningHubModel: null,
   sprintPlan: null,
+  statsTab: 'overview',
+  statsScope: 'global',
+  statsWindowDays: 7,
+  statsModel: null,
   exam: null,
   examQuestionMap: new Map(),
   examTimerId: null,
@@ -433,6 +438,28 @@ function bindEvents() {
     const button = event.target.closest('[data-review-bank][data-review-mode]');
     if (!button) return;
     await startDedicatedReview(button.dataset.reviewBank, button.dataset.reviewMode);
+  });
+
+  elements.statsArea.addEventListener('click', event => {
+    const statsTab = event.target.closest('[data-stats-tab]');
+    if (statsTab) {
+      state.statsTab = statsTab.dataset.statsTab || 'overview';
+      renderStatsFromCache();
+      return;
+    }
+
+    const windowButton = event.target.closest('[data-stats-window]');
+    if (windowButton) {
+      state.statsWindowDays = Number(windowButton.dataset.statsWindow) === 30 ? 30 : 7;
+      renderStatsFromCache();
+    }
+  });
+
+  elements.statsArea.addEventListener('change', event => {
+    const scope = event.target.closest('[data-stats-scope]');
+    if (!scope) return;
+    state.statsScope = scope.value || 'global';
+    renderStatsFromCache();
   });
 
   elements.examCenterArea.addEventListener('click', async event => {
@@ -1173,47 +1200,119 @@ async function startDedicatedReview(bankId, mode) {
 async function openStats() {
   await refreshBanks();
 
-  const bankStats = await Promise.all(state.banks.map(async bank => {
-    const [questions, attempts, progress, due, schedules] = await Promise.all([
+  const attempts = await listAllAttempts();
+
+  const bankChunks = await Promise.all(state.banks.map(async bank => {
+    const [questions, progress, due, schedules] = await Promise.all([
       getQuestionsByBank(bank.id),
-      getAttemptsByBank(bank.id),
       listQuestionProgress(bank.id),
       listDueReviews(bank.id),
       listReviewSchedules(bank.id),
     ]);
 
-    const correct = attempts.filter(item => item.correct).length;
-    const accuracy = attempts.length ? Math.round((correct / attempts.length) * 100) : 0;
-    const answered = new Set(attempts.map(item => item.questionId)).size;
-    const wrong = progress.filter(item => item.lastResult === 'wrong').length;
-
     return {
       bank,
-      questionCount: questions.length,
-      attempts: attempts.length,
+      questions,
+      progress,
+      due,
+      schedules,
+    };
+  }));
+
+  const questions = bankChunks.flatMap(chunk =>
+    chunk.questions.map(question => ({
+      ...question,
+      bankId: chunk.bank.id,
+      questionId: question.id || question.questionId,
+    }))
+  );
+
+  const attemptsByBank = new Map();
+  for (const attempt of attempts) {
+    const bankId = String(attempt.bankId || '');
+    if (!attemptsByBank.has(bankId)) attemptsByBank.set(bankId, []);
+    attemptsByBank.get(bankId).push(attempt);
+  }
+
+  const bankStats = bankChunks.map(chunk => {
+    const bankAttempts = attemptsByBank.get(String(chunk.bank.id)) || [];
+    const correct = bankAttempts.filter(item => item.correct).length;
+    const accuracy = bankAttempts.length
+      ? Math.round((correct / bankAttempts.length) * 100)
+      : 0;
+    const answered = new Set(bankAttempts.map(item => item.questionId)).size;
+    const wrong = chunk.progress.filter(item => item.lastResult === 'wrong').length;
+
+    return {
+      bank: chunk.bank,
+      questionCount: chunk.questions.length,
+      attempts: bankAttempts.length,
       correct,
       accuracy,
       answered,
       wrong,
-      due: due.length,
-      mastery: summarizeMastery(questions.map(question => question.id), schedules),
+      due: chunk.due.length,
+      mastery: summarizeMastery(
+        chunk.questions.map(question => question.id),
+        chunk.schedules,
+      ),
     };
-  }));
+  });
 
   const totalAttempts = bankStats.reduce((sum, item) => sum + item.attempts, 0);
   const totalCorrect = bankStats.reduce((sum, item) => sum + item.correct, 0);
 
-  renderLearningStats(elements.statsArea, {
+  state.statsModel = {
+    attempts,
+    questions,
+    banks: bankStats,
     overall: {
       attempts: totalAttempts,
-      accuracy: totalAttempts ? Math.round((totalCorrect / totalAttempts) * 100) : 0,
+      accuracy: totalAttempts
+        ? Math.round((totalCorrect / totalAttempts) * 100)
+        : 0,
       answeredQuestions: bankStats.reduce((sum, item) => sum + item.answered, 0),
       due: bankStats.reduce((sum, item) => sum + item.due, 0),
     },
-    banks: bankStats,
-  });
+    globalAnalytics: buildLearningAnalytics({
+      attempts,
+      questions,
+    }),
+  };
+
+  const validScopes = new Set(['global', ...state.banks.map(bank => String(bank.id))]);
+  if (!validScopes.has(state.statsScope)) state.statsScope = 'global';
+
+  renderStatsFromCache();
   showView('stats');
 }
+
+function renderStatsFromCache() {
+  if (!state.statsModel) return false;
+
+  const scope = state.statsScope || 'global';
+  const analytics = scope === 'global'
+    ? state.statsModel.globalAnalytics
+    : buildLearningAnalytics({
+        attempts: state.statsModel.attempts,
+        questions: state.statsModel.questions,
+      }, {
+        bankId: scope,
+      });
+
+  renderLearningStats(elements.statsArea, {
+    activeTab: state.statsTab,
+    scope,
+    windowDays: state.statsWindowDays,
+    overall: state.statsModel.overall,
+    globalAnalytics: state.statsModel.globalAnalytics,
+    analytics,
+    banks: state.statsModel.banks,
+  });
+
+  return true;
+}
+
 
 async function openExamCenter() {
   stopExamTimer();
