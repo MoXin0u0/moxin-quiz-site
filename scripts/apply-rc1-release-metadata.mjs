@@ -31,9 +31,9 @@ write('docs/V4_0_RC1_RELEASE_METADATA.md', METADATA_DOC);
   const path = 'tests/v33-run.mjs';
   let source = read(path);
 
-  const frozen = 'assert.match(index, /v3\\\\.3/);';
+  const frozen = 'assert.match(index, /v3\\.3/);';
   const flexible =
-    'assert.match(index, /<span class="version-badge">v[0-9][^<]*<\\\\/span>/);';
+    'assert.match(index, /<span class="version-badge">v[0-9][^<]*<\\/span>/);';
 
   if (source.includes(frozen)) {
     source = replaceOne(
