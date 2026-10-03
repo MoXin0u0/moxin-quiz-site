@@ -1,0 +1,36 @@
+/* P4.2 — explicit exam bank selection + layered settings */
+.exam-sprint-form-layered { display: grid; grid-template-columns: 1fr; gap: .8rem; padding-top: 0; border-top: 0; }
+.exam-sprint-setting-block,
+.exam-sprint-setting-grid { padding: .85rem; border: 1px solid var(--learn-line); border-radius: 16px; background: color-mix(in srgb, var(--learn-surface-soft) 80%, transparent); }
+.exam-sprint-setting-head { display: flex; align-items: end; justify-content: space-between; gap: .8rem; margin-bottom: .65rem; }
+.exam-sprint-setting-head > div { display: grid; gap: .16rem; }
+.exam-sprint-setting-head strong { color: var(--learn-text); }
+.exam-sprint-setting-head span { color: var(--learn-muted); font-size: .74rem; line-height: 1.45; }
+.exam-sprint-setting-head b { flex: 0 0 auto; color: var(--learn-primary); font-size: .82rem; }
+.exam-sprint-bank-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .48rem; max-height: 260px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding-right: .15rem; }
+.exam-sprint-bank-option { display: flex; align-items: center; gap: .55rem; min-width: 0; padding: .62rem; border: 1px solid var(--learn-line); border-radius: 12px; background: var(--learn-surface-strong); cursor: pointer; }
+.exam-sprint-bank-option.is-selected { border-color: color-mix(in srgb, var(--learn-primary) 48%, var(--learn-line)); background: color-mix(in srgb, var(--learn-primary) 9%, var(--learn-surface)); }
+.exam-sprint-bank-option input { flex: 0 0 auto; width: 1rem; height: 1rem; accent-color: var(--learn-primary); }
+.exam-sprint-bank-option > span { display: grid; min-width: 0; gap: .08rem; }
+.exam-sprint-bank-option strong,
+.exam-sprint-bank-option small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.exam-sprint-bank-option strong { color: var(--learn-text); font-size: .78rem; }
+.exam-sprint-bank-option small { color: var(--learn-muted); font-size: .64rem; }
+.exam-sprint-setting-grid { display: grid; grid-template-columns: 1.15fr 1fr 190px 170px auto; gap: .65rem; align-items: end; }
+.exam-sprint-setting-grid > label { display: grid; gap: .32rem; }
+.exam-sprint-setting-grid > label > span:first-child { color: var(--learn-muted); font-size: .76rem; font-weight: 800; }
+.exam-sprint-setting-grid input[type="text"],
+.exam-sprint-setting-grid input[type="date"],
+.exam-sprint-setting-grid input[type="number"] { width: 100%; min-height: 42px; border: 1px solid var(--learn-line); border-radius: 12px; padding: .6rem .72rem; background: var(--learn-surface-strong); color: var(--learn-text); font: inherit; }
+.exam-sprint-setting-grid > label > small { color: var(--learn-muted); font-size: .66rem; }
+@media (max-width: 1080px) {
+  .exam-sprint-bank-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .exam-sprint-setting-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .exam-sprint-setting-grid .exam-sprint-enabled { grid-column: 1 / -1; }
+}
+@media (max-width: 620px) {
+  .exam-sprint-setting-head { align-items: start; flex-direction: column; }
+  .exam-sprint-bank-picker,
+  .exam-sprint-setting-grid { grid-template-columns: 1fr; }
+  .exam-sprint-setting-grid .exam-sprint-enabled { grid-column: auto; }
+}
