@@ -68,19 +68,8 @@ write('docs/V4_0_RC1_BROWSER_UX_AUDIT.md', DOC);
   let source = read(path);
   source = replaceOne(
     source,
-    `<div class="home-goal-progress" aria-label="今日目標進度 ${percent}%">
-        <i style="width:${goal.configured ? percent : 0}%"></i>
-      </div>`,
-    `<div
-        class="home-goal-progress"
-        role="progressbar"
-        aria-label="今日目標進度"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="${goal.configured ? percent : 0}"
-      >
-        <i style="width:${goal.configured ? percent : 0}%"></i>
-      </div>`,
+    "<div class=\"home-goal-progress\" aria-label=\"今日目標進度 ${percent}%\">\n        <i style=\"width:${goal.configured ? percent : 0}%\"></i>\n      </div>",
+    "<div\n        class=\"home-goal-progress\"\n        role=\"progressbar\"\n        aria-label=\"今日目標進度\"\n        aria-valuemin=\"0\"\n        aria-valuemax=\"100\"\n        aria-valuenow=\"${goal.configured ? percent : 0}\"\n      >\n        <i style=\"width:${goal.configured ? percent : 0}%\"></i>\n      </div>",
     'home progressbar ARIA contract',
   );
   write(path, source);
