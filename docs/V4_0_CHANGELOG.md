@@ -2,6 +2,17 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P4.2 — Learning Hub IA Refactor
+- 主導覽「今日複習」升級為「今日學習」，建立總覽 / 複習 / 學習目標 / 考前衝刺第二層。
+- P3、P4、Review 不再垂直完整堆疊；總覽只保留今日決策資訊。
+- P4 與 P3 scope 完全解耦，使用獨立 exam-sprint record。
+- P4 新增 sprintBankIds 多題庫明確選擇；空選擇不再等同全部題庫。
+- P4 新增 sprintDailyTarget；0 代表依剩餘題量與天數自動建議。
+- P3 題庫範圍改成單一題庫優先、Global 明確標示「全部題庫（整體目標）」。
+- 沒有既有 P3 設定時，預設第一個本機題庫，不自動使用 Global。
+- 新增全站 UX Density Audit，P5 統計開始前先建立次層架構。
+- APP cache 更新至 r2k.5-13。
+
 ## P4.1 — Exam Sprint UI & Session Integration
 - 「今日複習」頁在 P3 學習目標後新增考前衝刺 Dashboard。
 - 支援 Global / Bank scope 的考試名稱、日期與 sprintEnabled 設定。

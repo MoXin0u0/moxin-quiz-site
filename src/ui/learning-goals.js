@@ -52,15 +52,21 @@ export function renderLearningGoalPanel(model = {}) {
         </div>
 
         <label class="learning-goal-scope">
-          <span>目標範圍</span>
+          <span>學習目標適用題庫</span>
           <select data-learning-goal-scope>
-            <option value="${GLOBAL_SCOPE}" ${selectedScope === GLOBAL_SCOPE ? 'selected' : ''}>全部題庫</option>
-            ${banks.map(bank => `
-              <option
-                value="${escapeAttr(bank.id)}"
-                ${selectedScope === String(bank.id) ? 'selected' : ''}
-              >${escapeHtml(bank.name || bank.title || bank.id)}</option>
-            `).join('')}
+            ${banks.length ? `
+              <optgroup label="單一題庫">
+                ${banks.map(bank => `
+                  <option
+                    value="${escapeAttr(bank.id)}"
+                    ${selectedScope === String(bank.id) ? 'selected' : ''}
+                  >${escapeHtml(bank.name || bank.title || bank.id)}</option>
+                `).join('')}
+              </optgroup>
+            ` : ''}
+            <optgroup label="整體範圍">
+              <option value="${GLOBAL_SCOPE}" ${selectedScope === GLOBAL_SCOPE ? 'selected' : ''}>全部題庫（整體目標）</option>
+            </optgroup>
           </select>
         </label>
       </div>

@@ -23,11 +23,12 @@ export const SPRINT_PRIORITY_ORDER = Object.freeze([
 ]);
 
 export const SPRINT_LOW_MASTERY_MAX_LEVEL = 2;
+export const EXAM_SPRINT_GOAL_ID = 'exam-sprint';
 
 export function buildExamSprintPlan(goal = {}, data = {}, {
   now = new Date(),
   timeZone = null,
-  todayPracticeCount = 0,
+  todayPracticeCount = null,
 } = {}) {
   const todayKey = localDateKey(now, { timeZone });
   const examDateKey = normalizeExamDateKey(goal?.examDate);
@@ -37,7 +38,9 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
       ? 0
       : Math.max(1, daysUntilExam);
 
-  const questions = normalizeQuestions(data?.questions, goal?.bankId);
+  const sprintBankIds = resolveSprintBankIds(goal);
+  const hasBankSelection = sprintBankIds === null || sprintBankIds.length > 0;
+  const questions = normalizeQuestions(data?.questions, sprintBankIds, goal?.bankId);
   const indexes = buildIndexes({
     progressRecords: data?.progressRecords,
     unfamiliarRecords: data?.unfamiliarRecords,
@@ -51,6 +54,7 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
   const completedTodayKeys = buildTodayPracticeKeySet(data?.attempts, {
     now,
     timeZone,
+    bankIds: sprintBankIds,
     bankId: goal?.bankId,
   });
   const availableToday = ranked.filter(
@@ -70,16 +74,18 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
       ? Math.ceil(candidateCount / remainingStudyDays)
       : 0;
 
-  const configuredDailyTarget = clampTarget(goal?.dailyPracticeTarget);
+  const configuredDailyTarget =
+    clampTarget(goal?.sprintDailyTarget) ||
+    clampTarget(goal?.dailyPracticeTarget);
   const dailyTarget =
     remainingStudyDays > 0
       ? configuredDailyTarget || recommendedDailyTarget
       : 0;
 
-  const completedPracticeToday = Math.max(
-    0,
-    Math.round(Number(todayPracticeCount) || 0),
-  );
+  const completedPracticeToday =
+    todayPracticeCount === null || todayPracticeCount === undefined
+      ? completedTodayKeys.size
+      : Math.max(0, Math.round(Number(todayPracticeCount) || 0));
 
   const remainingToday = Math.max(0, dailyTarget - completedPracticeToday);
   const availableTodayCount = availableToday.length;
@@ -97,6 +103,7 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
   const enabled = goal?.sprintEnabled === true;
   const active =
     enabled &&
+    hasBankSelection &&
     hasExamDate &&
     !examPassed &&
     candidateCount > 0;
@@ -104,12 +111,14 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
   return {
     goalId: String(goal?.id || 'global'),
     bankId: goal?.bankId ? String(goal.bankId) : null,
+    bankIds: sprintBankIds,
     examLabel: String(goal?.examLabel || '').trim(),
     examDateKey,
     sprintEnabled: enabled,
     active,
     status: sprintStatus({
       enabled,
+      hasBankSelection,
       hasExamDate,
       examPassed,
       candidateCount,
@@ -176,15 +185,20 @@ export function recommendedSprintDailyTarget({
 export function buildTodayPracticeKeySet(attempts = [], {
   now = new Date(),
   timeZone = null,
+  bankIds = null,
   bankId = null,
 } = {}) {
   const todayKey = localDateKey(now, { timeZone });
+  const explicitBankIds = Array.isArray(bankIds)
+    ? new Set(bankIds.map(value => String(value)))
+    : null;
   const scopedBankId = bankId ? String(bankId) : null;
   const keys = new Set();
 
   for (const attempt of Array.isArray(attempts) ? attempts : []) {
     if (!attempt?.timestamp) continue;
-    if (scopedBankId && String(attempt.bankId || '') !== scopedBankId) continue;
+    if (explicitBankIds && !explicitBankIds.has(String(attempt.bankId || ''))) continue;
+    if (!explicitBankIds && scopedBankId && String(attempt.bankId || '') !== scopedBankId) continue;
     if (classifyLearningAttempt(attempt) !== LEARNING_ATTEMPT_KIND.PRACTICE) continue;
     if (localDateKey(attempt.timestamp, { timeZone }) !== todayKey) continue;
 
@@ -195,6 +209,27 @@ export function buildTodayPracticeKeySet(attempts = [], {
   }
 
   return keys;
+}
+
+export function resolveSprintBankIds(goal = {}) {
+  if (Array.isArray(goal?.sprintBankIds)) {
+    const result = [];
+    const seen = new Set();
+    for (const value of goal.sprintBankIds) {
+      const id = String(value || '').trim();
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+      result.push(id);
+    }
+    return result;
+  }
+
+  if (goal?.bankId) return [String(goal.bankId)];
+
+  // Legacy P4 Core treated global/no-bank as all banks. New exam-sprint
+  // records always persist sprintBankIds, so [] safely means no selection.
+  if (String(goal?.id || '') !== EXAM_SPRINT_GOAL_ID) return null;
+  return [];
 }
 
 export function normalizeExamDateKey(value) {
@@ -278,8 +313,11 @@ function recordMap(records) {
   return map;
 }
 
-function normalizeQuestions(questions, fallbackBankId = null) {
+function normalizeQuestions(questions, allowedBankIds = null, fallbackBankId = null) {
   const fallback = fallbackBankId ? String(fallbackBankId) : '';
+  const allowed = Array.isArray(allowedBankIds)
+    ? new Set(allowedBankIds.map(value => String(value)))
+    : null;
   const seen = new Set();
   const normalized = [];
 
@@ -287,7 +325,8 @@ function normalizeQuestions(questions, fallbackBankId = null) {
     const bankId = String(question?.bankId || fallback || '');
     const questionId = String(question?.questionId || question?.id || '');
     if (!bankId || !questionId) continue;
-    if (fallback && bankId !== fallback) continue;
+    if (allowed && !allowed.has(bankId)) continue;
+    if (!allowed && fallback && bankId !== fallback) continue;
 
     const key = questionKey(bankId, questionId);
     if (seen.has(key)) continue;
@@ -368,6 +407,7 @@ function clampTarget(value) {
 
 function sprintStatus({
   enabled,
+  hasBankSelection,
   hasExamDate,
   examPassed,
   candidateCount,
@@ -375,6 +415,7 @@ function sprintStatus({
   availableTodayCount,
 }) {
   if (!enabled) return 'disabled';
+  if (!hasBankSelection) return 'missing-bank-selection';
   if (!hasExamDate) return 'missing-exam-date';
   if (examPassed) return 'exam-passed';
   if (!candidateCount) return 'no-questions';

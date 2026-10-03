@@ -106,7 +106,10 @@ import {
   saveLearningGoal,
 } from '../storage/repositories/goals.js';
 import { buildLearningGoalProgress } from '../learning/goal-progress.js';
-import { buildExamSprintPlan } from '../learning/exam-sprint.js';
+import {
+  EXAM_SPRINT_GOAL_ID,
+  buildExamSprintPlan,
+} from '../learning/exam-sprint.js';
 import { createExamSprintSaveInput } from '../ui/exam-sprint.js';
 import { renderLearningStats } from '../ui/stats.js';
 import { renderExamCenter } from '../ui/exam-center.js';
@@ -140,7 +143,8 @@ const state = {
   practiceQuestionMap: new Map(),
   assetUrls: [],
   reviewGroups: [],
-  learningGoalScope: GLOBAL_SCOPE,
+  learningGoalScope: null,
+  learningHubTab: 'overview',
   sprintPlan: null,
   exam: null,
   examQuestionMap: new Map(),
@@ -335,6 +339,13 @@ function bindEvents() {
     }
   });
 
+  elements.reviewArea.addEventListener('click', async event => {
+    const tab = event.target.closest('[data-learning-hub-tab]');
+    if (!tab) return;
+    state.learningHubTab = tab.dataset.learningHubTab || 'overview';
+    await openReviewCenter();
+  });
+
   elements.reviewArea.addEventListener('change', async event => {
     const scope = event.target.closest('[data-learning-goal-scope]');
     if (!scope) return;
@@ -347,20 +358,27 @@ function bindEvents() {
     if (!sprintForm) return;
     event.preventDefault();
 
-    const scope =
-      sprintForm.querySelector('[data-exam-sprint-scope]')?.value ||
-      state.learningGoalScope ||
-      GLOBAL_SCOPE;
+    const bankIds = [...sprintForm.querySelectorAll('[data-exam-sprint-bank]:checked')]
+      .map(input => input.value)
+      .filter(Boolean);
+    const sprintEnabled =
+      sprintForm.querySelector('[data-exam-sprint-enabled]')?.checked === true;
+
+    if (sprintEnabled && !bankIds.length) {
+      showToast(elements.toastRegion, '請至少選擇一個這場考試要使用的題庫。', 'error');
+      return;
+    }
 
     const payload = createExamSprintSaveInput({
-      scope,
+      bankIds,
       examLabel: sprintForm.querySelector('[data-exam-sprint-label]')?.value,
       examDate: sprintForm.querySelector('[data-exam-sprint-date]')?.value,
-      sprintEnabled: sprintForm.querySelector('[data-exam-sprint-enabled]')?.checked === true,
+      sprintEnabled,
+      sprintDailyTarget: sprintForm.querySelector('[data-exam-sprint-daily-target]')?.value,
     });
 
     await saveLearningGoal(payload);
-    state.learningGoalScope = scope;
+    state.learningHubTab = 'sprint';
     showToast(elements.toastRegion, '考前衝刺設定已儲存。', 'success');
     await openReviewCenter();
   });
@@ -917,14 +935,22 @@ async function openReviewCenter() {
     })),
   ]);
 
+  const p3Goals = goals.filter(goal => goal.id !== EXAM_SPRINT_GOAL_ID);
   const validScopes = new Set([GLOBAL_SCOPE, ...state.banks.map(bank => String(bank.id))]);
-  if (!validScopes.has(state.learningGoalScope)) {
-    state.learningGoalScope = GLOBAL_SCOPE;
+
+  if (!state.learningGoalScope || !validScopes.has(state.learningGoalScope)) {
+    const configuredGoal = p3Goals.find(goal =>
+      goal.enabled === true &&
+      (!goal.bankId || validScopes.has(String(goal.bankId)))
+    );
+    state.learningGoalScope = configuredGoal
+      ? configuredGoal.bankId || GLOBAL_SCOPE
+      : state.banks[0]?.id || GLOBAL_SCOPE;
   }
 
   const selectedScope = state.learningGoalScope;
   const goalId = learningGoalIdForScope(selectedScope);
-  const existingGoal = goals.find(goal => goal.id === goalId) || null;
+  const existingGoal = p3Goals.find(goal => goal.id === goalId) || null;
   const bankId = selectedScope === GLOBAL_SCOPE ? null : selectedScope;
   const goal = existingGoal || normalizeLearningGoal({
     id: selectedScope === GLOBAL_SCOPE ? GLOBAL_GOAL_ID : goalId,
@@ -934,20 +960,37 @@ async function openReviewCenter() {
     dailyReviewTarget: 0,
   });
 
-  const progress = buildLearningGoalProgress(goal, attempts, {
-    historyDays: 7,
-  });
+  const progress = buildLearningGoalProgress(goal, attempts, { historyDays: 7 });
 
-  const sprintData = await collectSprintData(bankId);
+  const explicitSprintGoal = goals.find(item => item.id === EXAM_SPRINT_GOAL_ID) || null;
+  const legacySprintGoal = explicitSprintGoal
+    ? null
+    : goals.find(item =>
+        item.id !== EXAM_SPRINT_GOAL_ID &&
+        (item.sprintEnabled === true || item.examDate || item.examLabel)
+      ) || null;
+
+  const sprintGoal = normalizeLearningGoal(
+    explicitSprintGoal || {
+      id: EXAM_SPRINT_GOAL_ID,
+      bankId: null,
+      sprintEnabled: legacySprintGoal?.sprintEnabled === true,
+      examDate: legacySprintGoal?.examDate || null,
+      examLabel: legacySprintGoal?.examLabel || '',
+      sprintBankIds: legacySprintGoal?.bankId ? [legacySprintGoal.bankId] : [],
+      sprintDailyTarget: legacySprintGoal?.dailyPracticeTarget || 0,
+    }
+  );
+
+  const sprintData = await collectSprintData(sprintGoal.sprintBankIds);
   sprintData.attempts = attempts;
-  const sprintPlan = buildExamSprintPlan(goal, sprintData, {
-    todayPracticeCount: progress.today?.practiceGoal?.count || 0,
-  });
+  const sprintPlan = buildExamSprintPlan(sprintGoal, sprintData);
 
   state.reviewGroups = groups;
   state.sprintPlan = sprintPlan;
 
   renderReviewCenter(elements.reviewArea, groups, {
+    activeTab: state.learningHubTab,
     goalModel: {
       banks: state.banks,
       selectedScope,
@@ -957,18 +1000,20 @@ async function openReviewCenter() {
     },
     sprintModel: {
       banks: state.banks,
-      selectedScope,
-      goal,
+      goal: sprintGoal,
       plan: sprintPlan,
     },
   });
   showView('review');
 }
 
-async function collectSprintData(bankId = null) {
-  const targetBanks = bankId
-    ? state.banks.filter(bank => String(bank.id) === String(bankId))
-    : state.banks;
+async function collectSprintData(bankIds = []) {
+  const selected = new Set(
+    (Array.isArray(bankIds) ? bankIds : [])
+      .map(value => String(value))
+      .filter(Boolean)
+  );
+  const targetBanks = state.banks.filter(bank => selected.has(String(bank.id)));
 
   const chunks = await Promise.all(targetBanks.map(async bank => {
     const [questions, progressRecords, unfamiliarRecords, reviewRecords] = await Promise.all([
@@ -1002,6 +1047,7 @@ async function startExamSprint(bankId) {
   const plan = state.sprintPlan;
   if (!plan) {
     showToast(elements.toastRegion, '請先重新整理考前衝刺計畫。', 'error');
+    state.learningHubTab = 'sprint';
     await openReviewCenter();
     return;
   }
@@ -1014,6 +1060,7 @@ async function startExamSprint(bankId) {
 
   if (!selectedIds.size) {
     showToast(elements.toastRegion, '這個題庫目前沒有待衝刺題目。', 'info');
+    state.learningHubTab = 'sprint';
     await openReviewCenter();
     return;
   }
@@ -1025,31 +1072,31 @@ async function startExamSprint(bankId) {
 
   if (!bank) {
     showToast(elements.toastRegion, '找不到這個題庫。', 'error');
+    state.learningHubTab = 'sprint';
     await openReviewCenter();
     return;
   }
 
   const byId = new Map(questions.map(question => [question.id, question]));
-  const selected = (plan.selected || [])
+  const selectedQuestions = (plan.selected || [])
     .filter(item => String(item.bankId) === String(bankId))
     .map(item => byId.get(item.questionId))
     .filter(Boolean);
 
-  if (!selected.length) {
+  if (!selectedQuestions.length) {
     showToast(elements.toastRegion, '衝刺題目已不存在，已重新計算。', 'info');
+    state.learningHubTab = 'sprint';
     await openReviewCenter();
     return;
   }
 
   state.currentBank = bank;
   state.allQuestions = questions;
-  state.filteredQuestions = selected;
+  state.filteredQuestions = selectedQuestions;
   state.learningFilter = 'all';
   state.learning = createEmptyLearningState();
 
-  await startPractice(selected, 'sprint', {
-    shuffleQuestions: false,
-  });
+  await startPractice(selectedQuestions, 'sprint', { shuffleQuestions: false });
 }
 
 

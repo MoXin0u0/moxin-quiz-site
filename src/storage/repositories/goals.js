@@ -20,6 +20,8 @@ export function normalizeLearningGoal(input = {}, now = new Date()) {
     examDate: normalizeOptionalDate(source.examDate),
     examLabel: String(source.examLabel || '').trim(),
     sprintEnabled: source.sprintEnabled === true,
+    sprintBankIds: normalizeStringArray(source.sprintBankIds),
+    sprintDailyTarget: clampInteger(source.sprintDailyTarget, 0, 10000),
     createdAt: normalizeDateString(source.createdAt, now),
     updatedAt: normalizeDateString(source.updatedAt, now),
   };
@@ -60,6 +62,18 @@ function clampInteger(value, min, max) {
   const number = Number(value);
   if (!Number.isFinite(number)) return min;
   return Math.min(max, Math.max(min, Math.round(number)));
+}
+
+function normalizeStringArray(values) {
+  const result = [];
+  const seen = new Set();
+  for (const value of Array.isArray(values) ? values : []) {
+    const item = String(value || '').trim();
+    if (!item || seen.has(item)) continue;
+    seen.add(item);
+    result.push(item);
+  }
+  return result;
 }
 
 function normalizeOptionalDate(value) {
