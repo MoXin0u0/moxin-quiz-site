@@ -412,3 +412,26 @@
   .exam-sprint-setting-grid { grid-template-columns: 1fr; }
   .exam-sprint-setting-grid .exam-sprint-enabled { grid-column: auto; }
 }
+
+
+/* P4.2.1 — large-bank search */
+
+.exam-sprint-bank-search {
+  display: block;
+  margin-bottom: .6rem;
+}
+
+.exam-sprint-bank-search input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--learn-line);
+  border-radius: 12px;
+  padding: .58rem .72rem;
+  background: var(--learn-surface-strong);
+  color: var(--learn-text);
+  font: inherit;
+}
+
+.exam-sprint-bank-search input::placeholder {
+  color: var(--learn-muted);
+}

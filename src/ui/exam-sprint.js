@@ -78,9 +78,25 @@ export function renderExamSprintPanel(model = {}) {
             <b>${selectedBankIds.length} 個題庫</b>
           </div>
 
+          ${banks.length > 6 ? `
+            <label class="exam-sprint-bank-search">
+              <span class="sr-only">搜尋考試題庫</span>
+              <input
+                type="search"
+                autocomplete="off"
+                placeholder="搜尋題庫名稱或 ID"
+                data-exam-sprint-bank-search
+              />
+            </label>
+          ` : ''}
+
           <div class="exam-sprint-bank-picker">
             ${banks.length ? banks.map(bank => `
-              <label class="exam-sprint-bank-option ${selectedBankSet.has(String(bank.id)) ? 'is-selected' : ''}">
+              <label
+                class="exam-sprint-bank-option ${selectedBankSet.has(String(bank.id)) ? 'is-selected' : ''}"
+                data-exam-sprint-bank-option
+                data-sprint-bank-search-text="${escapeAttr(`${bank.name || bank.title || bank.id} ${bank.id}`)}"
+              >
                 <input
                   type="checkbox"
                   value="${escapeAttr(bank.id)}"

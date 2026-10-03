@@ -16,9 +16,14 @@ export function renderReviewCenter(container, groups, options = {}) {
 
   const goalModel = options.goalModel || {};
   const sprintModel = options.sprintModel || {};
-  const goalProgress = goalModel.progress || {};
-  const todayPractice = Number(goalProgress.today?.practiceGoal?.count || 0);
-  const streak = Number(goalProgress.streak || 0);
+  const summaryModel = options.summaryModel || {};
+  const summaryProgress = summaryModel.progress || {};
+  const todayPractice = Number(
+    summaryProgress.today?.practiceGoal?.count ??
+    summaryProgress.today?.practice ??
+    0
+  );
+  const streak = Number(summaryProgress.streak || 0);
   const sprintPlan = sprintModel.plan || {};
   const examDays = sprintPlan.examDateKey && Number.isFinite(Number(sprintPlan.daysUntilExam))
     ? Number(sprintPlan.daysUntilExam)
@@ -52,8 +57,8 @@ export function renderReviewCenter(container, groups, options = {}) {
 
         <div class="learning-focus-strip learning-hero-stat-strip">
           ${focusItem('今日到期', totalDue, 'due')}
-          ${focusItem('今日刷題', todayPractice, 'favorite')}
-          ${focusItem('連續學習', streak, 'unfamiliar')}
+          ${focusItem('全站刷題', todayPractice, 'favorite')}
+          ${focusItem('全站連續', streak, 'unfamiliar')}
           ${focusItem('考試倒數', examDays === null ? '—' : Math.max(0, examDays), 'wrong')}
         </div>
       </div>
@@ -68,7 +73,11 @@ export function renderReviewCenter(container, groups, options = {}) {
     ${renderLearningHubTabs(activeTab)}
 
     <div class="learning-hub-content" data-learning-hub-content="${activeTab}">
-      ${renderActiveTab(activeTab, groups, { goalModel, sprintModel })}
+      ${renderActiveTab(activeTab, groups, {
+        goalModel,
+        sprintModel,
+        summaryModel,
+      })}
     </div>
   `;
 }
@@ -87,6 +96,7 @@ function renderActiveTab(activeTab, groups, options) {
     groups,
     goalModel: options.goalModel,
     sprintModel: options.sprintModel,
+    summaryModel: options.summaryModel,
   });
 }
 

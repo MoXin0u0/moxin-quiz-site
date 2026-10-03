@@ -66,3 +66,81 @@
   .learning-hub-tabs { grid-template-columns: 1fr; }
   .learning-hub-tab { min-height: 0; }
 }
+
+
+/* P4.2.1 — global summary, cached-tab UX, mobile compaction */
+
+.learning-hub-global-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .45rem;
+  padding: .72rem .8rem;
+  border: 1px solid var(--learn-line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--learn-surface-soft) 88%, transparent);
+}
+
+.learning-hub-global-strip > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .25rem;
+  padding: .28rem .46rem;
+  border-radius: 999px;
+  color: var(--learn-muted);
+  font-size: .72rem;
+}
+
+.learning-hub-global-strip > span:first-child {
+  padding-left: 0;
+  color: var(--learn-text);
+}
+
+.learning-hub-global-strip strong {
+  color: var(--learn-text);
+}
+
+@media (max-width: 620px) {
+  #reviewView .learning-review-hero {
+    margin-bottom: .65rem;
+    padding: .9rem;
+  }
+
+  #reviewView .learning-review-hero h2 {
+    max-width: 17ch;
+    margin: .28rem 0 .42rem;
+    font-size: clamp(1.45rem, 7.4vw, 1.95rem);
+    line-height: 1.12;
+  }
+
+  #reviewView .learning-review-hero p {
+    line-height: 1.5;
+  }
+
+  #reviewView .learning-review-hero .learning-hero-cta-row {
+    margin-top: .7rem;
+    gap: .45rem;
+  }
+
+  #reviewView .learning-review-hero .learning-hero-stat-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .4rem;
+    margin-top: .7rem;
+  }
+
+  #reviewView .learning-review-hero .learning-focus-item {
+    padding: .48rem .56rem;
+  }
+
+  #reviewView .learning-review-hero .learning-focus-item strong {
+    font-size: 1.05rem;
+  }
+
+  #reviewView .learning-hero-floating-stat.review {
+    display: none;
+  }
+
+  .learning-hub-tabs {
+    margin-top: .65rem;
+  }
+}

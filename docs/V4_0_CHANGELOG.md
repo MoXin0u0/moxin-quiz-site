@@ -2,6 +2,14 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## P4.2.1 — Learning Hub Refinement
+- Hero 與總覽新增真正 Global 今日摘要，不再誤用目前 P3 題庫 scope。
+- P3 目標卡仍保留自己的單題庫 / Global scope，並明確顯示目前目標範圍。
+- Hub 內部 Tab 改用 cached model 重新 render，不再每次切頁都重查所有 IndexedDB 資料。
+- 本機題庫超過 6 個時，P4 多題庫選擇新增名稱 / ID 搜尋。
+- 手機版壓縮今日學習 Hero，讓第二層導覽更快進入 viewport。
+- APP cache 更新至 r2k.5-14。
+
 ## P4.2 — Learning Hub IA Refactor
 - 主導覽「今日複習」升級為「今日學習」，建立總覽 / 複習 / 學習目標 / 考前衝刺第二層。
 - P3、P4、Review 不再垂直完整堆疊；總覽只保留今日決策資訊。

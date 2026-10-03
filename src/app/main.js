@@ -145,6 +145,7 @@ const state = {
   reviewGroups: [],
   learningGoalScope: null,
   learningHubTab: 'overview',
+  learningHubModel: null,
   sprintPlan: null,
   exam: null,
   examQuestionMap: new Map(),
@@ -343,7 +344,23 @@ function bindEvents() {
     const tab = event.target.closest('[data-learning-hub-tab]');
     if (!tab) return;
     state.learningHubTab = tab.dataset.learningHubTab || 'overview';
-    await openReviewCenter();
+    if (!renderLearningHubFromCache()) {
+      await openReviewCenter();
+    }
+  });
+
+  elements.reviewArea.addEventListener('input', event => {
+    const search = event.target.closest('[data-exam-sprint-bank-search]');
+    if (!search) return;
+
+    const query = String(search.value || '').trim().toLocaleLowerCase();
+    elements.reviewArea
+      .querySelectorAll('[data-exam-sprint-bank-option]')
+      .forEach(option => {
+        const text = String(option.dataset.sprintBankSearchText || option.textContent || '')
+          .toLocaleLowerCase();
+        option.hidden = Boolean(query) && !text.includes(query);
+      });
   });
 
   elements.reviewArea.addEventListener('change', async event => {
@@ -961,6 +978,13 @@ async function openReviewCenter() {
   });
 
   const progress = buildLearningGoalProgress(goal, attempts, { historyDays: 7 });
+  const summaryProgress = buildLearningGoalProgress({
+    id: GLOBAL_GOAL_ID,
+    bankId: null,
+    enabled: false,
+    dailyPracticeTarget: 0,
+    dailyReviewTarget: 0,
+  }, attempts, { historyDays: 7 });
 
   const explicitSprintGoal = goals.find(item => item.id === EXAM_SPRINT_GOAL_ID) || null;
   const legacySprintGoal = explicitSprintGoal
@@ -988,9 +1012,10 @@ async function openReviewCenter() {
 
   state.reviewGroups = groups;
   state.sprintPlan = sprintPlan;
-
-  renderReviewCenter(elements.reviewArea, groups, {
-    activeTab: state.learningHubTab,
+  state.learningHubModel = {
+    summaryModel: {
+      progress: summaryProgress,
+    },
     goalModel: {
       banks: state.banks,
       selectedScope,
@@ -1003,8 +1028,20 @@ async function openReviewCenter() {
       goal: sprintGoal,
       plan: sprintPlan,
     },
-  });
+  };
+
+  renderLearningHubFromCache();
   showView('review');
+}
+
+function renderLearningHubFromCache() {
+  if (!state.learningHubModel) return false;
+
+  renderReviewCenter(elements.reviewArea, state.reviewGroups, {
+    activeTab: state.learningHubTab,
+    ...state.learningHubModel,
+  });
+  return true;
 }
 
 async function collectSprintData(bankIds = []) {

@@ -42,12 +42,23 @@ export function renderLearningHubOverview({
   groups = [],
   goalModel = {},
   sprintModel = {},
+  summaryModel = {},
 } = {}) {
   const progress = goalModel.progress || {};
   const today = progress.today || {};
   const practice = today.practiceGoal || {};
   const review = today.reviewGoal || {};
   const goal = goalModel.goal || {};
+  const banks = Array.isArray(goalModel.banks) ? goalModel.banks : [];
+  const selectedScope = String(goalModel.selectedScope || 'global');
+
+  const globalProgress = summaryModel.progress || {};
+  const globalToday = globalProgress.today || {};
+  const globalPractice = Number(globalToday.practiceGoal?.count ?? globalToday.practice ?? 0);
+  const globalReview = Number(globalToday.reviewGoal?.count ?? globalToday.review ?? 0);
+  const globalExam = Number(globalToday.exam || 0);
+  const globalStreak = Number(globalProgress.streak || 0);
+
   const sprintGoal = sprintModel.goal || {};
   const sprintPlan = sprintModel.plan || {};
 
@@ -73,14 +84,27 @@ export function renderLearningHubOverview({
         : '已結束'
     : '尚未設定';
 
+  const selectedBank = banks.find(bank => String(bank.id) === selectedScope);
+  const scopeLabel = selectedScope === 'global'
+    ? '全部題庫（整體目標）'
+    : selectedBank?.name || selectedBank?.title || selectedScope;
+
   return `
     <section class="learning-hub-overview" aria-labelledby="learningHubOverviewTitle">
       <div class="learning-section-head compact">
         <div>
           <span class="learning-kicker">今日總覽</span>
-          <h2 id="learningHubOverviewTitle">先看今天，再進入需要的工具</h2>
-          <p>設定與深入分析分到各自頁籤；總覽只保留今天真正需要判斷的資訊。</p>
+          <h2 id="learningHubOverviewTitle">先看全站今天，再進入需要的工具</h2>
+          <p>最上層摘要固定看全部題庫；學習目標卡才依你目前選定的目標範圍顯示。</p>
         </div>
+      </div>
+
+      <div class="learning-hub-global-strip" aria-label="全站今日學習摘要">
+        <span><b>全站今日</b></span>
+        <span>刷題 <strong>${globalPractice}</strong></span>
+        <span>複習 <strong>${globalReview}</strong></span>
+        <span>模擬考 <strong>${globalExam}</strong></span>
+        <span>連續 <strong>${globalStreak} 天</strong></span>
       </div>
 
       <div class="learning-hub-overview-grid">
@@ -94,7 +118,7 @@ export function renderLearningHubOverview({
             <span>刷題 ${Number(practice.count || 0)}${practice.active ? ` / ${Number(practice.target || 0)}` : ''}</span>
             <span>複習 ${Number(review.count || 0)}${review.active ? ` / ${Number(review.target || 0)}` : ''}</span>
           </div>
-          <small>連續學習 ${Number(progress.streak || 0)} 天</small>
+          <small>目標範圍：${escapeHtml(scopeLabel)}</small>
         </article>
 
         <article class="learning-hub-overview-card review">
