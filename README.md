@@ -1,8 +1,8 @@
 # 墨忻刷題網
 
-墨忻刷題網 **v4.0 RC1** 是一個部署於 GitHub Pages 的 **Local-first 個人學習與刷題平台**。網站不需要後端、登入系統或付費伺服器；題庫、學習紀錄、目標、工作室草稿與大部分設定保存在目前瀏覽器，並支援 PWA 離線使用。
+墨忻刷題網 **v4.0** 是一個部署於 GitHub Pages 的 **Local-first 個人學習與刷題平台**。網站不需要後端、登入系統或付費伺服器；題庫、學習紀錄、目標、工作室草稿與大部分設定保存在目前瀏覽器，並支援 PWA 離線使用。
 
-> RC1 代表 v4.0 已完成主要功能與真實瀏覽器 Release Readiness 測試，但尚未進行正式 `main` cutover。
+> v4.0 已完成 Release Readiness 與 Main Cutover Rehearsal，正式版由 `main` 部署。
 
 ## v4.0 主要功能
 
@@ -212,7 +212,7 @@ Settings:  moxin.v3.settings
 
 完整備份涵蓋題庫、assets、學習紀錄、Session、工作室草稿與學習目標。
 
-v4.0 RC1 已以真實 Chromium 做過：
+v4.0 發布前已以真實 Chromium 做過：
 
 ```text
 下載完整備份
@@ -225,7 +225,7 @@ v4.0 RC1 已以真實 Chromium 做過：
 
 Service Worker 快取 App Shell。已加入 IndexedDB 的題庫在離線狀態仍可練習並保存本機進度。
 
-RC1 已驗證：
+v4.0 發布前已驗證：
 
 ```text
 Online
@@ -308,12 +308,12 @@ Branch: main
 Folder: / (root)
 ```
 
-RC1 開發與驗收仍在：
+正式版部署：
 
 ```text
-v4.0-learning-studio
+Branch: main
+Folder: / (root)
+Release tag: v4.0.0
 ```
 
 正式入口為 repository Pages 根網址；`v3.html` 保留相容入口。
-
-下一階段為 **Main Cutover Rehearsal**，通過後才會進行正式 v4.0 Production cutover。

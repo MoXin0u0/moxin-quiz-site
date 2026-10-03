@@ -140,6 +140,18 @@ IndexedDB version 2 → 3，只新增：
 - ✅ Release metadata cleanup
 - ✅ Main cutover rehearsal
 
+## v4.0 Production
+
+**狀態：Released**
+
+- ✅ RC1 Release Readiness
+- ✅ Main Cutover Rehearsal
+- ✅ Production metadata
+- ✅ Production regression contract
+- ✅ GitHub Pages main/root cutover
+- ✅ Public production smoke
+- ✅ v4.0.0 release tag
+
 ## 相容性要求
 
 v3.3 的以下資料必須無損保留：

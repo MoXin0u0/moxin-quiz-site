@@ -2,6 +2,14 @@
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。
 
+## v4.0 Production Cutover
+- 公開版本由 v4.0 RC1 升為 v4.0 / appVersion 4.0.0 / production channel。
+- APP cache 更新至 r2k.5-21。
+- Production regression 取代 RC1-only release gates。
+- 正式 PR 使用 Merge Commit，保留 merge SHA 作 rollback anchor。
+- GitHub Pages source 切換／確認為 main + root。
+- 公開網址完成 production smoke 並建立 v4.0.0 GitHub Release。
+
 ## RC1 — Main Cutover Rehearsal
 - 驗證 main 為 release candidate 祖先，candidate 不得 behind main。
 - 使用 temporary worktree + --no-ff merge 模擬正式 PR merge commit。
