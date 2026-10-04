@@ -188,6 +188,11 @@ write('src/app/landing.js', LANDING_JS);
 
   for (const path of activeTests) {
     if (!fs.existsSync(path)) continue;
+
+    // This file is replaced immediately after this migration block.
+    // Auditing its pre-v4.1 source here would be a false positive.
+    if (path === 'tests/v40-production-release-run.mjs') continue;
+
     const lines = read(path).split('\n');
 
     lines.forEach((line, index) => {
@@ -229,6 +234,44 @@ write('tests/v41-landing-page-run.mjs', V41_TEST);
 write('tests/v41-landing-browser-run.mjs', LANDING_BROWSER_TEST);
 write('scripts/v4-release-preflight.mjs', PREFLIGHT);
 write('docs/V4_1_PLAN.md', V41_PLAN);
+
+// Final cache-contract audit runs after generated tests replace historical
+// release-gate files, so it checks the state that npm test will actually see.
+{
+  const pkg = JSON.parse(read('package.json'));
+  const activeTests = String(pkg.scripts.test || '')
+    .split(/\s*&&\s*/)
+    .map(command => command.match(/^node\s+(tests\/[^\s]+\.mjs)$/)?.[1])
+    .filter(Boolean);
+
+  const stale = [];
+
+  for (const path of activeTests) {
+    if (!fs.existsSync(path)) continue;
+    read(path).split('\n').forEach((line, index) => {
+      if (
+        line.includes('assert.match(sw, /') &&
+        line.includes('moxin-quiz-v3-4') &&
+        (
+          line.includes('4\\.0\\.0') ||
+          line.includes('r2k') ||
+          line.includes('r2[')
+        )
+      ) {
+        stale.push(`${path}:${index + 1}: ${line.trim()}`);
+      }
+    });
+  }
+
+  if (stale.length) {
+    throw new Error(
+      'Final v4.1 cache-contract audit found stale historical assertions:\n' +
+      stale.join('\n'),
+    );
+  }
+
+  console.log('Final v4.1 cache-contract audit: PASS');
+}
 
 // Browser audit for the Learning Studio must enter app.html after the entry split.
 {
