@@ -115,10 +115,15 @@ write('src/app/landing.js', LANDING_JS);
   } catch {
     const url = new URL(request.url);
     const appNavigation = /\\/(?:app|v3)\\.html$/.test(url.pathname);
+    const routeFallback = appNavigation
+      ? await cache.match('./app.html')
+      : await cache.match('./index.html');
+
     return (
       await cache.match(request, { ignoreSearch: true }) ||
-      await cache.match(appNavigation ? './app.html' : './index.html') ||
+      routeFallback ||
       await cache.match('./app.html') ||
+      await cache.match('./index.html') ||
       Response.error()
     );
   }
@@ -300,8 +305,15 @@ PWA 安裝後使用 \`./app.html\` 作為 start_url。`;
   if (!read('app.html').includes('data-nav-library')) throw new Error('App navigation missing');
   if (manifest.start_url !== './app.html') throw new Error('PWA start_url is not app.html');
   if (!pkg.scripts.test.includes('v41-landing-page-run.mjs')) throw new Error('v4.1 test missing');
-  if (!read('service-worker.js').includes("moxin-quiz-v3-4.1.0-v41-landing-1")) {
+  const sw = read('service-worker.js');
+  if (!sw.includes("moxin-quiz-v3-4.1.0-v41-landing-1")) {
     throw new Error('v4.1 Service Worker cache missing');
+  }
+  if (!sw.includes("await cache.match('./app.html')")) {
+    throw new Error('v4.1 Service Worker app fallback is not explicit');
+  }
+  if (!sw.includes("await cache.match('./index.html')")) {
+    throw new Error('v4.1 Service Worker landing fallback is not explicit');
   }
 }
 
