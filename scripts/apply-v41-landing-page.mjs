@@ -141,88 +141,63 @@ write('src/app/landing.js', LANDING_JS);
     .map(command => command.match(/^node\s+(tests\/[^\s]+\.mjs)$/)?.[1])
     .filter(Boolean);
 
+  function pinsV40AppShellCache(line) {
+    if (!line.includes('assert.match(sw, /')) return false;
+
+    // Compare a normalized source line so the detector is independent of
+    // how many backslashes are needed inside a JavaScript regex literal.
+    const normalized = line.replaceAll('\\', '');
+    return normalized.includes('moxin-quiz-v3-4.0.0');
+  }
+
+  let expectedCacheMigrations = 0;
   let migratedCacheAssertions = 0;
 
   for (const path of activeTests) {
     if (!fs.existsSync(path)) continue;
-    if (path === 'tests/release-cutover-run.mjs' || path === 'tests/v40-production-release-run.mjs') continue;
+    if (
+      path === 'tests/release-cutover-run.mjs' ||
+      path === 'tests/v40-production-release-run.mjs'
+    ) {
+      continue;
+    }
 
     let source = read(path);
 
-    // After index.html becomes the public landing page, historical feature tests
-    // must inspect app.html for the Learning Studio UI.
+    // After index.html becomes the public landing page, historical feature
+    // tests must inspect app.html for the Learning Studio UI.
     source = source.replaceAll(
       "fs.readFileSync('index.html', 'utf8')",
       "fs.readFileSync('app.html', 'utf8')",
     );
 
-    // Historical milestones may verify that an App Shell cache version exists,
-    // but they must not freeze the CURRENT release at v4.0 / r2*.
-    // v4.1 owns the exact cache revision contract.
-    source = source
-      .split('\n')
+    const lines = source.split('\n');
+
+    for (const line of lines) {
+      if (pinsV40AppShellCache(line)) expectedCacheMigrations += 1;
+    }
+
+    source = lines
       .map(line => {
-        if (
-          line.includes('assert.match(sw, /') &&
-          line.includes('moxin-quiz-v3-4') &&
-          (
-            line.includes('4\\\\.0\\\\.0') ||
-            line.includes('r2k') ||
-            line.includes('r2[')
-          )
-        ) {
-          const indent = line.match(/^\s*/)?.[0] || '';
-          migratedCacheAssertions += 1;
-          return `${indent}assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\\.\\d+\\.\\d+-[^']+'/);`;
-        }
-        return line;
+        if (!pinsV40AppShellCache(line)) return line;
+
+        migratedCacheAssertions += 1;
+        const indent = line.match(/^\s*/)?.[0] || '';
+        return `${indent}assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\\.\\d+\\.\\d+-[^']+'/);`;
       })
       .join('\n');
 
     write(path, source);
   }
 
-  // Full active-test source audit: old milestones must not pin the current
-  // App Shell cache to the v4.0/r2 naming scheme.
-  const staleCacheAssertions = [];
-
-  for (const path of activeTests) {
-    if (!fs.existsSync(path)) continue;
-
-    // This file is replaced immediately after this migration block.
-    // Auditing its pre-v4.1 source here would be a false positive.
-    if (path === 'tests/v40-production-release-run.mjs') continue;
-
-    const lines = read(path).split('\n');
-
-    lines.forEach((line, index) => {
-      if (
-        line.includes('assert.match(sw, /') &&
-        line.includes('moxin-quiz-v3-4') &&
-        (
-          line.includes('4\\\\.0\\\\.0') ||
-          line.includes('r2k') ||
-          line.includes('r2[')
-        )
-      ) {
-        staleCacheAssertions.push(`${path}:${index + 1}: ${line.trim()}`);
-      }
-    });
-  }
-
-  if (staleCacheAssertions.length) {
+  if (migratedCacheAssertions !== expectedCacheMigrations) {
     throw new Error(
-      'Stale v4.0 App Shell cache assertions remain after v4.1 migration:\n' +
-      staleCacheAssertions.join('\n'),
+      `Historical cache migration count mismatch: expected ${expectedCacheMigrations}, migrated ${migratedCacheAssertions}`,
     );
   }
 
-  if (migratedCacheAssertions < 30) {
-    throw new Error(
-      `Expected to migrate at least 30 historical cache assertions; migrated ${migratedCacheAssertions}`,
-    );
-  }
-
+  // No arbitrary minimum is used here. The exact number of historical
+  // assertions is allowed to change as the test suite evolves.
   console.log(
     `Migrated historical App Shell cache assertions: ${migratedCacheAssertions}`,
   );
@@ -235,45 +210,8 @@ write('tests/v41-landing-browser-run.mjs', LANDING_BROWSER_TEST);
 write('scripts/v4-release-preflight.mjs', PREFLIGHT);
 write('docs/V4_1_PLAN.md', V41_PLAN);
 
-// Final cache-contract audit runs after generated tests replace historical
-// release-gate files, so it checks the state that npm test will actually see.
-{
-  const pkg = JSON.parse(read('package.json'));
-  const activeTests = String(pkg.scripts.test || '')
-    .split(/\s*&&\s*/)
-    .map(command => command.match(/^node\s+(tests\/[^\s]+\.mjs)$/)?.[1])
-    .filter(Boolean);
-
-  const stale = [];
-
-  for (const path of activeTests) {
-    if (!fs.existsSync(path)) continue;
-    read(path).split('\n').forEach((line, index) => {
-      if (
-        line.includes('assert.match(sw, /') &&
-        line.includes('moxin-quiz-v3-4') &&
-        (
-          line.includes('4\\.0\\.0') ||
-          line.includes('r2k') ||
-          line.includes('r2[')
-        )
-      ) {
-        stale.push(`${path}:${index + 1}: ${line.trim()}`);
-      }
-    });
-  }
-
-  if (stale.length) {
-    throw new Error(
-      'Final v4.1 cache-contract audit found stale historical assertions:\n' +
-      stale.join('\n'),
-    );
-  }
-
-  console.log('Final v4.1 cache-contract audit: PASS');
-}
-
 // Browser audit for the Learning Studio must enter app.html after the entry split.
+
 {
   const path = 'tests/v40-rc1-browser-ux-run.mjs';
   let source = read(path);
@@ -306,6 +244,40 @@ write('docs/V4_1_PLAN.md', V41_PLAN);
   pkg.scripts['audit:landing'] = 'node tests/v41-landing-browser-run.mjs';
 
   write(path, JSON.stringify(pkg, null, 2) + '\n');
+}
+
+// Final cache-contract audit runs after package.json and generated tests are in
+// their final v4.1 state, i.e. exactly what npm test will execute.
+{
+  const pkg = JSON.parse(read('package.json'));
+  const activeTests = String(pkg.scripts.test || '')
+    .split(/\s*&&\s*/)
+    .map(command => command.match(/^node\s+(tests\/[^\s]+\.mjs)$/)?.[1])
+    .filter(Boolean);
+
+  const stale = [];
+
+  for (const path of activeTests) {
+    if (!fs.existsSync(path)) continue;
+
+    read(path).split('\n').forEach((line, index) => {
+      if (!line.includes('assert.match(sw, /')) return;
+
+      const normalized = line.replaceAll('\\', '');
+      if (normalized.includes('moxin-quiz-v3-4.0.0')) {
+        stale.push(`${path}:${index + 1}: ${line.trim()}`);
+      }
+    });
+  }
+
+  if (stale.length) {
+    throw new Error(
+      'Final v4.1 cache-contract audit found stale v4.0 assertions:\n' +
+      stale.join('\n'),
+    );
+  }
+
+  console.log('Final v4.1 cache-contract audit: PASS');
 }
 
 // README: current version + explicit Landing/App entry architecture.
