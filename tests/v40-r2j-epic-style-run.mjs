@@ -5,7 +5,7 @@ import {
   normalizeSettings,
 } from '../src/storage/settings.js';
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const settingsUi = fs.readFileSync('src/ui/settings.js', 'utf8');
 const css = fs.readFileSync('styles/v4-learning-styles.css', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
@@ -48,6 +48,6 @@ assert.match(sceneLoader, /styles\/epic\/stats-dark\.webp/);
 assert.match(sw, /cacheFirstScene/);
 assert.match(sw, /moxin-quiz-scenes-/);
 // Cache revision is allowed to advance independently of this milestone.
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-\d+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2J epic fantasy style tests passed.');

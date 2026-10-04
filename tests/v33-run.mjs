@@ -69,7 +69,7 @@ assert.match(QUESTION_BANK_AI_PROMPT, /manifest\.json/);
 assert.match(QUESTION_BANK_AI_PROMPT, /questions\.json/);
 assert.match(QUESTION_BANK_AI_PROMPT, /不要自行猜題/);
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 const redirect = fs.readFileSync('legacy-v2.html', 'utf8');

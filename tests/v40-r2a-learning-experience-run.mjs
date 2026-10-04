@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const learning = fs.readFileSync('styles/v4-learning.css', 'utf8');
 const design = fs.readFileSync('styles/v4-design.css', 'utf8');
@@ -54,6 +54,6 @@ assert.match(learning, /#statsView \.mastery-cell/);
 assert.match(learning, /#practiceView \.answer-option/);
 
 assert.match(sw, /styles\/v4-learning\.css/);
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2A learning experience tests passed.');

@@ -5,7 +5,7 @@ import {
   normalizeSettings,
 } from '../src/storage/settings.js';
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const settingsUi = fs.readFileSync('src/ui/settings.js', 'utf8');
 const p7 = fs.readFileSync('src/app/p7.js', 'utf8');
@@ -58,6 +58,6 @@ assert.match(styleCss, /scene-intensity-picker/);
 
 assert.match(sw, /styles\/v4-learning-styles\.css/);
 // Cache revision is allowed to advance independently of this milestone.
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-\d+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2I visual style system tests passed.');

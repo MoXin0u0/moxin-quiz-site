@@ -168,7 +168,7 @@ const main = fs.readFileSync('src/app/main.js', 'utf8');
 const goalUi = fs.readFileSync('src/ui/learning-goals.js', 'utf8');
 const goals = fs.readFileSync('src/storage/repositories/goals.js', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 const audit = fs.readFileSync('docs/V4_0_UX_DENSITY_AUDIT.md', 'utf8');
 

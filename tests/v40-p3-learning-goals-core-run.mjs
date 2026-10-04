@@ -361,7 +361,7 @@ assert.equal(shiftDateKey('2024-03-01', -1), '2024-02-29');
 {
   const sw = fs.readFileSync('service-worker.js', 'utf8');
   assert.match(sw, /\.\/src\/learning\/goal-progress\.js/);
-  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 }
 
 console.log('MoXin Quiz v4.0 P3 learning goal progress core: 24 regression cases passed.');

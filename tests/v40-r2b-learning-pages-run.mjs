@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const review = fs.readFileSync('src/ui/review-center.js', 'utf8');
 const exam = fs.readFileSync('src/ui/exam-center.js', 'utf8');
@@ -45,7 +45,7 @@ assert.doesNotMatch(learning, /content:\s*["']✦["']/);
 assert.doesNotMatch(learning, /#toolsView/);
 assert.doesNotMatch(learning, /#settingsView/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 assert.match(sw, /styles\/v4-learning\.css/);
 
 console.log('MoXin Quiz v4.0 R2B learning page redesign tests passed.');

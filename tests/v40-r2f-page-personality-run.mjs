@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const review = fs.readFileSync('src/ui/review-center.js', 'utf8');
 const exam = fs.readFileSync('src/ui/exam-center.js', 'utf8');
@@ -41,6 +41,6 @@ assert.doesNotMatch(r2fCss, /assets\/learning\/light-sun-corner\.svg/);
 assert.doesNotMatch(r2fCss, /assets\/learning\/dark-desk-side\.svg/);
 
 // Cache revision is allowed to advance independently of this milestone.
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z0-9.]+-\d+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2F page personality and scene framework tests passed.');

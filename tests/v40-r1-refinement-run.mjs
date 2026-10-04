@@ -39,6 +39,6 @@ assert.match(css, /\.studio-r1-snackbar/);
 assert.match(css, /\.studio-r1-health-grid/);
 assert.match(css, /grid-template-columns:\s*260px minmax\(500px, 1fr\)/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R1.1 UI refinement tests passed.');

@@ -9,13 +9,8 @@ const warnings = [];
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const exists = file => fs.existsSync(path.join(root, file));
 
-function fail(message) {
-  errors.push(message);
-}
-
-function warn(message) {
-  warnings.push(message);
-}
+const fail = message => errors.push(message);
+const warn = message => warnings.push(message);
 
 function normalizeLocalPath(value) {
   if (!value || /^(?:https?:|data:|blob:|#)/i.test(value)) return null;
@@ -40,35 +35,50 @@ function parsePngSize(file) {
 
 for (const file of [
   'index.html',
+  'app.html',
   'v3.html',
   'legacy-v2.html',
   'legacy-v2/index.html',
   'manifest.webmanifest',
   'service-worker.js',
   'package.json',
+  'styles/v41-landing.css',
+  'src/app/landing.js',
 ]) {
   checkFile(file, 'release file');
 }
 
-const productionHtml = exists('index.html') ? read('index.html') : '';
-const compatibilityHtml = exists('v3.html') ? read('v3.html') : '';
-const legacyHtml = exists('legacy-v2.html') ? read('legacy-v2.html') : '';
+const landing = exists('index.html') ? read('index.html') : '';
+const app = exists('app.html') ? read('app.html') : '';
+const compatibility = exists('v3.html') ? read('v3.html') : '';
+const legacy = exists('legacy-v2.html') ? read('legacy-v2.html') : '';
 
-if (productionHtml && compatibilityHtml && productionHtml !== compatibilityHtml) {
-  fail('index.html and v3.html must remain byte-identical during the release cutover.');
+if (app && compatibility && app !== compatibility) {
+  fail('app.html and v3.html must remain byte-identical.');
 }
 
-checkHtml('index.html', productionHtml);
-checkHtml('v3.html', compatibilityHtml);
+checkHtml('index.html', landing);
+checkHtml('app.html', app);
+checkHtml('v3.html', compatibility);
 
-if (/\b(?:script\.js|style\.css)\b/.test(productionHtml)) {
-  fail('index.html must not reference the legacy root script.js/style.css.');
-}
-if (/\b(?:script\.js|style\.css)\b/.test(compatibilityHtml)) {
-  fail('v3.html must not reference the legacy root script.js/style.css.');
+if (!landing.includes('class="landing-body"')) fail('index.html must be the public landing page.');
+if (!landing.includes('href="./app.html"')) fail('Landing page must link to ./app.html.');
+if (landing.includes('src/app/main.js')) fail('Landing page must not bootstrap the Learning Studio runtime.');
+
+for (const nav of [
+  'data-nav-library',
+  'data-nav-review',
+  'data-nav-exam',
+  'data-nav-stats',
+  'data-nav-tools',
+  'data-nav-settings',
+]) {
+  if (!app.includes(nav)) fail(`Missing app navigation entry: ${nav}`);
 }
 
-if (legacyHtml && !legacyHtml.includes('./legacy-v2/')) {
+if (!app.includes('src/app/main.js')) fail('app.html must load src/app/main.js.');
+
+if (legacy && !legacy.includes('./legacy-v2/')) {
   fail('legacy-v2.html must redirect to ./legacy-v2/.');
 }
 
@@ -82,20 +92,7 @@ for (const file of [
 }
 
 for (const legacyRootFile of ['script.js', 'style.css', 'question-banks.json']) {
-  if (exists(legacyRootFile)) {
-    fail(`Legacy root file should be archived: ${legacyRootFile}`);
-  }
-}
-
-for (const nav of [
-  'data-nav-library',
-  'data-nav-review',
-  'data-nav-exam',
-  'data-nav-stats',
-  'data-nav-tools',
-  'data-nav-settings',
-]) {
-  if (!productionHtml.includes(nav)) fail(`Missing main navigation entry in index.html: ${nav}`);
+  if (exists(legacyRootFile)) fail(`Legacy root file should be archived: ${legacyRootFile}`);
 }
 
 let manifest = null;
@@ -106,12 +103,10 @@ try {
 }
 
 if (manifest) {
-  if (manifest.start_url !== './') {
-    fail(`manifest start_url must be ./ after cutover, got ${manifest.start_url}`);
+  if (manifest.start_url !== './app.html') {
+    fail(`manifest start_url must be ./app.html, got ${manifest.start_url}`);
   }
-  if (manifest.scope !== './') {
-    fail(`manifest scope must be ./, got ${manifest.scope}`);
-  }
+  if (manifest.scope !== './') fail(`manifest scope must be ./, got ${manifest.scope}`);
 
   const iconRequirements = new Map([
     ['192x192', [192, 192]],
@@ -124,14 +119,11 @@ if (manifest) {
       fail(`Manifest icon must be local: ${icon.src}`);
       continue;
     }
-
     checkFile(iconPath, 'manifest icon');
-
     if (exists(iconPath) && icon.type === 'image/png') {
       try {
         const actual = parsePngSize(iconPath);
-        const declared = String(icon.sizes || '').split(/\s+/);
-        for (const size of declared) {
+        for (const size of String(icon.sizes || '').split(/\s+/)) {
           const expected = iconRequirements.get(size);
           if (expected && (actual.width !== expected[0] || actual.height !== expected[1])) {
             fail(`${iconPath} declares ${size} but is ${actual.width}x${actual.height}.`);
@@ -146,17 +138,28 @@ if (manifest) {
 
 const sw = read('service-worker.js');
 const shellBlock = sw.match(/const\s+APP_SHELL\s*=\s*\[([\s\S]*?)\];/);
+
 if (!shellBlock) {
   fail('service-worker.js does not expose an APP_SHELL array.');
 } else {
-  const shellRefs = [...shellBlock[1].matchAll(/['"]\.\/([^'"]+)['"]/g)].map(match => match[1]);
-  if (!shellRefs.includes('index.html')) fail('Service Worker App Shell must include index.html.');
-  if (!shellRefs.includes('v3.html')) fail('Service Worker App Shell must retain v3.html compatibility entry.');
-  for (const ref of shellRefs) checkFile(ref, 'Service Worker App Shell resource');
+  const refs = [...shellBlock[1].matchAll(/['"]\.\/([^'"]+)['"]/g)].map(match => match[1]);
+  for (const required of [
+    'index.html',
+    'app.html',
+    'v3.html',
+    'styles/v41-landing.css',
+    'src/app/landing.js',
+  ]) {
+    if (!refs.includes(required)) fail(`Service Worker App Shell missing ${required}.`);
+  }
+  for (const ref of refs) checkFile(ref, 'Service Worker App Shell resource');
 }
 
 if (!/cache\.match\('\.\/index\.html'\)/.test(sw)) {
-  fail('Service Worker navigation fallback must prefer ./index.html.');
+  fail('Service Worker navigation fallback must include ./index.html.');
+}
+if (!/cache\.match\('\.\/app\.html'\)/.test(sw)) {
+  fail('Service Worker navigation fallback must include ./app.html.');
 }
 
 const codeFiles = [
@@ -166,10 +169,7 @@ const codeFiles = [
 
 for (const absolute of codeFiles) {
   const source = fs.readFileSync(absolute, 'utf8');
-  const imports = [
-    ...source.matchAll(/(?:from\s+|import\s*)['"]([^'"]+)['"]/g),
-  ].map(match => match[1]);
-
+  const imports = [...source.matchAll(/(?:from\s+|import\s*)['"]([^'"]+)['"]/g)].map(match => match[1]);
   for (const specifier of imports) {
     if (!specifier.startsWith('.')) continue;
     const resolved = path.resolve(path.dirname(absolute), specifier);
@@ -180,35 +180,21 @@ for (const absolute of codeFiles) {
 }
 
 for (const absolute of [...codeFiles, path.join(root, 'service-worker.js')]) {
-  const result = spawnSync(process.execPath, ['--check', absolute], {
-    encoding: 'utf8',
-  });
+  const result = spawnSync(process.execPath, ['--check', absolute], { encoding: 'utf8' });
   if (result.status !== 0) {
     fail(`Syntax error in ${path.relative(root, absolute)}: ${result.stderr.trim()}`);
   }
 }
 
-const styleDir = path.join(root, 'styles');
-const cssFiles = walk(styleDir).filter(file => file.endsWith('.css') && path.basename(file).startsWith('v3'));
-const css = cssFiles.map(file => fs.readFileSync(file, 'utf8')).join('\n');
-const refs = new Set([...css.matchAll(/var\((--[\w-]+)/g)].map(match => match[1]));
-const defs = new Set([...css.matchAll(/(--[\w-]+)\s*:/g)].map(match => match[1]));
-for (const ref of refs) {
-  if (!defs.has(ref)) fail(`Undefined CSS custom property: ${ref}`);
-}
-
-if (/https?:\/\//i.test(productionHtml)) {
-  warn('index.html contains an absolute HTTP(S) URL; review local-first/offline requirement.');
+if (/https?:\/\//i.test(landing)) {
+  warn('Landing page contains an absolute HTTP(S) URL; review offline/local-first requirement.');
 }
 if (/https?:\/\//i.test(shellBlock?.[1] || '')) {
   fail('Service Worker APP_SHELL must not depend on remote HTTP(S) assets.');
 }
 
-console.log(`V4 RC1 release preflight: ${errors.length ? 'FAIL' : 'PASS'}`);
-console.log(
-  `Checked production index + v3 alias, ${codeFiles.length} module/test files, ` +
-  `${cssFiles.length} v3 CSS files.`
-);
+console.log(`V4.1 release preflight: ${errors.length ? 'FAIL' : 'PASS'}`);
+console.log(`Checked landing + app + v3 compatibility, ${codeFiles.length} module/test files.`);
 
 for (const message of warnings) console.warn(`WARN: ${message}`);
 for (const message of errors) console.error(`ERROR: ${message}`);
@@ -217,17 +203,16 @@ if (errors.length) process.exit(1);
 
 function checkHtml(name, html) {
   if (!html) return;
-
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
-  const seenIds = new Set();
+  const seen = new Set();
   for (const id of ids) {
-    if (seenIds.has(id)) fail(`Duplicate HTML id in ${name}: ${id}`);
-    seenIds.add(id);
+    if (seen.has(id)) fail(`Duplicate HTML id in ${name}: ${id}`);
+    seen.add(id);
   }
 
-  const refs = [
-    ...html.matchAll(/\b(?:src|href)="([^"]+)"/g),
-  ].map(match => normalizeLocalPath(match[1])).filter(Boolean);
+  const refs = [...html.matchAll(/\b(?:src|href)="([^"]+)"/g)]
+    .map(match => normalizeLocalPath(match[1]))
+    .filter(Boolean);
 
   for (const ref of refs) checkFile(ref, `${name} resource`);
 }

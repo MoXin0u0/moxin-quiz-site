@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const sceneLoader = fs.readFileSync('src/ui/scene-assets.js', 'utf8');
 const css = fs.readFileSync('styles/v4-learning-styles.css', 'utf8');
@@ -25,7 +25,7 @@ assert.match(css, /background-image:\s*none/);
 assert.match(css, /data-scene-state="loading"/);
 assert.match(css, /data-scene-state="ready"/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2k\.\d+(?:\.\d+)?-\d+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 assert.match(sw, /moxin-quiz-scenes-r2k\.\d+(?:\.\d+)?-\d+/);
 assert.match(sw, /cacheFirstScene/);
 assert.match(sw, /isLearningScene/);

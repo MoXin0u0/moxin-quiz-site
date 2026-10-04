@@ -17,7 +17,7 @@ for (const asset of manifest) {
   assert.equal(asset.height, 1440);
 }
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 assert.match(sw, /SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k\.5-\d+'/);
 
 // Contrast/readability guard: Epic must retain a strong content-safe shield in both themes.

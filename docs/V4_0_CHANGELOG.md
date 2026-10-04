@@ -1,3 +1,12 @@
+## v4.1 — Public Landing & App Entry
+- 新增正式公開首頁，提供開始使用、功能介紹、使用流程、更新日誌與資料說明。
+- 原 Learning Studio 入口移至 `app.html`。
+- `v3.html` 與 `app.html` 維持 byte-identical，保留既有網址相容性。
+- PWA start_url 改為 `./app.html`，安裝後直接進入學習大廳。
+- Landing 不初始化 IndexedDB，降低首次瀏覽成本。
+- Service Worker App Shell 同時快取 Landing + App。
+- 新增 5 viewport × Light/Dark 真實 Chromium Landing audit。
+
 # 墨忻刷題網 v4.0 — Development Changelog
 
 本檔集中保存 v4.0 開發里程碑摘要。根目錄只保留正式 `README.md`；一次性更新包說明不再累積在 repository root。

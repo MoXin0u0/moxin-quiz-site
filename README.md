@@ -1,8 +1,21 @@
 # 墨忻刷題網
 
-墨忻刷題網 **v4.0** 是一個部署於 GitHub Pages 的 **Local-first 個人學習與刷題平台**。網站不需要後端、登入系統或付費伺服器；題庫、學習紀錄、目標、工作室草稿與大部分設定保存在目前瀏覽器，並支援 PWA 離線使用。
+墨忻刷題網 **v4.1** 是一個部署於 GitHub Pages 的 **Local-first 個人學習與刷題平台**。網站不需要後端、登入系統或付費伺服器；題庫、學習紀錄、目標、工作室草稿與大部分設定保存在目前瀏覽器，並支援 PWA 離線使用。
 
-> v4.0 已完成 Release Readiness 與 Main Cutover Rehearsal，正式版由 `main` 部署。
+> v4.1 新增正式公開首頁與 App 入口分層；v4.0 Learning Studio 核心功能維持不變。
+
+## v4.1 公開首頁與 App 入口
+
+v4.1 將網站拆成兩層：
+
+```text
+index.html  → 公開首頁
+app.html    → 學習大廳
+v3.html     → 舊網址相容入口（與 app.html 相同）
+```
+
+公開首頁提供功能介紹、開始使用、使用流程、更新日誌與資料說明；不初始化 IndexedDB。
+PWA 的 `start_url` 為 `./app.html`，因此安裝後仍直接進入學習大廳。
 
 ## v4.0 主要功能
 
@@ -308,12 +321,12 @@ Branch: main
 Folder: / (root)
 ```
 
-正式版部署：
+入口結構：
 
 ```text
-Branch: main
-Folder: / (root)
-Release tag: v4.0.0
+/          → 公開首頁
+/app.html  → 學習大廳
+/v3.html   → 舊網址相容入口
 ```
 
-正式入口為 repository Pages 根網址；`v3.html` 保留相容入口。
+PWA 安裝後使用 `./app.html` 作為 start_url。
