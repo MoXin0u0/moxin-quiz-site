@@ -141,16 +141,86 @@ write('src/app/landing.js', LANDING_JS);
     .map(command => command.match(/^node\s+(tests\/[^\s]+\.mjs)$/)?.[1])
     .filter(Boolean);
 
+  let migratedCacheAssertions = 0;
+
   for (const path of activeTests) {
     if (!fs.existsSync(path)) continue;
     if (path === 'tests/release-cutover-run.mjs' || path === 'tests/v40-production-release-run.mjs') continue;
+
     let source = read(path);
+
+    // After index.html becomes the public landing page, historical feature tests
+    // must inspect app.html for the Learning Studio UI.
     source = source.replaceAll(
       "fs.readFileSync('index.html', 'utf8')",
       "fs.readFileSync('app.html', 'utf8')",
     );
+
+    // Historical milestones may verify that an App Shell cache version exists,
+    // but they must not freeze the CURRENT release at v4.0 / r2*.
+    // v4.1 owns the exact cache revision contract.
+    source = source
+      .split('\n')
+      .map(line => {
+        if (
+          line.includes('assert.match(sw, /') &&
+          line.includes('moxin-quiz-v3-4') &&
+          (
+            line.includes('4\\\\.0\\\\.0') ||
+            line.includes('r2k') ||
+            line.includes('r2[')
+          )
+        ) {
+          const indent = line.match(/^\s*/)?.[0] || '';
+          migratedCacheAssertions += 1;
+          return `${indent}assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\\.\\d+\\.\\d+-[^']+'/);`;
+        }
+        return line;
+      })
+      .join('\n');
+
     write(path, source);
   }
+
+  // Full active-test source audit: old milestones must not pin the current
+  // App Shell cache to the v4.0/r2 naming scheme.
+  const staleCacheAssertions = [];
+
+  for (const path of activeTests) {
+    if (!fs.existsSync(path)) continue;
+    const lines = read(path).split('\n');
+
+    lines.forEach((line, index) => {
+      if (
+        line.includes('assert.match(sw, /') &&
+        line.includes('moxin-quiz-v3-4') &&
+        (
+          line.includes('4\\\\.0\\\\.0') ||
+          line.includes('r2k') ||
+          line.includes('r2[')
+        )
+      ) {
+        staleCacheAssertions.push(`${path}:${index + 1}: ${line.trim()}`);
+      }
+    });
+  }
+
+  if (staleCacheAssertions.length) {
+    throw new Error(
+      'Stale v4.0 App Shell cache assertions remain after v4.1 migration:\n' +
+      staleCacheAssertions.join('\n'),
+    );
+  }
+
+  if (migratedCacheAssertions < 30) {
+    throw new Error(
+      `Expected to migrate at least 30 historical cache assertions; migrated ${migratedCacheAssertions}`,
+    );
+  }
+
+  console.log(
+    `Migrated historical App Shell cache assertions: ${migratedCacheAssertions}`,
+  );
 }
 
 write('tests/release-cutover-run.mjs', RELEASE_CUTOVER_TEST);
