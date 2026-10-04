@@ -1,6 +1,6 @@
 export const APP_CONFIG = Object.freeze({
   appName: 'MoXin Quiz',
-  appVersion: '4.0.0',
+  appVersion: '4.1.0',
   releaseChannel: 'production',
   schemaVersion: '2.0',
   dbName: 'moxin-quiz-v3',

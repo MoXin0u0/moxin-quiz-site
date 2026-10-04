@@ -51,6 +51,6 @@ assert.match(sceneLoader, /styles\/academy\/stats-dark\.webp/);
 assert.match(sceneLoader, /styles\/epic\/library-light\.webp/);
 assert.match(sw, /cacheFirstScene/);
 // Cache revision is allowed to advance independently of this milestone.
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2[a-z](?:\.\d+)?-\d+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2K style differentiation tests passed.');

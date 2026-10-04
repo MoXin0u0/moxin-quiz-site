@@ -32,6 +32,6 @@ assert.match(studio, /await openDraftById\(requestedDraftId\)/);
 assert.match(css, /\.inspection-studio-note/);
 assert.match(css, /\.inspection-studio-note\.warning/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 P2C.1 import-to-Studio UI integration tests passed.');

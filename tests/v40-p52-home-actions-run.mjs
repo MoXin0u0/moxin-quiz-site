@@ -128,7 +128,7 @@ assert.match(container.innerHTML, /超過 7 天/);
 const main = fs.readFileSync('src/app/main.js', 'utf8');
 const p7 = fs.readFileSync('src/app/p7.js', 'utf8');
 const sessions = fs.readFileSync('src/storage/repositories/sessions.js', 'utf8');
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 
@@ -146,6 +146,6 @@ assert.match(sw, /\.\/styles\/v4-home\.css/);
 assert.match(sw, /\.\/src\/learning\/home-dashboard\.js/);
 assert.match(sw, /\.\/src\/ui\/home-dashboard\.js/);
 assert.match(sw, /\.\/src\/storage\/backup-meta\.js/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 P5.2 home actions tests passed.');

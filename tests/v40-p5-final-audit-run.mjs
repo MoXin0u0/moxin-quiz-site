@@ -356,12 +356,12 @@ const questions = [
   ]) {
     assert.ok(sw.includes(`'${asset}'`), `APP_SHELL missing ${asset}`);
   }
-  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 }
 
 // 15. Release entries stay byte-for-byte identical.
 {
-  const index = fs.readFileSync('index.html', 'utf8');
+  const index = fs.readFileSync('app.html', 'utf8');
   const v3 = fs.readFileSync('v3.html', 'utf8');
   assert.equal(index, v3);
 }

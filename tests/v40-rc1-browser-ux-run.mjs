@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 
-const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:4173/';
+const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:4173/app.html';
 const OUT_DIR = path.resolve('artifacts/rc1-browser-ux');
 const SCREEN_DIR = path.join(OUT_DIR, 'screenshots');
 fs.mkdirSync(SCREEN_DIR, { recursive: true });

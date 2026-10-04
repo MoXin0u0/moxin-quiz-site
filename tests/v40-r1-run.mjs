@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 const design = fs.readFileSync('styles/v4-design.css', 'utf8');
@@ -36,7 +36,7 @@ assert.match(studio, /planQuestionTypeChange/);
 assert.match(studio, /convertQuestionType/);
 assert.doesNotMatch(studio, /normalizeQuestionForType/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 assert.match(sw, /styles\/v4-design\.css/);
 assert.match(sw, /src\/studio\/question-draft\.js/);
 

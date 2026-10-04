@@ -132,7 +132,7 @@ const base = {
 }
 
 const main = fs.readFileSync('src/app/main.js', 'utf8');
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 const css = fs.readFileSync('styles/v4-stats.css', 'utf8');
@@ -156,7 +156,7 @@ assert.doesNotMatch(tabHandler, /openStats/);
 assert.equal(index, v3);
 assert.match(index, /styles\/v4-stats\.css/);
 assert.match(sw, /\.\/styles\/v4-stats\.css/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 assert.match(css, /\.stats-tabs/);
 assert.match(css, /\.stats-bar-chart/);
 assert.match(css, /@media \(max-width: 620px\)/);

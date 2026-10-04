@@ -108,7 +108,7 @@ assert.match(importer, /sourceType:\s*'author'/);
 const banksRepo = fs.readFileSync('src/storage/repositories/banks.js', 'utf8');
 assert.match(banksRepo, /sourceType:\s*pkg\.sourceType === 'author' \? 'author' : 'user'/);
 
-const html = fs.readFileSync('index.html', 'utf8');
+const html = fs.readFileSync('app.html', 'utf8');
 assert.match(html, /data-library-source-tab="author"/);
 assert.match(html, /data-library-source-tab="user"/);
 assert.match(html, /id="authorBankList"/);

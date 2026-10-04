@@ -1,9 +1,9 @@
 {
   "name": "墨忻刷題網",
   "short_name": "墨忻刷題",
-  "description": "墨忻刷題網 v4.0：本機優先的題庫工作室、練習、複習、學習目標、考前衝刺與學習統計平台。",
+  "description": "墨忻刷題網 v4.1：本機優先、可離線使用的個人學習與刷題平台。",
   "lang": "zh-TW",
-  "start_url": "./",
+  "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

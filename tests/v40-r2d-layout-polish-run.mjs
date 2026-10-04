@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
 const css = fs.readFileSync('styles/v4-learning.css', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
@@ -36,6 +36,6 @@ assert.match(css, /@media \(max-width: 760px\)/);
 assert.match(css, /\.learning-hero-art[\s\S]*height: 54%/);
 assert.match(css, /@media \(max-width: 390px\)|@media \(max-width: 420px\)/);
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-[^']+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2D layout polish tests passed.');

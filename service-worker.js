@@ -1,8 +1,11 @@
-const CACHE_VERSION = 'moxin-quiz-v3-4.0.0-r2k.5-21';
+const CACHE_VERSION = 'moxin-quiz-v3-4.1.0-v41-landing-1';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
+  './app.html',
   './v3.html',
+  './styles/v41-landing.css',
+  './src/app/landing.js',
   './manifest.webmanifest',
   './author-banks.json',
   './styles/v3.css',
@@ -146,10 +149,17 @@ async function networkFirstNavigation(request) {
     if (response.ok) cache.put(request, response.clone());
     return response;
   } catch {
+    const url = new URL(request.url);
+    const appNavigation = /\/(?:app|v3)\.html$/.test(url.pathname);
+    const routeFallback = appNavigation
+      ? await cache.match('./app.html')
+      : await cache.match('./index.html');
+
     return (
-      await cache.match(request) ||
+      await cache.match(request, { ignoreSearch: true }) ||
+      routeFallback ||
+      await cache.match('./app.html') ||
       await cache.match('./index.html') ||
-      await cache.match('./v3.html') ||
       Response.error()
     );
   }

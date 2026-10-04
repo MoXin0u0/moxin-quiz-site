@@ -130,7 +130,7 @@ const review = fs.readFileSync('src/ui/review-center.js', 'utf8');
 const session = fs.readFileSync('src/quiz/session-engine.js', 'utf8');
 const css = fs.readFileSync('styles/v4-exam-sprint.css', 'utf8');
 const v3 = fs.readFileSync('v3.html', 'utf8');
-const index = fs.readFileSync('index.html', 'utf8');
+const index = fs.readFileSync('app.html', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 
 assert.match(main, /buildExamSprintPlan/);
@@ -156,6 +156,6 @@ assert.match(v3, /styles\/v4-exam-sprint\.css/);
 assert.equal(index, v3);
 assert.match(sw, /\.\/styles\/v4-exam-sprint\.css/);
 assert.match(sw, /\.\/src\/ui\/exam-sprint\.js/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 
 console.log('MoXin Quiz v4.0 P4.1 exam sprint UI/session integration tests passed.');

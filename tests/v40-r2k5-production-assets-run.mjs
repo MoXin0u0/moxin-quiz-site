@@ -39,7 +39,7 @@ for (const style of styles) {
   }
 }
 
-assert.match(sw, /moxin-quiz-v3-4\.0\.0-r2k\.5-\d+/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 assert.match(sw, /moxin-quiz-scenes-r2k\.5-\d+/);
 assert.match(sw, /cacheFirstScene/);
 

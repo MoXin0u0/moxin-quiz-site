@@ -320,7 +320,7 @@ function makePackage(overrides = {}) {
 {
   const sw = fs.readFileSync('service-worker.js', 'utf8');
   assert.match(sw, /\.\/src\/studio\/package-to-draft\.js/);
-  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.0\.0-r2k\.5-\d+'/);
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
 }
 
 console.log('MoXin Quiz v4.0 P2C package-to-Studio core: 16 regression cases passed.');
