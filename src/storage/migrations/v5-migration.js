@@ -774,6 +774,7 @@ async function rebuildDerivedLearningState(db, migration) {
     scope: null,
     cursor: null,
     status: 'completed',
+    derivedRebuiltAt: rebuiltAt,
     updatedAt: rebuiltAt,
     lastError: null,
   };
@@ -788,7 +789,19 @@ export async function runV5MigrationStep() {
   let migration = meta.migration || defaultMigrationState();
 
   try {
-    if (migration.phase === 'completed') return migration;
+    if (migration.phase === 'completed') {
+      // Older/incomplete V5 migration states may say "completed" without ever
+      // rebuilding derived progress/review material. Treat the rebuild marker
+      // as part of the completion contract so stale V4 counters cannot survive.
+      if (!migration.derivedRebuiltAt) {
+        return rebuildDerivedLearningState(db, {
+          ...migration,
+          phase: 'derived-rebuild',
+          status: 'pending',
+        });
+      }
+      return migration;
+    }
     if (migration.status === 'failed') {
       migration = await updateMigrationState(db, { status: 'pending', lastError: null });
     }
