@@ -36,7 +36,7 @@ assert.match(studio, /planQuestionTypeChange/);
 assert.match(studio, /convertQuestionType/);
 assert.doesNotMatch(studio, /normalizeQuestionForType/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 assert.match(sw, /styles\/v4-design\.css/);
 assert.match(sw, /src\/studio\/question-draft\.js/);
 
