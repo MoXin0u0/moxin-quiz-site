@@ -8,6 +8,7 @@
     "ci": "npm test && npm run preflight",
     "audit:scenes": "node scripts/audit-scene-assets.mjs",
     "audit:browser": "node tests/v40-rc1-browser-ux-run.mjs",
-    "audit:landing": "node tests/v41-landing-browser-run.mjs"
+    "audit:landing": "node tests/v41-landing-browser-run.mjs",
+    "audit:v5-theme": "node tests/v5-p0a-browser-matrix-run.mjs"
   }
 }
