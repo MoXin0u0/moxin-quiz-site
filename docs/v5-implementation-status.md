@@ -26,7 +26,7 @@ Updated: 2026-10-05
 | B07 Exam Integrity | ✅ Complete | Frozen exam snapshot, atomic/idempotent submission, terminal session semantics |
 | B07.5 Cross-feature Consistency Repair | ✅ Complete | Migration bootstrap, unanswered policy, tombstone ancestry, session checkpoint semantics, PWA cache/version regression repair |
 | G2 Local Data Integrity | ✅ PASS | Unit + release preflight + all V5 browser gates green at current head |
-| B08 Google Identity + Drive Provider Foundation | ⏭ Next | Not started |
+| B08 Google Identity + Drive Provider Foundation | 🚧 Implemented / gating | Lazy GIS token model, Drive appDataFolder adapter, provider-neutral contract, dormant-by-default tests |
 
 ## Current green CI evidence
 
@@ -66,13 +66,15 @@ The pre-B08 consistency pass closed several issues that would otherwise make clo
 - OAuth/Drive support must remain optional and must never block local-only startup or offline practice.
 - The PR remains draft; no merge to `main` is authorized at this stage.
 
-## Next implementation target
+## Current implementation target
 
-B08 introduces the cloud-provider boundary only after the local data foundation is stable:
+B08 has been implemented and is now under CI gating:
 
 1. Lazy Google Identity Services loader.
-2. OAuth token manager with no client secret and no long-lived token persisted in IndexedDB.
-3. Google Drive `appDataFolder` adapter with least-privilege scope.
-4. Provider-neutral cloud interface so the sync engine is not hard-coded to Drive.
-5. Drive metadata/appProperties contract, JSON upload/download, checksum verification, and resumable upload foundation.
-6. CI unit/browser gates that verify cloud code remains dormant when cloud sync is disabled or unconfigured.
+2. Memory-only OAuth access-token manager; no client secret or refresh token storage.
+3. Google Drive `appDataFolder` adapter using the least-privilege `drive.appdata` scope.
+4. Provider-neutral cloud contract and typed cloud errors.
+5. Drive account profile lookup through `about.get`, appData listing, canonical JSON multipart upload, binary upload, resumable upload primitives, and delete/download operations.
+6. Cloud remains disabled and unconfigured by default, so local-only startup makes no Google request.
+
+After G3 passes, the next target is B09: immutable commit / pull-stage-apply sync-engine foundation.

@@ -12,6 +12,15 @@ export const APP_CONFIG = Object.freeze({
     cloudSync: false,
     syncUi: false,
   }),
+  cloud: Object.freeze({
+    provider: 'google-drive',
+    googleClientId: '',
+    googleIdentityScriptUrl: 'https://accounts.google.com/gsi/client',
+    googleDriveScope: 'https://www.googleapis.com/auth/drive.appdata',
+    googleDriveApiBaseUrl: 'https://www.googleapis.com/drive/v3',
+    googleDriveUploadBaseUrl: 'https://www.googleapis.com/upload/drive/v3',
+    resumableThresholdBytes: 5 * 1024 * 1024,
+  }),
   syncLimits: Object.freeze({
     idleDebounceMs: 5 * 1000,
     activePendingMaxMs: 30 * 1000,
