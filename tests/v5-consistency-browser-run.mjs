@@ -106,24 +106,13 @@ try {
 
   // This navigation exercises the real app bootstrap rather than importing migration directly.
   await page.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 15000 });
-  await page.waitForFunction(async dbName => {
-    const db = await new Promise((resolve, reject) => {
-      const request = indexedDB.open(dbName);
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-    if (!db.objectStoreNames.contains('syncMeta')) {
-      db.close();
-      return false;
-    }
-    const meta = await new Promise((resolve, reject) => {
-      const request = db.transaction('syncMeta', 'readonly').objectStore('syncMeta').get('global');
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-    db.close();
-    return meta?.migration?.phase === 'completed' && meta?.migration?.status === 'completed';
-  }, DB_NAME, { timeout: 15000 });
+  // Do not use an async predicate here: a Promise object can make a polling
+  // predicate appear truthy before the migration has actually completed.
+  // The app only publishes this ready message after awaiting the full migration.
+  await page.waitForFunction(() => {
+    const text = document.querySelector('#storageStatus')?.textContent || '';
+    return text.includes('IndexedDB 已就緒');
+  }, null, { timeout: 15000 });
 
   const result = await page.evaluate(async () => {
     const { openDatabase, requestToPromise } = await import('/src/storage/db.js');
@@ -209,6 +198,10 @@ try {
       finishedSession,
     };
   });
+
+  assert.equal(result.syncMeta?.migration?.phase, 'completed');
+  assert.equal(result.syncMeta?.migration?.status, 'completed');
+  assert.ok(result.syncMeta?.migration?.derivedRebuiltAt);
 
   const legacyExam = result.attempts
     .filter(item => item.bankId === 'legacy-bank' && item.questionId === 'Q1')
