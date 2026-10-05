@@ -1,5 +1,5 @@
 import { APP_CONFIG } from '../app/config.js';
-import { createDeviceId } from '../utils/ids.js';
+import { createDeviceId, createRevisionId } from '../utils/ids.js';
 import { openDatabase, transactionDone } from './db.js';
 import { loadSettings, normalizeSettings, saveSettings } from './settings.js';
 
@@ -164,6 +164,17 @@ export async function restoreBackupSnapshot(snapshot, { replace = true } = {}) {
 
   const deviceId = createDeviceId();
   const now = new Date().toISOString();
+  const deviceRevision = {
+    revisionId: createRevisionId(),
+    parentRevisionIds: [],
+    changedAt: now,
+    changedByDeviceId: deviceId,
+    clock: {
+      physicalMs: Date.now(),
+      logical: 0,
+      deviceId,
+    },
+  };
 
   if (tx.objectStoreNames.contains('devices')) {
     tx.objectStore('devices').put({
@@ -176,7 +187,15 @@ export async function restoreBackupSnapshot(snapshot, { replace = true } = {}) {
       lastSeenAt: now,
       lastSyncAt: null,
       appVersion: APP_CONFIG.appVersion,
-      revision: null,
+      revision: deviceRevision,
+    });
+  }
+
+  if (tx.objectStoreNames.contains('syncRevisions')) {
+    tx.objectStore('syncRevisions').put({
+      ...deviceRevision,
+      entityType: 'device',
+      entityKey: deviceId,
     });
   }
 
