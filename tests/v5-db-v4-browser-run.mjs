@@ -374,9 +374,8 @@ try {
     await deleteDatabase(page);
     await seedLegacyV3(page);
 
-    await page.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await waitReady(page);
-
+    // This block intentionally stops at structural IndexedDB upgrade.
+    // App bootstrap migration is verified by v5-consistency-browser-run.mjs.
     const state = await inspectDatabase(page);
     assert.equal(state.version, 4);
     assert.deepEqual(state.stores, EXPECTED_STORES);
