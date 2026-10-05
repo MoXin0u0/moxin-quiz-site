@@ -89,6 +89,8 @@ const unsupported = validateBackupSnapshot({ ...v2, version: 99 });
 assert.equal(unsupported.valid, false);
 assert.match(unsupported.errors.join(' '), /不支援備份格式版本/);
 
-assert.match(createBackupFilename(new Date('2026-10-05T12:34:56.789Z')), /^moxin-quiz-backup-v2-/);
+const compatibleFilename = createBackupFilename(new Date('2026-10-05T12:34:56.789Z'));
+assert.match(compatibleFilename, /^moxin-quiz-backup-2026-10-05T12-34-56-789Z\.json$/);
+assert.ok(!compatibleFilename.includes('-v2-'), 'backup v2 keeps the legacy filename shape for user-facing compatibility');
 
 console.log('V5 Backup v2 core contracts passed.');
