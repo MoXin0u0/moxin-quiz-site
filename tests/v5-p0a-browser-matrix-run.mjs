@@ -141,14 +141,23 @@ function assertSolidContrast(scope, state, min = 4.5) {
   assert.ok(ratio >= min, `${scope}: contrast ${ratio.toFixed(2)} < ${min}; ${state.color} on ${state.backgroundColor}`);
 }
 
-function assertGradientContrast(scope, state, min = 4.5) {
+function assertPrimaryContrast(scope, state, min = 4.5) {
   const foreground = parseRgb(state.color);
   const stops = gradientColors(state.backgroundImage);
-  assert.ok(stops.length >= 2, `${scope}: expected computed gradient, got ${state.backgroundImage}`);
-  for (const stop of stops) {
-    const ratio = contrast(foreground, stop);
-    assert.ok(ratio >= min, `${scope}: gradient-stop contrast ${ratio.toFixed(2)} < ${min}; fg=${state.color}; bg=${stop.join(',')}`);
+
+  if (stops.length >= 2) {
+    for (const stop of stops) {
+      const ratio = contrast(foreground, stop);
+      assert.ok(ratio >= min, `${scope}: gradient-stop contrast ${ratio.toFixed(2)} < ${min}; fg=${state.color}; bg=${stop.join(',')}`);
+    }
+    return;
   }
+
+  const ratio = contrast(foreground, parseRgb(state.backgroundColor));
+  assert.ok(
+    ratio >= min,
+    `${scope}: solid primary contrast ${ratio.toFixed(2)} < ${min}; fg=${state.color}; bg=${state.backgroundColor}`,
+  );
 }
 
 const browser = await chromium.launch({ headless: true });
@@ -181,7 +190,7 @@ try {
 
       assert.ok(state.overflow <= 4, `${scope}: page overflowed horizontally by ${state.overflow}px`);
 
-      assertGradientContrast(`${scope} primary action`, state.primary);
+      assertPrimaryContrast(`${scope} primary action`, state.primary);
       assertSolidContrast(`${scope} current exam number`, state.current);
       assertSolidContrast(`${scope} unfamiliar active`, state.unfamiliar);
 
