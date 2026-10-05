@@ -17,6 +17,9 @@ import { buildDerivedLearningRecords } from '../../learning/derived-state.js';
 export const V5_MIGRATION_TARGET_DB_VERSION = 4;
 export const V5_MIGRATION_BATCH_SIZE = 250;
 export const LEGACY_MIGRATION_DEVICE_ID = 'legacy-migration';
+export const V5_MIGRATION_LOCK_NAME = 'moxin-quiz-v5-migration';
+
+let migrationRunPromise = null;
 
 export const V5_MIGRATION_PHASES = Object.freeze([
   'device-identity',
@@ -843,13 +846,35 @@ export async function runV5MigrationStep() {
   }
 }
 
-export async function runV5MigrationToCompletion({ maxSteps = 100000 } = {}) {
+async function runMigrationLoop({ maxSteps = 100000 } = {}) {
   let state = null;
   for (let step = 0; step < maxSteps; step += 1) {
     state = await runV5MigrationStep();
     if (state.phase === 'completed' && state.status === 'completed') return state;
   }
   throw new Error(`V5 migration did not complete within ${maxSteps} steps.`);
+}
+
+export function runV5MigrationToCompletion(options = {}) {
+  if (migrationRunPromise) return migrationRunPromise;
+
+  const execute = async () => {
+    const locks = globalThis.navigator?.locks;
+    if (locks?.request) {
+      return locks.request(
+        V5_MIGRATION_LOCK_NAME,
+        { mode: 'exclusive' },
+        () => runMigrationLoop(options),
+      );
+    }
+    return runMigrationLoop(options);
+  };
+
+  const run = execute();
+  migrationRunPromise = run.finally(() => {
+    migrationRunPromise = null;
+  });
+  return migrationRunPromise;
 }
 
 export async function getV5MigrationState() {
