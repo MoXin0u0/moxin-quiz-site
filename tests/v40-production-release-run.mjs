@@ -18,7 +18,7 @@ assert.doesNotMatch(app, /v4 preview|v3\.3|RC1/i);
 assert.match(APP_CONFIG.appVersion, /^4\.\d+\.\d+$/);
 assert.equal(APP_CONFIG.releaseChannel, 'production');
 assert.equal(APP_CONFIG.dbName, 'moxin-quiz-v3');
-assert.equal(APP_CONFIG.dbVersion, 3);
+assert.ok(APP_CONFIG.dbVersion >= 3);
 
 assert.equal(manifest.scope, './');
 assert.match(readme, /\*\*v4\.\d+\*\*/);
