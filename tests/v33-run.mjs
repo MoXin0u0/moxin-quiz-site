@@ -80,7 +80,7 @@ assert.match(index, /data-nav-tools/);
 assert.match(index, /id="toolsView"/);
 
 // Cache version must remain versioned, but later releases are allowed to advance it.
-assert.match(sw, /const CACHE_VERSION = 'moxin-quiz-v3-[^']+';/);
+assert.match(sw, /const CACHE_VERSION = 'moxin-quiz-v(?:3|5)-[^']+';/);
 assert.match(sw, /src\/question-bank\/zip-writer\.js/);
 assert.match(sw, /src\/ui\/tools\.js/);
 assert.match(sw, /styles\/v3-v33\.css/);
