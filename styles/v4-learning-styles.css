@@ -817,6 +817,7 @@ html[data-learning-style="academy"] :is(
   --learn-shadow-soft: 0 9px 25px rgba(78, 58, 38, .09);
   --academy-brass: #b88948;
   --academy-walnut: #67462f;
+  --academy-action-start: #67462f;
   --academy-action-end: #8d633d;
   --learn-primary-action-fg: #fffaf0;
   --academy-parchment: #efe0c6;
@@ -858,6 +859,7 @@ html[data-theme="dark"][data-learning-style="academy"] :is(
   --learn-shadow-soft: 0 12px 30px rgba(0,0,0,.24);
   --academy-brass: #d5ad6a;
   --academy-walnut: #9a6b43;
+  --academy-action-start: #805734;
   --academy-action-end: #8d633d;
   --learn-selected-fg: #17100b;
   --academy-parchment: #57432f;
@@ -980,7 +982,7 @@ html[data-learning-style="academy"] :is(
   #bankDetailView,
   #practiceView
 ) .button.primary {
-  background: linear-gradient(105deg, var(--academy-walnut), var(--academy-action-end, var(--academy-brass)));
+  background: linear-gradient(105deg, var(--academy-action-start, var(--academy-walnut)), var(--academy-action-end, var(--academy-brass)));
   color: var(--learn-primary-action-fg, #fffaf0);
   box-shadow: 0 8px 20px color-mix(in srgb, var(--academy-walnut) 22%, transparent);
 }
