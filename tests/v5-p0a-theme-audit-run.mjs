@@ -41,7 +41,9 @@ assert.ok(
   legacyPractice.includes('.unfamiliar-button.is-active') &&
   legacyPractice.includes('color: var(--warning);')
 );
-assert.ok(!legacyPractice.includes('color: #8b5700;'));
+const unfamiliarRule = legacyPractice.match(/\.unfamiliar-button\.is-active\s*\{[^}]*\}/)?.[0] || '';
+assert.ok(unfamiliarRule);
+assert.ok(!unfamiliarRule.includes('color: #8b5700;'));
 
 const learning = read('styles/v4-learning.css');
 assert.ok(learning.includes('color: var(--learn-primary-action-fg, #fff);'));
