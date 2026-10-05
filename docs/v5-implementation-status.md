@@ -8,48 +8,71 @@ Updated: 2026-10-05
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
+- Current validated head: `417b3c8110d3f58eb8d02f611d925e4d8826f2ed`
 
 ## Gate status
 
 | Batch / Gate | Status | Evidence |
 | --- | --- | --- |
-| B00 Baseline Freeze | ✅ Complete | Baseline contract + frozen V4.1 commit |
+| B00 Baseline Freeze | ✅ Complete | Frozen V4.1 contract + isolated V5 branch |
 | G0 Baseline | ✅ PASS | Unit regression + release preflight + browser + landing audits |
 | B01 Theme / Contrast / Accessibility | ✅ Complete | P0A fixes + static contrast contract + 54-case browser matrix |
-| G1 UI Foundation | ✅ PASS | Validated at `2a8e9188bc40e311ac7c3df7f700fc4978af2d3d` |
-| B02 DB v4 + Canonical Foundation | ⏭ Next | Not started at this checkpoint |
+| G1 UI Foundation | ✅ PASS | 3 styles × 2 themes × 3 intensities × 3 viewports |
+| B02 DB v4 + Canonical Foundation | ✅ Complete | IndexedDB v4 structural schema, canonical JSON/hash, HLC/revision primitives, V5 repositories |
+| B03 Deterministic V4 → V5 Migration | ✅ Complete | Resumable deterministic migration, legacy event/revision IDs, fingerprints, derived rebuild |
+| B04 Backup v2 Recovery | ✅ Complete | Backup v2 export/restore contract, new device identity after restore, recovery gate |
+| B05 Transactional Outbox | ✅ Complete | Same-transaction local state + outbox mutation contract |
+| B06 Learning Events / Derived State | ✅ Complete | Attempt Event source of truth, progress/review deterministic reducers |
+| B07 Exam Integrity | ✅ Complete | Frozen exam snapshot, atomic/idempotent submission, terminal session semantics |
+| B07.5 Cross-feature Consistency Repair | ✅ Complete | Migration bootstrap, unanswered policy, tombstone ancestry, session checkpoint semantics, PWA cache/version regression repair |
+| G2 Local Data Integrity | ✅ PASS | Unit + release preflight + all V5 browser gates green at current head |
+| B08 Google Identity + Drive Provider Foundation | ⏭ Next | Not started |
 
-## G1 validated checks
+## Current green CI evidence
 
-Latest validated implementation commit:
-
-```text
-2a8e9188bc40e311ac7c3df7f700fc4978af2d3d
-```
-
-GitHub Actions:
+At `417b3c8110d3f58eb8d02f611d925e4d8826f2ed`:
 
 - Unit + release preflight: PASS
 - Existing app browser audit: PASS
 - Landing browser audit: PASS
-- V5 P0A browser matrix: PASS
-- Matrix coverage: 3 learning styles × 2 themes × 3 scene intensities × 3 viewports = 54 cases
+- V5 P0A 54-case browser matrix: PASS
+- IndexedDB v4 structural audit: PASS
+- Deterministic V4 → V5 migration audit: PASS
+- Backup v2 recovery audit: PASS
+- Transactional outbox audit: PASS
+- Exam atomic/idempotent audit: PASS
+- Cross-feature consistency audit: PASS
 
-## P0A corrections completed
+## B07.5 repair notes
 
-- Fixed dark active `unfamiliar` contrast.
-- Added semantic primary-action / selected foregrounds.
-- Fixed Academy dark primary CTA gradient contrast.
-- Fixed Epic dark CTA where an earlier high-specificity white-text rule overrode the semantic foreground.
-- Fixed Focus page-level CTA rules overriding the Focus style and producing insufficient contrast.
-- Restored visible Exam timer warning / danger states after the V4 cascade override.
-- Fixed current Exam question-number foreground contrast.
-- Added global keyboard `:focus-visible` contract.
-- Practice answer result options now include visible `✓ 正確答案` / `✕ 你的答案` labels instead of relying on color alone.
-- Added CI browser/a11y gate for V5.
+The pre-B08 consistency pass closed several issues that would otherwise make cloud sync unsafe:
+
+- App bootstrap now completes the V5 migration before the app publishes the ready state.
+- V5 migration completion includes a derived-state rebuild marker and self-heals an older incomplete completion state.
+- Migration runners are serialized in one realm and, when available, across tabs via the Web Locks API.
+- Legacy unanswered exam attempts migrate as `unanswered`, not as ordinary wrong answers.
+- `unanswered` remains a distinct review outcome and does not silently demote mastery.
+- Note and Learning Goal recreation descends from the latest delete tombstone revision.
+- Practice navigation checkpoints no longer create cloud lifecycle mutations; lifecycle changes still do.
+- Session status is normalized so terminal timestamps take precedence over stale `active` flags.
+- Frozen exam question sets are never silently shrunk during resume; incomplete snapshots stop safe finalization instead.
+- V5 service-worker cache namespaces retire older V5 app-shell caches.
+- Historical V3/V4 regression assertions were made version-compatible without weakening their underlying feature checks.
 
 ## Production safety
 
-No IndexedDB v4 change has been made at this checkpoint.
+- The V5 branch uses IndexedDB version 4 and must remain isolated from production until the full V5 release gate is complete.
+- Production rollback after DB v4 must use a client that can open DB v4; do not roll back to a client that requests DB v3.
+- OAuth/Drive support must remain optional and must never block local-only startup or offline practice.
+- The PR remains draft; no merge to `main` is authorized at this stage.
 
-The next phase, B02, must remain on the development branch / isolated test origin until the DB v3 → v4 structural upgrade and deterministic migration gates are proven safe. Production rollback after DB v4 must remain on a client capable of opening DB v4; production must never be rolled back to a client requesting DB v3.
+## Next implementation target
+
+B08 introduces the cloud-provider boundary only after the local data foundation is stable:
+
+1. Lazy Google Identity Services loader.
+2. OAuth token manager with no client secret and no long-lived token persisted in IndexedDB.
+3. Google Drive `appDataFolder` adapter with least-privilege scope.
+4. Provider-neutral cloud interface so the sync engine is not hard-coded to Drive.
+5. Drive metadata/appProperties contract, JSON upload/download, checksum verification, and resumable upload foundation.
+6. CI unit/browser gates that verify cloud code remains dormant when cloud sync is disabled or unconfigured.
