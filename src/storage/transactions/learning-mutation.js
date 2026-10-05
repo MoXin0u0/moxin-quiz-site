@@ -83,7 +83,10 @@ export async function commitPracticeAnswer({
         bankFingerprint: bank.contentFingerprint || null,
         questionFingerprint: question.questionFingerprint || null,
         questionType: question.type || 'unknown',
-        chapter: question.chapter ? String(question.chapter) : null,
+        chapter:
+          question.chapter === undefined || question.chapter === null
+            ? null
+            : String(question.chapter),
         difficulty: Number.isFinite(question.difficulty) ? question.difficulty : null,
       },
     };

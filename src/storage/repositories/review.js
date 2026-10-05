@@ -1,11 +1,14 @@
-import { getAllRecords, getRecord, putRecord } from '../db.js';
+import { deleteRecord, getAllRecords, getRecord, putRecord } from '../db.js';
 import { learningKey } from '../../utils/ids.js';
 import { calculateNextReview, isReviewDue } from '../../quiz/review-engine.js';
+import { getAttemptsByQuestion } from './attempts.js';
+import { reduceReviewSchedule } from '../../learning/derived-state.js';
 
 export async function updateReviewScheduleFromResult(bankId, questionId, correct, now = new Date()) {
   const key = learningKey(bankId, questionId);
   const existing = await getRecord('reviewSchedule', key);
   const next = calculateNextReview(existing, correct, now);
+  const outcome = correct ? 'correct' : 'wrong';
 
   const record = {
     ...existing,
@@ -13,9 +16,23 @@ export async function updateReviewScheduleFromResult(bankId, questionId, correct
     key,
     bankId,
     questionId,
+    unansweredCount: existing?.unansweredCount || 0,
+    lastOutcome: outcome,
     updatedAt: now.toISOString(),
   };
 
+  await putRecord('reviewSchedule', record);
+  return record;
+}
+
+export async function rebuildQuestionReviewSchedule(bankId, questionId, attempts = null) {
+  const rows = attempts || await getAttemptsByQuestion(bankId, questionId);
+  const record = reduceReviewSchedule(rows, { bankId, questionId });
+  const key = learningKey(bankId, questionId);
+  if (!record) {
+    await deleteRecord('reviewSchedule', key);
+    return null;
+  }
   await putRecord('reviewSchedule', record);
   return record;
 }

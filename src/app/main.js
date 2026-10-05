@@ -111,6 +111,7 @@ import { buildLearningGoalProgress } from '../learning/goal-progress.js';
 import { buildLearningAnalytics } from '../learning/analytics.js';
 import { buildHomeDashboard } from '../learning/home-dashboard.js';
 import { getLastFullBackupAt } from '../storage/backup-meta.js';
+import { getStudyTimeZone } from '../learning/study-time-zone.js';
 import {
   EXAM_SPRINT_GOAL_ID,
   buildExamSprintPlan,
@@ -878,6 +879,7 @@ async function refreshBanks() {
 async function refreshHomeDashboard() {
   if (!elements.homeDashboardArea) return;
 
+  const timeZone = await getStudyTimeZone();
   const [goals, attempts, resumeSession, summaries] = await Promise.all([
     listLearningGoals(),
     listAllAttempts(),
@@ -912,6 +914,7 @@ async function refreshHomeDashboard() {
     summaries,
     resumeSession,
     lastBackupAt: getLastFullBackupAt(),
+    timeZone,
   }));
 }
 
@@ -1026,6 +1029,7 @@ function applyDetailFilters() {
 
 async function openReviewCenter() {
   await refreshBanks();
+  const timeZone = await getStudyTimeZone();
 
   const [goals, attempts, groups] = await Promise.all([
     listLearningGoals(),
@@ -1084,14 +1088,14 @@ async function openReviewCenter() {
     dailyReviewTarget: 0,
   });
 
-  const progress = buildLearningGoalProgress(goal, attempts, { historyDays: 7 });
+  const progress = buildLearningGoalProgress(goal, attempts, { historyDays: 7, timeZone });
   const summaryProgress = buildLearningGoalProgress({
     id: GLOBAL_GOAL_ID,
     bankId: null,
     enabled: false,
     dailyPracticeTarget: 0,
     dailyReviewTarget: 0,
-  }, attempts, { historyDays: 7 });
+  }, attempts, { historyDays: 7, timeZone });
 
   const explicitSprintGoal = goals.find(item => item.id === EXAM_SPRINT_GOAL_ID) || null;
   const legacySprintGoal = explicitSprintGoal
@@ -1115,7 +1119,7 @@ async function openReviewCenter() {
 
   const sprintData = await collectSprintData(sprintGoal.sprintBankIds);
   sprintData.attempts = attempts;
-  const sprintPlan = buildExamSprintPlan(sprintGoal, sprintData);
+  const sprintPlan = buildExamSprintPlan(sprintGoal, sprintData, { timeZone });
 
   state.reviewGroups = groups;
   state.sprintPlan = sprintPlan;
@@ -1279,6 +1283,7 @@ async function startDedicatedReview(bankId, mode) {
 
 async function openStats() {
   await refreshBanks();
+  const timeZone = await getStudyTimeZone();
 
   const attempts = await listAllAttempts();
 
@@ -1339,25 +1344,25 @@ async function openStats() {
     };
   });
 
-  const totalAttempts = bankStats.reduce((sum, item) => sum + item.attempts, 0);
-  const totalCorrect = bankStats.reduce((sum, item) => sum + item.correct, 0);
+  const globalAnalytics = buildLearningAnalytics({
+    attempts,
+    questions,
+  }, {
+    timeZone,
+  });
 
   state.statsModel = {
     attempts,
     questions,
     banks: bankStats,
+    timeZone,
     overall: {
-      attempts: totalAttempts,
-      accuracy: totalAttempts
-        ? Math.round((totalCorrect / totalAttempts) * 100)
-        : 0,
-      answeredQuestions: bankStats.reduce((sum, item) => sum + item.answered, 0),
+      attempts: globalAnalytics.overall.attempts,
+      accuracy: globalAnalytics.overall.accuracy,
+      answeredQuestions: globalAnalytics.overall.uniqueQuestions,
       due: bankStats.reduce((sum, item) => sum + item.due, 0),
     },
-    globalAnalytics: buildLearningAnalytics({
-      attempts,
-      questions,
-    }),
+    globalAnalytics,
   };
 
   const validScopes = new Set(['global', ...state.banks.map(bank => String(bank.id))]);
@@ -1378,6 +1383,7 @@ function renderStatsFromCache() {
         questions: state.statsModel.questions,
       }, {
         bankId: scope,
+        timeZone: state.statsModel.timeZone,
       });
 
   renderLearningStats(elements.statsArea, {

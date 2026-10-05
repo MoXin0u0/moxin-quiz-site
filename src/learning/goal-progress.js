@@ -1,30 +1,17 @@
+import {
+  ATTEMPT_ACTIVITY,
+  attemptActivityType,
+  attemptInstant,
+} from './attempt-events.js';
+
 export const LEARNING_ATTEMPT_KIND = Object.freeze({
-  PRACTICE: 'practice',
-  REVIEW: 'review',
-  EXAM: 'exam',
+  PRACTICE: ATTEMPT_ACTIVITY.PRACTICE,
+  REVIEW: ATTEMPT_ACTIVITY.REVIEW,
+  EXAM: ATTEMPT_ACTIVITY.EXAM,
 });
 
-const REVIEW_MODES = new Set([
-  'review',
-  'due',
-  'wrong',
-  'unfamiliar',
-  'favorite',
-  'scheduled-review',
-]);
-
 export function classifyLearningAttempt(attempt = {}) {
-  const mode = String(attempt?.mode || '').trim().toLowerCase();
-
-  if (mode === 'exam' || mode.startsWith('exam:')) {
-    return LEARNING_ATTEMPT_KIND.EXAM;
-  }
-
-  if (REVIEW_MODES.has(mode) || mode.startsWith('review:')) {
-    return LEARNING_ATTEMPT_KIND.REVIEW;
-  }
-
-  return LEARNING_ATTEMPT_KIND.PRACTICE;
+  return attemptActivityType(attempt);
 }
 
 export function localDateKey(value = new Date(), { timeZone = null } = {}) {
@@ -100,10 +87,11 @@ export function buildDailyLearningActivity(attempts = [], {
   const scopedBankId = bankId ? String(bankId) : null;
 
   for (const attempt of Array.isArray(attempts) ? attempts : []) {
-    if (!attempt || !attempt.timestamp) continue;
+    const instant = attemptInstant(attempt);
+    if (!attempt || !instant) continue;
     if (scopedBankId && String(attempt.bankId || '') !== scopedBankId) continue;
 
-    const dateKey = localDateKey(attempt.timestamp, { timeZone });
+    const dateKey = localDateKey(instant, { timeZone });
     if (!dateKey || !requested.has(dateKey)) continue;
 
     const bucket = buckets.get(dateKey);
@@ -138,16 +126,15 @@ export function calculateLearningStreak(attempts = [], {
   const activeDays = new Set();
 
   for (const attempt of Array.isArray(attempts) ? attempts : []) {
-    if (!attempt?.timestamp) continue;
+    const instant = attemptInstant(attempt);
+    if (!instant) continue;
     if (scopedBankId && String(attempt.bankId || '') !== scopedBankId) continue;
 
-    const key = localDateKey(attempt.timestamp, { timeZone });
+    const key = localDateKey(instant, { timeZone });
     if (key && key <= todayKey) activeDays.add(key);
   }
 
   let cursor = todayKey;
-
-  // A streak is still alive during a not-yet-finished current day.
   if (!activeDays.has(cursor)) {
     const yesterday = shiftDateKey(cursor, -1);
     if (!yesterday || !activeDays.has(yesterday)) return 0;
@@ -271,9 +258,10 @@ function learningAttemptQuestionKey(attempt) {
 
   if (bank || question) return `${bank}\u0000${question}`;
 
+  if (attempt?.eventId) return `event:${String(attempt.eventId)}`;
   const id = attempt?.id;
   return id === undefined || id === null
-    ? `anonymous:${String(attempt?.timestamp || '')}:${String(attempt?.mode || '')}`
+    ? `anonymous:${String(attemptInstant(attempt) || '')}:${String(attempt?.mode || '')}`
     : `attempt:${String(id)}`;
 }
 

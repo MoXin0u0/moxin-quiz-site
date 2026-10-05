@@ -220,16 +220,17 @@ function buildSprintCard(goal, bankMap, { now, timeZone }) {
       .filter(id => bankMap.has(id))
     : [];
 
-  const daysUntilExam = calendarDaysUntil(goal?.examDate, { now, timeZone });
+  const examDate = goal?.examDateKey || goal?.examDate || null;
+  const daysUntilExam = calendarDaysUntil(examDate, { now, timeZone });
   const configured =
     goal?.sprintEnabled === true &&
-    Boolean(goal?.examDate) &&
+    Boolean(examDate) &&
     bankIds.length > 0;
 
   return {
     configured,
     label: String(goal?.examLabel || '考前衝刺'),
-    examDate: goal?.examDate || null,
+    examDate,
     daysUntilExam,
     bankCount: bankIds.length,
   };

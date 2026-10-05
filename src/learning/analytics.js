@@ -1,4 +1,11 @@
 import { localDateKey } from './goal-progress.js';
+import {
+  ATTEMPT_OUTCOME,
+  attemptInstant,
+  attemptOutcome,
+  hasAttemptContextMetadata,
+  normalizedAttemptEvent,
+} from './attempt-events.js';
 
 export const ANALYTICS_WINDOW_DAYS = Object.freeze({
   WEEK: 7,
@@ -44,11 +51,24 @@ export function buildLearningAnalytics(data = {}, {
   const history7 = history30.slice(-ANALYTICS_WINDOW_DAYS.WEEK);
 
   const typeAccuracy = buildDimensionAccuracy(attempts, attempt => {
+    const contextType = String(attempt?.context?.questionType || '').trim();
+    if (contextType && contextType !== ANALYTICS_UNKNOWN_TYPE) {
+      return normalizeType(contextType);
+    }
     const question = questionMap.get(questionKey(attempt.bankId, attempt.questionId));
     return normalizeType(question?.type);
   }, TYPE_ORDER);
 
   const chapterAccuracy = buildDimensionAccuracy(attempts, attempt => {
+    const context = attempt?.context;
+    if (
+      context &&
+      Object.prototype.hasOwnProperty.call(context, 'chapter') &&
+      context.chapter !== null
+    ) {
+      return normalizeChapter(context.chapter);
+    }
+
     const question = questionMap.get(questionKey(attempt.bankId, attempt.questionId));
     if (!question) return ANALYTICS_REMOVED_QUESTION_CHAPTER;
     return normalizeChapter(question.chapter);
@@ -60,7 +80,7 @@ export function buildLearningAnalytics(data = {}, {
   });
 
   const validDateAttempts = attempts.filter(attempt =>
-    Boolean(toDateKey(attempt.timestamp, { timeZone })),
+    Boolean(toDateKey(attemptInstant(attempt), { timeZone })),
   );
 
   return {
@@ -79,7 +99,8 @@ export function buildLearningAnalytics(data = {}, {
     dataQuality: {
       attemptsWithoutValidTimestamp: attempts.length - validDateAttempts.length,
       attemptsWithoutQuestionMetadata: attempts.filter(attempt =>
-        !questionMap.has(questionKey(attempt.bankId, attempt.questionId)),
+        !questionMap.has(questionKey(attempt.bankId, attempt.questionId)) &&
+        !hasAttemptContextMetadata(attempt),
       ).length,
     },
   };
@@ -103,6 +124,7 @@ export function buildDailySeries(attempts = [], {
       attempts: 0,
       correct: 0,
       wrong: 0,
+      unanswered: 0,
       accuracy: 0,
       uniqueQuestions: 0,
       active: false,
@@ -111,13 +133,14 @@ export function buildDailySeries(attempts = [], {
   }
 
   for (const attempt of normalizeAttempts(attempts)) {
-    const dateKey = toDateKey(attempt.timestamp, { timeZone });
+    const dateKey = toDateKey(attemptInstant(attempt), { timeZone });
     const bucket = dateKey ? buckets.get(dateKey) : null;
     if (!bucket) continue;
 
     bucket.attempts += 1;
-    if (attempt.correct) bucket.correct += 1;
-    else bucket.wrong += 1;
+    if (attempt.outcome === ATTEMPT_OUTCOME.CORRECT) bucket.correct += 1;
+    else if (attempt.outcome === ATTEMPT_OUTCOME.WRONG) bucket.wrong += 1;
+    else bucket.unanswered += 1;
     bucket._questionKeys.add(questionKey(attempt.bankId, attempt.questionId));
   }
 
@@ -126,6 +149,7 @@ export function buildDailySeries(attempts = [], {
     attempts: bucket.attempts,
     correct: bucket.correct,
     wrong: bucket.wrong,
+    unanswered: bucket.unanswered,
     accuracy: percent(bucket.correct, bucket.attempts),
     uniqueQuestions: bucket._questionKeys.size,
     active: bucket.attempts > 0,
@@ -145,6 +169,7 @@ export function buildDimensionAccuracy(attempts = [], keySelector, order = null)
         attempts: 0,
         correct: 0,
         wrong: 0,
+        unanswered: 0,
         accuracy: 0,
         uniqueQuestions: 0,
         _questionKeys: new Set(),
@@ -153,8 +178,9 @@ export function buildDimensionAccuracy(attempts = [], keySelector, order = null)
 
     const bucket = buckets.get(key);
     bucket.attempts += 1;
-    if (attempt.correct) bucket.correct += 1;
-    else bucket.wrong += 1;
+    if (attempt.outcome === ATTEMPT_OUTCOME.CORRECT) bucket.correct += 1;
+    else if (attempt.outcome === ATTEMPT_OUTCOME.WRONG) bucket.wrong += 1;
+    else bucket.unanswered += 1;
     bucket._questionKeys.add(questionKey(attempt.bankId, attempt.questionId));
   }
 
@@ -163,6 +189,7 @@ export function buildDimensionAccuracy(attempts = [], keySelector, order = null)
     attempts: bucket.attempts,
     correct: bucket.correct,
     wrong: bucket.wrong,
+    unanswered: bucket.unanswered,
     accuracy: percent(bucket.correct, bucket.attempts),
     uniqueQuestions: bucket._questionKeys.size,
   }));
@@ -206,6 +233,7 @@ export function buildWeakChapterList(chapterAccuracy = [], {
     .sort((a, b) =>
       Number(a.accuracy || 0) - Number(b.accuracy || 0) ||
       Number(b.wrong || 0) - Number(a.wrong || 0) ||
+      Number(b.unanswered || 0) - Number(a.unanswered || 0) ||
       Number(b.attempts || 0) - Number(a.attempts || 0) ||
       String(a.key).localeCompare(String(b.key)),
     )
@@ -218,7 +246,16 @@ export function buildWeakChapterList(chapterAccuracy = [], {
 
 export function summarizeAttempts(attempts = []) {
   const normalized = normalizeAttempts(attempts);
-  const correct = normalized.filter(attempt => attempt.correct).length;
+  let correct = 0;
+  let wrong = 0;
+  let unanswered = 0;
+
+  for (const attempt of normalized) {
+    if (attempt.outcome === ATTEMPT_OUTCOME.CORRECT) correct += 1;
+    else if (attempt.outcome === ATTEMPT_OUTCOME.WRONG) wrong += 1;
+    else unanswered += 1;
+  }
+
   const unique = new Set(
     normalized.map(attempt => questionKey(attempt.bankId, attempt.questionId)),
   );
@@ -226,7 +263,8 @@ export function summarizeAttempts(attempts = []) {
   return {
     attempts: normalized.length,
     correct,
-    wrong: normalized.length - correct,
+    wrong,
+    unanswered,
     accuracy: percent(correct, normalized.length),
     uniqueQuestions: unique.size,
   };
@@ -237,11 +275,13 @@ export function summarizeSeries(series = []) {
   const attempts = items.reduce((sum, day) => sum + Number(day.attempts || 0), 0);
   const correct = items.reduce((sum, day) => sum + Number(day.correct || 0), 0);
   const wrong = items.reduce((sum, day) => sum + Number(day.wrong || 0), 0);
+  const unanswered = items.reduce((sum, day) => sum + Number(day.unanswered || 0), 0);
 
   return {
     attempts,
     correct,
     wrong,
+    unanswered,
     accuracy: percent(correct, attempts),
     activeDays: items.filter(day => day.active).length,
     uniqueQuestionTouches: items.reduce(
@@ -262,7 +302,6 @@ export function shiftDateKey(dateKey, offsetDays) {
   ));
 
   if (Number.isNaN(date.getTime())) return null;
-
   date.setUTCDate(date.getUTCDate() + Number(offsetDays || 0));
 
   return [
@@ -284,12 +323,7 @@ function normalizeQuestions(questions = []) {
 
 function normalizeAttempts(attempts = []) {
   return (Array.isArray(attempts) ? attempts : [])
-    .map(attempt => ({
-      ...attempt,
-      bankId: String(attempt?.bankId || ''),
-      questionId: String(attempt?.questionId || ''),
-      correct: attempt?.correct === true,
-    }))
+    .map(normalizedAttemptEvent)
     .filter(attempt => attempt.bankId && attempt.questionId);
 }
 

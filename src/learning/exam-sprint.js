@@ -3,6 +3,7 @@ import {
   classifyLearningAttempt,
   localDateKey,
 } from './goal-progress.js';
+import { attemptInstant } from './attempt-events.js';
 
 export const SPRINT_PRIORITY = Object.freeze({
   WRONG: 'wrong',
@@ -31,7 +32,7 @@ export function buildExamSprintPlan(goal = {}, data = {}, {
   todayPracticeCount = null,
 } = {}) {
   const todayKey = localDateKey(now, { timeZone });
-  const examDateKey = normalizeExamDateKey(goal?.examDate);
+  const examDateKey = normalizeExamDateKey(goal?.examDateKey || goal?.examDate);
   const daysUntilExam = diffDateKeys(todayKey, examDateKey);
   const remainingStudyDays =
     daysUntilExam === null || daysUntilExam < 0
@@ -196,11 +197,12 @@ export function buildTodayPracticeKeySet(attempts = [], {
   const keys = new Set();
 
   for (const attempt of Array.isArray(attempts) ? attempts : []) {
-    if (!attempt?.timestamp) continue;
+    const instant = attemptInstant(attempt);
+    if (!instant) continue;
     if (explicitBankIds && !explicitBankIds.has(String(attempt.bankId || ''))) continue;
     if (!explicitBankIds && scopedBankId && String(attempt.bankId || '') !== scopedBankId) continue;
     if (classifyLearningAttempt(attempt) !== LEARNING_ATTEMPT_KIND.PRACTICE) continue;
-    if (localDateKey(attempt.timestamp, { timeZone }) !== todayKey) continue;
+    if (localDateKey(instant, { timeZone }) !== todayKey) continue;
 
     const attemptBankId = String(attempt.bankId || '');
     const questionId = String(attempt.questionId || '');
