@@ -233,7 +233,7 @@ html[data-learning-style="epic"] :is(
   #practiceView
 ) .button.primary {
   background: linear-gradient(105deg, var(--learn-page-accent, var(--learn-primary)), var(--learn-primary-2));
-  color: #fff;
+  color: var(--learn-primary-action-fg, #fff);
   box-shadow:
     0 10px 26px color-mix(in srgb, var(--learn-primary) 25%, transparent),
     0 0 0 1px color-mix(in srgb, var(--epic-gold) 18%, transparent);
@@ -249,7 +249,7 @@ html[data-theme="dark"][data-learning-style="epic"] :is(
   #bankDetailView,
   #practiceView
 ) .button.primary {
-  color: #fff;
+  color: var(--learn-primary-action-fg, #fff);
 }
 
 html[data-learning-style="epic"] .learning-kicker {
