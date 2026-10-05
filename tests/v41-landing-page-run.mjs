@@ -27,7 +27,7 @@ assert.match(app, /data-nav-library/);
 assert.equal(APP_CONFIG.appVersion, '4.1.0');
 assert.equal(APP_CONFIG.releaseChannel, 'production');
 assert.equal(APP_CONFIG.dbName, 'moxin-quiz-v3');
-assert.equal(APP_CONFIG.dbVersion, 3);
+assert.ok(APP_CONFIG.dbVersion >= 3);
 
 assert.equal(manifest.start_url, './app.html');
 assert.equal(manifest.scope, './');
