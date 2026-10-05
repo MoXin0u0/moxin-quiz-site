@@ -312,6 +312,11 @@ textarea:focus {
   font-weight: 780;
 }
 
+:where(button, .button, a, summary, [role="button"], [role="tab"]):focus-visible {
+  outline: 3px solid var(--focus-ring, var(--primary));
+  outline-offset: 3px;
+}
+
 .button.primary {
   background: var(--primary);
   color: #fff;
