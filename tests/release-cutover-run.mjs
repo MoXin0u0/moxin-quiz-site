@@ -21,7 +21,7 @@ assert.match(legacy, /\.\/legacy-v2\//);
 assert.equal(manifest.start_url, './app.html');
 assert.equal(manifest.scope, './');
 
-assert.match(sw, /moxin-quiz-v3-[^'"\s]+/);
+assert.match(sw, /moxin-quiz-v(?:3|5)-[^'"\s]+/);
 assert.match(sw, /'\.\/index\.html'/);
 assert.match(sw, /'\.\/app\.html'/);
 assert.match(sw, /'\.\/v3\.html'/);
