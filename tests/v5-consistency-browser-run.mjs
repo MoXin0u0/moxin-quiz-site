@@ -146,6 +146,9 @@ try {
     const attempts = await all('attempts');
     const progress = await get('progress', 'legacy-bank::Q1');
     const review = await get('reviewSchedule', 'legacy-bank::Q1');
+    const syncMeta = await get('syncMeta', 'global');
+    const allProgress = await all('progress');
+    const allReview = await all('reviewSchedule');
 
     await saveNote('bank-a', 'Q1', 'first');
     await saveNote('bank-a', 'Q1', '');
@@ -194,6 +197,9 @@ try {
       attempts,
       progress,
       review,
+      syncMeta,
+      allProgress,
+      allReview,
       noteTombstone,
       recreatedNote,
       goalTombstone,
@@ -210,6 +216,14 @@ try {
   assert.equal(legacyExam[0].outcome, 'correct');
   assert.equal(legacyExam[1].outcome, 'unanswered');
 
+  if (result.progress?.attempts !== 2) {
+    console.error('V5 consistency diagnostics', JSON.stringify({
+      migration: result.syncMeta?.migration || null,
+      attempts: result.attempts,
+      allProgress: result.allProgress,
+      allReview: result.allReview,
+    }, null, 2));
+  }
   assert.equal(result.progress.attempts, 2, 'derived rebuild must replace stale legacy counters');
   assert.equal(result.progress.correctCount, 1);
   assert.equal(result.progress.wrongCount, 0);
