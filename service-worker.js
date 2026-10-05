@@ -146,7 +146,7 @@ self.addEventListener('activate', event => {
     caches.keys()
       .then(keys => Promise.all(
         keys
-          .filter(key => (key.startsWith('moxin-quiz-v3-') && key !== CACHE_VERSION) || (key.startsWith('moxin-quiz-scenes-') && key !== SCENE_CACHE_VERSION))
+          .filter(key => (((key.startsWith('moxin-quiz-v3-') || key.startsWith('moxin-quiz-v5-')) && key !== CACHE_VERSION) || (key.startsWith('moxin-quiz-scenes-') && key !== SCENE_CACHE_VERSION)))
           .map(key => caches.delete(key)),
       ))
       .then(() => self.clients.claim()),
