@@ -98,8 +98,8 @@
 }
 
 .unfamiliar-button.is-active {
-  color: #8b5700;
-  border-color: #e5c575;
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 45%, var(--line));
   background: var(--warning-soft);
 }
 
