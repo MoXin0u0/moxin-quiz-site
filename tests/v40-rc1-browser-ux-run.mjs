@@ -1072,12 +1072,12 @@ async function runV2Migration(browser) {
     };
   });
 
-  if (migrationState.version !== 3) addFailure(scope, `Expected DB version 3 after upgrade, got ${migrationState.version}`);
+  if (migrationState.version !== 4) addFailure(scope, `Expected DB version 4 after upgrade, got ${migrationState.version}`);
   if (!migrationState.hasStudioDrafts || !migrationState.hasLearningGoals) {
     addFailure(scope, 'DB upgrade did not add v4 stores.', migrationState);
   }
   for (const key of ['bank', 'question', 'favorite', 'note', 'unfamiliar', 'session']) {
-    if (!migrationState[key]) addFailure(scope, `Legacy record missing after v2 → v3 upgrade: ${key}`);
+    if (!migrationState[key]) addFailure(scope, `Legacy record missing after v2 → v4 upgrade: ${key}`);
   }
   if (migrationState.settings.theme !== 'dark' || migrationState.settings.fontScale !== 'large') {
     addFailure(scope, 'Legacy UI settings were not preserved.', migrationState.settings);
@@ -1208,7 +1208,7 @@ ${metricRows || '| — | — | — |'}
 - Academy / Epic / Focus × Light / Dark representative profiles
 - 36-bank / 360-question heavy local library
 - Full backup export → fresh browser restore
-- v3.3-style IndexedDB v2 → v4 DB v3 upgrade
+- v3.3-style IndexedDB v2 → V5 structural DB v4 upgrade
 - PWA offline reload
 
 `;
