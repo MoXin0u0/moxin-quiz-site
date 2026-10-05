@@ -409,7 +409,7 @@ html[data-theme="dark"] .learning-hero {
 ) .button.primary {
   border: 0;
   background: linear-gradient(105deg, var(--learn-primary), var(--learn-primary-2));
-  color: #fff;
+  color: var(--learn-primary-action-fg, #fff);
   box-shadow: 0 8px 20px color-mix(in srgb, var(--learn-primary) 24%, transparent);
 }
 
@@ -1358,6 +1358,23 @@ html[data-theme="dark"] .learning-hero-scene {
 #practiceView .answer-option.is-wrong {
   border-color: color-mix(in srgb, var(--learn-rose) 38%, var(--learn-line));
   background: color-mix(in srgb, var(--learn-rose) 12%, var(--learn-surface));
+}
+
+#practiceView .answer-option:focus-within,
+#examView .answer-option:focus-within {
+  outline: 3px solid var(--focus-ring, var(--learn-primary));
+  outline-offset: 3px;
+}
+
+.practice-option-feedback {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: .18rem;
+  color: var(--learn-text);
+  font-size: .72rem;
+  font-weight: 850;
 }
 
 
@@ -3095,6 +3112,18 @@ html[data-theme="dark"] .learning-art-slot {
   font-size: 1.3rem;
 }
 
+.exam-focus-time-block .exam-timer.is-warning {
+  border-color: color-mix(in srgb, var(--warning) 46%, var(--learn-line));
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.exam-focus-time-block .exam-timer.is-danger {
+  border-color: color-mix(in srgb, var(--danger) 48%, var(--learn-line));
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
 .exam-focus-layout {
   display: grid;
   grid-template-columns: minmax(170px, 210px) minmax(0, 1fr);
@@ -3155,7 +3184,7 @@ html[data-theme="dark"] .learning-art-slot {
 .exam-focus-navigator .exam-number.is-current {
   outline-color: var(--learn-primary);
   background: var(--learn-primary);
-  color: #fff;
+  color: var(--learn-selected-fg, #fff);
 }
 
 .exam-submit-button {
