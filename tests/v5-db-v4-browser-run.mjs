@@ -283,9 +283,9 @@ try {
     const page = await context.newPage();
     await establishOrigin(page);
     await deleteDatabase(page);
-    await page.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await waitReady(page);
-
+    // Open db.js directly from the neutral docs origin so this block tests only
+    // IndexedDB onupgradeneeded structure. The real app bootstrap migration is
+    // covered separately by the B07.5 consistency browser gate.
     const state = await inspectDatabase(page);
     assert.equal(state.version, 4);
     assert.deepEqual(state.stores, EXPECTED_STORES);
