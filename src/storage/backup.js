@@ -317,7 +317,7 @@ export function summarizeSnapshot(snapshot) {
 
 export function createBackupFilename(now = new Date()) {
   const stamp = now.toISOString().replace(/[:.]/g, '-');
-  return `moxin-quiz-backup-v${BACKUP_VERSION}-${stamp}.json`;
+  return `moxin-quiz-backup-${stamp}.json`;
 }
 
 async function readAll(db, storeName) {
