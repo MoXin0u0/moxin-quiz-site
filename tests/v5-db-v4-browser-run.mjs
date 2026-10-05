@@ -296,6 +296,73 @@ try {
     assert.equal(state.eventIdUnique, true);
     assert.equal(state.runtimeState.status, 'open');
 
+    const repositoryRoundTrip = await page.evaluate(async () => {
+      const [
+        accountSettings,
+        authorLibrary,
+        devices,
+        bankRegistry,
+        syncMeta,
+        syncOutbox,
+        syncReceipts,
+        syncRevisions,
+        syncConflicts,
+        syncTombstones,
+        cloudObjects,
+      ] = await Promise.all([
+        import('/src/storage/repositories/account-settings.js'),
+        import('/src/storage/repositories/author-library.js'),
+        import('/src/storage/repositories/devices.js'),
+        import('/src/storage/repositories/bank-registry.js'),
+        import('/src/storage/repositories/sync-meta.js'),
+        import('/src/storage/repositories/sync-outbox.js'),
+        import('/src/storage/repositories/sync-receipts.js'),
+        import('/src/storage/repositories/sync-revisions.js'),
+        import('/src/storage/repositories/sync-conflicts.js'),
+        import('/src/storage/repositories/sync-tombstones.js'),
+        import('/src/storage/repositories/cloud-objects.js'),
+      ]);
+
+      const now = '2026-10-05T00:00:00.000Z';
+      await accountSettings.saveAccountSettings({ id: 'global', studyTimeZone: 'Asia/Taipei', updatedAt: now });
+      await authorLibrary.saveAuthorLibraryState({ bankId: 'author-a', inLibrary: true, changedAt: now });
+      await devices.saveDeviceProfile({ deviceId: 'device-a', label: 'Test', status: 'active', lastSeenAt: now });
+      await bankRegistry.saveBankRegistryRecord({ bankId: 'bank-a', displayName: 'Bank A', sourceType: 'user', availability: 'installed', lastSeenAt: now });
+      await syncMeta.saveSyncMeta({ key: 'global', deviceId: 'device-a', runtimeState: 'LOCAL_ONLY' });
+      await syncOutbox.saveOutboxMutation({ mutationId: 'mutation-a', status: 'pending', entityKey: 'note:bank-a::Q1', createdAt: now });
+      await syncReceipts.saveSyncReceipt({ commitId: 'commit-a', deviceId: 'device-a', deviceSequence: 1, appliedAt: now });
+      await syncRevisions.saveSyncRevision({ revisionId: 'rev-a', entityType: 'note', entityKey: 'bank-a::Q1', changedAt: now });
+      await syncConflicts.saveSyncConflict({ conflictId: 'conflict-a', entityType: 'note', entityKey: 'bank-a::Q1', status: 'open', createdAt: now });
+      await syncTombstones.saveSyncTombstone({ tombstoneId: 'tombstone-a', entityType: 'note', entityKey: 'bank-a::Q1', deletedAt: now });
+      await cloudObjects.saveCloudObjectMapping({ objectKey: 'asset:sha256:test', objectType: 'asset', logicalId: 'asset-a', contentHash: 'sha256:test', driveFileId: 'drive-a', verifiedAt: now });
+
+      return {
+        account: await accountSettings.getAccountSettings(),
+        author: await authorLibrary.getAuthorLibraryState('author-a'),
+        device: await devices.getDeviceProfile('device-a'),
+        bank: await bankRegistry.getBankRegistryRecord('bank-a'),
+        meta: await syncMeta.getSyncMeta(),
+        pending: (await syncOutbox.listOutboxMutationsByStatus('pending')).length,
+        receipt: await syncReceipts.getSyncReceipt('commit-a'),
+        revisions: (await syncRevisions.listSyncRevisionsForEntity('bank-a::Q1')).length,
+        conflicts: (await syncConflicts.listOpenSyncConflicts()).length,
+        tombstones: (await syncTombstones.listSyncTombstonesForEntity('bank-a::Q1')).length,
+        cloudByHash: (await cloudObjects.listCloudObjectsByHash('sha256:test')).length,
+      };
+    });
+
+    assert.equal(repositoryRoundTrip.account.studyTimeZone, 'Asia/Taipei');
+    assert.equal(repositoryRoundTrip.author.inLibrary, true);
+    assert.equal(repositoryRoundTrip.device.status, 'active');
+    assert.equal(repositoryRoundTrip.bank.availability, 'installed');
+    assert.equal(repositoryRoundTrip.meta.runtimeState, 'LOCAL_ONLY');
+    assert.equal(repositoryRoundTrip.pending, 1);
+    assert.equal(repositoryRoundTrip.receipt.deviceSequence, 1);
+    assert.equal(repositoryRoundTrip.revisions, 1);
+    assert.equal(repositoryRoundTrip.conflicts, 1);
+    assert.equal(repositoryRoundTrip.tombstones, 1);
+    assert.equal(repositoryRoundTrip.cloudByHash, 1);
+
     await context.close();
   }
 
