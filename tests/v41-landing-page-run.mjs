@@ -24,8 +24,13 @@ assert.match(app, /<title>墨忻刷題網 v4\.1<\/title>/);
 assert.match(app, /<span class="version-badge">v4\.1<\/span>/);
 assert.match(app, /data-nav-library/);
 
-assert.equal(APP_CONFIG.appVersion, '4.1.0');
-assert.equal(APP_CONFIG.releaseChannel, 'production');
+if (APP_CONFIG.features?.v5DataFoundation) {
+  assert.equal(APP_CONFIG.appVersion, '5.0.0-dev');
+  assert.equal(APP_CONFIG.releaseChannel, 'development');
+} else {
+  assert.equal(APP_CONFIG.appVersion, '4.1.0');
+  assert.equal(APP_CONFIG.releaseChannel, 'production');
+}
 assert.equal(APP_CONFIG.dbName, 'moxin-quiz-v3');
 assert.ok(APP_CONFIG.dbVersion >= 3);
 
@@ -43,7 +48,11 @@ for (const asset of [
   assert.ok(sw.includes(`'${asset}'`), `APP_SHELL missing ${asset}`);
 }
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.1\.0-v41-landing-1'/);
+if (APP_CONFIG.features?.v5DataFoundation) {
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b075-1'/);
+} else {
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.1\.0-v41-landing-1'/);
+}
 assert.match(sw, /cache\.match\('\.\/app\.html'\)/);
 assert.match(sw, /cache\.match\('\.\/index\.html'\)/);
 
