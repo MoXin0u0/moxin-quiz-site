@@ -1,7 +1,10 @@
 import { getAllByIndex, getRecord } from '../db.js';
 import { learningKey, createUuid } from '../../utils/ids.js';
 import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
-import { createRevisionMutationInTransaction } from '../transactions/sync-mutation.js';
+import {
+  createRevisionMutationInTransaction,
+  getLatestTombstoneRevisionInTransaction,
+} from '../transactions/sync-mutation.js';
 
 export async function setFavorite(bankId, questionId, favorite = true) {
   const key = learningKey(bankId, questionId);
@@ -119,6 +122,12 @@ export async function saveNote(bankId, questionId, text) {
     'syncTombstones',
   ], async ({ store, request, tx }) => {
     const existing = await request(store('notes').get(key));
+    const tombstoneRevision = existing
+      ? null
+      : await getLatestTombstoneRevisionInTransaction(tx, {
+          entityType: 'note',
+          entityKey: key,
+        });
 
     if (!normalized.trim()) {
       if (!existing) return null;
@@ -146,7 +155,7 @@ export async function saveNote(bankId, questionId, text) {
     const { revision } = await createRevisionMutationInTransaction(tx, {
       entityType: 'note',
       entityKey: key,
-      previousRevision: existing?.revision || null,
+      previousRevision: existing?.revision || tombstoneRevision || null,
       operation: 'upsert',
       coalesceKey: `note:${key}`,
       now,

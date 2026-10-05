@@ -27,6 +27,43 @@ export function calculateNextReview(previous = null, correct, now = new Date()) 
   };
 }
 
+export function calculateNextReviewFromOutcome(previous = null, outcome, now = new Date()) {
+  const normalized = String(outcome || '').trim().toLowerCase();
+
+  if (normalized === 'unanswered') {
+    const currentLevel = clampLevel(previous?.level ?? 0);
+    const previousDue = previous?.dueAt ? new Date(previous.dueAt) : null;
+    const dueAt = previousDue && !Number.isNaN(previousDue.getTime())
+      ? previousDue.toISOString()
+      : now.toISOString();
+
+    return {
+      level: currentLevel,
+      mastery: previous?.mastery || masteryLabel(currentLevel),
+      intervalDays: Number.isFinite(Number(previous?.intervalDays))
+        ? Number(previous.intervalDays)
+        : 0,
+      dueAt,
+      correctStreak: Number(previous?.correctStreak) || 0,
+      wrongCount: Number(previous?.wrongCount) || 0,
+      unansweredCount: (Number(previous?.unansweredCount) || 0) + 1,
+      reviewCount: Number(previous?.reviewCount) || 0,
+      lastResult: 'unanswered',
+      lastOutcome: 'unanswered',
+      lastUnansweredAt: now.toISOString(),
+      lastReviewedAt: previous?.lastReviewedAt || null,
+    };
+  }
+
+  const correct = normalized === 'correct';
+  const next = calculateNextReview(previous, correct, now);
+  return {
+    ...next,
+    unansweredCount: Number(previous?.unansweredCount) || 0,
+    lastOutcome: correct ? 'correct' : 'wrong',
+  };
+}
+
 export function masteryLabel(level) {
   const normalized = clampLevel(level);
   if (normalized >= 5) return 'mastered';

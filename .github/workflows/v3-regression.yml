@@ -115,3 +115,6 @@ jobs:
 
       - name: Run V5 exam integrity audit
         run: npm run audit:v5-exam
+
+      - name: Run V5 consistency repair audit
+        run: npm run audit:v5-consistency

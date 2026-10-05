@@ -1,5 +1,5 @@
 import { learningKey } from '../utils/ids.js';
-import { calculateNextReview } from '../quiz/review-engine.js';
+import { calculateNextReviewFromOutcome } from '../quiz/review-engine.js';
 import {
   ATTEMPT_OUTCOME,
   attemptInstant,
@@ -73,18 +73,13 @@ export function reduceReviewSchedule(attempts = [], {
   const resolvedBankId = String(bankId || first.bankId || '');
   const resolvedQuestionId = String(questionId || first.questionId || '');
   let current = null;
-  let wrongCount = 0;
-  let unansweredCount = 0;
 
   for (const attempt of scoped) {
     const outcome = attemptOutcome(attempt);
-    if (outcome === ATTEMPT_OUTCOME.WRONG) wrongCount += 1;
-    if (outcome === ATTEMPT_OUTCOME.UNANSWERED) unansweredCount += 1;
-
     const instant = validInstant(attemptInstant(attempt));
-    const next = calculateNextReview(
+    const next = calculateNextReviewFromOutcome(
       current,
-      outcome === ATTEMPT_OUTCOME.CORRECT,
+      outcome,
       new Date(instant),
     );
 
@@ -94,8 +89,6 @@ export function reduceReviewSchedule(attempts = [], {
       key: learningKey(resolvedBankId, resolvedQuestionId),
       bankId: resolvedBankId,
       questionId: resolvedQuestionId,
-      wrongCount,
-      unansweredCount,
       lastOutcome: outcome,
       lastResult: outcome,
       updatedAt: instant,

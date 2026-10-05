@@ -56,6 +56,8 @@ const OPERATIONAL_STORES = Object.freeze([
 ]);
 
 export async function createBackupSnapshot() {
+  const { runV5MigrationToCompletion } = await import('./migrations/v5-migration.js');
+  await runV5MigrationToCompletion();
   const db = await openDatabase();
   const stores = {};
 
@@ -228,10 +230,10 @@ export async function restoreBackupSnapshot(snapshot, { replace = true } = {}) {
           }
         : {
             targetDbVersion: APP_CONFIG.dbVersion,
-            phase: 'completed',
+            phase: 'derived-rebuild',
             scope: null,
             cursor: null,
-            status: 'completed',
+            status: 'pending',
             startedAt: now,
             updatedAt: now,
             lastError: null,
@@ -255,10 +257,8 @@ export async function restoreBackupSnapshot(snapshot, { replace = true } = {}) {
     saveSettings(deviceSettings);
   }
 
-  if (snapshot.version === LEGACY_BACKUP_VERSION) {
-    const { runV5MigrationToCompletion } = await import('./migrations/v5-migration.js');
-    await runV5MigrationToCompletion();
-  }
+  const { runV5MigrationToCompletion } = await import('./migrations/v5-migration.js');
+  await runV5MigrationToCompletion();
 
   return {
     ...summarizeSnapshot(snapshot),

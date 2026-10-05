@@ -38,12 +38,18 @@ export async function commitExamSubmission({
       throw new Error('Abandoned exam cannot be submitted.');
     }
 
+    const questionIds = (existing.questionIds || []).map(String);
     const questionMap = new Map(
       (Array.isArray(existing.questionSnapshot) ? existing.questionSnapshot : [])
         .map(question => [String(question.questionId || question.id), question]),
     );
-    if (!questionMap.size) {
-      throw new Error('Exam question snapshot is missing; cannot finalize safely.');
+    const missingQuestionIds = questionIds.filter(id => !questionMap.has(id));
+    if (!questionMap.size || missingQuestionIds.length || questionMap.size !== new Set(questionIds).size) {
+      throw new Error(
+        `Exam question snapshot is incomplete; cannot finalize safely${missingQuestionIds.length
+          ? `: ${missingQuestionIds.join(', ')}`
+          : '.'}`,
+      );
     }
 
     const result = gradeExam(existing, questionMap);

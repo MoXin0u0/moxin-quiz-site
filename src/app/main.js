@@ -1,4 +1,5 @@
 import { openDatabase } from '../storage/db.js';
+import { runV5MigrationToCompletion } from '../storage/migrations/v5-migration.js';
 import { commitPracticeAnswer } from '../storage/transactions/learning-mutation.js';
 import {
   deleteBank,
@@ -205,12 +206,17 @@ bootstrap().catch(error => {
 
 async function bootstrap() {
   cleanupLegacyAnswerQuery();
-  bindEvents();
   renderQuestionBankTools(elements.toolsArea);
   await openDatabase();
   renderStorageStatus(elements.storageStatus, {
     ok: true,
-    message: 'IndexedDB 已就緒，資料只保存在這個瀏覽器。',
+    message: '正在檢查並升級本機學習資料…',
+  });
+  await runV5MigrationToCompletion();
+  bindEvents();
+  renderStorageStatus(elements.storageStatus, {
+    ok: true,
+    message: 'IndexedDB 已就緒；目前為本機優先模式。',
   });
   await refreshBanks();
   await refreshAuthorCatalog();
@@ -1435,12 +1441,15 @@ async function startExam(bankId, questionCount, durationMinutes) {
   const normalizedCount = Math.max(1, Math.min(Number(questionCount) || 20, questions.length, 100));
   const normalizedDuration = Math.max(1, Math.min(Number(durationMinutes) || 30, 240));
 
-  if (existingExam) {
-    const replaceConfirmed = confirm(
-      '這個題庫已有一場未完成的模擬考。\n\n開始新考試會將上一場標記為已放棄；原本的作答紀錄不會被當成正式交卷結果。\n\n確定繼續？',
-    );
-    if (!replaceConfirmed) return;
+  const existingExamNotice = existingExam
+    ? '\n\n注意：這個題庫已有一場未完成的模擬考。開始新考試後，上一場才會被標記為已放棄。'
+    : '';
+  const confirmed = confirm(
+    `開始模擬考？\n\n題庫：${bank.name || bank.id}\n題數：${normalizedCount}\n時間：${normalizedDuration} 分鐘\n\n開始後會立即倒數；離開畫面也不會暫停。${existingExamNotice}`,
+  );
+  if (!confirmed) return;
 
+  if (existingExam) {
     await saveSession({
       ...existingExam,
       status: 'abandoned',
@@ -1448,11 +1457,6 @@ async function startExam(bankId, questionCount, durationMinutes) {
       activeLease: null,
     });
   }
-
-  const confirmed = confirm(
-    `開始模擬考？\n\n題庫：${bank.name || bank.id}\n題數：${normalizedCount}\n時間：${normalizedDuration} 分鐘\n\n開始後會立即倒數；離開畫面也不會暫停。`,
-  );
-  if (!confirmed) return;
 
   const assetHashes = new Map(
     (assets || []).map(asset => [String(asset.path), asset.contentHash || null]),
@@ -1499,6 +1503,17 @@ async function resumeExam(bankId) {
   state.examQuestionMap = new Map(
     (state.exam.questionSnapshot || []).map(question => [question.questionId, question]),
   );
+
+  if (state.exam.integrityError) {
+    const missing = state.exam.integrityError.missingQuestionIds.join('、');
+    showToast(
+      elements.toastRegion,
+      `這份模擬考的凍結題目資料不完整，已停止恢復：${missing}`,
+      'error',
+    );
+    await openExamCenter();
+    return;
+  }
 
   if (!state.exam.questionIds.length) {
     showToast(elements.toastRegion, '這份模擬考的題目已不存在，無法恢復。', 'error');
@@ -1718,7 +1733,7 @@ async function startPractice(questions, modeOverride = null, options = {}) {
     shuffleQuestions: options.shuffleQuestions !== false,
   });
 
-  await persistPracticeSession();
+  await persistPracticeSession({ syncLifecycle: true });
   showView('practice');
   await showNextPracticeQuestion();
 }
@@ -1752,7 +1767,7 @@ async function showNextPracticeQuestion() {
 
   if (isSessionFinished(state.practice)) {
     state.practice.finishedAt = new Date().toISOString();
-    await persistPracticeSession();
+    await persistPracticeSession({ syncLifecycle: true });
     revokeAssetUrls();
     renderPracticeFinished(elements.practiceArea, {
       bank: state.currentBank,
@@ -1885,15 +1900,19 @@ async function saveCurrentNote() {
   );
 }
 
-async function persistPracticeSession() {
+async function persistPracticeSession({ syncLifecycle = false } = {}) {
   if (!state.practice) return;
-  const saved = await saveSession({
+  const snapshot = {
     ...state.practice,
     currentQuestionId: state.practice.currentQuestionId,
-  });
-  state.practice.id = saved.id;
-  state.practice.createdAt = saved.createdAt;
-  state.practice.updatedAt = saved.updatedAt;
+  };
+  const saved = syncLifecycle
+    ? await saveSession(snapshot)
+    : await saveSessionCheckpoint(snapshot);
+  state.practice = {
+    ...state.practice,
+    ...saved,
+  };
 }
 
 async function hydrateAssetImages(paths, selector) {

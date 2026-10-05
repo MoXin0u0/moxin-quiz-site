@@ -12,6 +12,7 @@ import {
   computeDraftFingerprint,
   computeQuestionFingerprint,
 } from '../../content/fingerprints.js';
+import { buildDerivedLearningRecords } from '../../learning/derived-state.js';
 
 export const V5_MIGRATION_TARGET_DB_VERSION = 4;
 export const V5_MIGRATION_BATCH_SIZE = 250;
@@ -48,6 +49,21 @@ function dateKeyFromLegacy(value) {
 
 function stripShaPrefix(value) {
   return String(value || '').replace(/^sha256:/, '');
+}
+
+function isEmptyLegacyAnswer(value) {
+  if (value === null || value === undefined || value === '') return true;
+  return Array.isArray(value) && value.length === 0;
+}
+
+function legacyAttemptOutcome(source = {}) {
+  if (source.correct === true) return 'correct';
+
+  const mode = String(source.mode || '').toLowerCase();
+  const isExam = mode === 'exam' || mode.startsWith('exam:');
+  if (isExam && isEmptyLegacyAnswer(source.selectedAnswer)) return 'unanswered';
+
+  return 'wrong';
 }
 
 async function legacyRevisionMeta({
@@ -314,7 +330,7 @@ async function migrateAttemptBatch(db, migration) {
       recordedAt: answeredAt,
       deviceId: LEGACY_MIGRATION_DEVICE_ID,
       activityType,
-      outcome: source.correct === true ? 'correct' : 'wrong',
+      outcome: legacyAttemptOutcome(source),
       responseTimeMs: Number.isFinite(source.responseTime) ? source.responseTime : null,
       context: source.context || {
         bankName: null,
@@ -734,6 +750,38 @@ async function migrateAssetHashBatch(db, migration) {
   return next;
 }
 
+async function rebuildDerivedLearningState(db, migration) {
+  const readTx = db.transaction('attempts', 'readonly');
+  const attempts = await requestToPromise(readTx.objectStore('attempts').getAll());
+  const rebuiltAt = new Date().toISOString();
+  const derived = buildDerivedLearningRecords(attempts, { rebuiltAt });
+
+  const tx = db.transaction(['progress', 'reviewSchedule', 'syncMeta'], 'readwrite');
+  const done = transactionDone(tx);
+  const progressStore = tx.objectStore('progress');
+  const reviewStore = tx.objectStore('reviewSchedule');
+  const metaStore = tx.objectStore('syncMeta');
+
+  progressStore.clear();
+  reviewStore.clear();
+  for (const record of derived.progress) progressStore.put(record);
+  for (const record of derived.review) reviewStore.put(record);
+
+  const currentMeta = await requestToPromise(metaStore.get('global')) || { key: 'global' };
+  const completed = {
+    ...migration,
+    phase: 'completed',
+    scope: null,
+    cursor: null,
+    status: 'completed',
+    updatedAt: rebuiltAt,
+    lastError: null,
+  };
+  metaStore.put({ ...currentMeta, migration: completed });
+  await done;
+  return completed;
+}
+
 export async function runV5MigrationStep() {
   const db = await openDatabase();
   let meta = await getSyncMeta(db);
@@ -763,7 +811,7 @@ export async function runV5MigrationStep() {
       case 'asset-hashes':
         return migrateAssetHashBatch(db, migration);
       case 'derived-rebuild':
-        return finishPhase(db, 'derived-rebuild');
+        return rebuildDerivedLearningState(db, migration);
       default:
         return updateMigrationState(db, {
           phase: 'completed',

@@ -16,15 +16,7 @@ export async function saveSession(session) {
     const existing = await request(store('sessions').get(id));
     const sessionType = session.sessionType || (session.mode === 'exam' ? 'exam' : 'practice');
     const entityType = sessionType === 'exam' ? 'exam-session' : 'practice-session';
-    const status = session.status || (
-      session.submittedAt
-        ? 'submitted'
-        : session.finishedAt
-          ? 'finished'
-          : session.abandonedAt
-            ? 'abandoned'
-            : 'active'
-    );
+    const status = resolveSessionStatus({ ...(existing || {}), ...session });
 
     const { revision } = await createRevisionMutationInTransaction(tx, {
       entityType,
@@ -57,10 +49,14 @@ export function getSession(sessionId) {
 export async function saveSessionCheckpoint(session) {
   if (!session?.id) throw new Error('Session checkpoint requires id.');
   const existing = await getSession(session.id);
-  const record = {
+  const merged = {
     ...(existing || {}),
     ...session,
     id: session.id,
+  };
+  const record = {
+    ...merged,
+    status: resolveSessionStatus(merged),
     revision: existing?.revision || session.revision || null,
     updatedAt: new Date().toISOString(),
   };
@@ -108,6 +104,13 @@ export async function getLatestUnfinishedExamForBank(bankId) {
 
 export function deleteSession(sessionId) {
   return deleteRecord('sessions', sessionId);
+}
+
+export function resolveSessionStatus(session = {}) {
+  if (session.submittedAt || session.status === 'submitted') return 'submitted';
+  if (session.abandonedAt || session.status === 'abandoned') return 'abandoned';
+  if (session.finishedAt || session.status === 'finished') return 'finished';
+  return 'active';
 }
 
 function isUnfinishedPractice(session) {

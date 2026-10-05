@@ -1,6 +1,6 @@
 import { questionKey } from '../../utils/ids.js';
 import { createSessionId, createUuid } from '../../utils/ids.js';
-import { calculateNextReview } from '../../quiz/review-engine.js';
+import { calculateNextReviewFromOutcome } from '../../quiz/review-engine.js';
 import { ATTEMPT_OUTCOME } from '../../learning/attempt-events.js';
 import { runReadwriteTransaction } from './transaction-utils.js';
 import {
@@ -134,19 +134,17 @@ export async function writeLearningAttemptInTransaction({
   store('progress').put(progress);
 
   const existingReview = await request(store('reviewSchedule').get(progressKey));
-  const nextReview = calculateNextReview(existingReview, correct, new Date(answeredAt));
+  const nextReview = calculateNextReviewFromOutcome(
+    existingReview,
+    normalizedOutcome,
+    new Date(answeredAt),
+  );
   const review = {
     ...(existingReview || {}),
     ...nextReview,
     key: progressKey,
     bankId,
     questionId,
-    wrongCount:
-      (existingReview?.wrongCount || 0) +
-      (normalizedOutcome === ATTEMPT_OUTCOME.WRONG ? 1 : 0),
-    unansweredCount:
-      (existingReview?.unansweredCount || 0) +
-      (normalizedOutcome === ATTEMPT_OUTCOME.UNANSWERED ? 1 : 0),
     lastOutcome: normalizedOutcome,
     lastResult: normalizedOutcome,
     updatedAt: answeredAt,

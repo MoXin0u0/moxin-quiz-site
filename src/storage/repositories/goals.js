@@ -4,7 +4,10 @@ import {
 } from '../db.js';
 import { createUuid } from '../../utils/ids.js';
 import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
-import { createRevisionMutationInTransaction } from '../transactions/sync-mutation.js';
+import {
+  createRevisionMutationInTransaction,
+  getLatestTombstoneRevisionInTransaction,
+} from '../transactions/sync-mutation.js';
 
 export const GLOBAL_GOAL_ID = 'global';
 
@@ -44,8 +47,15 @@ export async function saveLearningGoal(input) {
     'syncMeta',
     'syncOutbox',
     'syncRevisions',
+    'syncTombstones',
   ], async ({ store, request, tx }) => {
     const existing = await request(store('learningGoals').get(id));
+    const tombstoneRevision = existing
+      ? null
+      : await getLatestTombstoneRevisionInTransaction(tx, {
+          entityType: 'learning-goal',
+          entityKey: id,
+        });
     const goal = normalizeLearningGoal({
       ...existing,
       ...input,
@@ -57,7 +67,7 @@ export async function saveLearningGoal(input) {
     const { revision } = await createRevisionMutationInTransaction(tx, {
       entityType: 'learning-goal',
       entityKey: id,
-      previousRevision: existing?.revision || null,
+      previousRevision: existing?.revision || tombstoneRevision || null,
       operation: 'upsert',
       coalesceKey: `learning-goal:${id}`,
       now,

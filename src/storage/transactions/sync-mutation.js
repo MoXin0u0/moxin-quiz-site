@@ -1,7 +1,7 @@
 import { requestToPromise } from '../db.js';
 import { createDeviceId } from '../../utils/ids.js';
 import { nextHybridClock } from '../../sync/clock.js';
-import { createRevisionMeta } from '../../sync/revision.js';
+import { compareRevisionOrder, createRevisionMeta } from '../../sync/revision.js';
 import { enqueueOutboxMutation } from '../../sync/outbox-service.js';
 
 function createBaseSyncMeta(deviceId) {
@@ -41,6 +41,29 @@ export async function ensureSyncIdentityInTransaction(tx) {
   }
 
   return meta;
+}
+
+export async function getLatestTombstoneRevisionInTransaction(tx, {
+  entityType,
+  entityKey,
+} = {}) {
+  if (!tx.objectStoreNames.contains('syncTombstones')) return null;
+
+  const key = String(entityKey || '');
+  const type = String(entityType || '');
+  if (!key || !type) return null;
+
+  const tombstones = await requestToPromise(
+    tx.objectStore('syncTombstones')
+      .index('entityKey')
+      .getAll(IDBKeyRange.only(key)),
+  );
+
+  const matching = (tombstones || [])
+    .filter(item => item?.entityType === type && item?.revision)
+    .sort((left, right) => compareRevisionOrder(left.revision, right.revision));
+
+  return matching.at(-1)?.revision || null;
 }
 
 export async function createRevisionMutationInTransaction(tx, {

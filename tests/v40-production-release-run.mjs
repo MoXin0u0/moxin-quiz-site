@@ -15,8 +15,13 @@ assert.match(app, /<title>墨忻刷題網 v4\.\d+<\/title>/);
 assert.match(app, /<span class="version-badge">v4\.\d+<\/span>/);
 assert.doesNotMatch(app, /v4 preview|v3\.3|RC1/i);
 
-assert.match(APP_CONFIG.appVersion, /^4\.\d+\.\d+$/);
-assert.equal(APP_CONFIG.releaseChannel, 'production');
+if (APP_CONFIG.features?.v5DataFoundation) {
+  assert.match(APP_CONFIG.appVersion, /^5\.0\.0(?:-[0-9A-Za-z.-]+)?$/);
+  assert.equal(APP_CONFIG.releaseChannel, 'development');
+} else {
+  assert.match(APP_CONFIG.appVersion, /^4\.\d+\.\d+$/);
+  assert.equal(APP_CONFIG.releaseChannel, 'production');
+}
 assert.equal(APP_CONFIG.dbName, 'moxin-quiz-v3');
 assert.ok(APP_CONFIG.dbVersion >= 3);
 

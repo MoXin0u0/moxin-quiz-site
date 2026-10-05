@@ -173,25 +173,29 @@ export function gradeExam(session, questionMap) {
 export function normalizeResumedExam(session, validQuestions = [], now = new Date()) {
   const suppliedQuestions = (Array.isArray(validQuestions) ? validQuestions : [])
     .filter(item => item && typeof item === 'object');
-  const suppliedIds = new Set(
-    (Array.isArray(validQuestions) ? validQuestions : [])
-      .map(item => typeof item === 'object' ? item.id || item.questionId : item)
-      .map(String),
+  const suppliedById = new Map(
+    suppliedQuestions.map(question => [
+      String(question.id || question.questionId || ''),
+      question,
+    ]),
   );
 
+  const questionIds = (session.questionIds || []).map(String);
   const existingSnapshot = Array.isArray(session?.questionSnapshot)
     ? session.questionSnapshot.map(question => createExamQuestionSnapshot(question))
     : [];
 
   const snapshot = existingSnapshot.length
     ? existingSnapshot
-    : suppliedQuestions.map(question => createExamQuestionSnapshot(question));
+    : questionIds
+        .map(id => suppliedById.get(id))
+        .filter(Boolean)
+        .map(question => createExamQuestionSnapshot(question));
 
-  const snapshotIds = new Set(snapshot.map(question => String(question.questionId || question.id)));
-  const allowed = snapshotIds.size ? snapshotIds : suppliedIds;
-  const questionIds = (session.questionIds || [])
-    .map(String)
-    .filter(id => allowed.has(id));
+  const snapshotById = new Map(
+    snapshot.map(question => [String(question.questionId || question.id), question]),
+  );
+  const missingQuestionIds = questionIds.filter(id => !snapshotById.has(id));
 
   const answers = {};
   for (const id of questionIds) {
@@ -219,15 +223,20 @@ export function normalizeResumedExam(session, validQuestions = [], now = new Dat
     mode: 'exam',
     status,
     questionIds,
-    questionSnapshot: snapshot.filter(question =>
-      questionIds.includes(String(question.questionId || question.id))
-    ),
+    questionSnapshot: snapshot,
     questionCount: questionIds.length,
     answers,
     currentIndex,
     submissionReason: session.submissionReason || null,
     abandonedAt: session.abandonedAt || null,
     activeLease: session.activeLease || null,
+    integrityError: missingQuestionIds.length
+      ? {
+          code: 'missing-question-snapshot',
+          missingQuestionIds,
+          legacyFallback: existingSnapshot.length === 0,
+        }
+      : null,
     expired: status === 'active' && getRemainingSeconds(session, now) <= 0,
   };
 }
