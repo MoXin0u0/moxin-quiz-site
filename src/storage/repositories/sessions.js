@@ -1,4 +1,4 @@
-import { deleteRecord, getAllByIndex, getAllRecords, getRecord } from '../db.js';
+import { deleteRecord, getAllByIndex, getAllRecords, getRecord, putRecord } from '../db.js';
 import { createSessionId } from '../../utils/ids.js';
 import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
 import { createRevisionMutationInTransaction } from '../transactions/sync-mutation.js';
@@ -54,6 +54,20 @@ export function getSession(sessionId) {
   return getRecord('sessions', sessionId);
 }
 
+export async function saveSessionCheckpoint(session) {
+  if (!session?.id) throw new Error('Session checkpoint requires id.');
+  const existing = await getSession(session.id);
+  const record = {
+    ...(existing || {}),
+    ...session,
+    id: session.id,
+    revision: existing?.revision || session.revision || null,
+    updatedAt: new Date().toISOString(),
+  };
+  await putRecord('sessions', record);
+  return record;
+}
+
 export function listSessionsForBank(bankId) {
   return getAllByIndex('sessions', 'bankId', bankId);
 }
@@ -105,7 +119,8 @@ function isUnfinishedPractice(session) {
 }
 
 function isUnfinishedExam(session) {
-  if (!session || session.finishedAt || session.submittedAt) return false;
+  if (!session || session.finishedAt || session.submittedAt || session.abandonedAt) return false;
+  if (session.status && session.status !== 'active') return false;
   if (session.sessionType !== 'exam' && session.mode !== 'exam') return false;
   return Array.isArray(session.questionIds) && session.questionIds.length > 0;
 }

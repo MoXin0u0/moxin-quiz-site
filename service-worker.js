@@ -72,6 +72,8 @@ const APP_SHELL = [
   './src/storage/transactions/transaction-utils.js',
   './src/storage/transactions/sync-mutation.js',
   './src/storage/transactions/learning-mutation.js',
+  './src/storage/transactions/exam-session.js',
+  './src/storage/transactions/exam-submission.js',
   './src/storage/repositories/attempts.js',
   './src/storage/repositories/banks.js',
   './src/storage/repositories/goals.js',

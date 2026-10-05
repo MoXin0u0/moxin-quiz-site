@@ -1,6 +1,7 @@
 import { questionKey } from '../../utils/ids.js';
 import { createSessionId, createUuid } from '../../utils/ids.js';
 import { calculateNextReview } from '../../quiz/review-engine.js';
+import { ATTEMPT_OUTCOME } from '../../learning/attempt-events.js';
 import { runReadwriteTransaction } from './transaction-utils.js';
 import {
   createRevisionMutationInTransaction,
@@ -26,6 +27,135 @@ function activityTypeForMode(mode) {
   return 'practice';
 }
 
+export async function writeLearningAttemptInTransaction({
+  tx,
+  store,
+  request,
+  bank,
+  question,
+  sessionId = null,
+  eventId = createUuid('event'),
+  selectedAnswer = null,
+  outcome,
+  responseTime = null,
+  mode = 'practice',
+  activityType = null,
+  answeredAt = new Date().toISOString(),
+} = {}) {
+  if (!tx || !store || !request || !bank?.id || !question?.id) {
+    throw new Error('Learning attempt transaction requires stores, bank, and question.');
+  }
+
+  const normalizedOutcome = normalizeOutcome(outcome);
+  const bankId = String(bank.id);
+  const questionId = String(question.id);
+  const meta = await ensureSyncIdentityInTransaction(tx);
+  const responseTimeMs = Number.isFinite(responseTime) ? responseTime : null;
+  const correct = normalizedOutcome === ATTEMPT_OUTCOME.CORRECT;
+
+  const attempt = {
+    eventVersion: 1,
+    eventId: String(eventId),
+    bankId,
+    questionId,
+    questionKey: questionKey(bankId, questionId),
+    sessionId: sessionId ? String(sessionId) : null,
+    activityType: activityType || activityTypeForMode(mode),
+    mode: String(mode || 'practice'),
+    answeredAt,
+    recordedAt: answeredAt,
+    timestamp: answeredAt,
+    deviceId: meta.deviceId,
+    selectedAnswer,
+    outcome: normalizedOutcome,
+    correct,
+    responseTimeMs,
+    responseTime: responseTimeMs,
+    context: {
+      bankName: bank.name ? String(bank.name) : null,
+      bankVersion: bank.version ? String(bank.version) : null,
+      bankFingerprint: bank.contentFingerprint || bank.bankFingerprint || null,
+      questionFingerprint: question.questionFingerprint || null,
+      questionType: question.type || 'unknown',
+      chapter:
+        question.chapter === undefined || question.chapter === null
+          ? null
+          : String(question.chapter),
+      difficulty: Number.isFinite(Number(question.difficulty))
+        ? Number(question.difficulty)
+        : null,
+    },
+  };
+
+  const attemptId = await request(store('attempts').add(attempt));
+  attempt.id = attemptId;
+
+  await enqueueImmutableMutationInTransaction(tx, {
+    entityType: 'attempt',
+    entityKey: attempt.eventId,
+    operation: 'append',
+    createdAt: answeredAt,
+  });
+
+  const progressKey = questionKey(bankId, questionId);
+  const existingProgress = await request(store('progress').get(progressKey));
+  const progress = {
+    ...(existingProgress || {
+      key: progressKey,
+      bankId,
+      questionId,
+      attempts: 0,
+      correctCount: 0,
+      wrongCount: 0,
+      unansweredCount: 0,
+    }),
+    key: progressKey,
+    bankId,
+    questionId,
+    attempts: (existingProgress?.attempts || 0) + 1,
+    correctCount:
+      (existingProgress?.correctCount || 0) +
+      (normalizedOutcome === ATTEMPT_OUTCOME.CORRECT ? 1 : 0),
+    wrongCount:
+      (existingProgress?.wrongCount || 0) +
+      (normalizedOutcome === ATTEMPT_OUTCOME.WRONG ? 1 : 0),
+    unansweredCount:
+      (existingProgress?.unansweredCount || 0) +
+      (normalizedOutcome === ATTEMPT_OUTCOME.UNANSWERED ? 1 : 0),
+    lastResult: normalizedOutcome,
+    lastOutcome: normalizedOutcome,
+    lastAnsweredAt: answeredAt,
+    ...(normalizedOutcome === ATTEMPT_OUTCOME.CORRECT
+      ? { lastCorrectAt: answeredAt }
+      : normalizedOutcome === ATTEMPT_OUTCOME.WRONG
+        ? { lastWrongAt: answeredAt }
+        : { lastUnansweredAt: answeredAt }),
+  };
+  store('progress').put(progress);
+
+  const existingReview = await request(store('reviewSchedule').get(progressKey));
+  const nextReview = calculateNextReview(existingReview, correct, new Date(answeredAt));
+  const review = {
+    ...(existingReview || {}),
+    ...nextReview,
+    key: progressKey,
+    bankId,
+    questionId,
+    wrongCount:
+      (existingReview?.wrongCount || 0) +
+      (normalizedOutcome === ATTEMPT_OUTCOME.WRONG ? 1 : 0),
+    unansweredCount:
+      (existingReview?.unansweredCount || 0) +
+      (normalizedOutcome === ATTEMPT_OUTCOME.UNANSWERED ? 1 : 0),
+    lastOutcome: normalizedOutcome,
+    lastResult: normalizedOutcome,
+    updatedAt: answeredAt,
+  };
+  store('reviewSchedule').put(review);
+
+  return { attempt, progress, review };
+}
+
 export async function commitPracticeAnswer({
   bank,
   question,
@@ -40,8 +170,6 @@ export async function commitPracticeAnswer({
     throw new Error('Practice answer commit requires bank, question, and session.');
   }
 
-  const bankId = String(bank.id);
-  const questionId = String(question.id);
   const answeredAt = now.toISOString();
   const sessionId = session.id || createSessionId();
 
@@ -54,92 +182,19 @@ export async function commitPracticeAnswer({
     'syncOutbox',
     'syncRevisions',
   ], async ({ store, request, tx }) => {
-    const meta = await ensureSyncIdentityInTransaction(tx);
-
-    const eventId = createUuid('event');
-    const outcome = correct ? 'correct' : 'wrong';
-    const responseTimeMs = Number.isFinite(responseTime) ? responseTime : null;
-    const attempt = {
-      eventVersion: 1,
-      eventId,
-      bankId,
-      questionId,
-      questionKey: questionKey(bankId, questionId),
+    const learning = await writeLearningAttemptInTransaction({
+      tx,
+      store,
+      request,
+      bank,
+      question,
       sessionId,
-      activityType: activityTypeForMode(mode),
-      mode: String(mode || 'practice'),
-      answeredAt,
-      recordedAt: answeredAt,
-      timestamp: answeredAt,
-      deviceId: meta.deviceId,
       selectedAnswer,
-      outcome,
-      correct: Boolean(correct),
-      responseTimeMs,
-      responseTime: responseTimeMs,
-      context: {
-        bankName: bank.name ? String(bank.name) : null,
-        bankVersion: bank.version ? String(bank.version) : null,
-        bankFingerprint: bank.contentFingerprint || null,
-        questionFingerprint: question.questionFingerprint || null,
-        questionType: question.type || 'unknown',
-        chapter:
-          question.chapter === undefined || question.chapter === null
-            ? null
-            : String(question.chapter),
-        difficulty: Number.isFinite(question.difficulty) ? question.difficulty : null,
-      },
-    };
-
-    const attemptId = await request(store('attempts').add(attempt));
-    attempt.id = attemptId;
-
-    await enqueueImmutableMutationInTransaction(tx, {
-      entityType: 'attempt',
-      entityKey: eventId,
-      operation: 'append',
-      createdAt: answeredAt,
+      outcome: correct ? ATTEMPT_OUTCOME.CORRECT : ATTEMPT_OUTCOME.WRONG,
+      responseTime,
+      mode,
+      answeredAt,
     });
-
-    const progressKey = questionKey(bankId, questionId);
-    const existingProgress = await request(store('progress').get(progressKey));
-    const progress = {
-      ...(existingProgress || {
-        key: progressKey,
-        bankId,
-        questionId,
-        attempts: 0,
-        correctCount: 0,
-        wrongCount: 0,
-        unansweredCount: 0,
-      }),
-      key: progressKey,
-      bankId,
-      questionId,
-      attempts: (existingProgress?.attempts || 0) + 1,
-      correctCount: (existingProgress?.correctCount || 0) + (correct ? 1 : 0),
-      wrongCount: (existingProgress?.wrongCount || 0) + (correct ? 0 : 1),
-      unansweredCount: existingProgress?.unansweredCount || 0,
-      lastResult: outcome,
-      lastOutcome: outcome,
-      lastAnsweredAt: answeredAt,
-      ...(correct
-        ? { lastCorrectAt: answeredAt }
-        : { lastWrongAt: answeredAt }),
-    };
-    store('progress').put(progress);
-
-    const existingReview = await request(store('reviewSchedule').get(progressKey));
-    const nextReview = calculateNextReview(existingReview, Boolean(correct), now);
-    const review = {
-      ...(existingReview || {}),
-      ...nextReview,
-      key: progressKey,
-      bankId,
-      questionId,
-      updatedAt: answeredAt,
-    };
-    store('reviewSchedule').put(review);
 
     const existingSession = await request(store('sessions').get(sessionId));
     const sessionStatus = session.abandonedAt
@@ -170,10 +225,14 @@ export async function commitPracticeAnswer({
     store('sessions').put(savedSession);
 
     return {
-      attempt,
-      progress,
-      review,
+      ...learning,
       session: savedSession,
     };
   });
+}
+
+function normalizeOutcome(value) {
+  const outcome = String(value || '').trim().toLowerCase();
+  if (Object.values(ATTEMPT_OUTCOME).includes(outcome)) return outcome;
+  return ATTEMPT_OUTCOME.UNANSWERED;
 }

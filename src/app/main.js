@@ -3,13 +3,13 @@ import { commitPracticeAnswer } from '../storage/transactions/learning-mutation.
 import {
   deleteBank,
   getAsset,
+  getAssetsByBank,
   getBank,
   getBankPackage,
   getQuestionsByBank,
   listBanks,
 } from '../storage/repositories/banks.js';
 import {
-  addAttempt,
   getAttemptsByBank,
   listAllAttempts,
 } from '../storage/repositories/attempts.js';
@@ -24,20 +24,17 @@ import {
   setFavorite,
   setUnfamiliar,
 } from '../storage/repositories/learning.js';
-import {
-  listQuestionProgress,
-  recordQuestionResult,
-} from '../storage/repositories/progress.js';
+import { listQuestionProgress } from '../storage/repositories/progress.js';
 import {
   listDueReviews,
   listReviewSchedules,
-  updateReviewScheduleFromResult,
 } from '../storage/repositories/review.js';
 import {
   getLatestUnfinishedExamForBank,
   getLatestUnfinishedPracticeSession,
   getLatestUnfinishedSessionForBank,
   saveSession,
+  saveSessionCheckpoint,
 } from '../storage/repositories/sessions.js';
 import {
   importAuthorPackage,
@@ -76,8 +73,9 @@ import {
   getRemainingSeconds,
   gradeExam,
   normalizeResumedExam,
-  setExamAnswer,
 } from '../quiz/exam-engine.js';
+import { saveExamAnswerState } from '../storage/transactions/exam-session.js';
+import { commitExamSubmission } from '../storage/transactions/exam-submission.js';
 import {
   filterQuestions,
   readBankFilters,
@@ -1422,9 +1420,11 @@ async function openExamCenter() {
 }
 
 async function startExam(bankId, questionCount, durationMinutes) {
-  const [bank, questions] = await Promise.all([
+  const [bank, questions, assets, existingExam] = await Promise.all([
     getBank(bankId),
     getQuestionsByBank(bankId),
+    getAssetsByBank(bankId),
+    getLatestUnfinishedExamForBank(bankId),
   ]);
 
   if (!bank || !questions.length) {
@@ -1435,23 +1435,46 @@ async function startExam(bankId, questionCount, durationMinutes) {
   const normalizedCount = Math.max(1, Math.min(Number(questionCount) || 20, questions.length, 100));
   const normalizedDuration = Math.max(1, Math.min(Number(durationMinutes) || 30, 240));
 
+  if (existingExam) {
+    const replaceConfirmed = confirm(
+      '這個題庫已有一場未完成的模擬考。\n\n開始新考試會將上一場標記為已放棄；原本的作答紀錄不會被當成正式交卷結果。\n\n確定繼續？',
+    );
+    if (!replaceConfirmed) return;
+
+    await saveSession({
+      ...existingExam,
+      status: 'abandoned',
+      abandonedAt: new Date().toISOString(),
+      activeLease: null,
+    });
+  }
+
   const confirmed = confirm(
-    `開始模擬考？\n\n題庫：${bank.name || bank.id}\n題數：${normalizedCount}\n時間：${normalizedDuration} 分鐘\n\n開始後會立即倒數。`,
+    `開始模擬考？\n\n題庫：${bank.name || bank.id}\n題數：${normalizedCount}\n時間：${normalizedDuration} 分鐘\n\n開始後會立即倒數；離開畫面也不會暫停。`,
   );
   if (!confirmed) return;
 
+  const assetHashes = new Map(
+    (assets || []).map(asset => [String(asset.path), asset.contentHash || null]),
+  );
+
   state.currentBank = bank;
   state.allQuestions = questions;
-  state.examQuestionMap = new Map(questions.map(question => [question.id, question]));
   state.exam = createExamSession({
     bankId,
     bankName: bank.name || bank.title || bank.id,
+    bankVersion: bank.version || null,
+    bankFingerprint: bank.contentFingerprint || null,
     questions,
     questionCount: normalizedCount,
     durationMinutes: normalizedDuration,
+    assetHashes,
   });
+  state.examQuestionMap = new Map(
+    state.exam.questionSnapshot.map(question => [question.questionId, question]),
+  );
 
-  await persistExamSession();
+  await persistExamSession({ syncLifecycle: true });
   showView('exam');
   await renderCurrentExamQuestion();
   startExamTimer();
@@ -1472,8 +1495,10 @@ async function resumeExam(bankId) {
 
   state.currentBank = bank;
   state.allQuestions = questions;
-  state.examQuestionMap = new Map(questions.map(question => [question.id, question]));
-  state.exam = normalizeResumedExam(resume, questions.map(question => question.id));
+  state.exam = normalizeResumedExam(resume, questions);
+  state.examQuestionMap = new Map(
+    (state.exam.questionSnapshot || []).map(question => [question.questionId, question]),
+  );
 
   if (!state.exam.questionIds.length) {
     showToast(elements.toastRegion, '這份模擬考的題目已不存在，無法恢復。', 'error');
@@ -1543,8 +1568,11 @@ async function saveCurrentExamAnswer() {
   if (!question) return;
 
   const answer = collectExamAnswer(elements.examArea, question);
-  setExamAnswer(state.exam, questionId, answer);
-  await persistExamSession();
+  state.exam = await saveExamAnswerState({
+    sessionId: state.exam.id,
+    questionId,
+    value: answer,
+  });
 }
 
 function startExamTimer() {
@@ -1591,34 +1619,13 @@ async function submitExam({ auto = false } = {}) {
   stopExamTimer();
 
   try {
-    const result = gradeExam(state.exam, state.examQuestionMap);
-    const submittedAt = new Date().toISOString();
-
-    for (const detail of result.details) {
-      await Promise.all([
-        addAttempt({
-          bankId: state.currentBank.id,
-          questionId: detail.questionId,
-          selectedAnswer: detail.userAnswer,
-          correct: detail.correct,
-          responseTime: null,
-          mode: 'exam',
-        }),
-        recordQuestionResult(state.currentBank.id, detail.questionId, detail.correct),
-        updateReviewScheduleFromResult(state.currentBank.id, detail.questionId, detail.correct),
-      ]);
-    }
-
-    state.exam.submittedAt = submittedAt;
-    state.exam.finishedAt = submittedAt;
-    state.exam.result = {
-      total: result.total,
-      correctCount: result.correctCount,
-      wrongCount: result.wrongCount,
-      unansweredCount: result.unansweredCount,
-      score: result.score,
-    };
-    await persistExamSession();
+    const committed = await commitExamSubmission({
+      sessionId: state.exam.id,
+      bank: state.currentBank,
+      reason: auto ? 'timeout' : 'manual',
+    });
+    state.exam = committed.session;
+    const result = committed.result;
 
     revokeAssetUrls();
     renderExamResult(elements.examArea, {
@@ -1634,25 +1641,32 @@ async function submitExam({ auto = false } = {}) {
   } catch (error) {
     console.error(error);
     showToast(elements.toastRegion, `交卷失敗：${error.message}`, 'error');
-    startExamTimer();
+    if (getRemainingSeconds(state.exam) > 0) {
+      startExamTimer();
+    }
   } finally {
     state.examSubmitting = false;
   }
 }
 
-async function persistExamSession() {
+async function persistExamSession({ syncLifecycle = false } = {}) {
   if (!state.exam) return;
-  const saved = await saveSession(state.exam);
-  state.exam.id = saved.id;
-  state.exam.createdAt = saved.createdAt;
-  state.exam.updatedAt = saved.updatedAt;
+  const saved = syncLifecycle
+    ? await saveSession(state.exam)
+    : await saveSessionCheckpoint(state.exam);
+  state.exam = {
+    ...state.exam,
+    ...saved,
+  };
 }
 
 async function hydrateExamImages(paths) {
   const container = elements.examArea.querySelector('[data-exam-question-images]');
   if (!container || !Array.isArray(paths) || !paths.length) return;
 
-  for (const path of paths) {
+  for (const item of paths) {
+    const path = typeof item === 'string' ? item : item?.path;
+    if (!path) continue;
     try {
       const asset = await getAsset(state.currentBank.id, path);
       if (!asset?.blob) {

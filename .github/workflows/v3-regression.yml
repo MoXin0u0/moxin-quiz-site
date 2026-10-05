@@ -112,3 +112,6 @@ jobs:
 
       - name: Run V5 transactional outbox audit
         run: npm run audit:v5-outbox
+
+      - name: Run V5 exam integrity audit
+        run: npm run audit:v5-exam

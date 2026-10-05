@@ -26,6 +26,7 @@ export function renderExamQuestion(container, { bank, session, question, index }
         <div class="exam-focus-time-block">
           <span>剩餘時間</span>
           <div class="exam-timer" data-exam-timer aria-live="polite">--:--</div>
+          <small data-exam-timer-state>倒數進行中 · 離開畫面不會暫停</small>
         </div>
       </header>
 
@@ -63,7 +64,7 @@ export function renderExamQuestion(container, { bank, session, question, index }
             <div class="question-images" data-exam-question-images></div>
 
             <form class="answer-form exam-focus-answer" data-exam-answer-form>
-              ${buildAnswerForm(question, session.answers?.[question.id])}
+              ${buildAnswerForm(question, answerValue(session, question.id))}
             </form>
 
             <footer class="exam-question-actions exam-focus-question-actions">
@@ -115,6 +116,15 @@ export function updateExamTimer(container, remainingSeconds) {
   timer.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   timer.classList.toggle('is-warning', total <= 300);
   timer.classList.toggle('is-danger', total <= 60);
+
+  const state = container.querySelector('[data-exam-timer-state]');
+  if (state) {
+    state.textContent = total <= 60
+      ? '剩不到 1 分鐘 · 離開畫面不會暫停'
+      : total <= 300
+        ? '剩不到 5 分鐘 · 離開畫面不會暫停'
+        : '倒數進行中 · 離開畫面不會暫停';
+  }
 }
 
 export function renderExamResult(container, { bank, result, questionMap, session }) {
@@ -266,9 +276,22 @@ function countAnswered(session) {
 }
 
 function hasAnswer(session, questionId) {
-  const answer = session.answers?.[questionId];
+  const answer = answerValue(session, questionId);
   if (answer === null || answer === undefined || answer === '') return false;
   return !Array.isArray(answer) || answer.length > 0;
+}
+
+function answerValue(session, questionId) {
+  const stored = session.answers?.[questionId];
+  if (
+    stored &&
+    typeof stored === 'object' &&
+    !Array.isArray(stored) &&
+    Object.prototype.hasOwnProperty.call(stored, 'value')
+  ) {
+    return stored.value;
+  }
+  return stored;
 }
 
 function resultStat(label, value) {
