@@ -100,3 +100,6 @@ jobs:
 
       - name: Run V5 P0A browser matrix
         run: npm run audit:v5-theme
+
+      - name: Run V5 IndexedDB v4 structural audit
+        run: npm run audit:v5-db
