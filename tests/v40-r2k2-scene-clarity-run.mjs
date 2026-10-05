@@ -24,6 +24,6 @@ assert.match(css, /data-learning-style="epic"\]\[data-scene-intensity="full"/);
 assert.match(css, /@media \(max-width: 760px\)/);
 
 // Cache revision is allowed to advance independently of this milestone.
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2K.2 scene clarity tests passed.');

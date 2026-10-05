@@ -25,7 +25,7 @@ assert.match(css, /background-image:\s*none/);
 assert.match(css, /data-scene-state="loading"/);
 assert.match(css, /data-scene-state="ready"/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 assert.match(sw, /moxin-quiz-scenes-r2k\.\d+(?:\.\d+)?-\d+/);
 assert.match(sw, /cacheFirstScene/);
 assert.match(sw, /isLearningScene/);

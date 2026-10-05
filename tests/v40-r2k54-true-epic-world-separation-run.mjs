@@ -60,7 +60,7 @@ if (comparisons.length > 0) {
   }
 }
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 assert.match(sw, /SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k\.5-5'/);
 
 console.log('MoXin Quiz v4.0 R2K.5.4 true Epic world-separation tests passed.');

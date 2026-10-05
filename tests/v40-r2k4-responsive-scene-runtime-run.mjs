@@ -26,7 +26,7 @@ for (const style of ['academy', 'epic']) {
   assert.match(loader, new RegExp(`${style}:[\\s\\S]*desktop:`));
 }
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 assert.match(sw, /moxin-quiz-scenes-r2k\.\d+(?:\.\d+)?-\d+/);
 
 assert.match(audit, /readWebpSize/);
