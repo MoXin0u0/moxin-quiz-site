@@ -47,6 +47,6 @@ assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.learning-scene-panel \.le
 assert.match(css, /prefers-reduced-data: reduce/);
 
 // Cache revision is allowed to advance independently of this milestone.
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2G scene integration tests passed.');

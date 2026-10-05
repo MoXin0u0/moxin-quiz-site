@@ -45,7 +45,7 @@ assert.doesNotMatch(learning, /content:\s*["']✦["']/);
 assert.doesNotMatch(learning, /#toolsView/);
 assert.doesNotMatch(learning, /#settingsView/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 assert.match(sw, /styles\/v4-learning\.css/);
 
 console.log('MoXin Quiz v4.0 R2B learning page redesign tests passed.');

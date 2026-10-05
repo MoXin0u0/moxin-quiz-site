@@ -19,6 +19,6 @@ assert.match(pathRule, /left:\s*clamp/);
 assert.match(pathRule, /right:\s*clamp/);
 
 assert.match(css, /\.learning-art-slot \.learning-scene-path/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2D.1 scene path positioning tests passed.');

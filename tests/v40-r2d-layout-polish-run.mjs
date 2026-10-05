@@ -36,6 +36,6 @@ assert.match(css, /@media \(max-width: 760px\)/);
 assert.match(css, /\.learning-hero-art[\s\S]*height: 54%/);
 assert.match(css, /@media \(max-width: 390px\)|@media \(max-width: 420px\)/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2D layout polish tests passed.');

@@ -41,6 +41,6 @@ assert.doesNotMatch(r2fCss, /assets\/learning\/light-sun-corner\.svg/);
 assert.doesNotMatch(r2fCss, /assets\/learning\/dark-desk-side\.svg/);
 
 // Cache revision is allowed to advance independently of this milestone.
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 
 console.log('MoXin Quiz v4.0 R2F page personality and scene framework tests passed.');

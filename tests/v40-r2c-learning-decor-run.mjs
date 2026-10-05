@@ -28,7 +28,7 @@ assert.match(css, /display: none;/);
 assert.match(css, /learning-scene-note/);
 assert.match(css, /learning-book-stack/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 assert.match(sw, /assets\/learning\/light-sun-corner\.svg/);
 assert.match(sw, /assets\/learning\/dark-desk-side\.svg/);
 
