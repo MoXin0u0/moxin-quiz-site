@@ -81,7 +81,7 @@ async function mountFixture(page) {
     const fixture = document.createElement('div');
     fixture.id = 'v5-p0a-fixture';
     fixture.innerHTML = `
-      <button class="button primary" data-v5-primary>主要操作</button>
+      <button class="button primary" data-v5-primary tabindex="1">主要操作</button>
       <button class="unfamiliar-button is-active" data-v5-unfamiliar>不熟</button>
       <div class="exam-focus-time-block">
         <span class="exam-timer" data-v5-timer-neutral>10:00</span>
@@ -199,7 +199,13 @@ try {
       assertSolidContrast(`${scope} warning timer`, state.timerWarning);
       assertSolidContrast(`${scope} danger timer`, state.timerDanger);
 
-      await page.locator('[data-v5-primary]').focus();
+      await page.evaluate(() => document.activeElement?.blur());
+      await page.keyboard.press('Tab');
+      const activeIsPrimary = await page.evaluate(() =>
+        document.activeElement?.matches?.('[data-v5-primary]') === true
+      );
+      assert.equal(activeIsPrimary, true, `${scope}: keyboard Tab did not reach the primary fixture first`);
+
       const focused = await page.locator('[data-v5-primary]').evaluate(el => {
         const style = getComputedStyle(el);
         return {
@@ -208,7 +214,7 @@ try {
           outlineColor: style.outlineColor,
         };
       });
-      assert.notEqual(focused.outlineStyle, 'none', `${scope}: primary button has no visible focus outline`);
+      assert.notEqual(focused.outlineStyle, 'none', `${scope}: keyboard focus has no visible outline`);
       assert.ok(parseFloat(focused.outlineWidth) >= 2, `${scope}: focus outline is thinner than 2px`);
 
       cases += 1;
