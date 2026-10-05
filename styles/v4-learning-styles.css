@@ -315,6 +315,8 @@ html[data-learning-style="focus"] :is(
   --learn-line-strong: #c7cfd9;
   --learn-primary: #4f65b7;
   --learn-primary-2: #6779c7;
+  --learn-primary-action-fg: #fff;
+  --learn-selected-fg: #fff;
   --learn-cyan: #4d8796;
   --learn-teal: #478576;
   --learn-gold: #a97f43;
@@ -419,8 +421,17 @@ html[data-learning-style="focus"] #examView .exam-shell {
 }
 
 html[data-learning-style="focus"] .learning-hero-primary-cta,
-html[data-learning-style="focus"] .button.primary {
+html[data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
   background: var(--learn-primary);
+  color: var(--learn-primary-action-fg, #fff);
   box-shadow: none;
 }
 
