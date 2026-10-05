@@ -97,3 +97,6 @@ jobs:
 
       - name: Run landing browser audit
         run: npm run audit:landing
+
+      - name: Run V5 P0A browser matrix
+        run: npm run audit:v5-theme
