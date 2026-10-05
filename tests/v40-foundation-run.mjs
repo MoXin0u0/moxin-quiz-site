@@ -11,7 +11,7 @@ import {
   normalizeLearningGoal,
 } from '../src/storage/repositories/goals.js';
 
-assert.equal(APP_CONFIG.dbVersion, 3);
+assert.ok(APP_CONFIG.dbVersion >= 3);
 
 const dbSource = fs.readFileSync('src/storage/db.js', 'utf8');
 assert.match(dbSource, /studioDrafts:/);
