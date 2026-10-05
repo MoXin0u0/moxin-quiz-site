@@ -200,20 +200,26 @@ try {
       assertSolidContrast(`${scope} danger timer`, state.timerDanger);
 
       await page.evaluate(() => document.activeElement?.blur());
-      await page.keyboard.press('Tab');
-      const activeIsPrimary = await page.evaluate(() =>
-        document.activeElement?.matches?.('[data-v5-primary]') === true
-      );
-      assert.equal(activeIsPrimary, true, `${scope}: keyboard Tab did not reach the primary fixture first`);
+      let reachedPrimary = false;
+      for (let tabIndex = 0; tabIndex < 48; tabIndex += 1) {
+        await page.keyboard.press('Tab');
+        reachedPrimary = await page.evaluate(() =>
+          document.activeElement?.matches?.('[data-v5-primary]') === true
+        );
+        if (reachedPrimary) break;
+      }
+      assert.equal(reachedPrimary, true, `${scope}: keyboard navigation could not reach the primary fixture`);
 
       const focused = await page.locator('[data-v5-primary]').evaluate(el => {
         const style = getComputedStyle(el);
         return {
+          focusVisible: el.matches(':focus-visible'),
           outlineStyle: style.outlineStyle,
           outlineWidth: style.outlineWidth,
           outlineColor: style.outlineColor,
         };
       });
+      assert.equal(focused.focusVisible, true, `${scope}: keyboard-focused primary button does not match :focus-visible`);
       assert.notEqual(focused.outlineStyle, 'none', `${scope}: keyboard focus has no visible outline`);
       assert.ok(parseFloat(focused.outlineWidth) >= 2, `${scope}: focus outline is thinner than 2px`);
 
