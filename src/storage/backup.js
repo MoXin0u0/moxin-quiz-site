@@ -1,12 +1,34 @@
 import { APP_CONFIG } from '../app/config.js';
+import { createDeviceId } from '../utils/ids.js';
 import { openDatabase, transactionDone } from './db.js';
 import { loadSettings, normalizeSettings, saveSettings } from './settings.js';
 
 export const BACKUP_FORMAT = 'moxin-quiz-backup';
-export const BACKUP_VERSION = 1;
+export const BACKUP_VERSION = 2;
+export const LEGACY_BACKUP_VERSION = 1;
 export const MAX_BACKUP_FILE_BYTES = 400 * 1024 * 1024;
 
-const STORE_NAMES = Object.freeze([
+export const BACKUP_STORE_NAMES = Object.freeze([
+  'banks',
+  'questions',
+  'assets',
+  'attempts',
+  'progress',
+  'favorites',
+  'notes',
+  'mastery',
+  'reviewSchedule',
+  'sessions',
+  'studioDrafts',
+  'learningGoals',
+  'accountSettings',
+  'authorLibrary',
+  'syncRevisions',
+  'syncConflicts',
+  'syncTombstones',
+]);
+
+const V1_STORE_NAMES = Object.freeze([
   'banks',
   'questions',
   'assets',
@@ -21,11 +43,23 @@ const STORE_NAMES = Object.freeze([
   'learningGoals',
 ]);
 
+const DERIVED_STORES = Object.freeze([
+  'bankRegistry',
+]);
+
+const OPERATIONAL_STORES = Object.freeze([
+  'devices',
+  'syncMeta',
+  'syncOutbox',
+  'syncReceipts',
+  'cloudObjects',
+]);
+
 export async function createBackupSnapshot() {
   const db = await openDatabase();
   const stores = {};
 
-  for (const storeName of STORE_NAMES) {
+  for (const storeName of BACKUP_STORE_NAMES) {
     if (!db.objectStoreNames.contains(storeName)) {
       stores[storeName] = [];
       continue;
@@ -40,40 +74,55 @@ export async function createBackupSnapshot() {
     exportedAt: new Date().toISOString(),
     app: {
       name: APP_CONFIG.appName,
-      schemaVersion: APP_CONFIG.schemaVersion,
+      appVersion: APP_CONFIG.appVersion,
+      questionBankSchemaVersion: APP_CONFIG.schemaVersion,
       dbName: APP_CONFIG.dbName,
       dbVersion: APP_CONFIG.dbVersion,
+      backupVersion: BACKUP_VERSION,
     },
-    settings: normalizeSettings(loadSettings()),
+    deviceSettings: normalizeSettings(loadSettings()),
     stores,
   };
 }
 
 export function validateBackupSnapshot(snapshot) {
   const errors = [];
+  const warnings = [];
+
   if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
     errors.push('備份根節點必須是物件。');
-    return { valid: false, errors };
+    return { valid: false, errors, warnings };
   }
+
   if (snapshot.format !== BACKUP_FORMAT) {
     errors.push(`不是 ${BACKUP_FORMAT} 格式。`);
   }
-  if (snapshot.version !== BACKUP_VERSION) {
-    errors.push(`目前只支援備份格式版本 ${BACKUP_VERSION}。`);
+
+  if (![LEGACY_BACKUP_VERSION, BACKUP_VERSION].includes(snapshot.version)) {
+    errors.push(`不支援備份格式版本 ${snapshot.version ?? '未知'}；目前可讀取版本 1 與 2。`);
   }
+
   if (!snapshot.stores || typeof snapshot.stores !== 'object' || Array.isArray(snapshot.stores)) {
     errors.push('備份缺少 stores。');
   }
 
+  const expectedStores = snapshot.version === LEGACY_BACKUP_VERSION
+    ? V1_STORE_NAMES
+    : BACKUP_STORE_NAMES;
+
   if (snapshot.stores && typeof snapshot.stores === 'object') {
-    for (const storeName of STORE_NAMES) {
+    for (const storeName of expectedStores) {
       if (snapshot.stores[storeName] !== undefined && !Array.isArray(snapshot.stores[storeName])) {
         errors.push(`stores.${storeName} 必須是陣列。`);
       }
     }
   }
 
-  return { valid: errors.length === 0, errors };
+  if (snapshot.version === LEGACY_BACKUP_VERSION) {
+    warnings.push('這是 V4 Backup v1；還原後會執行 V5 deterministic migration。');
+  }
+
+  return { valid: errors.length === 0, errors, warnings };
 }
 
 export async function restoreBackupSnapshot(snapshot, { replace = true } = {}) {
@@ -82,32 +131,122 @@ export async function restoreBackupSnapshot(snapshot, { replace = true } = {}) {
     throw new Error(validation.errors.join(' '));
   }
 
+  const sourceStoreNames = snapshot.version === LEGACY_BACKUP_VERSION
+    ? V1_STORE_NAMES
+    : BACKUP_STORE_NAMES;
+
   const decodedStores = {};
-  for (const storeName of STORE_NAMES) {
+  for (const storeName of sourceStoreNames) {
     const source = snapshot.stores?.[storeName] || [];
     decodedStores[storeName] = await Promise.all(source.map(record => deserializeValue(record)));
   }
 
   const db = await openDatabase();
-  const availableStores = STORE_NAMES.filter(name => db.objectStoreNames.contains(name));
-  const tx = db.transaction(availableStores, 'readwrite');
+  const restoreStores = BACKUP_STORE_NAMES.filter(name => db.objectStoreNames.contains(name));
+  const resetStores = [...DERIVED_STORES, ...OPERATIONAL_STORES]
+    .filter(name => db.objectStoreNames.contains(name));
+  const transactionStores = [...new Set([...restoreStores, ...resetStores])];
+  const tx = db.transaction(transactionStores, 'readwrite');
   const done = transactionDone(tx);
 
-  for (const storeName of availableStores) {
+  for (const storeName of restoreStores) {
     const store = tx.objectStore(storeName);
     if (replace) store.clear();
-    for (const record of decodedStores[storeName]) {
+
+    for (const record of decodedStores[storeName] || []) {
       store.put(record);
     }
   }
 
-  await done;
-
-  if (snapshot.settings) {
-    saveSettings(snapshot.settings);
+  for (const storeName of resetStores) {
+    tx.objectStore(storeName).clear();
   }
 
-  return summarizeSnapshot(snapshot);
+  const deviceId = createDeviceId();
+  const now = new Date().toISOString();
+
+  if (tx.objectStoreNames.contains('devices')) {
+    tx.objectStore('devices').put({
+      deviceId,
+      label: '此裝置',
+      platformHint: globalThis.navigator?.platform || null,
+      browserHint: globalThis.navigator?.userAgent || null,
+      status: 'active',
+      createdAt: now,
+      lastSeenAt: now,
+      lastSyncAt: null,
+      appVersion: APP_CONFIG.appVersion,
+      revision: null,
+    });
+  }
+
+  if (tx.objectStoreNames.contains('syncMeta')) {
+    tx.objectStore('syncMeta').put({
+      key: 'global',
+      deviceId,
+      linkedProfileId: null,
+      cloudSchemaVersion: null,
+      nextCommitSequence: 1,
+      lastSuccessfulSyncAt: null,
+      lastSyncAttemptAt: null,
+      lastCheckpointId: null,
+      runtimeState: 'LOCAL_ONLY',
+      pendingCloudCommit: null,
+      clock: {
+        physicalMs: Date.now(),
+        logical: 0,
+      },
+      migration: snapshot.version === LEGACY_BACKUP_VERSION
+        ? {
+            targetDbVersion: APP_CONFIG.dbVersion,
+            phase: 'device-identity',
+            scope: null,
+            cursor: null,
+            status: 'pending',
+            startedAt: null,
+            updatedAt: now,
+            lastError: null,
+          }
+        : {
+            targetDbVersion: APP_CONFIG.dbVersion,
+            phase: 'completed',
+            scope: null,
+            cursor: null,
+            status: 'completed',
+            startedAt: now,
+            updatedAt: now,
+            lastError: null,
+          },
+      reconciliation: {
+        reconciliationId: createRecoveryId(),
+        kind: 'restore',
+        phase: 'inventory',
+        localInventoryHash: null,
+        remoteCheckpointId: null,
+        createdAt: now,
+        updatedAt: now,
+      },
+    });
+  }
+
+  await done;
+
+  const deviceSettings = snapshot.deviceSettings || snapshot.settings;
+  if (deviceSettings) {
+    saveSettings(deviceSettings);
+  }
+
+  if (snapshot.version === LEGACY_BACKUP_VERSION) {
+    const { runV5MigrationToCompletion } = await import('./migrations/v5-migration.js');
+    await runV5MigrationToCompletion();
+  }
+
+  return {
+    ...summarizeSnapshot(snapshot),
+    restoredFromVersion: snapshot.version,
+    newDeviceId: deviceId,
+    cloudLinkReset: true,
+  };
 }
 
 export async function backupSnapshotToBlob(snapshot) {
@@ -137,7 +276,11 @@ export function summarizeSnapshot(snapshot) {
   const counts = {};
   let totalRecords = 0;
 
-  for (const storeName of STORE_NAMES) {
+  const storeNames = snapshot?.version === LEGACY_BACKUP_VERSION
+    ? V1_STORE_NAMES
+    : BACKUP_STORE_NAMES;
+
+  for (const storeName of storeNames) {
     const count = Array.isArray(snapshot?.stores?.[storeName])
       ? snapshot.stores[storeName].length
       : 0;
@@ -146,6 +289,7 @@ export function summarizeSnapshot(snapshot) {
   }
 
   return {
+    version: snapshot?.version ?? null,
     exportedAt: snapshot?.exportedAt || null,
     counts,
     totalRecords,
@@ -154,7 +298,7 @@ export function summarizeSnapshot(snapshot) {
 
 export function createBackupFilename(now = new Date()) {
   const stamp = now.toISOString().replace(/[:.]/g, '-');
-  return `moxin-quiz-backup-${stamp}.json`;
+  return `moxin-quiz-backup-v${BACKUP_VERSION}-${stamp}.json`;
 }
 
 async function readAll(db, storeName) {
@@ -210,6 +354,11 @@ async function deserializeValue(value) {
   }
 
   return value;
+}
+
+function createRecoveryId() {
+  if (globalThis.crypto?.randomUUID) return `restore-${crypto.randomUUID()}`;
+  return `restore-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 export function bytesToBase64(bytes) {
