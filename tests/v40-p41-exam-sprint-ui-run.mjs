@@ -156,6 +156,6 @@ assert.match(v3, /styles\/v4-exam-sprint\.css/);
 assert.equal(index, v3);
 assert.match(sw, /\.\/styles\/v4-exam-sprint\.css/);
 assert.match(sw, /\.\/src\/ui\/exam-sprint\.js/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 
 console.log('MoXin Quiz v4.0 P4.1 exam sprint UI/session integration tests passed.');

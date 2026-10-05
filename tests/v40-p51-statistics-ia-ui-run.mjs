@@ -156,7 +156,7 @@ assert.doesNotMatch(tabHandler, /openStats/);
 assert.equal(index, v3);
 assert.match(index, /styles\/v4-stats\.css/);
 assert.match(sw, /\.\/styles\/v4-stats\.css/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 assert.match(css, /\.stats-tabs/);
 assert.match(css, /\.stats-bar-chart/);
 assert.match(css, /@media \(max-width: 620px\)/);
