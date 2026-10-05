@@ -5,6 +5,7 @@ import {
   dateKeyFromLegacy,
   legacyRevisionMeta,
   V5_MIGRATION_PHASES,
+  V5_MIGRATION_LOCK_NAME,
 } from '../src/storage/migrations/v5-migration.js';
 import {
   canonicalQuestionPayload,
@@ -24,6 +25,7 @@ assert.deepEqual(V5_MIGRATION_PHASES, [
   'derived-rebuild',
   'completed',
 ]);
+assert.equal(V5_MIGRATION_LOCK_NAME, 'moxin-quiz-v5-migration');
 
 const migrationSource = fs.readFileSync('src/storage/migrations/v5-migration.js', 'utf8');
 assert.match(
@@ -35,6 +37,16 @@ assert.match(
   migrationSource,
   /if \(!migration\.derivedRebuiltAt\)/,
   'completed states without a rebuild marker must self-heal',
+);
+assert.match(
+  migrationSource,
+  /navigator\?\.locks|navigator\.locks|globalThis\.navigator\?\.locks/,
+  'migration completion must use a browser-wide lock when available',
+);
+assert.match(
+  migrationSource,
+  /migrationRunPromise/,
+  'migration completion must coalesce concurrent calls in one realm',
 );
 
 assert.equal(dateKeyFromLegacy('2026-11-20T00:00:00.000Z'), '2026-11-20');
