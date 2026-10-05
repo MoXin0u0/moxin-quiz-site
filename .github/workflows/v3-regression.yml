@@ -103,3 +103,6 @@ jobs:
 
       - name: Run V5 IndexedDB v4 structural audit
         run: npm run audit:v5-db
+
+      - name: Run V5 deterministic migration audit
+        run: npm run audit:v5-migration
