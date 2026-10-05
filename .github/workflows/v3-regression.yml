@@ -106,3 +106,6 @@ jobs:
 
       - name: Run V5 deterministic migration audit
         run: npm run audit:v5-migration
+
+      - name: Run V5 Backup v2 recovery audit
+        run: npm run audit:v5-backup
