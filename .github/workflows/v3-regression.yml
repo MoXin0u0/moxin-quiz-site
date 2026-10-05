@@ -109,3 +109,6 @@ jobs:
 
       - name: Run V5 Backup v2 recovery audit
         run: npm run audit:v5-backup
+
+      - name: Run V5 transactional outbox audit
+        run: npm run audit:v5-outbox

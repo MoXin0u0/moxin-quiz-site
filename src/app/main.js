@@ -1,4 +1,5 @@
 import { openDatabase } from '../storage/db.js';
+import { commitPracticeAnswer } from '../storage/transactions/learning-mutation.js';
 import {
   deleteBank,
   getAsset,
@@ -1806,19 +1807,20 @@ async function submitPracticeAnswer() {
 
   recordSessionAnswer(state.practice, question.id, correct);
 
-  await Promise.all([
-    addAttempt({
-      bankId: state.currentBank.id,
-      questionId: question.id,
-      selectedAnswer: userAnswer,
-      correct,
-      responseTime,
-      mode: state.practice.mode,
-    }),
-    recordQuestionResult(state.currentBank.id, question.id, correct),
-    updateReviewScheduleFromResult(state.currentBank.id, question.id, correct),
-    persistPracticeSession(),
-  ]);
+  const committed = await commitPracticeAnswer({
+    bank: state.currentBank,
+    question,
+    session: state.practice,
+    selectedAnswer: userAnswer,
+    correct,
+    responseTime,
+    mode: state.practice.mode,
+  });
+
+  state.practice = {
+    ...state.practice,
+    ...committed.session,
+  };
 
   renderAnswerFeedback(elements.practiceArea, {
     question,

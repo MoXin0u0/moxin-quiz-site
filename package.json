@@ -12,6 +12,7 @@
     "audit:v5-theme": "node tests/v5-p0a-browser-matrix-run.mjs",
     "audit:v5-db": "node tests/v5-db-v4-browser-run.mjs",
     "audit:v5-migration": "node tests/v5-migration-browser-run.mjs",
-    "audit:v5-backup": "node tests/v5-backup-browser-run.mjs"
+    "audit:v5-backup": "node tests/v5-backup-browser-run.mjs",
+    "audit:v5-outbox": "node tests/v5-outbox-transaction-browser-run.mjs"
   }
 }
