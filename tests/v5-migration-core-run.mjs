@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { canonicalJson } from '../src/sync/canonical.js';
 import {
   dateKeyFromLegacy,
@@ -23,6 +24,18 @@ assert.deepEqual(V5_MIGRATION_PHASES, [
   'derived-rebuild',
   'completed',
 ]);
+
+const migrationSource = fs.readFileSync('src/storage/migrations/v5-migration.js', 'utf8');
+assert.match(
+  migrationSource,
+  /derivedRebuiltAt:\s*rebuiltAt/,
+  'completed migration state must record a derived rebuild marker',
+);
+assert.match(
+  migrationSource,
+  /if \(!migration\.derivedRebuiltAt\)/,
+  'completed states without a rebuild marker must self-heal',
+);
 
 assert.equal(dateKeyFromLegacy('2026-11-20T00:00:00.000Z'), '2026-11-20');
 assert.equal(dateKeyFromLegacy('invalid'), null);
