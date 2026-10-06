@@ -133,3 +133,6 @@ jobs:
 
       - name: Run V5 object-backed repository sync audit
         run: npm run audit:v5-object-sync
+
+      - name: Run V5 sync-cycle engine audit
+        run: npm run audit:v5-sync-engine
