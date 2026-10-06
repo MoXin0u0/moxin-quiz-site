@@ -93,7 +93,7 @@ const abandonIndex = mainSource.indexOf("status: 'abandoned'", confirmIndex);
 assert.ok(confirmIndex >= 0 && abandonIndex > confirmIndex, 'exam abandon mutation must occur only after the final confirmation');
 
 const sw = fs.readFileSync('service-worker.js', 'utf8');
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9]+-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9A-Za-z.-]+-\\d+'/);
 assert.match(sw, /key\.startsWith\('moxin-quiz-v5-'\)/, 'activate must retire older V5 app-shell caches');
 
 console.log('V5 B07.5 consistency repair unit contracts passed.');

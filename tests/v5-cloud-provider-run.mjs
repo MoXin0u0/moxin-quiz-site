@@ -224,7 +224,7 @@ await assert.rejects(
 );
 
 const sw = fs.readFileSync('service-worker.js', 'utf8');
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9]+-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9A-Za-z.-]+-\\d+'/);
 assert.match(sw, /src\/cloud\/google\/google-drive\.js/);
 assert.doesNotMatch(sw, /accounts\.google\.com\/gsi\/client/);
 assert.doesNotMatch(sw, /www\.googleapis\.com/);
