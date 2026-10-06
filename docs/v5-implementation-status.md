@@ -8,7 +8,7 @@ Updated: 2026-10-06
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head before B11B: `8015be0842a03822d2bdcc254c49ba7279281d65`
+- Current validated head: `db6cda5b3fdff742b74f477a40e01671f6283010`
 
 ## Gate status
 
@@ -36,11 +36,13 @@ Updated: 2026-10-06
 | G6A Cloud Object Transport | ✅ PASS | Push + PR unit/browser gates green at B11A head |
 | B11B Studio / User Bank Object Sync | ✅ Complete | Sync-aware repositories, durable Blob snapshots, object materialization, object-backed remote apply |
 | G6B Object-backed Repository Sync | ✅ PASS | Unit gate green; browser object-sync gate green on B11B implementation head |
-| B12 Sync Cycle + First-sync Execution | 🚧 Implemented / gating | First-sync inventory/confirmation, legacy seed, Pull→Apply→Push orchestration, retry/backoff/runtime states |
+| B12 Sync Cycle + First-sync Execution | ✅ Complete | First-sync inventory/confirmation, legacy seed, Pull→Apply→Push orchestration, retry/backoff/runtime states |
+| B12.5 Sync Reliability Repair | ✅ Complete | Cycle-level retry gate covers pull/object/push failures; online NETWORK ≠ OFFLINE; failure-path browser matrix added |
+| G7 Sync Cycle + Reliability | ✅ PASS | Unit/release preflight + full browser matrix green at `db6cda5b3fdff742b74f477a40e01671f6283010` |
 
 ## Current green CI evidence
 
-At `417b3c8110d3f58eb8d02f611d925e4d8826f2ed`:
+At `db6cda5b3fdff742b74f477a40e01671f6283010`:
 
 - Unit + release preflight: PASS
 - Existing app browser audit: PASS
@@ -52,6 +54,10 @@ At `417b3c8110d3f58eb8d02f611d925e4d8826f2ed`:
 - Transactional outbox audit: PASS
 - Exam atomic/idempotent audit: PASS
 - Cross-feature consistency audit: PASS
+- Cloud provider / immutable commit / deterministic merge audits: PASS
+- Cloud object + object-backed repository audits: PASS
+- Sync-cycle engine audit: PASS
+- B12.5 retry / offline-reconnect / object-upload failure / cloud-only bootstrap browser matrix: PASS
 
 ## B07.5 repair notes
 
@@ -78,7 +84,7 @@ The pre-B08 consistency pass closed several issues that would otherwise make clo
 
 ## Current implementation target
 
-B08/G3, B09/G4, B10/G5, B11A/G6A, and B11B/G6B are complete. B12 is now implemented and under gating:
+B08/G3, B09/G4, B10/G5, B11A/G6A, B11B/G6B, B12, B12.5, and G7 are complete:
 
 1. Binary assets are addressed by SHA-256 and discovered before upload, so identical assets are reused across document revisions instead of duplicated.
 2. Studio Draft, User Bank, Session, and Checkpoint JSON objects use immutable object IDs plus canonical SHA-256 content verification.
@@ -110,4 +116,13 @@ B12 now adds the first end-to-end sync-cycle orchestrator:
 7. Runtime state now moves through SYNCING / SYNCED / PENDING / OFFLINE / AUTH_REQUIRED / CONFLICT / ERROR according to the actual cycle outcome.
 8. A completed first-sync reconciliation records its completion only after pull/apply/push finishes with no pending mutations or conflicts.
 
-After G7 passes, the next target is B13: checkpoint/profile frontier, device registry integration, account switching/revocation flows, and Sync Center product UI wiring.
+B12.5 closed the pre-B13 reliability gaps:
+
+1. Pull, object materialization, and push failures now share a durable cycle-level retry gate instead of immediately hammering the provider again.
+2. The retry gate persists retry count, next retry instant, error code/message, and clears only after a successful cycle or a resolved conflict path.
+3. True browser offline remains `OFFLINE`; a `NETWORK` transport failure while the browser is online is now a retryable `ERROR`, preventing misleading offline UI.
+4. 429/rate-limit and 5xx/server failures are covered by exponential backoff with jitter.
+5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
+6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
+
+G7 is now closed. The next target is B13: checkpoint/profile frontier, device registry integration, account switching/revocation flows, and Sync Center product UI wiring. B13 has not started yet.
