@@ -130,3 +130,6 @@ jobs:
 
       - name: Run V5 cloud object transport audit
         run: npm run audit:v5-cloud-object
+
+      - name: Run V5 object-backed repository sync audit
+        run: npm run audit:v5-object-sync
