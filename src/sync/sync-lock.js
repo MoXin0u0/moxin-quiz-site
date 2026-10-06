@@ -18,14 +18,15 @@ export async function withSyncLock(callback, {
   const gate = new Promise(resolve => {
     release = resolve;
   });
-  realmQueues.set(name, previous.catch(() => {}).then(() => gate));
+  const queued = previous.catch(() => {}).then(() => gate);
+  realmQueues.set(name, queued);
 
   await previous.catch(() => {});
   try {
     return await callback();
   } finally {
     release();
-    if (realmQueues.get(name) === gate) {
+    if (realmQueues.get(name) === queued) {
       realmQueues.delete(name);
     }
   }
