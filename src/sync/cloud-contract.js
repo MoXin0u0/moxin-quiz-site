@@ -228,7 +228,7 @@ function normalizeCloudMutation(mutation = {}) {
     value: Object.prototype.hasOwnProperty.call(mutation, 'value')
       ? mutation.value
       : null,
-    objectRef: mutation.objectRef ? normalizeObjectRef(mutation.objectRef) : null,
+    ...(mutation.objectRef ? { objectRef: normalizeObjectRef(mutation.objectRef) } : {}),
   };
 }
 
