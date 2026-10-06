@@ -2,7 +2,10 @@ import { createUuid } from '../../utils/ids.js';
 import { gradeExam } from '../../quiz/exam-engine.js';
 import { ATTEMPT_OUTCOME } from '../../learning/attempt-events.js';
 import { runReadwriteTransaction } from './transaction-utils.js';
-import { createRevisionMutationInTransaction } from './sync-mutation.js';
+import {
+  attachMutationPayloadInTransaction,
+  createRevisionMutationInTransaction,
+} from './sync-mutation.js';
 import { writeLearningAttemptInTransaction } from './learning-mutation.js';
 
 export async function commitExamSubmission({
@@ -93,7 +96,7 @@ export async function commitExamSubmission({
       });
     }
 
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType: 'exam-session',
       entityKey: id,
       previousRevision: existing.revision || null,
@@ -123,6 +126,7 @@ export async function commitExamSubmission({
       revision,
     };
     store('sessions').put(session);
+    attachMutationPayloadInTransaction(tx, mutation, session);
 
     return {
       session,

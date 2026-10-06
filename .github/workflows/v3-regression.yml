@@ -121,3 +121,6 @@ jobs:
 
       - name: Run V5 cloud provider foundation audit
         run: npm run audit:v5-cloud-provider
+
+      - name: Run V5 immutable commit transport audit
+        run: npm run audit:v5-sync-transport

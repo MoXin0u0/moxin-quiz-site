@@ -5,6 +5,7 @@ import {
 import { createUuid } from '../../utils/ids.js';
 import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
 import {
+  attachMutationPayloadInTransaction,
   createRevisionMutationInTransaction,
   getLatestTombstoneRevisionInTransaction,
 } from '../transactions/sync-mutation.js';
@@ -64,7 +65,7 @@ export async function saveLearningGoal(input) {
       updatedAt: now.toISOString(),
     }, now);
 
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType: 'learning-goal',
       entityKey: id,
       previousRevision: existing?.revision || tombstoneRevision || null,
@@ -75,6 +76,7 @@ export async function saveLearningGoal(input) {
 
     const record = { ...goal, revision };
     store('learningGoals').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, record);
     return record;
   });
 }
@@ -104,7 +106,7 @@ export async function deleteLearningGoal(id = GLOBAL_GOAL_ID) {
     const existing = await request(store('learningGoals').get(key));
     if (!existing) return false;
 
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType: 'learning-goal',
       entityKey: key,
       previousRevision: existing.revision || null,
@@ -113,14 +115,16 @@ export async function deleteLearningGoal(id = GLOBAL_GOAL_ID) {
       now,
     });
 
-    store('learningGoals').delete(key);
-    store('syncTombstones').put({
+    const tombstone = {
       tombstoneId: createUuid('tombstone'),
       entityType: 'learning-goal',
       entityKey: key,
       deletedAt: now.toISOString(),
       revision,
-    });
+    };
+    store('learningGoals').delete(key);
+    store('syncTombstones').put(tombstone);
+    attachMutationPayloadInTransaction(tx, mutation, tombstone);
     return true;
   });
 }

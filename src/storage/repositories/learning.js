@@ -2,6 +2,7 @@ import { getAllByIndex, getRecord } from '../db.js';
 import { learningKey, createUuid } from '../../utils/ids.js';
 import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
 import {
+  attachMutationPayloadInTransaction,
   createRevisionMutationInTransaction,
   getLatestTombstoneRevisionInTransaction,
 } from '../transactions/sync-mutation.js';
@@ -19,7 +20,7 @@ export async function setFavorite(bankId, questionId, favorite = true) {
     const existing = await request(store('favorites').get(key));
     const firstAddedAt = existing?.firstAddedAt || existing?.addedAt || (favorite ? now.toISOString() : null);
 
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType: 'favorite',
       entityKey: key,
       previousRevision: existing?.revision || null,
@@ -40,6 +41,7 @@ export async function setFavorite(bankId, questionId, favorite = true) {
       revision,
     };
     store('favorites').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, record);
     return record;
   });
 }
@@ -67,7 +69,7 @@ export async function setUnfamiliar(bankId, questionId, unfamiliar = true) {
     const existing = await request(store('mastery').get(key));
     const firstMarkedAt = existing?.firstMarkedAt || existing?.markedAt || (unfamiliar ? now.toISOString() : null);
 
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType: 'unfamiliar',
       entityKey: key,
       previousRevision: existing?.revision || null,
@@ -90,6 +92,7 @@ export async function setUnfamiliar(bankId, questionId, unfamiliar = true) {
       revision,
     };
     store('mastery').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, record);
     return record;
   });
 }
@@ -132,7 +135,7 @@ export async function saveNote(bankId, questionId, text) {
     if (!normalized.trim()) {
       if (!existing) return null;
 
-      const { revision } = await createRevisionMutationInTransaction(tx, {
+      const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
         entityType: 'note',
         entityKey: key,
         previousRevision: existing.revision || null,
@@ -141,18 +144,20 @@ export async function saveNote(bankId, questionId, text) {
         now,
       });
 
-      store('notes').delete(key);
-      store('syncTombstones').put({
+      const tombstone = {
         tombstoneId: createUuid('tombstone'),
         entityType: 'note',
         entityKey: key,
         deletedAt: now.toISOString(),
         revision,
-      });
+      };
+      store('notes').delete(key);
+      store('syncTombstones').put(tombstone);
+      attachMutationPayloadInTransaction(tx, mutation, tombstone);
       return null;
     }
 
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType: 'note',
       entityKey: key,
       previousRevision: existing?.revision || tombstoneRevision || null,
@@ -172,6 +177,7 @@ export async function saveNote(bankId, questionId, text) {
       revision,
     };
     store('notes').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, record);
     return record;
   });
 }

@@ -2,7 +2,10 @@ import { requestToPromise } from '../db.js';
 import { createDeviceId } from '../../utils/ids.js';
 import { nextHybridClock } from '../../sync/clock.js';
 import { compareRevisionOrder, createRevisionMeta } from '../../sync/revision.js';
-import { enqueueOutboxMutation } from '../../sync/outbox-service.js';
+import {
+  enqueueOutboxMutation,
+  setOutboxMutationPayload,
+} from '../../sync/outbox-service.js';
 
 function createBaseSyncMeta(deviceId) {
   return {
@@ -145,4 +148,9 @@ export async function enqueueImmutableMutationInTransaction(tx, {
     mutation,
     deviceId: meta.deviceId,
   };
+}
+
+
+export function attachMutationPayloadInTransaction(tx, mutation, payload) {
+  return setOutboxMutationPayload(tx, mutation, payload);
 }

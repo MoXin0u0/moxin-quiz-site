@@ -1,5 +1,8 @@
 import { runReadwriteTransaction } from './transaction-utils.js';
-import { createRevisionMutationInTransaction } from './sync-mutation.js';
+import {
+  attachMutationPayloadInTransaction,
+  createRevisionMutationInTransaction,
+} from './sync-mutation.js';
 import { getExamAnswerState } from '../../quiz/exam-engine.js';
 
 export async function saveExamAnswerState({
@@ -29,7 +32,7 @@ export async function saveExamAnswerState({
 
     const previous = getExamAnswerState(session, qid);
     const entityKey = `${id}::${qid}`;
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType: 'exam-answer',
       entityKey,
       previousRevision: previous?.revision || null,
@@ -54,6 +57,7 @@ export async function saveExamAnswerState({
       updatedAt: now.toISOString(),
     };
     store('sessions').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, answerState);
     return record;
   });
 }

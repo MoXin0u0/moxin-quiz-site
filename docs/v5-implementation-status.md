@@ -26,7 +26,9 @@ Updated: 2026-10-05
 | B07 Exam Integrity | ✅ Complete | Frozen exam snapshot, atomic/idempotent submission, terminal session semantics |
 | B07.5 Cross-feature Consistency Repair | ✅ Complete | Migration bootstrap, unanswered policy, tombstone ancestry, session checkpoint semantics, PWA cache/version regression repair |
 | G2 Local Data Integrity | ✅ PASS | Unit + release preflight + all V5 browser gates green at current head |
-| B08 Google Identity + Drive Provider Foundation | 🚧 Implemented / gating | Lazy GIS token model, Drive appDataFolder adapter, provider-neutral contract, dormant-by-default tests |
+| B08 Google Identity + Drive Provider Foundation | ✅ Complete | Lazy GIS token model, Drive appDataFolder adapter, provider-neutral contract, dormant-by-default tests |
+| G3 Cloud Provider Foundation | ✅ PASS | Push + PR regression and browser provider gate green at B08 head |
+| B09 Immutable Commit Transport | 🚧 Implemented / gating | Durable outbox payload snapshots, immutable hashed commits, lost-response recovery, receipts, remote staging/apply callback |
 
 ## Current green CI evidence
 
@@ -68,13 +70,14 @@ The pre-B08 consistency pass closed several issues that would otherwise make clo
 
 ## Current implementation target
 
-B08 has been implemented and is now under CI gating:
+B08 and G3 are complete. B09 is now implemented and under gating:
 
-1. Lazy Google Identity Services loader.
-2. Memory-only OAuth access-token manager; no client secret or refresh token storage.
-3. Google Drive `appDataFolder` adapter using the least-privilege `drive.appdata` scope.
-4. Provider-neutral cloud contract and typed cloud errors.
-5. Drive account profile lookup through `about.get`, appData listing, canonical JSON multipart upload, binary upload, resumable upload primitives, and delete/download operations.
-6. Cloud remains disabled and unconfigured by default, so local-only startup makes no Google request.
+1. Every newly-created Outbox mutation carries a durable payload snapshot in the same IndexedDB transaction as the local change.
+2. Immutable Cloud Commit objects use canonical JSON + SHA-256 payload hashes and per-device monotonic sequences.
+3. A prepared commit is persisted in `syncMeta.pendingCloudCommit`; retries reuse the same commit ID/hash/sequence.
+4. Publish checks Drive for an existing commit before creating it, so a lost upload response does not duplicate the commit.
+5. Successful publish records a receipt, deletes acknowledged outbox rows, advances the device sequence, and caches the Drive object mapping.
+6. Pull discovery validates hashes/schema/profile, deduplicates commit IDs, stages unseen commits, and records a receipt only after the apply callback succeeds.
+7. The transport remains dormant behind the cloud feature flag; B09 does not yet enable automatic cloud sync in the product UI.
 
-After G3 passes, the next target is B09: immutable commit / pull-stage-apply sync-engine foundation.
+After G4 passes, the next target is B10: deterministic entity merge/apply rules, conflict staging, and first-sync reconciliation groundwork.

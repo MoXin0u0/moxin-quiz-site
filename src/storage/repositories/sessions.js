@@ -1,7 +1,10 @@
 import { deleteRecord, getAllByIndex, getAllRecords, getRecord, putRecord } from '../db.js';
 import { createSessionId } from '../../utils/ids.js';
 import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
-import { createRevisionMutationInTransaction } from '../transactions/sync-mutation.js';
+import {
+  attachMutationPayloadInTransaction,
+  createRevisionMutationInTransaction,
+} from '../transactions/sync-mutation.js';
 
 export async function saveSession(session) {
   const now = new Date();
@@ -18,7 +21,7 @@ export async function saveSession(session) {
     const entityType = sessionType === 'exam' ? 'exam-session' : 'practice-session';
     const status = resolveSessionStatus({ ...(existing || {}), ...session });
 
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType,
       entityKey: id,
       previousRevision: existing?.revision || session.revision || null,
@@ -38,6 +41,7 @@ export async function saveSession(session) {
       revision,
     };
     store('sessions').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, record);
     return record;
   });
 }

@@ -18,6 +18,7 @@ export function buildOutboxMutation({
   operation,
   targetRevisionId = null,
   payloadHash = null,
+  payload,
   coalesceKey = null,
   createdAt = new Date().toISOString(),
   deviceId,
@@ -38,6 +39,8 @@ export function buildOutboxMutation({
     policy,
     targetRevisionId: targetRevisionId ? String(targetRevisionId) : null,
     payloadHash: payloadHash ? String(payloadHash) : null,
+    hasPayload: payload !== undefined,
+    ...(payload !== undefined ? { payload } : {}),
     coalesceKey:
       policy === MUTATION_POLICY.COALESCIBLE && coalesceKey
         ? String(coalesceKey)
@@ -72,4 +75,18 @@ export async function enqueueOutboxMutation(tx, input) {
 
   store.put(mutation);
   return mutation;
+}
+
+
+export function setOutboxMutationPayload(tx, mutation, payload) {
+  if (!mutation?.mutationId) {
+    throw new Error('Cannot attach an outbox payload without mutationId.');
+  }
+  const next = {
+    ...mutation,
+    hasPayload: true,
+    payload,
+  };
+  tx.objectStore('syncOutbox').put(next);
+  return next;
 }

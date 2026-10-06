@@ -4,6 +4,7 @@ import { calculateNextReviewFromOutcome } from '../../quiz/review-engine.js';
 import { ATTEMPT_OUTCOME } from '../../learning/attempt-events.js';
 import { runReadwriteTransaction } from './transaction-utils.js';
 import {
+  attachMutationPayloadInTransaction,
   createRevisionMutationInTransaction,
   ensureSyncIdentityInTransaction,
   enqueueImmutableMutationInTransaction,
@@ -90,12 +91,13 @@ export async function writeLearningAttemptInTransaction({
   const attemptId = await request(store('attempts').add(attempt));
   attempt.id = attemptId;
 
-  await enqueueImmutableMutationInTransaction(tx, {
+  const { mutation: attemptMutation } = await enqueueImmutableMutationInTransaction(tx, {
     entityType: 'attempt',
     entityKey: attempt.eventId,
     operation: 'append',
     createdAt: answeredAt,
   });
+  attachMutationPayloadInTransaction(tx, attemptMutation, attempt);
 
   const progressKey = questionKey(bankId, questionId);
   const existingProgress = await request(store('progress').get(progressKey));
@@ -201,7 +203,7 @@ export async function commitPracticeAnswer({
         ? 'finished'
         : 'active';
 
-    const { revision } = await createRevisionMutationInTransaction(tx, {
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
       entityType: 'practice-session',
       entityKey: sessionId,
       previousRevision: existingSession?.revision || session.revision || null,
@@ -221,6 +223,7 @@ export async function commitPracticeAnswer({
       revision,
     };
     store('sessions').put(savedSession);
+    attachMutationPayloadInTransaction(tx, mutation, savedSession);
 
     return {
       ...learning,
