@@ -498,9 +498,9 @@ function selectMutationBatch(rows) {
   const maxBytes = Math.max(1024, Number(APP_CONFIG.syncLimits.maxCommitJsonBytes) || 1024);
 
   for (const row of rows) {
-    if (row.hasPayload !== true) {
+    if (row.hasPayload !== true && !row.objectRef) {
       throw new SyncProtocolError(
-        `Outbox mutation ${row.mutationId} does not contain a durable payload snapshot.`,
+        `Outbox mutation ${row.mutationId} does not contain a durable payload snapshot or object reference.`,
         {
           code: 'OUTBOX_PAYLOAD_MISSING',
           details: { mutationId: row.mutationId },
@@ -536,7 +536,8 @@ function toCloudMutation(row) {
     op: row.operation,
     policy: row.policy,
     revision: row.payload?.revision || null,
-    value: row.payload,
+    value: row.objectRef ? null : row.payload,
+    objectRef: row.objectRef || null,
   };
 }
 

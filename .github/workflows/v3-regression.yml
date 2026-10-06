@@ -127,3 +127,6 @@ jobs:
 
       - name: Run V5 deterministic merge and reconciliation audit
         run: npm run audit:v5-sync-merge
+
+      - name: Run V5 cloud object transport audit
+        run: npm run audit:v5-cloud-object

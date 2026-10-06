@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v5-dev-b10-1';
+const CACHE_VERSION = 'moxin-quiz-v5-dev-b11a-1';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
@@ -115,6 +115,7 @@ const APP_SHELL = [
   './src/sync/merge-policy.js',
   './src/sync/remote-apply.js',
   './src/sync/reconciliation.js',
+  './src/sync/cloud-object-transport.js',
 
   './src/studio/asset-manager.js',
   './src/studio/editor-model.js',

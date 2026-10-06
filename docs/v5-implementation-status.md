@@ -30,7 +30,9 @@ Updated: 2026-10-05
 | G3 Cloud Provider Foundation | ✅ PASS | Push + PR regression and browser provider gate green at B08 head |
 | B09 Immutable Commit Transport | ✅ Complete | Durable outbox payload snapshots, immutable hashed commits, lost-response recovery, receipts, remote staging/apply callback |
 | G4 Commit Transport | ✅ PASS | Push + PR unit/browser gates green at B09 head |
-| B10 Deterministic Merge + Remote Apply | 🚧 Implemented / gating | Revision ancestry, LWW boolean state, conflict staging, atomic remote receipt/apply, derived rebuild, first-sync inventory planner |
+| B10 Deterministic Merge + Remote Apply | ✅ Complete | Revision ancestry, LWW boolean state, conflict staging, atomic remote receipt/apply, derived rebuild, first-sync inventory planner |
+| G5 Deterministic Merge | ✅ PASS | Push + PR unit/browser gates green at B10 head |
+| B11A Cloud Object Documents + Assets | 🚧 Implemented / gating | Content-addressed assets, immutable JSON documents, SHA-256 round-trip verification, object refs |
 
 ## Current green CI evidence
 
@@ -72,16 +74,14 @@ The pre-B08 consistency pass closed several issues that would otherwise make clo
 
 ## Current implementation target
 
-B08/G3 and B09/G4 are complete. B10 is now implemented and under gating:
+B08/G3, B09/G4, and B10/G5 are complete. B11A is now implemented and under gating:
 
-1. Remote mutable revisions are compared by ancestry before any overwrite; known descendants apply, known ancestors are ignored, divergent conflict-sensitive branches are staged as conflicts.
-2. Favorite/unfamiliar and other coalescible state use deterministic HLC/revision ordering rather than wall-clock-only LWW.
-3. Concurrent Note/Goal/session edits are preserved instead of silently overwritten; delete-vs-edit and divergent submitted Exam branches receive explicit conflict kinds.
-4. Attempt Events merge as an immutable eventId union; an eventId/content collision becomes a conflict instead of a duplicate or overwrite.
-5. Remote commit application and its sync receipt are now one IndexedDB transaction, making crash/replay behavior idempotent.
-6. Remote Attempt application rebuilds the affected Progress and Review Schedule from Attempt Events, preserving the source-of-truth contract.
-7. Receiving a remote revision advances the local HLC so a future local edit cannot accidentally sort behind a known remote clock.
-8. First-sync inventory discovery is read-only and classifies both-empty / upload-local / download-cloud / merge-required before any mutation.
-9. User-bank binary/document object application remains intentionally blocked until the object-reference transport batch; B10 will not inline large bank payloads into commit JSON.
+1. Binary assets are addressed by SHA-256 and discovered before upload, so identical assets are reused across document revisions instead of duplicated.
+2. Studio Draft, User Bank, Session, and Checkpoint JSON objects use immutable object IDs plus canonical SHA-256 content verification.
+3. JSON uploads are downloaded once for round-trip verification before their object reference is considered valid.
+4. Object references carry objectType/objectId/contentHash/size/mimeType/Drive file ID and are now legal Cloud Mutation payload references.
+5. Studio Draft/User Bank document builders strip local Blob/storage-only fields and retain stable asset path→hash metadata.
+6. Uploaded asset references are attached to JSON documents only after every required binary object exists, preserving binary-first / document-last ordering.
+7. Downloads verify both Drive appProperties ownership and the actual SHA-256 content before returning data.
 
-After G5 passes, the next target is B11: cloud object documents/assets, full user-bank and Studio draft transport, then first-sync reconciliation execution.
+After G6A passes, the next target is B11B: sync-aware Studio/User Bank repositories, materialize their Outbox snapshots into cloud object refs, and apply those documents on remote devices.

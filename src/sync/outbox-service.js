@@ -90,3 +90,18 @@ export function setOutboxMutationPayload(tx, mutation, payload) {
   tx.objectStore('syncOutbox').put(next);
   return next;
 }
+
+
+export async function attachOutboxObjectRef(tx, mutationId, objectRef) {
+  const store = tx.objectStore('syncOutbox');
+  const id = String(mutationId || '');
+  if (!id) throw new Error('mutationId is required to attach an object reference.');
+  const record = await requestToPromise(store.get(id));
+  if (!record) throw new Error(`Outbox mutation was not found: ${id}`);
+  const next = {
+    ...record,
+    objectRef,
+  };
+  store.put(next);
+  return next;
+}

@@ -228,6 +228,27 @@ function normalizeCloudMutation(mutation = {}) {
     value: Object.prototype.hasOwnProperty.call(mutation, 'value')
       ? mutation.value
       : null,
+    objectRef: mutation.objectRef ? normalizeObjectRef(mutation.objectRef) : null,
+  };
+}
+
+function normalizeObjectRef(ref = {}) {
+  const objectType = String(ref.objectType || '');
+  const objectId = String(ref.objectId || '');
+  const contentHash = String(ref.contentHash || '');
+  const driveFileId = String(ref.driveFileId || '');
+  if (!objectType || !objectId || !contentHash || !driveFileId) {
+    throw new SyncProtocolError('Cloud object reference is incomplete.', {
+      code: 'INVALID_OBJECT_REF',
+    });
+  }
+  return {
+    objectType,
+    objectId,
+    contentHash,
+    size: Number.isFinite(Number(ref.size)) ? Number(ref.size) : null,
+    mimeType: ref.mimeType ? String(ref.mimeType) : null,
+    driveFileId,
   };
 }
 
