@@ -49,7 +49,7 @@ for (const asset of [
 }
 
 if (APP_CONFIG.features?.v5DataFoundation) {
-  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9]+-\d+'/);
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9A-Za-z.-]+-\d+'/);
 } else {
   assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.1\.0-v41-landing-1'/);
 }
