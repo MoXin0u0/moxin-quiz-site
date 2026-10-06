@@ -34,7 +34,9 @@ Updated: 2026-10-06
 | G5 Deterministic Merge | ✅ PASS | Push + PR unit/browser gates green at B10 head |
 | B11A Cloud Object Documents + Assets | ✅ Complete | Content-addressed assets, immutable JSON documents, SHA-256 round-trip verification, object refs |
 | G6A Cloud Object Transport | ✅ PASS | Push + PR unit/browser gates green at B11A head |
-| B11B Studio / User Bank Object Sync | 🚧 Implemented / gating | Sync-aware repositories, durable Blob snapshots, object materialization, object-backed remote apply |
+| B11B Studio / User Bank Object Sync | ✅ Complete | Sync-aware repositories, durable Blob snapshots, object materialization, object-backed remote apply |
+| G6B Object-backed Repository Sync | ✅ PASS | Unit gate green; browser object-sync gate green on B11B implementation head |
+| B12 Sync Cycle + First-sync Execution | 🚧 Implemented / gating | First-sync inventory/confirmation, legacy seed, Pull→Apply→Push orchestration, retry/backoff/runtime states |
 
 ## Current green CI evidence
 
@@ -76,7 +78,7 @@ The pre-B08 consistency pass closed several issues that would otherwise make clo
 
 ## Current implementation target
 
-B08/G3, B09/G4, B10/G5, and B11A/G6A are complete. B11B is now implemented and under gating:
+B08/G3, B09/G4, B10/G5, B11A/G6A, and B11B/G6B are complete. B12 is now implemented and under gating:
 
 1. Binary assets are addressed by SHA-256 and discovered before upload, so identical assets are reused across document revisions instead of duplicated.
 2. Studio Draft, User Bank, Session, and Checkpoint JSON objects use immutable object IDs plus canonical SHA-256 content verification.
@@ -97,4 +99,15 @@ B11B adds the repository/runtime bridge that B11A intentionally did not include:
 7. Remote Studio Drafts are hydrated back with their assets; remote User Banks atomically replace bank/questions/assets and preserve the cloud revision.
 8. Cloud commits remain small because object-backed mutations carry references instead of embedded large documents.
 
-After G6B passes, the next target is B12: full Sync Cycle orchestration (Pull → Stage → Apply → Materialize → Push), retry/backoff scheduling, runtime-state transitions, and first-sync reconciliation execution.
+B12 now adds the first end-to-end sync-cycle orchestrator:
+
+1. First cloud setup performs local/remote inventory and stores a reconciliation plan before mutating learning data.
+2. The cycle refuses to run while the first-sync plan is still awaiting explicit confirmation.
+3. Confirmation seeds migrated V4/V5 local entities that have revisions but no Outbox rows yet, including immutable Attempt Events and user-created banks/drafts while excluding author-bank content.
+4. The runtime executes Pull → Stage → Atomic Apply → conflict check → object materialization → Push.
+5. Open conflicts stop the push phase and switch runtime state to CONFLICT instead of propagating an unresolved branch automatically.
+6. Retryable network/rate/server failures receive exponential backoff with jitter; authorization/config failures block mutations until explicitly resumed.
+7. Runtime state now moves through SYNCING / SYNCED / PENDING / OFFLINE / AUTH_REQUIRED / CONFLICT / ERROR according to the actual cycle outcome.
+8. A completed first-sync reconciliation records its completion only after pull/apply/push finishes with no pending mutations or conflicts.
+
+After G7 passes, the next target is B13: checkpoint/profile frontier, device registry integration, account switching/revocation flows, and Sync Center product UI wiring.
