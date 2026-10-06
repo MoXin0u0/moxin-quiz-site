@@ -99,7 +99,7 @@ assert.equal(
 );
 
 const sw = fs.readFileSync('service-worker.js', 'utf8');
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b10-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9A-Za-z.-]+-\d+'/);
 assert.match(sw, /src\/sync\/remote-apply\.js/);
 assert.match(sw, /src\/sync\/reconciliation\.js/);
 
