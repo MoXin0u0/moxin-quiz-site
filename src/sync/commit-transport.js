@@ -307,11 +307,13 @@ export async function applyStagedCommits(staged, {
       continue;
     }
 
-    await applyCommit(commit, item);
-    await recordAppliedCommitReceipt(commit, item.file, {
-      appliedAt: now().toISOString(),
-      source: 'remote-pull',
-    });
+    const applyResult = await applyCommit(commit, item);
+    if (!applyResult?.receiptRecorded) {
+      await recordAppliedCommitReceipt(commit, item.file, {
+        appliedAt: now().toISOString(),
+        source: 'remote-pull',
+      });
+    }
     results.push({ commitId: commit.commitId, skipped: false });
   }
   return results;

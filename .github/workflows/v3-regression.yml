@@ -124,3 +124,6 @@ jobs:
 
       - name: Run V5 immutable commit transport audit
         run: npm run audit:v5-sync-transport
+
+      - name: Run V5 deterministic merge and reconciliation audit
+        run: npm run audit:v5-sync-merge

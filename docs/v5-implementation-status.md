@@ -28,7 +28,9 @@ Updated: 2026-10-05
 | G2 Local Data Integrity | ✅ PASS | Unit + release preflight + all V5 browser gates green at current head |
 | B08 Google Identity + Drive Provider Foundation | ✅ Complete | Lazy GIS token model, Drive appDataFolder adapter, provider-neutral contract, dormant-by-default tests |
 | G3 Cloud Provider Foundation | ✅ PASS | Push + PR regression and browser provider gate green at B08 head |
-| B09 Immutable Commit Transport | 🚧 Implemented / gating | Durable outbox payload snapshots, immutable hashed commits, lost-response recovery, receipts, remote staging/apply callback |
+| B09 Immutable Commit Transport | ✅ Complete | Durable outbox payload snapshots, immutable hashed commits, lost-response recovery, receipts, remote staging/apply callback |
+| G4 Commit Transport | ✅ PASS | Push + PR unit/browser gates green at B09 head |
+| B10 Deterministic Merge + Remote Apply | 🚧 Implemented / gating | Revision ancestry, LWW boolean state, conflict staging, atomic remote receipt/apply, derived rebuild, first-sync inventory planner |
 
 ## Current green CI evidence
 
@@ -70,14 +72,16 @@ The pre-B08 consistency pass closed several issues that would otherwise make clo
 
 ## Current implementation target
 
-B08 and G3 are complete. B09 is now implemented and under gating:
+B08/G3 and B09/G4 are complete. B10 is now implemented and under gating:
 
-1. Every newly-created Outbox mutation carries a durable payload snapshot in the same IndexedDB transaction as the local change.
-2. Immutable Cloud Commit objects use canonical JSON + SHA-256 payload hashes and per-device monotonic sequences.
-3. A prepared commit is persisted in `syncMeta.pendingCloudCommit`; retries reuse the same commit ID/hash/sequence.
-4. Publish checks Drive for an existing commit before creating it, so a lost upload response does not duplicate the commit.
-5. Successful publish records a receipt, deletes acknowledged outbox rows, advances the device sequence, and caches the Drive object mapping.
-6. Pull discovery validates hashes/schema/profile, deduplicates commit IDs, stages unseen commits, and records a receipt only after the apply callback succeeds.
-7. The transport remains dormant behind the cloud feature flag; B09 does not yet enable automatic cloud sync in the product UI.
+1. Remote mutable revisions are compared by ancestry before any overwrite; known descendants apply, known ancestors are ignored, divergent conflict-sensitive branches are staged as conflicts.
+2. Favorite/unfamiliar and other coalescible state use deterministic HLC/revision ordering rather than wall-clock-only LWW.
+3. Concurrent Note/Goal/session edits are preserved instead of silently overwritten; delete-vs-edit and divergent submitted Exam branches receive explicit conflict kinds.
+4. Attempt Events merge as an immutable eventId union; an eventId/content collision becomes a conflict instead of a duplicate or overwrite.
+5. Remote commit application and its sync receipt are now one IndexedDB transaction, making crash/replay behavior idempotent.
+6. Remote Attempt application rebuilds the affected Progress and Review Schedule from Attempt Events, preserving the source-of-truth contract.
+7. Receiving a remote revision advances the local HLC so a future local edit cannot accidentally sort behind a known remote clock.
+8. First-sync inventory discovery is read-only and classifies both-empty / upload-local / download-cloud / merge-required before any mutation.
+9. User-bank binary/document object application remains intentionally blocked until the object-reference transport batch; B10 will not inline large bank payloads into commit JSON.
 
-After G4 passes, the next target is B10: deterministic entity merge/apply rules, conflict staging, and first-sync reconciliation groundwork.
+After G5 passes, the next target is B11: cloud object documents/assets, full user-bank and Studio draft transport, then first-sync reconciliation execution.
