@@ -46,13 +46,15 @@ try {
         deviceId: 'device-remote',
       },
     };
+    const remoteFavoritePhysicalMs =
+      Number(localFavorite.revision?.clock?.physicalMs || Date.now()) + 1000;
     const remoteFavoriteRevision = {
       revisionId: 'remote-favorite-rev',
       parentRevisionIds: [],
-      changedAt: '2026-10-06T08:11:00.000Z',
+      changedAt: new Date(remoteFavoritePhysicalMs).toISOString(),
       changedByDeviceId: 'device-remote',
       clock: {
-        physicalMs: new Date('2026-10-06T08:11:00.000Z').getTime(),
+        physicalMs: remoteFavoritePhysicalMs,
         logical: 0,
         deviceId: 'device-remote',
       },
@@ -186,6 +188,7 @@ try {
       clockPhysicalMs: meta.clock?.physicalMs || 0,
       inventory,
       firstSyncPlan: planFirstSync(inventory, { isEmpty: false }).plan,
+      remoteFavoritePhysicalMs,
     };
   }, DB_NAME);
 
@@ -207,7 +210,7 @@ try {
   assert.equal(result.applied.skipped, false);
   assert.equal(result.replay.skipped, true, 'replaying the same commit must be idempotent');
   assert.equal(result.linkedProfileId, 'profile-a');
-  assert.ok(result.clockPhysicalMs >= new Date('2026-10-06T08:11:00.000Z').getTime());
+  assert.ok(result.clockPhysicalMs >= result.remoteFavoritePhysicalMs);
 
   assert.equal(result.inventory.isEmpty, false);
   assert.equal(result.firstSyncPlan, 'merge-required');
