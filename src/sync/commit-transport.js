@@ -110,11 +110,16 @@ export async function publishPreparedCloudCommit(provider, {
   const profile = String(profileId || '').trim();
   if (!profile) throw new SyncProtocolError('profileId is required.', { code: 'PROFILE_REQUIRED' });
 
+  let prepared = await getPendingCommit();
+  if (!prepared) {
+    prepared = await prepareNextCloudCommit({ profileId: profile, now });
+  }
+  if (!prepared) return null;
+
   return withSyncLock(async () => {
-    let commit = await getPendingCommit();
-    if (!commit) {
-      commit = await prepareNextCloudCommit({ profileId: profile, now });
-    }
+    // Another tab may have published the prepared commit before this tab
+    // acquired the transport lock. Re-read the durable pending state.
+    const commit = await getPendingCommit();
     if (!commit) return null;
 
     if (String(commit.profileId) !== profile) {
@@ -172,9 +177,10 @@ export async function ensureRemoteCommit(provider, commit) {
     }
 
     const remotePayload = await provider.downloadJson(exact.id);
-    await validateCloudCommit(remotePayload, {
+    const remoteCommit = await validateCloudCommit(remotePayload, {
       expectedProfileId: validated.profileId,
     });
+    assertSameCommitIdentity(validated, remoteCommit);
     return { file: exact, reusedExistingFile: true };
   }
 
@@ -185,9 +191,10 @@ export async function ensureRemoteCommit(provider, commit) {
   });
 
   const roundTrip = await provider.downloadJson(file.id);
-  await validateCloudCommit(roundTrip, {
+  const remoteCommit = await validateCloudCommit(roundTrip, {
     expectedProfileId: validated.profileId,
   });
+  assertSameCommitIdentity(validated, remoteCommit);
 
   return { file, reusedExistingFile: false };
 }
@@ -392,7 +399,7 @@ async function acknowledgePublishedCommit(commit, file, {
     pendingCloudCommit: null,
     lastSyncAttemptAt: timestamp,
     lastSuccessfulSyncAt: timestamp,
-    runtimeState: remainingCount > (pending.mutationIds || []).length
+    runtimeState: remainingCount > 0
       ? SYNC_RUNTIME_STATE.PENDING
       : SYNC_RUNTIME_STATE.SYNCED,
   });
@@ -525,6 +532,25 @@ function compareStagedCommits(left, right) {
     Number(a.deviceSequence || 0) - Number(b.deviceSequence || 0) ||
     String(a.commitId || '').localeCompare(String(b.commitId || ''))
   );
+}
+
+function assertSameCommitIdentity(expected, actual) {
+  if (
+    expected.commitId !== actual.commitId ||
+    expected.payloadHash !== actual.payloadHash ||
+    expected.deviceId !== actual.deviceId ||
+    Number(expected.deviceSequence) !== Number(actual.deviceSequence)
+  ) {
+    throw new SyncProtocolError('Remote commit does not match the prepared local commit.', {
+      code: 'COMMIT_HASH_MISMATCH',
+      details: {
+        expectedCommitId: expected.commitId,
+        actualCommitId: actual.commitId,
+        expectedHash: expected.payloadHash,
+        actualHash: actual.payloadHash,
+      },
+    });
+  }
 }
 
 export { selectMutationBatch, toCloudMutation };
