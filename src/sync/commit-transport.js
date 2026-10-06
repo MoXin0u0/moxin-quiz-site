@@ -17,6 +17,7 @@ import { SYNC_RUNTIME_STATE } from './config.js';
 import { OUTBOX_STATUS } from './outbox-service.js';
 import { withSyncLock } from './sync-lock.js';
 import { materializePendingObjectMutations } from './object-mutation-transport.js';
+import { classifySyncFailure, nextRetryInstant } from './retry-policy.js';
 
 const encoder = new TextEncoder();
 
@@ -461,26 +462,26 @@ async function markPendingCommitFailure(commit, error, {
     return;
   }
 
+  const failure = classifySyncFailure(error);
   for (const mutationId of meta.pendingCloudCommit.mutationIds || []) {
     const row = await requestToPromise(outboxStore.get(mutationId));
     if (!row) continue;
+    const retryCount = (Number(row.retryCount) || 0) + 1;
     outboxStore.put({
       ...row,
-      status: OUTBOX_STATUS.RETRY,
-      retryCount: (Number(row.retryCount) || 0) + 1,
+      status: failure.retryable ? OUTBOX_STATUS.RETRY : OUTBOX_STATUS.BLOCKED,
+      retryCount,
       lastError: String(error?.message || error),
-      nextRetryAt: null,
+      nextRetryAt: failure.retryable
+        ? nextRetryInstant(retryCount, { now })
+        : null,
     });
   }
-
-  const runtimeState = error?.code === 'AUTH_REQUIRED'
-    ? SYNC_RUNTIME_STATE.AUTH_REQUIRED
-    : SYNC_RUNTIME_STATE.ERROR;
 
   metaStore.put({
     ...meta,
     lastSyncAttemptAt: now.toISOString(),
-    runtimeState,
+    runtimeState: failure.runtimeState,
   });
   await done;
 }
