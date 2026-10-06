@@ -18,7 +18,8 @@ import {
   reduceQuestionProgress,
   reduceReviewSchedule,
 } from '../learning/derived-state.js';
-import { learningKey, questionKey } from '../utils/ids.js';
+import { assetKey, learningKey, questionKey } from '../utils/ids.js';
+import { resolveCommitObjectValues } from './object-mutation-transport.js';
 
 const REMOTE_APPLY_STORES = Object.freeze([
   'attempts',
@@ -48,8 +49,10 @@ const REMOTE_APPLY_STORES = Object.freeze([
 export async function applyRemoteCommitAtomically(commitInput, {
   file = null,
   now = new Date(),
+  provider = null,
 } = {}) {
   const commit = await validateCloudCommit(commitInput);
+  const resolvedObjectValues = await resolveCommitObjectValues(provider, commit);
   const db = await openDatabase();
   const tx = db.transaction(REMOTE_APPLY_STORES, 'readwrite');
   const done = transactionDone(tx);
@@ -91,6 +94,9 @@ export async function applyRemoteCommitAtomically(commitInput, {
       const result = await applyRemoteMutationInTransaction(tx, mutation, commit, {
         affectedQuestions,
         now,
+        resolvedValue: resolvedObjectValues.has(String(mutation.mutationId))
+          ? resolvedObjectValues.get(String(mutation.mutationId))
+          : undefined,
       });
       results.push(result);
 
@@ -170,11 +176,14 @@ export async function applyRemoteCommitAtomically(commitInput, {
 export async function applyRemoteMutationInTransaction(tx, mutation, commit, {
   affectedQuestions = new Map(),
   now = new Date(),
+  resolvedValue = undefined,
 } = {}) {
   const entityType = String(mutation?.type || '');
   const entityKey = String(mutation?.key || '');
   const operation = String(mutation?.op || 'upsert');
-  const remoteValue = mutation?.value ?? null;
+  const remoteValue = resolvedValue !== undefined
+    ? resolvedValue
+    : mutation?.value ?? null;
 
   if (mutation.policy === MUTATION_POLICY.IMMUTABLE) {
     if (entityType !== 'attempt' || operation !== 'append') {
@@ -444,14 +453,80 @@ async function applyRemoteUpsert(tx, entityType, entityKey, remoteValue, remoteR
       tx.objectStore('studioDrafts').put({ ...value, id: entityKey });
       return;
     case 'user-bank':
-      throw new SyncProtocolError(
-        'Inline remote user-bank application is intentionally deferred to object transport.',
-        { code: 'REMOTE_OBJECT_REQUIRED', details: { entityKey } },
-      );
+      await applyRemoteUserBank(tx, entityKey, value, remoteRevision);
+      return;
     default:
       throw new SyncProtocolError(`Unsupported remote upsert entity: ${entityType}`, {
         code: 'UNSUPPORTED_REMOTE_ENTITY',
       });
+  }
+}
+
+async function applyRemoteUserBank(tx, entityKey, remoteValue, remoteRevision) {
+  const bank = remoteValue?.bank;
+  const questions = Array.isArray(remoteValue?.questions) ? remoteValue.questions : [];
+  const assets = Array.isArray(remoteValue?.assets) ? remoteValue.assets : [];
+
+  if (!bank || String(bank.id || '') !== String(entityKey)) {
+    throw new SyncProtocolError('Remote user-bank document identity is invalid.', {
+      code: 'INVALID_CLOUD_MUTATION',
+      details: { entityKey },
+    });
+  }
+  if (bank.sourceType === 'author') {
+    throw new SyncProtocolError('Remote user-bank cannot install author catalog content.', {
+      code: 'INVALID_CLOUD_MUTATION',
+      details: { entityKey },
+    });
+  }
+
+  const bankStore = tx.objectStore('banks');
+  const questionStore = tx.objectStore('questions');
+  const assetStore = tx.objectStore('assets');
+
+  await deleteByIndex(questionStore, 'bankId', entityKey);
+  await deleteByIndex(assetStore, 'bankId', entityKey);
+
+  bankStore.put({
+    ...bank,
+    id: entityKey,
+    sourceType: 'user',
+    questionCount: questions.length,
+    revision: remoteRevision,
+  });
+
+  for (const question of questions) {
+    const questionId = String(question?.id || question?.questionId || '');
+    if (!questionId) {
+      throw new SyncProtocolError('Remote user-bank question is missing id.', {
+        code: 'INVALID_CLOUD_MUTATION',
+        details: { entityKey },
+      });
+    }
+    questionStore.put({
+      ...question,
+      id: questionId,
+      key: questionKey(entityKey, questionId),
+      bankId: entityKey,
+      questionId,
+    });
+  }
+
+  for (const asset of assets) {
+    const path = String(asset?.path || '');
+    if (!path || !(asset?.blob instanceof Blob)) {
+      throw new SyncProtocolError('Remote user-bank asset is incomplete.', {
+        code: 'INVALID_CLOUD_MUTATION',
+        details: { entityKey, path: path || null },
+      });
+    }
+    assetStore.put({
+      ...asset,
+      key: assetKey(entityKey, path),
+      bankId: entityKey,
+      path,
+      hashStatus: asset.hashStatus || 'ready',
+    });
   }
 }
 
