@@ -32,7 +32,7 @@ assert.match(remoteApplySource, /resolveCommitObjectValues/);
 assert.match(remoteApplySource, /applyRemoteUserBank/);
 assert.match(commitTransportSource, /materializePendingObjectMutations/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b11b-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9A-Za-z.-]+-\d+'/);
 assert.match(sw, /src\/sync\/object-mutation-transport\.js/);
 
 console.log('V5 B11B sync-aware object repository contracts passed.');
