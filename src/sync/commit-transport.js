@@ -16,6 +16,7 @@ import {
 import { SYNC_RUNTIME_STATE } from './config.js';
 import { OUTBOX_STATUS } from './outbox-service.js';
 import { withSyncLock } from './sync-lock.js';
+import { materializePendingObjectMutations } from './object-mutation-transport.js';
 
 const encoder = new TextEncoder();
 
@@ -127,6 +128,10 @@ export async function publishPreparedCloudCommit(provider, {
 
   let prepared = await getPendingCommit();
   if (!prepared) {
+    await materializePendingObjectMutations(provider, {
+      profileId: profile,
+      now,
+    });
     prepared = await prepareNextCloudCommit({ profileId: profile, now });
   }
   if (!prepared) return null;
