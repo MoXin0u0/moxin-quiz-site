@@ -76,7 +76,13 @@ export async function prepareNextCloudCommit({
       if (!fresh || !isEligibleMutation(fresh)) {
         try { tx.abort(); } catch {}
         await done.catch(() => {});
-        return prepareNextCloudCommit({ profileId: profile, now });
+        throw new SyncProtocolError(
+          'Outbox changed while preparing the commit; retry the prepare step.',
+          {
+            code: 'OUTBOX_CHANGED_DURING_PREPARE',
+            details: { mutationId: row.mutationId },
+          },
+        );
       }
       outboxStore.put({
         ...fresh,
