@@ -1,6 +1,6 @@
 # MoXin Quiz V5 Implementation Status
 
-Updated: 2026-10-05
+Updated: 2026-10-06
 
 ## Baseline
 
@@ -8,7 +8,7 @@ Updated: 2026-10-05
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head: `417b3c8110d3f58eb8d02f611d925e4d8826f2ed`
+- Current validated head before B11B: `8015be0842a03822d2bdcc254c49ba7279281d65`
 
 ## Gate status
 
@@ -32,7 +32,9 @@ Updated: 2026-10-05
 | G4 Commit Transport | ✅ PASS | Push + PR unit/browser gates green at B09 head |
 | B10 Deterministic Merge + Remote Apply | ✅ Complete | Revision ancestry, LWW boolean state, conflict staging, atomic remote receipt/apply, derived rebuild, first-sync inventory planner |
 | G5 Deterministic Merge | ✅ PASS | Push + PR unit/browser gates green at B10 head |
-| B11A Cloud Object Documents + Assets | 🚧 Implemented / gating | Content-addressed assets, immutable JSON documents, SHA-256 round-trip verification, object refs |
+| B11A Cloud Object Documents + Assets | ✅ Complete | Content-addressed assets, immutable JSON documents, SHA-256 round-trip verification, object refs |
+| G6A Cloud Object Transport | ✅ PASS | Push + PR unit/browser gates green at B11A head |
+| B11B Studio / User Bank Object Sync | 🚧 Implemented / gating | Sync-aware repositories, durable Blob snapshots, object materialization, object-backed remote apply |
 
 ## Current green CI evidence
 
@@ -74,7 +76,7 @@ The pre-B08 consistency pass closed several issues that would otherwise make clo
 
 ## Current implementation target
 
-B08/G3, B09/G4, and B10/G5 are complete. B11A is now implemented and under gating:
+B08/G3, B09/G4, B10/G5, and B11A/G6A are complete. B11B is now implemented and under gating:
 
 1. Binary assets are addressed by SHA-256 and discovered before upload, so identical assets are reused across document revisions instead of duplicated.
 2. Studio Draft, User Bank, Session, and Checkpoint JSON objects use immutable object IDs plus canonical SHA-256 content verification.
@@ -84,4 +86,15 @@ B08/G3, B09/G4, and B10/G5 are complete. B11A is now implemented and under gatin
 6. Uploaded asset references are attached to JSON documents only after every required binary object exists, preserving binary-first / document-last ordering.
 7. Downloads verify both Drive appProperties ownership and the actual SHA-256 content before returning data.
 
-After G6A passes, the next target is B11B: sync-aware Studio/User Bank repositories, materialize their Outbox snapshots into cloud object refs, and apply those documents on remote devices.
+B11B adds the repository/runtime bridge that B11A intentionally did not include:
+
+1. Studio Draft writes now create revisioned transactional Outbox snapshots, including SHA-256 asset hashes and a content fingerprint.
+2. User Bank publication now writes bank/questions/assets plus revision/outbox data atomically; author-bank content remains local/catalog-backed and is not uploaded.
+3. Local-only bank removal remains separate from the explicit synced user-bank delete path, preventing a device cleanup action from becoming a cloud-wide delete.
+4. Pending Studio/User Bank mutations upload binary assets first, then immutable JSON documents, then attach the resulting objectRef to the Outbox row.
+5. Identical asset hashes are reused across draft and published-bank documents.
+6. Remote object-backed mutations are downloaded and SHA-256 verified before the IndexedDB write transaction starts, avoiding network waits inside an active IDB transaction.
+7. Remote Studio Drafts are hydrated back with their assets; remote User Banks atomically replace bank/questions/assets and preserve the cloud revision.
+8. Cloud commits remain small because object-backed mutations carry references instead of embedded large documents.
+
+After G6B passes, the next target is B12: full Sync Cycle orchestration (Pull → Stage → Apply → Materialize → Push), retry/backoff scheduling, runtime-state transitions, and first-sync reconciliation execution.
