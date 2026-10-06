@@ -13,6 +13,21 @@ assert.equal(offline.classification, SYNC_RETRY_CLASS.RETRYABLE);
 assert.equal(offline.runtimeState, 'OFFLINE');
 assert.equal(offline.retryable, true);
 
+const onlineNetwork = classifySyncFailure(
+  { code: 'NETWORK', retryable: true },
+  { online: true },
+);
+assert.equal(onlineNetwork.classification, SYNC_RETRY_CLASS.RETRYABLE);
+assert.equal(onlineNetwork.runtimeState, 'ERROR');
+assert.equal(onlineNetwork.retryable, true);
+
+for (const code of ['RATE_LIMIT', 'SERVER_ERROR']) {
+  const transient = classifySyncFailure({ code, retryable: true }, { online: true });
+  assert.equal(transient.classification, SYNC_RETRY_CLASS.RETRYABLE);
+  assert.equal(transient.runtimeState, 'ERROR');
+  assert.equal(transient.retryable, true);
+}
+
 const auth = classifySyncFailure({ code: 'AUTH_REQUIRED' }, { online: true });
 assert.equal(auth.classification, SYNC_RETRY_CLASS.BLOCKED);
 assert.equal(auth.runtimeState, 'AUTH_REQUIRED');
@@ -56,6 +71,9 @@ assert.match(engineSource, /runSyncCycle/);
 assert.match(engineSource, /Pull|stageRemoteCommits/);
 assert.match(engineSource, /publishPreparedCloudCommit/);
 assert.match(engineSource, /reconciliation-required/);
+assert.match(engineSource, /syncRetry/);
+assert.match(engineSource, /nextRetryInstant/);
+assert.match(engineSource, /retry-backoff/);
 
 assert.match(seedSource, /seedInitialSyncOutbox/);
 assert.match(seedSource, /entityType:\s*'attempt'/);
@@ -65,7 +83,7 @@ assert.match(seedSource, /syncTombstones/);
 assert.match(transportSource, /nextRetryInstant/);
 assert.match(transportSource, /OUTBOX_STATUS\.BLOCKED/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b12-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b12r-1'/);
 assert.match(sw, /src\/sync\/sync-engine\.js/);
 assert.match(sw, /src\/sync\/initial-seed\.js/);
 assert.match(sw, /src\/sync\/retry-policy\.js/);

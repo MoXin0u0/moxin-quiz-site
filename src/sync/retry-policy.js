@@ -41,9 +41,10 @@ export function classifySyncFailure(error, {
   if (['NETWORK', 'RATE_LIMIT', 'SERVER_ERROR'].includes(code) || error?.retryable === true) {
     return {
       classification: SYNC_RETRY_CLASS.RETRYABLE,
-      runtimeState: code === 'NETWORK'
-        ? SYNC_RUNTIME_STATE.OFFLINE
-        : SYNC_RUNTIME_STATE.ERROR,
+      // A transport/network failure while the browser is online is a sync
+      // error, not an offline state. True offline is handled by the
+      // navigator.onLine guard above.
+      runtimeState: SYNC_RUNTIME_STATE.ERROR,
       retryable: true,
       code: code || 'RETRYABLE',
     };

@@ -21,6 +21,6 @@
     "audit:v5-sync-merge": "node tests/v5-sync-merge-browser-run.mjs",
     "audit:v5-cloud-object": "node tests/v5-cloud-object-browser-run.mjs",
     "audit:v5-object-sync": "node tests/v5-object-sync-browser-run.mjs",
-    "audit:v5-sync-engine": "node tests/v5-sync-engine-browser-run.mjs"
+    "audit:v5-sync-engine": "node tests/v5-sync-engine-browser-run.mjs && node tests/v5-sync-reliability-browser-run.mjs"
   }
 }

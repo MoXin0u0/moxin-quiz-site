@@ -13,7 +13,7 @@ import {
 import { stageRemoteCommits, publishPreparedCloudCommit } from './commit-transport.js';
 import { applyRemoteCommitAtomically } from './remote-apply.js';
 import { seedInitialSyncOutbox } from './initial-seed.js';
-import { classifySyncFailure } from './retry-policy.js';
+import { classifySyncFailure, nextRetryInstant } from './retry-policy.js';
 import { SYNC_RUNTIME_STATE } from './config.js';
 import { withSyncLock } from './sync-lock.js';
 
@@ -180,6 +180,7 @@ export async function runSyncCycle(provider, {
         await updateSyncMeta(current => ({
           ...current,
           runtimeState: SYNC_RUNTIME_STATE.CONFLICT,
+          syncRetry: null,
           reconciliation: current.reconciliation
             ? {
                 ...current.reconciliation,
@@ -222,6 +223,7 @@ export async function runSyncCycle(provider, {
         ...current,
         lastSuccessfulSyncAt: now().toISOString(),
         runtimeState,
+        syncRetry: null,
         reconciliation:
           current.reconciliation?.phase === 'applying' && runtimeState === SYNC_RUNTIME_STATE.SYNCED
             ? {
@@ -242,12 +244,31 @@ export async function runSyncCycle(provider, {
         runtimeState,
       };
     } catch (error) {
+      const failedAt = now();
       const failure = classifySyncFailure(error);
-      await updateSyncMeta(current => ({
-        ...current,
-        lastSyncAttemptAt: now().toISOString(),
-        runtimeState: failure.runtimeState,
-      }));
+      let retryState = null;
+
+      await updateSyncMeta(current => {
+        const retryCount = failure.retryable
+          ? Math.max(0, Number(current?.syncRetry?.retryCount) || 0) + 1
+          : 0;
+        retryState = {
+          retryCount,
+          nextRetryAt: failure.retryable
+            ? nextRetryInstant(retryCount, { now: failedAt })
+            : null,
+          code: failure.code || null,
+          message: String(error?.message || error),
+          updatedAt: failedAt.toISOString(),
+        };
+
+        return {
+          ...current,
+          lastSyncAttemptAt: failedAt.toISOString(),
+          runtimeState: failure.runtimeState,
+          syncRetry: retryState,
+        };
+      });
 
       return {
         status: 'error',
@@ -255,6 +276,7 @@ export async function runSyncCycle(provider, {
         pushed,
         runtimeState: failure.runtimeState,
         retryable: failure.retryable,
+        nextRetryAt: retryState?.nextRetryAt || null,
         error,
       };
     }
@@ -304,16 +326,28 @@ async function getDeferredRetryAt(now) {
   const db = await openDatabase();
   const tx = db.transaction(['syncMeta', 'syncOutbox'], 'readonly');
   const meta = await requestToPromise(tx.objectStore('syncMeta').get('global'));
+  const future = [];
+
+  const cycleRetryAt = new Date(meta?.syncRetry?.nextRetryAt || '');
+  if (Number.isFinite(cycleRetryAt.getTime()) && cycleRetryAt > now) {
+    future.push(cycleRetryAt);
+  }
+
   const pendingIds = new Set(meta?.pendingCloudCommit?.mutationIds || []);
-  if (!pendingIds.size) return null;
+  if (pendingIds.size) {
+    const rows = await requestToPromise(tx.objectStore('syncOutbox').getAll());
+    for (const row of rows || []) {
+      if (!pendingIds.has(row.mutationId) || !row.nextRetryAt) continue;
+      const retryAt = new Date(row.nextRetryAt);
+      if (Number.isFinite(retryAt.getTime()) && retryAt > now) {
+        future.push(retryAt);
+      }
+    }
+  }
 
-  const rows = await requestToPromise(tx.objectStore('syncOutbox').getAll());
-  const future = (rows || [])
-    .filter(row => pendingIds.has(row.mutationId) && row.nextRetryAt)
-    .map(row => new Date(row.nextRetryAt))
-    .filter(date => Number.isFinite(date.getTime()) && date > now)
-    .sort((a, b) => a - b);
-
+  // All active retry gates must have elapsed before an automatic cycle runs.
+  // Returning the latest gate avoids retrying pull/object/push work too early.
+  future.sort((a, b) => b - a);
   return future[0]?.toISOString() || null;
 }
 
