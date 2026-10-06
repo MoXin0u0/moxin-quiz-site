@@ -20,8 +20,8 @@ export async function ensureCloudAsset(provider, {
     throw new TypeError('ensureCloudAsset requires a Blob.');
   }
 
-  const hash = contentHash || await sha256Blob(blob);
   const actualHash = await sha256Blob(blob);
+  const hash = contentHash || actualHash;
   if (hash !== actualHash) {
     throw new SyncProtocolError('Local asset content hash does not match its Blob.', {
       code: 'LOCAL_OBJECT_HASH_MISMATCH',
