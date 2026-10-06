@@ -2,6 +2,8 @@ import { APP_CONFIG } from '../app/config.js';
 import { createCommitId } from '../utils/ids.js';
 import { canonicalJson } from './canonical.js';
 import { sha256Canonical } from './hash.js';
+import { isSyncEntityType } from './entity-types.js';
+import { getMutationPolicy } from './mutation-policy.js';
 
 export const CLOUD_SYNC_FORMAT = 'moxin-quiz-sync';
 export const CLOUD_COMMIT_VERSION = 1;
@@ -196,13 +198,32 @@ function normalizeCloudMutation(mutation = {}) {
       code: 'INVALID_CLOUD_MUTATION',
     });
   }
+  if (!isSyncEntityType(type)) {
+    throw new SyncProtocolError(`Unsupported cloud mutation entity type: ${type}`, {
+      code: 'INVALID_CLOUD_MUTATION',
+    });
+  }
+  if (!['append', 'upsert', 'delete', 'resolve'].includes(op)) {
+    throw new SyncProtocolError(`Unsupported cloud mutation operation: ${op}`, {
+      code: 'INVALID_CLOUD_MUTATION',
+    });
+  }
+
+  const expectedPolicy = getMutationPolicy(type);
+  const suppliedPolicy = String(mutation.policy || expectedPolicy);
+  if (suppliedPolicy !== expectedPolicy) {
+    throw new SyncProtocolError(
+      `Cloud mutation policy mismatch for ${type}: ${suppliedPolicy}`,
+      { code: 'INVALID_CLOUD_MUTATION' },
+    );
+  }
 
   return {
     mutationId: String(mutation.mutationId),
     type,
     key,
     op,
-    policy: String(mutation.policy || ''),
+    policy: expectedPolicy,
     revision: mutation.revision || null,
     value: Object.prototype.hasOwnProperty.call(mutation, 'value')
       ? mutation.value
