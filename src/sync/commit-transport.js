@@ -33,6 +33,15 @@ export async function prepareNextCloudCommit({
     if (!meta?.deviceId) {
       throw new SyncProtocolError('Local sync identity is missing.', { code: 'DEVICE_ID_REQUIRED' });
     }
+    if (meta.linkedProfileId && String(meta.linkedProfileId) !== profile) {
+      throw new SyncProtocolError('This device is linked to a different cloud profile.', {
+        code: 'PROFILE_MISMATCH',
+        details: {
+          linkedProfileId: meta.linkedProfileId,
+          requestedProfileId: profile,
+        },
+      });
+    }
 
     if (meta.pendingCloudCommit?.commit) {
       if (String(meta.pendingCloudCommit.commit.profileId) !== profile) {
@@ -212,8 +221,18 @@ export async function stageRemoteCommits(provider, {
   if (!profile) throw new SyncProtocolError('profileId is required.', { code: 'PROFILE_REQUIRED' });
 
   const db = await openDatabase();
-  const receiptTx = db.transaction('syncReceipts', 'readonly');
-  const receipts = await requestToPromise(receiptTx.objectStore('syncReceipts').getAll());
+  const stateTx = db.transaction(['syncMeta', 'syncReceipts'], 'readonly');
+  const localMeta = await requestToPromise(stateTx.objectStore('syncMeta').get('global'));
+  if (localMeta?.linkedProfileId && String(localMeta.linkedProfileId) !== profile) {
+    throw new SyncProtocolError('This device is linked to a different cloud profile.', {
+      code: 'PROFILE_MISMATCH',
+      details: {
+        linkedProfileId: localMeta.linkedProfileId,
+        requestedProfileId: profile,
+      },
+    });
+  }
+  const receipts = await requestToPromise(stateTx.objectStore('syncReceipts').getAll());
   const applied = new Set((receipts || []).map(item => String(item.commitId)));
 
   const files = await listAllProviderFiles(provider, {
@@ -329,6 +348,13 @@ export async function recordAppliedCommitReceipt(commit, file = null, {
 
   const metaStore = tx.objectStore('syncMeta');
   const meta = await requestToPromise(metaStore.get('global'));
+  if (meta?.linkedProfileId && String(meta.linkedProfileId) !== String(commit.profileId)) {
+    try { tx.abort(); } catch {}
+    await done.catch(() => {});
+    throw new SyncProtocolError('Refusing to record a receipt for a different cloud profile.', {
+      code: 'PROFILE_MISMATCH',
+    });
+  }
   if (meta) {
     metaStore.put({
       ...meta,
