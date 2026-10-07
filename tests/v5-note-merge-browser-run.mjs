@@ -68,7 +68,7 @@ try {
       key: 'bank-b13c5::Q1',
       bankId: 'bank-b13c5',
       questionId: 'Q1',
-      content: '本機版本第一段',
+      text: '本機版本第一段',
       updatedAt: localRevision.changedAt,
       revision: localRevision,
     });
@@ -97,14 +97,14 @@ try {
         key: 'bank-b13c5::Q1',
         bankId: 'bank-b13c5',
         questionId: 'Q1',
-        content: '本機版本第一段',
+        text: '本機版本第一段',
         revision: localRevision,
       },
       remoteValue: {
         key: 'bank-b13c5::Q1',
         bankId: 'bank-b13c5',
         questionId: 'Q1',
-        content: '雲端版本第二段',
+        text: '雲端版本第二段',
         revision: remoteRevision,
       },
       createdAt: '2026-10-07T08:02:00.000Z',
@@ -196,7 +196,7 @@ try {
     ]);
 
     return {
-      content: note?.content || null,
+      text: note?.text || null,
       parents: note?.revision?.parentRevisionIds || [],
       revisionId: note?.revision?.revisionId || null,
       runtimeState: meta?.runtimeState || null,
@@ -212,7 +212,7 @@ try {
     };
   });
 
-  assert.equal(result.content, mergedText);
+  assert.equal(result.text, mergedText);
   assert.deepEqual(
     [...result.parents].sort(),
     ['rev-b13c5-local', 'rev-b13c5-remote'].sort(),
@@ -278,7 +278,7 @@ try {
       key: 'bank-b13c51::Q-delete',
       bankId: 'bank-b13c51',
       questionId: 'Q-delete',
-      content: '不可直接與刪除分支合併的本機筆記',
+      text: '不可直接與刪除分支合併的本機筆記',
       updatedAt: deleteLocal.changedAt,
       revision: deleteLocal,
     });
@@ -304,7 +304,7 @@ try {
         key: 'bank-b13c51::Q-delete',
         bankId: 'bank-b13c51',
         questionId: 'Q-delete',
-        content: '不可直接與刪除分支合併的本機筆記',
+        text: '不可直接與刪除分支合併的本機筆記',
         revision: deleteLocal,
       },
       remoteValue: {
@@ -357,7 +357,7 @@ try {
       key: 'bank-b13c51::Q-stale',
       bankId: 'bank-b13c51',
       questionId: 'Q-stale',
-      content: 'L2：衝突建立後又修改的最新本機內容',
+      text: 'L2：衝突建立後又修改的最新本機內容',
       updatedAt: currentLocal.changedAt,
       revision: currentLocal,
     });
@@ -384,14 +384,14 @@ try {
         key: 'bank-b13c51::Q-stale',
         bankId: 'bank-b13c51',
         questionId: 'Q-stale',
-        content: 'L1：衝突建立當下的舊本機內容',
+        text: 'L1：衝突建立當下的舊本機內容',
         revision: staleLocalSnapshot,
       },
       remoteValue: {
         key: 'bank-b13c51::Q-stale',
         bankId: 'bank-b13c51',
         questionId: 'Q-stale',
-        content: 'R1：雲端衝突內容',
+        text: 'R1：雲端衝突內容',
         revision: staleRemote,
       },
       createdAt: '2026-10-07T08:23:00.000Z',
@@ -411,7 +411,7 @@ try {
     try {
       await resolveSyncConflict('conflict-b13c51-delete-edit', {
         choice: CONFLICT_RESOLUTION_CHOICE.MERGED,
-        mergedValue: { content: '這個合併不應被接受' },
+        mergedValue: { text: '這個合併不應被接受' },
       });
     } catch (error) {
       deleteMergeCode = error?.code || null;
@@ -510,7 +510,7 @@ try {
     ]);
 
     return {
-      content: note?.content || null,
+      text: note?.text || null,
       parents: note?.revision?.parentRevisionIds || [],
       status: conflict?.status || null,
       choice: conflict?.resolutionChoice || null,
@@ -521,7 +521,7 @@ try {
     };
   });
 
-  assert.equal(staleResolved.content, 'R1：雲端衝突內容');
+  assert.equal(staleResolved.text, 'R1：雲端衝突內容');
   assert.equal(staleResolved.status, 'resolved');
   assert.equal(staleResolved.choice, 'remote');
   assert.equal(
