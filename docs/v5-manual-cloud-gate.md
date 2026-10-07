@@ -92,10 +92,11 @@ Cloud can be disabled through the feature flag while preserving Local-first oper
 
 - Automated gate head: `cf77c7f5604fc75626ba1893f78a2d69c68ff471`
 - Push workflow: ✅ PASS — GitHub Actions run `37669209524`; Unit + release preflight, cloud-cutover READY check, and full browser/accessibility gate all passed
-- PR workflow: _Pending — existing PR #7 still points to `v5-cloud-sync`; update its head to the validated RC before merge authorization_
+- PR workflow: ✅ PASS — PR #7 head fast-forwarded to the validated production candidate; pull-request run `37670343952` passed Unit + release preflight and the full browser/accessibility gate
 - Real Google account used: ✅ PASS — live Google OAuth / Drive appDataFolder validation completed, including two-account switching
 - Device A / Browser: Chrome normal profile on Codespaces forwarded-port RC
 - Device B / Browser: Chrome incognito profile on the same RC origin (isolated browser storage)
 - Manual matrix completed by: ✅ Live user validation completed 2026-10-08
-- OAuth audience: _Testing — switch to In production only after the public Pages deployment exposes the configured homepage/privacy/terms URLs_
+- Pages deployment: ✅ PASS — GitHub Pages deployment for production-candidate head `03f33ed3fbde3ab0fb46ee737d14591260d936b2` completed successfully; configured homepage/privacy/terms paths are included in that deployment
+- OAuth audience: _Testing — ready for the user to switch to In production now that the public Pages deployment contains the configured policy URLs_
 - Production merge authorized by: _Pending_
