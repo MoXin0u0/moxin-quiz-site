@@ -178,5 +178,8 @@ jobs:
       - name: Run V5 note conflict merge audit
         run: npm run audit:v5-note-merge
 
+      - name: Run V5 cross-device conflict convergence audit
+        run: npm run audit:v5-conflict-convergence
+
       - name: Run V5 release readiness diagnostics audit
         run: npm run audit:v5-release-readiness
