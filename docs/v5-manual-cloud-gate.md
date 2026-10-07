@@ -1,6 +1,6 @@
 # MoXin Quiz V5｜Manual Cloud / Production Cutover Gate
 
-Status: **MANUAL CLOUD GATE COMPLETE — production cutover pending release configuration and explicit authorization**
+Status: **PRODUCTION CANDIDATE READY — automated + manual gates passed; main merge pending explicit authorization**
 
 This checklist is the manual half of the V5 release gate. Automated CI can validate Local-first behavior, deterministic sync semantics, failure handling, accessibility, and provider boundaries, but it cannot replace real Google account / Drive / two-device validation.
 
@@ -25,7 +25,7 @@ npm run preflight
 npm run preflight:cloud-cutover
 ```
 
-The cloud-cutover preflight is expected to remain blocked while the RC still uses the development app version / release channel; those markers are changed only during the authorized production cutover.
+On the production candidate, both preflight commands must pass. The validated RC is configured as `appVersion=5.0.0` / `releaseChannel=production`, and `preflight:cloud-cutover` returns `READY`.
 
 ## Manual two-device matrix
 
@@ -90,11 +90,12 @@ Cloud can be disabled through the feature flag while preserving Local-first oper
 
 ## Sign-off
 
-- Automated gate head: `c9e3ceee0c817bb50ab0428f5c3249ed82ca27b6`
-- Push workflow: ✅ PASS — Unit + release preflight and full browser/accessibility gate
-- PR workflow: _Pending_
+- Automated gate head: `cf77c7f5604fc75626ba1893f78a2d69c68ff471`
+- Push workflow: ✅ PASS — GitHub Actions run `37669209524`; Unit + release preflight, cloud-cutover READY check, and full browser/accessibility gate all passed
+- PR workflow: _Pending — existing PR #7 still points to `v5-cloud-sync`; update its head to the validated RC before merge authorization_
 - Real Google account used: ✅ PASS — live Google OAuth / Drive appDataFolder validation completed, including two-account switching
 - Device A / Browser: Chrome normal profile on Codespaces forwarded-port RC
 - Device B / Browser: Chrome incognito profile on the same RC origin (isolated browser storage)
 - Manual matrix completed by: ✅ Live user validation completed 2026-10-08
+- OAuth audience: _Testing — switch to In production only after the public Pages deployment exposes the configured homepage/privacy/terms URLs_
 - Production merge authorized by: _Pending_
