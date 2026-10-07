@@ -66,7 +66,7 @@ assert.match(css, /grid-template-columns:\s*repeat\(5,/);
 assert.match(css, /\.nav-more-mobile/);
 assert.match(css, /\.settings-cloud-card/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c2-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c2-2'/);
 assert.match(sw, /src\/ui\/sync-status\.js/);
 assert.match(sw, /src\/ui\/sync-center\.js/);
 assert.match(sw, /src\/ui\/dialogs\.js/);
