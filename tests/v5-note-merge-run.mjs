@@ -105,7 +105,7 @@ assert.match(syncUi, /showTextAreaDialog/);
 assert.match(syncUi, /mergedValue:\s*\{ text: mergedContent \}/);
 assert.match(dialogCss, /\.app-dialog-textarea/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-2'/);
 assert.match(sw, /src\/ui\/conflicts\.js/);
 assert.match(sw, /src\/sync\/conflict-resolution\.js/);
 
