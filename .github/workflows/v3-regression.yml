@@ -69,22 +69,9 @@ jobs:
       - name: Run full v3 regression suite
         run: npm run ci
 
-      - name: Verify live RC cutover blockers are only development markers
+      - name: Verify live RC cloud cutover readiness
         if: github.ref == 'refs/heads/v5-cloud-sync-live-rc' || github.head_ref == 'v5-cloud-sync-live-rc'
-        shell: bash
-        run: |
-          set +e
-          output="$(npm run preflight:cloud-cutover 2>&1)"
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          test "$status" -ne 0
-          blocker_count="$(printf '%s\n' "$output" | grep -c '^BLOCKER:' || true)"
-          test "$blocker_count" -eq 2
-          printf '%s\n' "$output" | grep -F "BLOCKER: Release channel is still development."
-          printf '%s\n' "$output" | grep -F "BLOCKER: Development appVersion cannot cut over: 5.0.0-dev"
-          if printf '%s\n' "$output" | grep -F "BLOCKER: Cloud runtime is still disabled."; then exit 1; fi
-          if printf '%s\n' "$output" | grep -F "BLOCKER: Google OAuth Client ID is not configured."; then exit 1; fi
+        run: npm run preflight:cloud-cutover
 
 
   v5-browser-audit:
