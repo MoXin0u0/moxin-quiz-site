@@ -86,7 +86,7 @@ assert.match(seedSource, /syncTombstones/);
 assert.match(transportSource, /nextRetryInstant/);
 assert.match(transportSource, /OUTBOX_STATUS\.BLOCKED/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c3-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c4-1'/);
 assert.match(sw, /src\/sync\/sync-engine\.js/);
 assert.match(sw, /src\/sync\/initial-seed\.js/);
 assert.match(sw, /src\/sync\/retry-policy\.js/);

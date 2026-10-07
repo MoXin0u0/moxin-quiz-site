@@ -31,6 +31,7 @@ import {
 } from '../ui/sync-center.js';
 import { showToast } from '../ui/library.js';
 import { showReconciliationPlanDialog } from '../ui/first-sync.js';
+import { SyncScheduler } from '../sync/sync-scheduler.js';
 import {
   resolveSyncConflict,
   CONFLICT_RESOLUTION_CHOICE,
@@ -49,6 +50,7 @@ let centerPreviousFocus = null;
 let moreOpen = false;
 let statusTimer = null;
 let cloudProvider = null;
+let automaticSyncScheduler = null;
 
 initSyncUi().catch(error => {
   console.error('V5 sync UI initialization failed.', error);
@@ -62,6 +64,7 @@ async function initSyncUi() {
 
   bindGlobalActions();
   await refreshSyncStatus();
+  startAutomaticSyncScheduler();
 
   window.addEventListener('online', refreshSyncStatus);
   window.addEventListener('offline', refreshSyncStatus);
@@ -76,6 +79,7 @@ async function initSyncUi() {
 
   window.addEventListener('beforeunload', () => {
     if (statusTimer) window.clearInterval(statusTimer);
+    automaticSyncScheduler?.stop();
   }, { once: true });
 }
 
@@ -498,6 +502,47 @@ async function switchCloudAccount({ selectAccount = false } = {}) {
   } catch (error) {
     await handleCloudActionError(error, 'Google 帳號切換失敗');
   }
+}
+
+function startAutomaticSyncScheduler() {
+  if (automaticSyncScheduler) return automaticSyncScheduler;
+
+  automaticSyncScheduler = new SyncScheduler({
+    getSnapshot: () => getSyncStatusSnapshot(),
+    runSync: runAutomaticSync,
+    idleDebounceMs: APP_CONFIG.syncLimits.idleDebounceMs,
+    activePendingMaxMs: APP_CONFIG.syncLimits.activePendingMaxMs,
+  });
+  automaticSyncScheduler.start();
+  return automaticSyncScheduler;
+}
+
+async function runAutomaticSync({ snapshot } = {}) {
+  const current = snapshot || await getSyncStatusSnapshot();
+  if (
+    !current?.cloudRuntimeEnabled ||
+    !current?.cloudConfigured ||
+    !current?.connected ||
+    !current?.linkedProfileId
+  ) {
+    return { status: 'skipped', reason: 'automatic-gate' };
+  }
+
+  cloudProvider ||= new GoogleDriveAppDataProvider();
+
+  // Automatic sync must never open GIS or an OAuth popup. A missing/expired
+  // access token waits for explicit user interaction through Sync Center.
+  const token = cloudProvider.tokenManager?.peekAccessToken?.() || null;
+  if (!token) {
+    return { status: 'skipped', reason: 'authorization-required' };
+  }
+
+  const cycle = await runLinkedCloudSync(
+    cloudProvider,
+    current.linkedProfileId,
+  );
+  await refreshSyncStatus();
+  return cycle;
 }
 
 async function syncNow() {

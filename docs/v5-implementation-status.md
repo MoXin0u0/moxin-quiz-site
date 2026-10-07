@@ -49,6 +49,7 @@ Updated: 2026-10-07
 | B13C2 First Sync / Account Switch Reconciliation UX | ✅ Complete | Inventory-first planning, zero-cloud-write pre-confirmation, explicit Apply/Cancel dialogs, confirmed profile bootstrap, account-switch cancel preserves original link; full gate green at `613f6da4d79f1e40b8a659be5313990ddd019dc9` |
 | B13C3 Conflict Resolution UX | ✅ Complete | Revisioned two-parent resolution for conflict-sensitive data, explicit local/cloud choice UI, preserved conflict copies for practice sessions / Studio drafts / user banks, immutable collision manual-recovery guard |
 | G8C3 Conflict Resolution Safety | ✅ PASS | Unit/release preflight + full browser suite + dedicated conflict UI/Axe gate green at `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe` |
+| B13C4 Automatic Sync Scheduler | 🚧 Implemented / gating | 5s idle debounce, 30s active-pending ceiling, reconnect/resume triggers, retry scheduling, conflict/offline gates, no automatic OAuth popup |
 
 ## Current green CI evidence
 

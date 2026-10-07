@@ -6,6 +6,7 @@ import {
   enqueueOutboxMutation,
   setOutboxMutationPayload,
 } from '../../sync/outbox-service.js';
+import { notifySyncPending } from '../../sync/sync-scheduler.js';
 
 function createBaseSyncMeta(deviceId) {
   return {
@@ -160,5 +161,11 @@ export async function enqueueImmutableMutationInTransaction(tx, {
 
 
 export function attachMutationPayloadInTransaction(tx, mutation, payload) {
-  return setOutboxMutationPayload(tx, mutation, payload);
+  const next = setOutboxMutationPayload(tx, mutation, payload);
+  notifySyncPending({
+    entityType: mutation?.entityType || null,
+    entityKey: mutation?.entityKey || null,
+    mutationId: mutation?.mutationId || null,
+  });
+  return next;
 }

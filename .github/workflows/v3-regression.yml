@@ -153,3 +153,6 @@ jobs:
 
       - name: Run V5 conflict resolution UI audit
         run: npm run audit:v5-conflict-resolution
+
+      - name: Run V5 automatic sync scheduler audit
+        run: npm run audit:v5-sync-scheduler
