@@ -1,6 +1,6 @@
 # MoXin Quiz V5｜Live Cloud RC Setup
 
-Status: **Waiting for Google OAuth Client ID**
+Status: **OAuth configured / live RC automated gating in progress**
 
 RC branch: `v5-cloud-sync-live-rc`
 
@@ -8,16 +8,16 @@ Base validated V5 head: `194fb155f4b4b7a9b7f4f7dd0143cb726eec1ae8`
 
 ## Safety state
 
-The RC branch starts from the fully green B13 automated-readiness head and remains dormant until a real Google OAuth Web Client ID is supplied.
+The RC branch starts from the fully green B13 automated-readiness head. A real Google OAuth Web Client ID is now configured only on this isolated RC branch, and the cloud runtime is enabled for live validation.
 
 Current required invariants:
 
-- `features.cloudSync=false` until the Client ID is configured.
+- `features.cloudSync=true` only on this isolated RC branch.
 - `syncUi=true`.
 - IndexedDB remains version 4.
 - Cloud Sync Schema remains version 1.
 - Drive scope remains exactly `https://www.googleapis.com/auth/drive.appdata`.
-- `main` must remain unchanged.
+- `main` and `v5-cloud-sync` must remain unchanged.
 - PR #7 remains Draft.
 - No production merge is authorized by this RC.
 
@@ -51,9 +51,9 @@ GitHub Pages production origin:
 
 ## Activation sequence after Client ID is supplied
 
-1. Write the Web Client ID only into the isolated RC branch.
-2. Set `features.cloudSync=true` only on the RC branch.
-3. Keep `releaseChannel=development` for live validation.
+1. ✅ Web Client ID is configured only in the isolated RC branch.
+2. ✅ `features.cloudSync=true` only on the RC branch.
+3. ✅ `releaseChannel=development` remains in place for live validation.
 4. Run full automated CI.
 5. Run `npm run preflight`.
 6. Run the first localhost OAuth + Drive appDataFolder smoke test.
@@ -77,3 +77,8 @@ Expected path:
 10. Inspect failure behavior by revoking/expiring authorization only after the success path is recorded.
 
 Never paste or commit a Google **client secret**. This browser app only needs the OAuth Web **Client ID**.
+
+## Current OAuth client
+
+- Web Client ID: `465928667951-721b0udej0814jjelmepk0h98c57cf2a.apps.googleusercontent.com`
+- Client secret: intentionally not used or stored by the app.
