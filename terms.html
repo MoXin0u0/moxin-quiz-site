@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="墨忻刷題網服務條款：說明服務性質、使用者資料責任、雲端同步、備份與服務可用性。" />
+  <meta name="theme-color" content="#3559d9" />
+  <title>服務條款｜墨忻刷題網</title>
+  <link rel="icon" href="assets/pwa/icon-192.png" sizes="192x192" />
+  <script>
+    try {
+      const raw = localStorage.getItem('moxin.v3.settings');
+      const settings = raw ? JSON.parse(raw) : {};
+      const preference = ['system', 'light', 'dark'].includes(settings.theme) ? settings.theme : 'system';
+      const theme = preference === 'system'
+        ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : preference;
+      document.documentElement.dataset.themePreference = preference;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.reduceMotion = settings.reduceMotion === true ? 'true' : 'false';
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="styles/v41-landing.css" />
+</head>
+<body class="landing-body">
+  <a class="skip-link" href="#mainContent">跳到主要內容</a>
+
+  <header class="landing-header">
+    <a class="landing-brand" href="./" aria-label="墨忻刷題網首頁">
+      <span class="landing-brand-mark" aria-hidden="true">墨</span>
+      <span><strong>墨忻刷題網</strong><small>MoXin Quiz</small></span>
+    </a>
+    <nav class="landing-nav" aria-label="服務條款導覽">
+      <a href="#service">服務性質</a>
+      <a href="#data">資料與同步</a>
+      <a href="#responsibility">使用責任</a>
+    </nav>
+    <a class="landing-header-cta" href="./app.html">進入學習大廳</a>
+  </header>
+
+  <main id="mainContent">
+    <section class="landing-section">
+      <div class="landing-section-heading">
+        <span>Terms of Service</span>
+        <h1>服務條款</h1>
+        <p>最後更新：2026-10-08</p>
+      </div>
+
+      <div class="landing-data-card">
+        <div>
+          <span class="landing-kicker">適用範圍</span>
+          <h2>使用墨忻刷題網，即表示你理解並同意以下服務條件。</h2>
+          <p>
+            墨忻刷題網提供題庫管理、練習、複習、模擬考、學習統計、題庫工作室、
+            PWA 離線使用，以及使用者主動啟用的 Google Drive 跨裝置同步功能。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="service">
+      <div class="landing-section-heading">
+        <span>Service</span>
+        <h2>服務性質與可用性</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            本服務以「本機優先」方式運作，核心學習功能不以登入或雲端連線為必要條件。
+            雲端同步、Google OAuth、GitHub Pages、瀏覽器儲存空間與網路連線等功能，
+            可能受到第三方服務狀態、瀏覽器限制或平台政策變更影響。
+          </p>
+          <p>
+            本服務會盡力維持功能穩定與資料安全機制，但不保證服務永不中斷、
+            所有瀏覽器環境皆完全相容，或第三方平台永遠維持相同介面與政策。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="data">
+      <div class="landing-section-heading">
+        <span>Data & Sync</span>
+        <h2>資料、備份與雲端同步</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            題庫、作答紀錄、收藏、筆記、Session 與其他學習資料主要保存在使用者目前瀏覽器的本機儲存空間。
+            使用者有責任依自身需求定期下載完整備份，特別是在清除瀏覽器資料、重設裝置或更換瀏覽器之前。
+          </p>
+          <p>
+            Google 雲端同步為選用功能。啟用後，應用程式會依照同步規則將可同步資料寫入使用者自己的
+            Google Drive appDataFolder。同步不取代完整備份；解除裝置連結也不等同於刪除既有雲端資料。
+          </p>
+          <p>
+            當不同裝置同時修改衝突敏感資料時，系統可能要求使用者選擇保留版本或產生衝突副本；
+            使用者應在確認內容後再完成衝突處理。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="responsibility">
+      <div class="landing-section-heading">
+        <span>User Responsibility</span>
+        <h2>使用者責任</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            使用者應確保自行匯入、建立或分享的題庫與圖片素材具有合法使用權，
+            並自行核對題目、答案、詳解與其他學習內容的正確性。
+          </p>
+          <p>
+            本服務提供學習與資料管理工具，不構成專業考試保證、法律、醫療、財務或其他專業意見。
+            使用者應依正式來源判斷考試規範、答案與其他重要資訊。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section">
+      <div class="landing-section-heading">
+        <span>Third-party Services</span>
+        <h2>第三方服務</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            本網站使用 GitHub Pages 提供靜態託管；使用者選擇啟用雲端同步時，
+            會使用 Google Identity Services 與 Google Drive API。第三方服務的使用亦受其各自條款與政策約束。
+          </p>
+          <p>
+            有關 Google 資料的存取、使用、保存與使用者控制方式，請參閱本網站的隱私權政策。
+          </p>
+          <p><a href="./privacy.html">查看隱私權政策</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section">
+      <div class="landing-section-heading">
+        <span>Changes</span>
+        <h2>條款更新與聯絡</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            本條款可能因功能、平台政策或服務方式調整而更新；更新時會修改本頁的最後更新日期。
+          </p>
+          <p>
+            若對本服務條款有疑問，可透過墨忻刷題網 GitHub Repository 的 Issues 提出。
+          </p>
+          <p>
+            <a href="https://github.com/MoXin0u0/moxin-quiz-site/issues" target="_blank" rel="noopener">前往 GitHub Issues</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="landing-footer">
+    <div class="landing-brand compact">
+      <span class="landing-brand-mark" aria-hidden="true">墨</span>
+      <span><strong>墨忻刷題網</strong><small>個人學習與刷題平台</small></span>
+    </div>
+    <a href="./">返回首頁</a>
+    <a href="./privacy.html">隱私權政策</a>
+    <a href="./app.html">進入學習大廳</a>
+  </footer>
+</body>
+</html>
