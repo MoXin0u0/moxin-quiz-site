@@ -21,6 +21,12 @@ try {
       .includes('IndexedDB 已就緒'),
   null, { timeout: 15000 });
 
+  await page.waitForFunction(() => {
+    const host = document.querySelector('#syncStatusHost');
+    return host && !host.hidden &&
+      Boolean(host.querySelector('[data-open-sync-center]'));
+  }, null, { timeout: 10000 });
+
   const planned = await page.evaluate(async dbName => {
     const {
       closeDatabase,
