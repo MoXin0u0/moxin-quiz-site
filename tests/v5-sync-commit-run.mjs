@@ -84,7 +84,7 @@ assert.equal(mutation.hasPayload, true);
 assert.equal(mutation.payload.text, 'snapshot');
 
 const sw = fs.readFileSync('service-worker.js', 'utf8');
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9A-Za-z.-]+-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-\d+'/);
 assert.match(sw, /src\/sync\/cloud-contract\.js/);
 assert.match(sw, /src\/sync\/commit-transport\.js/);
 assert.match(sw, /src\/sync\/sync-lock\.js/);

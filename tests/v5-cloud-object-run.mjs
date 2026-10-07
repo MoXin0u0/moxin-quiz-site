@@ -97,7 +97,7 @@ const validated = await validateCloudCommit(commit);
 assert.equal(validated.mutations[0].objectRef.driveFileId, 'file-draft');
 
 const sw = fs.readFileSync('service-worker.js', 'utf8');
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9A-Za-z.-]+-\d+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-\d+'/);
 assert.match(sw, /src\/sync\/cloud-object-transport\.js/);
 
 console.log('V5 B11A cloud object document contracts passed.');
