@@ -139,3 +139,6 @@ jobs:
 
       - name: Run V5 cloud profile, checkpoint and device registry audit
         run: npm run audit:v5-profile-checkpoint
+
+      - name: Run V5 account switching and revocation audit
+        run: npm run audit:v5-account-lifecycle

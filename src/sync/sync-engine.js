@@ -17,6 +17,10 @@ import { classifySyncFailure, nextRetryInstant } from './retry-policy.js';
 import { SYNC_RUNTIME_STATE } from './config.js';
 import { withSyncLock } from './sync-lock.js';
 import { publishCheckpointIfDue } from './checkpoint.js';
+import {
+  getCurrentDeviceSyncPermission,
+  verifyLinkedCloudContext,
+} from './account-lifecycle.js';
 
 export async function inspectFirstSync(provider, {
   profileId,
@@ -135,7 +139,7 @@ export async function runSyncCycle(provider, {
       };
     }
 
-    if (meta?.reconciliation?.phase === 'planning') {
+    if (['planning', 'seeding'].includes(meta?.reconciliation?.phase)) {
       return {
         status: 'blocked',
         reason: 'reconciliation-required',
@@ -156,10 +160,76 @@ export async function runSyncCycle(provider, {
 
     if (force) await resumeBlockedOutboxMutations();
 
+    const localPermission = await getCurrentDeviceSyncPermission();
+    if (!localPermission.allowed) {
+      await updateSyncMeta(current => ({
+        ...current,
+        runtimeState: SYNC_RUNTIME_STATE.ERROR,
+        blockReason: localPermission.reason,
+      }));
+      return {
+        status: 'blocked',
+        reason: localPermission.reason,
+        runtimeState: SYNC_RUNTIME_STATE.ERROR,
+      };
+    }
+
+    try {
+      const context = await verifyLinkedCloudContext(provider, {
+        profileId: profile,
+      });
+      if (context.verified) {
+        await updateSyncMeta(current => ({
+          ...current,
+          cloudAccount: {
+            provider: context.account?.provider || 'google',
+            providerSubject: context.account?.providerSubject || null,
+            displayName: context.account?.displayName || null,
+            displayEmail: context.account?.displayEmail || null,
+            photoUrl: context.account?.photoUrl || null,
+          },
+          cloudSchemaVersion:
+            context.cloudProfile?.cloudSchema || current.cloudSchemaVersion,
+          blockReason: null,
+        }));
+      }
+    } catch (contextError) {
+      if (contextError?.code === 'ACCOUNT_SWITCH_REQUIRED') {
+        await updateSyncMeta(current => ({
+          ...current,
+          runtimeState: SYNC_RUNTIME_STATE.ERROR,
+          blockReason: 'account-switch-required',
+          lastSyncAttemptAt: startedAt.toISOString(),
+        }));
+        return {
+          status: 'blocked',
+          reason: 'account-switch-required',
+          runtimeState: SYNC_RUNTIME_STATE.ERROR,
+          error: contextError,
+        };
+      }
+
+      const failure = classifySyncFailure(contextError);
+      await updateSyncMeta(current => ({
+        ...current,
+        runtimeState: failure.runtimeState,
+        blockReason: failure.code || 'cloud-context-error',
+        lastSyncAttemptAt: startedAt.toISOString(),
+      }));
+      return {
+        status: 'error',
+        reason: 'cloud-context-error',
+        runtimeState: failure.runtimeState,
+        retryable: failure.retryable,
+        error: contextError,
+      };
+    }
+
     await updateSyncMeta(current => ({
       ...current,
       lastSyncAttemptAt: startedAt.toISOString(),
       runtimeState: SYNC_RUNTIME_STATE.SYNCING,
+      blockReason: null,
     }));
 
     const pulled = [];
@@ -189,6 +259,13 @@ export async function runSyncCycle(provider, {
                 updatedAt: now().toISOString(),
               }
             : current.reconciliation,
+          accountSwitch: current.accountSwitch
+            ? {
+                ...current.accountSwitch,
+                phase: 'conflicts',
+                updatedAt: now().toISOString(),
+              }
+            : current.accountSwitch,
         }));
 
         return {
@@ -197,6 +274,22 @@ export async function runSyncCycle(provider, {
           pushed,
           openConflicts,
           runtimeState: SYNC_RUNTIME_STATE.CONFLICT,
+        };
+      }
+
+      const permissionAfterPull = await getCurrentDeviceSyncPermission();
+      if (!permissionAfterPull.allowed) {
+        await updateSyncMeta(current => ({
+          ...current,
+          runtimeState: SYNC_RUNTIME_STATE.ERROR,
+          blockReason: permissionAfterPull.reason,
+        }));
+        return {
+          status: 'blocked',
+          reason: permissionAfterPull.reason,
+          pulled,
+          pushed,
+          runtimeState: SYNC_RUNTIME_STATE.ERROR,
         };
       }
 
@@ -239,21 +332,39 @@ export async function runSyncCycle(provider, {
         }));
       }
 
-      await updateSyncMeta(current => ({
-        ...current,
-        lastSuccessfulSyncAt: now().toISOString(),
-        runtimeState,
-        syncRetry: null,
-        reconciliation:
-          current.reconciliation?.phase === 'applying' && runtimeState === SYNC_RUNTIME_STATE.SYNCED
+      await updateSyncMeta(current => {
+        const completedAt = now().toISOString();
+        const completedReconciliation =
+          current.reconciliation?.phase === 'applying' &&
+          runtimeState === SYNC_RUNTIME_STATE.SYNCED
             ? {
                 ...current.reconciliation,
                 phase: 'completed',
-                completedAt: now().toISOString(),
-                updatedAt: now().toISOString(),
+                completedAt,
+                updatedAt: completedAt,
               }
-            : current.reconciliation,
-      }));
+            : current.reconciliation;
+        const completedAccountSwitch =
+          current.accountSwitch?.phase === 'applying' &&
+          runtimeState === SYNC_RUNTIME_STATE.SYNCED
+            ? {
+                ...current.accountSwitch,
+                phase: 'completed',
+                completedAt,
+                updatedAt: completedAt,
+              }
+            : current.accountSwitch;
+
+        return {
+          ...current,
+          lastSuccessfulSyncAt: completedAt,
+          runtimeState,
+          syncRetry: null,
+          blockReason: null,
+          reconciliation: completedReconciliation,
+          accountSwitch: completedAccountSwitch,
+        };
+      });
 
       return {
         status: runtimeState === SYNC_RUNTIME_STATE.SYNCED ? 'synced' : 'pending',
