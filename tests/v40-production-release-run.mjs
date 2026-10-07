@@ -30,7 +30,12 @@ assert.equal(APP_CONFIG.dbName, 'moxin-quiz-v3');
 assert.ok(APP_CONFIG.dbVersion >= 3);
 
 assert.equal(manifest.scope, './');
-assert.equal(pkg.scripts.preflight, 'node scripts/v4-release-preflight.mjs');
+if (APP_CONFIG.features?.v5DataFoundation) {
+  assert.equal(pkg.scripts.preflight, 'node scripts/v5-release-preflight.mjs');
+  assert.equal(pkg.scripts['preflight:v4'], 'node scripts/v4-release-preflight.mjs');
+} else {
+  assert.equal(pkg.scripts.preflight, 'node scripts/v4-release-preflight.mjs');
+}
 assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3|5)-[^']+'/);
 assert.match(plan, /## v4\.0 Production/);
 assert.match(plan, /\*\*狀態：Released\*\*/);

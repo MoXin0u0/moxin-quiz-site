@@ -38,6 +38,8 @@ const legacyEntry = fs.readFileSync('v3.html', 'utf8');
 const manifest = JSON.parse(fs.readFileSync('manifest.webmanifest', 'utf8'));
 const readme = fs.readFileSync('README.md', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const v5Preflight = fs.readFileSync('scripts/v5-release-preflight.mjs', 'utf8');
 
 assert.match(index, /墨忻刷題網 v5/);
 assert.match(index, /雲端同步是選用功能/);
@@ -60,5 +62,10 @@ assert.match(readme, /features\.cloudSync=false/);
 assert.match(readme, /Backup 與 Sync/);
 
 assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-1'/);
+assert.equal(pkg.scripts.preflight, 'node scripts/v5-release-preflight.mjs');
+assert.equal(pkg.scripts['preflight:v4'], 'node scripts/v4-release-preflight.mjs');
+assert.match(v5Preflight, /Cloud runtime cannot be enabled without a Google Client ID/);
+assert.match(v5Preflight, /drive\.appdata/);
+assert.match(v5Preflight, /cloud runtime dormant/);
 
 console.log('V5 B13D1 release readiness contracts passed.');

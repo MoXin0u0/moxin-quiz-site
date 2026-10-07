@@ -58,6 +58,7 @@ Updated: 2026-10-07
 | B13C Product Integration | ✅ Complete | Sync Center, first-sync/account-switch UX, conflict resolution + note merge, device controls, mobile 5-tab IA, automatic scheduler, accessibility/product integration all closed |
 | G8C Product Integration | ✅ PASS | Push + PR workflows fully green at `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`; no merge to main and cloud runtime remains dormant |
 | B13D1 Release Readiness / Diagnostics | 🚧 Implemented / gating | V5 landing/app/manifest positioning, DB v4 + migration + cloud/auth/schema/outbox/conflict/last-sync diagnostics, dormant cloud release checks |
+| B13D2 V5 Release Preflight | 🚧 Implemented / gating | V5 wrapper retains V4 static compatibility checks and adds DB/schema/scope/config/UI/App Shell release assertions; cloud runtime may remain dormant but cannot be enabled without Client ID |
 
 ## Current green CI evidence
 
@@ -175,4 +176,4 @@ G7, B13A/G8A, B13B/G8B, B13B.5/G8B.5, and the full B13C/G8C product-integration 
 
 ## B13 remaining target
 
-B13C product integration is complete. B13D1 release/readiness integration is implemented and under gating: the public/app metadata now describes V5 as Local-first / Offline-ready / Optional Cloud Sync, while the Settings preflight exposes DB v4, migration, cloud runtime/config/auth/schema, Outbox, conflicts, last sync, and storage readiness without activating OAuth. Live Google credentials, manual two-device cloud validation, release tagging, production cutover, and merge to `main` still require a separate explicit authorization step.
+B13C product integration is complete. B13D1 release/readiness integration and B13D2 V5 release preflight are implemented and under gating: the public/app metadata now describes V5 as Local-first / Offline-ready / Optional Cloud Sync, while the Settings preflight exposes DB v4, migration, cloud runtime/config/auth/schema, Outbox, conflicts, last sync, and storage readiness without activating OAuth. The V5 preflight now wraps the existing V4 compatibility preflight instead of replacing it, then verifies the V5 DB/schema/scope/config/Sync UI/App Shell contracts. Live Google credentials, manual two-device cloud validation, release tagging, production cutover, and merge to `main` still require a separate explicit authorization step.
