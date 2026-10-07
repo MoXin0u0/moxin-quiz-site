@@ -69,7 +69,7 @@ assert.match(readme, /Optional Cloud Sync/);
 assert.match(readme, /live cloud RC/i);
 assert.match(readme, /Backup 與 Sync/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-2'/);
 assert.equal(pkg.scripts.preflight, 'node scripts/v5-release-preflight.mjs');
 assert.equal(pkg.scripts['preflight:v4'], 'node scripts/v4-release-preflight.mjs');
 assert.match(v5Preflight, /Cloud runtime cannot be enabled without a Google Client ID/);
