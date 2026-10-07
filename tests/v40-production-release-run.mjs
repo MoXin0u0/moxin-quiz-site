@@ -18,7 +18,7 @@ if (APP_CONFIG.features?.v5DataFoundation) {
   assert.match(app, /<span class="version-badge">v5<\/span>/);
   assert.match(APP_CONFIG.appVersion, /^5\.0\.0(?:-[0-9A-Za-z.-]+)?$/);
   assert.equal(APP_CONFIG.releaseChannel, 'development');
-  assert.match(readme, /\*\*v5 開發分支\*\*/);
+  assert.match(readme, /\*\*v5\.0\.0 正式版\*\*/);
 } else {
   assert.match(app, /<title>墨忻刷題網 v4\.\d+<\/title>/);
   assert.match(app, /<span class="version-badge">v4\.\d+<\/span>/);

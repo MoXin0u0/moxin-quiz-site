@@ -1,8 +1,8 @@
 # 墨忻刷題網
 
-墨忻刷題網 **v5 開發分支** 是部署於 GitHub Pages 的 **Local-first / Offline-ready 個人學習與刷題平台**。核心功能不要求登入：題庫、學習紀錄、目標與工作室草稿先寫入本機 IndexedDB，PWA 離線時仍可使用。V5 另外加入 **可選用的 Google Drive appDataFolder 跨裝置同步**；完整備份仍是獨立的資料安全機制，不會被同步取代。
+墨忻刷題網 **v5.0.0 正式版** 是部署於 GitHub Pages 的 **Local-first / Offline-ready 個人學習與刷題平台**。核心功能不要求登入：題庫、學習紀錄、目標與工作室草稿先寫入本機 IndexedDB，PWA 離線時仍可使用。V5 另外加入 **可選用的 Google Drive appDataFolder 跨裝置同步**；完整備份仍是獨立的資料安全機制，不會被同步取代。
 
-> `v5-cloud-sync` 主開發分支仍維持 dormant cloud；隔離的 `v5-cloud-sync-live-rc` 分支目前已配置 Web OAuth Client ID 並設為 `features.cloudSync=true`，只用於 live cloud RC 驗證。即使在 live RC，Google 授權仍必須由使用者明確觸發，Local-only 啟動不應自動登入。
+> V5.0.0 正式版啟用 **Production Cloud Sync**：`features.cloudSync=true`，並使用已配置的 Google Web OAuth Client ID。Google 授權仍必須由使用者明確觸發；Local-only 啟動不會自動登入，也不會因雲端不可用而阻擋本機學習。
 
 ## V5 定位與入口
 

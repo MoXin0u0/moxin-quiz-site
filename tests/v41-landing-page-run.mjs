@@ -26,7 +26,7 @@ if (APP_CONFIG.features?.v5DataFoundation) {
   assert.match(landing, /Optional Cloud Sync/);
   assert.match(app, /<title>墨忻刷題網 v5<\/title>/);
   assert.match(app, /<span class="version-badge">v5<\/span>/);
-  assert.equal(APP_CONFIG.appVersion, '5.0.0-dev');
+  assert.equal(APP_CONFIG.appVersion, '5.0.0');
   assert.equal(APP_CONFIG.releaseChannel, 'development');
 } else {
   assert.match(landing, /2026-10-04/);
@@ -58,7 +58,7 @@ for (const asset of [
 }
 
 if (APP_CONFIG.features?.v5DataFoundation) {
-  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b[0-9A-Za-z.-]+-\d+'/);
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-\d+'/);
 } else {
   assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.1\.0-v41-landing-1'/);
 }
@@ -66,7 +66,7 @@ assert.match(sw, /cache\.match\('\.\/app\.html'\)/);
 assert.match(sw, /cache\.match\('\.\/index\.html'\)/);
 
 if (APP_CONFIG.features?.v5DataFoundation) {
-  assert.match(readme, /\*\*v5 開發分支\*\*/);
+  assert.match(readme, /\*\*v5\.0\.0 正式版\*\*/);
   assert.match(readme, /Optional Cloud Sync/);
 } else {
   assert.match(readme, /\*\*v4\.1\*\*/);

@@ -1,9 +1,11 @@
-const CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-3';
+const CACHE_VERSION = 'moxin-quiz-v5-5.0.0-prod-1';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
   './app.html',
   './v3.html',
+  './privacy.html',
+  './terms.html',
   './styles/v41-landing.css',
   './src/app/landing.js',
   './manifest.webmanifest',

@@ -3,7 +3,8 @@ import fs from 'node:fs';
 
 import { APP_CONFIG } from '../src/app/config.js';
 
-assert.equal(APP_CONFIG.appVersion, '5.0.0-dev');
+assert.equal(APP_CONFIG.appVersion, '5.0.0');
+assert.equal(APP_CONFIG.releaseChannel, 'production');
 assert.equal(APP_CONFIG.dbVersion, 4);
 assert.equal(APP_CONFIG.features.cloudSync, true);
 assert.equal(APP_CONFIG.features.syncUi, true);
@@ -53,7 +54,7 @@ assert.match(index, /墨忻刷題網 v5/);
 assert.match(index, /雲端同步是選用功能/);
 assert.match(index, /完整備份仍獨立保留/);
 assert.match(index, /不登入也能完整練習與離線使用/);
-assert.match(index, /v5 development preview/);
+assert.match(index, /v5\.0\.0 · 正式版/);
 
 for (const html of [app, legacyEntry]) {
   assert.match(html, /墨忻刷題網 v5/);
@@ -66,10 +67,10 @@ assert.match(manifest.description, /可選用跨裝置雲端同步/);
 
 assert.match(readme, /Local-first \/ Offline-ready/);
 assert.match(readme, /Optional Cloud Sync/);
-assert.match(readme, /live cloud RC/i);
+assert.match(readme, /Production Cloud Sync/);
 assert.match(readme, /Backup 與 Sync/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-3'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-1'/);
 assert.equal(pkg.scripts.preflight, 'node scripts/v5-release-preflight.mjs');
 assert.equal(pkg.scripts['preflight:v4'], 'node scripts/v4-release-preflight.mjs');
 assert.match(v5Preflight, /Cloud runtime cannot be enabled without a Google Client ID/);
