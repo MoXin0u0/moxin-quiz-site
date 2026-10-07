@@ -35,6 +35,7 @@ Record concrete evidence for every row before authorizing production cutover.
 | --- | --- | --- |
 | Local → Cloud | Existing local data uploads only after explicit first-sync confirmation | ✅ PASS — live OAuth + empty first-sync confirmation + post-confirm automatic sync completed; Sync Center returned SYNCED with pending=0/conflicts=0 |
 | Fresh device bootstrap | New device discovers profile and reconstructs user data without replacing newer local data incorrectly | ✅ PASS — isolated incognito browser registered as device 2, discovered the same cloud profile, pulled the synced learning-goal data, and reached SYNCED |
+| Bidirectional propagation | A change made on device B reaches device A through the same cloud profile | ✅ PASS — device B changed the synced learning-goal data, automatic sync returned pending=0/conflicts=0, and device A received the change after manual sync |
 | Two devices offline attempts | Each device can answer offline independently | Pending |
 | Reconnect union | Immutable Attempt Events from both devices converge without duplication/loss | Pending |
 | Note concurrent edit | Real concurrent edits surface a conflict; local / cloud / merge paths behave as designed | Pending |
