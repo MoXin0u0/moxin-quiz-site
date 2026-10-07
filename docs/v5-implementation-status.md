@@ -8,7 +8,7 @@ Updated: 2026-10-07
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head: `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe`
+- Current validated head: `2591d37e446034508163a2b560e3b8ec99bfb4f1`
 
 ## Gate status
 
@@ -49,7 +49,8 @@ Updated: 2026-10-07
 | B13C2 First Sync / Account Switch Reconciliation UX | ✅ Complete | Inventory-first planning, zero-cloud-write pre-confirmation, explicit Apply/Cancel dialogs, confirmed profile bootstrap, account-switch cancel preserves original link; full gate green at `613f6da4d79f1e40b8a659be5313990ddd019dc9` |
 | B13C3 Conflict Resolution UX | ✅ Complete | Revisioned two-parent resolution for conflict-sensitive data, explicit local/cloud choice UI, preserved conflict copies for practice sessions / Studio drafts / user banks, immutable collision manual-recovery guard |
 | G8C3 Conflict Resolution Safety | ✅ PASS | Unit/release preflight + full browser suite + dedicated conflict UI/Axe gate green at `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe` |
-| B13C4 Automatic Sync Scheduler | 🚧 Implemented / gating | 5s idle debounce, 30s active-pending ceiling, reconnect/resume triggers, retry scheduling, conflict/offline gates, no automatic OAuth popup |
+| B13C4 Automatic Sync Scheduler | ✅ Complete | 5s idle debounce, 30s active-pending ceiling, reconnect/resume triggers, retry scheduling, conflict/offline gates, no automatic OAuth popup |
+| G8C4 Automatic Sync Scheduling | ✅ PASS | Unit/release preflight + full browser suite + dedicated scheduler gate green at `2591d37e446034508163a2b560e3b8ec99bfb4f1` |
 
 ## Current green CI evidence
 
@@ -83,6 +84,12 @@ At `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe`:
 - Conflict resolution creates a new revision with both local and remote parents
 - Immutable Attempt Event identity collisions remain open/manual instead of being silently overwritten
 - Conflict section serious/critical Axe violations: 0
+- B13C4 automatic scheduler: PASS
+- Local mutation idle debounce: PASS
+- Continuous pending ceiling: PASS
+- Offline → reconnect trigger: PASS
+- Conflict state automatic-sync block: PASS
+- Dormant cloud runtime performs no automatic Google authorization
 
 ## B07.5 repair notes
 
