@@ -8,7 +8,7 @@ Updated: 2026-10-07
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head: `613f6da4d79f1e40b8a659be5313990ddd019dc9`
+- Current validated head: `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe`
 
 ## Gate status
 
@@ -47,11 +47,12 @@ Updated: 2026-10-07
 | G8B.5 Profile Boundary Consistency | ✅ PASS | Unit/release preflight + full browser suite green at `dd0281027cb73ecc27fae07e5e417e28142ea5a3` |
 | B13C1 Sync Center / Settings / Mobile IA Shell | ✅ Complete | Canonical sync-state vocabulary, Data & Sync Center, Account & Cloud settings card, Data Safety home action, 5-tab mobile More, accessible custom dialogs; light/dark Axe gate green at `06fbc9c1c61fa96215b0b6c3e55c7196bc41b72c` |
 | B13C2 First Sync / Account Switch Reconciliation UX | ✅ Complete | Inventory-first planning, zero-cloud-write pre-confirmation, explicit Apply/Cancel dialogs, confirmed profile bootstrap, account-switch cancel preserves original link; full gate green at `613f6da4d79f1e40b8a659be5313990ddd019dc9` |
-| B13C3 Conflict Resolution UX | 🚧 Implemented / gating | Revisioned two-parent resolution for conflict-sensitive data, explicit local/cloud choice UI, preserved conflict copies for practice sessions / Studio drafts / user banks, immutable collision manual-recovery guard |
+| B13C3 Conflict Resolution UX | ✅ Complete | Revisioned two-parent resolution for conflict-sensitive data, explicit local/cloud choice UI, preserved conflict copies for practice sessions / Studio drafts / user banks, immutable collision manual-recovery guard |
+| G8C3 Conflict Resolution Safety | ✅ PASS | Unit/release preflight + full browser suite + dedicated conflict UI/Axe gate green at `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe` |
 
 ## Current green CI evidence
 
-At `613f6da4d79f1e40b8a659be5313990ddd019dc9`:
+At `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe`:
 
 - Unit + release preflight: PASS
 - Existing app browser audit: PASS
@@ -77,7 +78,10 @@ At `613f6da4d79f1e40b8a659be5313990ddd019dc9`:
 - First-sync planning before confirmation: 0 cloud writes
 - First-sync cancel returns to LOCAL_ONLY without cloud mutation
 - Account-switch planning/cancel preserves original linked profile and performs 0 writes to target account
-- B13C3 conflict resolution core and UI are implemented and awaiting the dedicated conflict gate
+- B13C3 conflict resolution core/UI: PASS
+- Conflict resolution creates a new revision with both local and remote parents
+- Immutable Attempt Event identity collisions remain open/manual instead of being silently overwritten
+- Conflict section serious/critical Axe violations: 0
 
 ## B07.5 repair notes
 
