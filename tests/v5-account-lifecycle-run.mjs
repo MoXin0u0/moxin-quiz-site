@@ -24,7 +24,7 @@ assert.match(engine, /account-switch-required/);
 assert.match(lifecycle, /device-revoked/);
 assert.match(engine, /permissionAfterPull/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-3'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5.0.0-prod-1'/);
 assert.match(sw, /src\/sync\/account-lifecycle\.js/);
 
 console.log('V5 B13B.5 account lifecycle consistency contracts passed.');

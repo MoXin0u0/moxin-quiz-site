@@ -118,7 +118,7 @@ assert.match(center, /renderConflictCards/);
 assert.match(center, /Conflict Resolution/);
 assert.match(css, /\.sync-conflict-branches/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-3'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5.0.0-prod-1'/);
 assert.match(sw, /src\/sync\/conflict-resolution\.js/);
 assert.match(sw, /src\/ui\/conflicts\.js/);
 
