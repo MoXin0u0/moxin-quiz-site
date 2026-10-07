@@ -35,6 +35,10 @@ export function getConflictPresentation(conflict) {
     entityLabel: ENTITY_LABELS[entityType] || entityType,
     kindLabel: KIND_LABELS[kind] || kind,
     directlyResolvable,
+    supportsManualMerge:
+      directlyResolvable &&
+      entityType === 'note' &&
+      kind !== 'delete-vs-edit',
     preservesLosingBranch: PRESERVE_LOSING_BRANCH_TYPES.has(entityType),
     local: summarizeConflictBranch(conflict?.localValue, {
       side: 'local',
@@ -47,6 +51,30 @@ export function getConflictPresentation(conflict) {
       entityType,
     }),
   };
+}
+
+export function buildNoteMergeSeed(conflict) {
+  if (String(conflict?.entityType || '') !== 'note') return '';
+
+  const local = String(conflict?.localValue?.content || '').trim();
+  const remote = String(conflict?.remoteValue?.content || '').trim();
+
+  if (local && remote && local !== remote) {
+    return local + '\n\n--- 雲端版本 ---\n\n' + remote;
+  }
+  return local || remote;
+}
+
+export function buildNoteMergeMessage(conflict) {
+  const presentation = getConflictPresentation(conflict);
+  if (!presentation.supportsManualMerge) {
+    return '這筆衝突不支援文字合併。';
+  }
+
+  return [
+    '請編輯合併後的筆記內容。',
+    '儲存後會建立一個同時承接此裝置與雲端 Revision 的新版本；兩個原始分支仍會保留在同步歷史中。',
+  ].join('\n\n');
 }
 
 export function buildConflictResolutionMessage(conflict, choice) {
@@ -97,6 +125,12 @@ function renderConflictCard(conflict) {
         'data-resolve-conflict-local="', conflictId, '">保留此裝置版本</button>',
         '<button class="button primary" type="button" ',
         'data-resolve-conflict-remote="', conflictId, '">採用雲端版本</button>',
+        ...(presentation.supportsManualMerge
+          ? [
+              '<button class="button secondary" type="button" ',
+              'data-resolve-conflict-merge="', conflictId, '">合併文字</button>',
+            ]
+          : []),
         '</div>',
       ].join('')
     : [

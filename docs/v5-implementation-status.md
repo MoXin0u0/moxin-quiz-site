@@ -51,6 +51,7 @@ Updated: 2026-10-07
 | G8C3 Conflict Resolution Safety | ✅ PASS | Unit/release preflight + full browser suite + dedicated conflict UI/Axe gate green at `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe` |
 | B13C4 Automatic Sync Scheduler | ✅ Complete | 5s idle debounce, 30s active-pending ceiling, reconnect/resume triggers, retry scheduling, conflict/offline gates, no automatic OAuth popup |
 | G8C4 Automatic Sync Scheduling | ✅ PASS | Unit/release preflight + full browser suite + dedicated scheduler gate green at `2591d37e446034508163a2b560e3b8ec99bfb4f1` |
+| B13C5 Note Conflict Merge UX | 🚧 Implemented / gating | Note conflicts support local / cloud / merge-textarea choices; merged revision descends from both branches; delete-vs-edit remains explicit-choice only |
 
 ## Current green CI evidence
 

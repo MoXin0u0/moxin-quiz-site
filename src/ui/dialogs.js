@@ -63,6 +63,39 @@ export function showPromptDialog({
   });
 }
 
+export function showTextAreaDialog({
+  title,
+  message = '',
+  label = '內容',
+  value = '',
+  confirmLabel = '儲存',
+  cancelLabel = '取消',
+  maxLength = 12000,
+  rows = 10,
+} = {}) {
+  return showDialog({
+    title,
+    message,
+    input: {
+      label,
+      value,
+      maxLength,
+      multiline: true,
+      rows,
+    },
+    actions: [
+      { value: null, label: cancelLabel, kind: 'secondary' },
+      {
+        value: '__submit_input__',
+        label: confirmLabel,
+        kind: 'primary',
+        autofocus: true,
+      },
+    ],
+    dismissValue: null,
+  });
+}
+
 export function showDialog({
   title = '確認',
   message = '',
@@ -110,10 +143,19 @@ export function showDialog({
     field.className = 'app-dialog-field';
     const fieldLabel = document.createElement('span');
     fieldLabel.textContent = String(input.label || '輸入');
-    inputElement = document.createElement('input');
-    inputElement.type = 'text';
+    inputElement = document.createElement(
+      input.multiline ? 'textarea' : 'input',
+    );
+    if (!input.multiline) inputElement.type = 'text';
     inputElement.value = String(input.value || '');
-    inputElement.maxLength = Math.max(1, Number(input.maxLength) || 80);
+    inputElement.maxLength = Math.max(
+      1,
+      Number(input.maxLength) || (input.multiline ? 12000 : 80),
+    );
+    if (input.multiline) {
+      inputElement.rows = Math.max(4, Math.min(18, Number(input.rows) || 10));
+      inputElement.classList.add('app-dialog-textarea');
+    }
     field.append(fieldLabel, inputElement);
     panel.appendChild(field);
   }

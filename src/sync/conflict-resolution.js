@@ -17,6 +17,7 @@ import { SYNC_RUNTIME_STATE } from './config.js';
 export const CONFLICT_RESOLUTION_CHOICE = Object.freeze({
   LOCAL: 'local',
   REMOTE: 'remote',
+  MERGED: 'merged',
 });
 
 const RESOLVABLE_ENTITY_TYPES = new Set([
@@ -66,6 +67,7 @@ export function isConflictDirectlyResolvable(conflict) {
 
 export async function resolveSyncConflict(conflictId, {
   choice = CONFLICT_RESOLUTION_CHOICE.LOCAL,
+  mergedValue = null,
   now = new Date(),
 } = {}) {
   const id = String(conflictId || '');
@@ -116,14 +118,28 @@ export async function resolveSyncConflict(conflictId, {
       ? currentLocal
       : branchFromConflict(conflict, 'local');
     const remoteBranch = branchFromConflict(conflict, 'remote');
-    const selected = selectedChoice === CONFLICT_RESOLUTION_CHOICE.LOCAL
-      ? localBranch
-      : remoteBranch;
+    const mergedBranch = selectedChoice === CONFLICT_RESOLUTION_CHOICE.MERGED
+      ? buildMergedBranch(conflict, {
+          localBranch,
+          remoteBranch,
+          mergedValue,
+        })
+      : null;
+    const selected = mergedBranch || (
+      selectedChoice === CONFLICT_RESOLUTION_CHOICE.LOCAL
+        ? localBranch
+        : remoteBranch
+    );
     const losing = selectedChoice === CONFLICT_RESOLUTION_CHOICE.LOCAL
       ? remoteBranch
-      : localBranch;
+      : selectedChoice === CONFLICT_RESOLUTION_CHOICE.REMOTE
+        ? localBranch
+        : null;
 
-    if (!selected.revision?.revisionId) {
+    if (
+      selectedChoice !== CONFLICT_RESOLUTION_CHOICE.MERGED &&
+      !selected.revision?.revisionId
+    ) {
       throw conflictError(
         'Selected conflict branch is missing revision metadata.',
         'CONFLICT_REVISION_MISSING',
@@ -214,6 +230,49 @@ export async function resolveSyncConflict(conflictId, {
     await done.catch(() => {});
     throw error;
   }
+}
+
+function buildMergedBranch(conflict, {
+  localBranch,
+  remoteBranch,
+  mergedValue,
+} = {}) {
+  if (String(conflict?.entityType || '') !== 'note') {
+    throw conflictError(
+      'Manual merged content is only supported for note conflicts.',
+      'CONFLICT_MERGE_UNSUPPORTED',
+      { entityType: conflict?.entityType || null },
+    );
+  }
+
+  const content = typeof mergedValue === 'string'
+    ? mergedValue
+    : mergedValue?.content;
+  const normalizedContent = String(content ?? '').trim();
+  if (!normalizedContent) {
+    throw conflictError(
+      'Merged note content cannot be empty.',
+      'CONFLICT_MERGE_EMPTY',
+    );
+  }
+
+  const source =
+    (localBranch?.value && typeof localBranch.value === 'object'
+      ? localBranch.value
+      : null) ||
+    (remoteBranch?.value && typeof remoteBranch.value === 'object'
+      ? remoteBranch.value
+      : null) ||
+    {};
+
+  return {
+    revision: null,
+    deleted: false,
+    value: {
+      ...source,
+      content: normalizedContent,
+    },
+  };
 }
 
 function branchFromConflict(conflict, side) {

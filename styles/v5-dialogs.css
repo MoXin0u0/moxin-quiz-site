@@ -45,10 +45,18 @@
   font-weight: 750;
 }
 
-.app-dialog-field input {
+.app-dialog-field input,
+.app-dialog-field textarea {
   width: 100%;
   color: var(--text);
   background: var(--surface);
+}
+
+.app-dialog-textarea {
+  min-height: 180px;
+  resize: vertical;
+  line-height: 1.55;
+  white-space: pre-wrap;
 }
 
 .app-dialog-actions {

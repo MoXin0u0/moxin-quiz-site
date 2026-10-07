@@ -24,6 +24,7 @@ import {
   showConfirmDialog,
   showMessageDialog,
   showPromptDialog,
+  showTextAreaDialog,
 } from '../ui/dialogs.js';
 import {
   renderSyncCenter,
@@ -38,6 +39,8 @@ import {
 } from '../sync/conflict-resolution.js';
 import {
   buildConflictResolutionMessage,
+  buildNoteMergeMessage,
+  buildNoteMergeSeed,
   getConflictPresentation,
 } from '../ui/conflicts.js';
 
@@ -202,6 +205,13 @@ function bindGlobalActions() {
       return;
     }
 
+    const resolveMerged = event.target.closest('[data-resolve-conflict-merge]');
+    if (resolveMerged) {
+      event.preventDefault();
+      await mergeNoteConflict(resolveMerged.dataset.resolveConflictMerge);
+      return;
+    }
+
     if (event.target.closest('[data-unlink-cloud]')) {
       event.preventDefault();
       await unlinkCloud();
@@ -344,6 +354,54 @@ async function revokeDevice(deviceId) {
     'success',
   );
   await refreshSyncStatus();
+}
+
+async function mergeNoteConflict(conflictId) {
+  const snapshot = await getSyncCenterSnapshot();
+  const conflict = snapshot.conflicts.find(
+    item => String(item.conflictId) === String(conflictId),
+  );
+  if (!conflict) {
+    showToast(toastRegion, '找不到這筆待處理衝突，狀態可能已經更新。', 'warning');
+    await refreshSyncStatus();
+    return;
+  }
+
+  const presentation = getConflictPresentation(conflict);
+  if (!presentation.supportsManualMerge) {
+    await showMessageDialog({
+      title: '這筆衝突不支援文字合併',
+      message: '只有同時存在兩個文字版本的題目筆記可以直接合併。刪除與編輯衝突仍需要明確選擇保留哪一邊。',
+    });
+    return;
+  }
+
+  const mergedContent = await showTextAreaDialog({
+    title: '合併題目筆記',
+    message: buildNoteMergeMessage(conflict),
+    label: '合併後內容',
+    value: buildNoteMergeSeed(conflict),
+    confirmLabel: '儲存合併版本',
+    cancelLabel: '先不處理',
+    maxLength: 12000,
+    rows: 12,
+  });
+  if (!mergedContent) return;
+
+  try {
+    await resolveSyncConflict(conflict.conflictId, {
+      choice: CONFLICT_RESOLUTION_CHOICE.MERGED,
+      mergedValue: { content: mergedContent },
+    });
+    await refreshSyncStatus();
+    showToast(
+      toastRegion,
+      '筆記衝突已合併；新版本會在下一次同步送出。',
+      'success',
+    );
+  } catch (error) {
+    await handleCloudActionError(error, '筆記合併失敗');
+  }
 }
 
 async function resolveConflict(conflictId, choice) {
