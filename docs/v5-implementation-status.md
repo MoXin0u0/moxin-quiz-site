@@ -8,7 +8,7 @@ Updated: 2026-10-07
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head: `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`
+- Current validated head: `a96cb024733307f3fd10fd6c1a973bd869bb9993`
 
 ## Gate status
 
@@ -57,13 +57,14 @@ Updated: 2026-10-07
 | G8C5.1 Conflict Consistency Safety | ✅ PASS | Unit/release preflight + full browser suite + stale-local/delete-vs-edit regression green at `b7eccfeea6eca28f69cbf39bacea0c25216bef7f` |
 | B13C Product Integration | ✅ Complete | Sync Center, first-sync/account-switch UX, conflict resolution + note merge, device controls, mobile 5-tab IA, automatic scheduler, accessibility/product integration all closed |
 | G8C Product Integration | ✅ PASS | Push + PR workflows fully green at `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`; no merge to main and cloud runtime remains dormant |
-| B13D1 Release Readiness / Diagnostics | 🚧 Implemented / gating | V5 landing/app/manifest positioning, DB v4 + migration + cloud/auth/schema/outbox/conflict/last-sync diagnostics, dormant cloud release checks |
-| B13D2 V5 Release Preflight | 🚧 Implemented / gating | V5 wrapper retains V4 static compatibility checks and adds DB/schema/scope/config/UI/App Shell release assertions; cloud runtime may remain dormant but cannot be enabled without Client ID |
-| B13D3 Manual Cloud / Cutover Gate Scaffold | 🚧 Implemented / gating | Explicit blocking cutover preflight + real two-device/manual matrix + DB v4 rollback invariant; intentionally excluded from normal CI until live-cloud authorization |
+| B13D1 Release Readiness / Diagnostics | ✅ Complete | V5 landing/app/manifest positioning, DB v4 + migration + cloud/auth/schema/outbox/conflict/last-sync diagnostics, dormant cloud release checks |
+| B13D2 V5 Release Preflight | ✅ Complete | V5 wrapper retains V4 static compatibility checks and adds DB/schema/scope/config/UI/App Shell release assertions; cloud runtime may remain dormant but cannot be enabled without Client ID |
+| B13D3 Manual Cloud / Cutover Gate Scaffold | ✅ Complete | Explicit blocking cutover preflight + real two-device/manual matrix + DB v4 rollback invariant; intentionally excluded from normal CI until live-cloud authorization |
+| G8D B13 Automated Release Readiness | ✅ PASS | Unit/release preflight + full browser/accessibility suite + release-readiness diagnostics green on push and PR at `a96cb024733307f3fd10fd6c1a973bd869bb9993` |
 
 ## Current green CI evidence
 
-At `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`:
+At `a96cb024733307f3fd10fd6c1a973bd869bb9993`:
 
 - Unit + release preflight: PASS
 - Existing app browser audit: PASS
@@ -105,6 +106,12 @@ At `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`:
 - B13C5.1 delete-vs-edit merge rejection: PASS
 - B13C5.1 stale-local snapshot refresh-before-resolution: PASS
 - Re-confirmed resolution parents latest local revision + remote revision: PASS
+- B13D1 release-readiness diagnostics browser audit: PASS
+- V5 landing/app/manifest release positioning: PASS
+- Settings diagnostics expose DB v4 / migration / cloud config-auth-schema / Outbox / conflicts / last sync: PASS
+- B13D2 V5 release preflight wrapping V4 compatibility preflight: PASS
+- Dormant cloud configuration is allowed for automated readiness; enabling cloud without Client ID is blocked
+- B13D3 manual-cloud/cutover blocker and two-device checklist are present and intentionally excluded from normal CI
 
 ## B07.5 repair notes
 
@@ -172,9 +179,11 @@ B12.5 closed the pre-B13 reliability gaps:
 5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
-G7, B13A/G8A, B13B/G8B, B13B.5/G8B.5, and the full B13C/G8C product-integration track are closed. The final B13C5.1 repair makes conflict resolution safe even when the local entity changes after a conflict card was created: the stale choice is not applied, the local conflict snapshot is refreshed, and the user must review and confirm again. Note text merge is domain-gated so delete-vs-edit or deleted branches cannot bypass the UI guard. Cloud runtime remains disabled and Google OAuth remains unconfigured, so live Drive operations are still intentionally dormant. The remaining B13 work is release/readiness integration and diagnostics; production cutover, live OAuth, real two-device validation, and merging to main remain explicitly out of scope until authorized.
+G7, the complete B13A/B lifecycle track, the full B13C/G8C product-integration track, and B13D automated release-readiness work are closed. V5 now has release-facing Local-first / Offline-ready / Optional Cloud Sync positioning, in-app DB/migration/cloud diagnostics, a V5-specific preflight layered on the existing V4 compatibility checks, and an explicit manual cloud/cutover gate. Cloud runtime remains disabled and Google OAuth remains unconfigured, so live Drive operations are intentionally dormant. Production cutover, live OAuth, real two-device validation, release tagging, and merging to main remain explicitly blocked until separately authorized.
 
 
 ## B13 remaining target
 
-B13C product integration is complete. B13D1 release/readiness integration and B13D2 V5 release preflight are implemented and under gating: the public/app metadata now describes V5 as Local-first / Offline-ready / Optional Cloud Sync, while the Settings preflight exposes DB v4, migration, cloud runtime/config/auth/schema, Outbox, conflicts, last sync, and storage readiness without activating OAuth. The V5 preflight now wraps the existing V4 compatibility preflight instead of replacing it, then verifies the V5 DB/schema/scope/config/Sync UI/App Shell contracts. B13D3 also adds a separate `preflight:cloud-cutover` command that is intentionally excluded from normal CI and must remain BLOCKED while cloud runtime, Client ID, and release channel are still in development state; the accompanying manual gate records the required real two-device scenarios and cutover sequence. Live Google credentials, manual two-device cloud validation, release tagging, production cutover, and merge to `main` still require a separate explicit authorization step.
+The automated B13 implementation/readiness scope is complete and green at `a96cb024733307f3fd10fd6c1a973bd869bb9993`. The remaining gate is deliberately manual/live: configure the real Google OAuth client for the intended GitHub Pages origin, enable cloud runtime only for an authorized release candidate, run `npm run preflight:cloud-cutover`, complete the real two-device matrix in `docs/v5-manual-cloud-gate.md`, then perform release tagging / Pages smoke tests / production cutover only after explicit authorization.
+
+Until that happens, PR #7 remains Draft, `main` remains unchanged, and the application continues to operate as Local-first with dormant optional cloud support.
