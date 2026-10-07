@@ -79,7 +79,7 @@ assert.equal(practicePresentation.directlyResolvable, true);
 assert.equal(practicePresentation.preservesLosingBranch, true);
 assert.match(
   buildConflictResolutionMessage(practiceConflict, 'local'),
-  /另存為衝突副本/,
+  /衝突副本/,
 );
 
 const immutableConflict = {
