@@ -43,6 +43,7 @@ Updated: 2026-10-07
 | G8A Cloud Lifecycle Foundation | ✅ PASS | Unit/release preflight + full browser suite green at `61bc4565fc049e85f4667fbb06a9b014c6e96504` |
 | B13B Account Switching / Revocation Enforcement | ✅ Complete | Account identity preflight, zero-cloud-mutation switch inspection, explicit reconcile, remote revocation push-block, unlink-preserves-local |
 | G8B Account Lifecycle Safety | ✅ PASS | Unit/release preflight + full browser suite green at `f158defb2a96d28b5fec6bde8547785541a71963` |
+| B13B.5 Account Lifecycle Consistency Repair | 🚧 Implemented / gating | Purge profile-scoped device revision ancestry on switch/unlink, fresh local device genesis revision, stable resume semantics, stale block-state cleanup |
 
 ## Current green CI evidence
 
@@ -129,4 +130,4 @@ B12.5 closed the pre-B13 reliability gaps:
 5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
-G7, B13A/G8A, and B13B/G8B are closed. Account identity is verified before sync, account switching remains planning-only until explicit confirmation, operational state is rebound only after confirmation, revoked devices cannot push, and unlinking preserves local user data. The next target is B13C Sync Center/product UI wiring, first-sync/account-switch dialogs, conflict/device management UI, and automatic sync scheduling.
+G7, B13A/G8A, and B13B/G8B are closed. B13B.5 is implemented and under gating after a post-disconnect audit found profile-scoped device revision ancestry could survive account switch/unlink. The repair purges only device revision lineage (user learning/content revisions remain intact), creates a fresh current-device genesis revision, fixes first-confirm vs resumed semantics, and clears stale block state. B13C remains intentionally unstarted until this repair gate is green.

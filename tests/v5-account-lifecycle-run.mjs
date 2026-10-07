@@ -13,13 +13,17 @@ assert.match(lifecycle, /ACCOUNT_SWITCH_REQUIRED/);
 assert.match(lifecycle, /providerSubject/);
 assert.match(lifecycle, /syncOutbox'\)\.clear|syncOutbox.*clear/s);
 assert.match(lifecycle, /preservedLocalData:\s*true/);
+assert.match(lifecycle, /deleteDeviceRevisionLineage/);
+assert.match(lifecycle, /parentRevisionIds:\s*\[\]/);
+assert.match(lifecycle, /const resumed = reconciliation\.phase === 'seeding'/);
+assert.match(lifecycle, /blockReason:\s*null/);
 
 assert.match(engine, /getCurrentDeviceSyncPermission/);
 assert.match(engine, /account-switch-required/);
 assert.match(lifecycle, /device-revoked/);
 assert.match(engine, /permissionAfterPull/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13b-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13b5-1'/);
 assert.match(sw, /src\/sync\/account-lifecycle\.js/);
 
-console.log('V5 B13B account lifecycle contracts passed.');
+console.log('V5 B13B.5 account lifecycle consistency contracts passed.');

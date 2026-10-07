@@ -171,6 +171,11 @@ export async function confirmAccountSwitch(
     return { reconciliation, seedResult: null, resumed: true };
   }
 
+  // Only a persisted "seeding" phase means this confirmation is resuming an
+  // interrupted account switch. A normal first confirmation starts at
+  // "planning" and must not be reported to the UI as a resume.
+  const resumed = reconciliation.phase === 'seeding';
+
   const openConflicts = await countOpenConflicts();
   if (openConflicts > 0) {
     throw new SyncProtocolError(
@@ -237,7 +242,7 @@ export async function confirmAccountSwitch(
     seedResult,
     account,
     cloudProfile: cloud.profile,
-    resumed: reconciliation.phase === 'seeding',
+    resumed,
   };
 }
 
@@ -268,21 +273,52 @@ export async function unlinkCurrentCloudProfile({
       ? await requestToPromise(deviceStore.get(meta.deviceId))
       : null;
     const timestamp = now.toISOString();
+    const revisionStore = tx.objectStore('syncRevisions');
 
     tx.objectStore('syncOutbox').clear();
     tx.objectStore('syncReceipts').clear();
     tx.objectStore('syncConflicts').clear();
     tx.objectStore('cloudObjects').clear();
 
-    if (currentDevice) {
-      deviceStore.clear();
+    // Device identities are profile-scoped operational metadata. Unlinking
+    // must not leave another profile's device revision ancestry behind.
+    await deleteDeviceRevisionLineage(revisionStore);
+    deviceStore.clear();
+
+    let nextClock = meta.clock || null;
+    if (currentDevice && meta.deviceId) {
+      const clock = nextHybridClock({
+        local: meta.clock,
+        deviceId: meta.deviceId,
+        nowMs: now.getTime(),
+      });
+      const revision = createRevisionMeta({
+        parentRevisionIds: [],
+        changedAt: timestamp,
+        changedByDeviceId: meta.deviceId,
+        clock,
+      });
+
       deviceStore.put({
         ...currentDevice,
+        deviceId: meta.deviceId,
         status: 'active',
         revokedAt: null,
         lastSyncAt: null,
         lastSeenAt: timestamp,
+        updatedAt: timestamp,
+        appVersion: APP_CONFIG.appVersion,
+        revision,
       });
+      revisionStore.put({
+        ...revision,
+        entityType: 'device',
+        entityKey: meta.deviceId,
+      });
+      nextClock = {
+        physicalMs: clock.physicalMs,
+        logical: clock.logical,
+      };
     }
 
     metaStore.put({
@@ -304,6 +340,8 @@ export async function unlinkCurrentCloudProfile({
       lastCheckpointError: null,
       lastSuccessfulSyncAt: null,
       lastSyncAttemptAt: null,
+      blockReason: null,
+      clock: nextClock,
       unlinkedAt: timestamp,
     });
 
@@ -382,6 +420,11 @@ async function resetOperationalStateForAccountSwitch(
     tx.objectStore('syncConflicts').clear();
     tx.objectStore('cloudObjects').clear();
 
+    // Device revision history belongs to the cloud profile, unlike the user's
+    // learning/content revisions which intentionally survive account switch.
+    const revisionStore = tx.objectStore('syncRevisions');
+    await deleteDeviceRevisionLineage(revisionStore);
+
     const timestamp = now.toISOString();
     const clock = nextHybridClock({
       local: meta.clock,
@@ -404,7 +447,7 @@ async function resetOperationalStateForAccountSwitch(
       appVersion: APP_CONFIG.appVersion,
       revision,
     });
-    tx.objectStore('syncRevisions').put({
+    revisionStore.put({
       ...revision,
       entityType: 'device',
       entityKey: meta.deviceId,
@@ -441,6 +484,7 @@ async function resetOperationalStateForAccountSwitch(
       lastCheckpointError: null,
       lastSuccessfulSyncAt: null,
       lastSyncAttemptAt: null,
+      blockReason: null,
       clock: {
         physicalMs: clock.physicalMs,
         logical: clock.logical,
@@ -454,6 +498,17 @@ async function resetOperationalStateForAccountSwitch(
     await done.catch(() => {});
     throw error;
   }
+}
+
+async function deleteDeviceRevisionLineage(revisionStore) {
+  const index = revisionStore.index('entityType');
+  const keys = await requestToPromise(
+    index.getAllKeys(IDBKeyRange.only('device')),
+  );
+  for (const key of keys || []) {
+    revisionStore.delete(key);
+  }
+  return (keys || []).length;
 }
 
 async function emptyRemoteInventory(profileId) {

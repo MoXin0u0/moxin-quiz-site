@@ -39,6 +39,8 @@ try {
       unlinkCurrentCloudProfile,
     } = await import('/src/sync/account-lifecycle.js');
     const { runSyncCycle } = await import('/src/sync/sync-engine.js');
+    const { publishCheckpointIfDue } =
+      await import('/src/sync/checkpoint.js');
 
     await closeDatabase();
     await new Promise((resolve, reject) => {
@@ -254,7 +256,7 @@ try {
 
     db = await openDatabase();
     const afterConfirmTx = db.transaction(
-      ['syncMeta', 'devices', 'syncOutbox'],
+      ['syncMeta', 'devices', 'syncOutbox', 'syncRevisions'],
       'readonly',
     );
     const metaAfterConfirm =
@@ -263,10 +265,21 @@ try {
       await requestToPromise(afterConfirmTx.objectStore('devices').getAll());
     const outboxAfterConfirm =
       await requestToPromise(afterConfirmTx.objectStore('syncOutbox').getAll());
+    const revisionsAfterConfirm =
+      await requestToPromise(afterConfirmTx.objectStore('syncRevisions').getAll());
+    const deviceRevisionsAfterConfirm = revisionsAfterConfirm.filter(
+      revision => revision.entityType === 'device',
+    );
 
     const mergedCycle = await runSyncCycle(providerB, {
       profileId: 'profile-b',
       now: () => new Date('2026-10-07T02:06:00.000Z'),
+    });
+
+    const switchCheckpoint = await publishCheckpointIfDue(providerB, {
+      profileId: 'profile-b',
+      force: true,
+      now: () => new Date('2026-10-07T02:06:30.000Z'),
     });
 
     db = await openDatabase();
@@ -356,7 +369,14 @@ try {
 
     db = await openDatabase();
     const finalTx = db.transaction(
-      ['syncMeta', 'syncOutbox', 'syncReceipts', 'favorites', 'devices'],
+      [
+        'syncMeta',
+        'syncOutbox',
+        'syncReceipts',
+        'favorites',
+        'devices',
+        'syncRevisions',
+      ],
       'readonly',
     );
     const finalMeta =
@@ -375,6 +395,11 @@ try {
       );
     const finalDevices =
       await requestToPromise(finalTx.objectStore('devices').getAll());
+    const finalRevisions =
+      await requestToPromise(finalTx.objectStore('syncRevisions').getAll());
+    const finalDeviceRevisions = finalRevisions.filter(
+      revision => revision.entityType === 'device',
+    );
 
     return {
       wrongAccountCycle: {
@@ -387,14 +412,29 @@ try {
       inspectCreatedNoFiles: filesAfterInspect === filesBeforeInspect,
       linkedProfileAfterInspect: metaAfterInspect.linkedProfileId,
       confirmedPhase: confirmed.reconciliation.phase,
+      confirmedResumed: confirmed.resumed,
       linkedProfileAfterConfirm: metaAfterConfirm.linkedProfileId,
+      currentDeviceIdAfterConfirm: metaAfterConfirm.deviceId,
       devicesAfterConfirm: devicesAfterConfirm.map(item => item.deviceId),
       outboxAfterConfirm: outboxAfterConfirm.length,
+      deviceRevisionsAfterConfirm: deviceRevisionsAfterConfirm.map(item => ({
+        revisionId: item.revisionId,
+        entityKey: item.entityKey,
+        parentRevisionIds: item.parentRevisionIds || [],
+      })),
       mergedCycle: {
         status: mergedCycle.status,
         runtimeState: mergedCycle.runtimeState,
       },
       remoteFavorite: remoteFavorite?.isFavorite ?? null,
+      switchCheckpointStatus: switchCheckpoint.status,
+      switchCheckpointDeviceHeads:
+        switchCheckpoint.checkpoint?.entityHeadIndex
+          ?.filter(item => item.entityType === 'device')
+          .map(item => ({
+            entityKey: item.entityKey,
+            revisionId: item.revisionId,
+          })) || [],
       revokedCycle: {
         status: revokedCycle.status,
         reason: revokedCycle.reason,
@@ -406,6 +446,7 @@ try {
       unlink,
       finalLinkedProfileId: finalMeta.linkedProfileId,
       finalRuntimeState: finalMeta.runtimeState,
+      finalBlockReason: finalMeta.blockReason ?? null,
       finalOutbox,
       finalReceipts,
       localQ1: localQ1?.isFavorite ?? null,
@@ -413,6 +454,13 @@ try {
       finalDevices: finalDevices.map(item => ({
         deviceId: item.deviceId,
         status: item.status,
+        revisionId: item.revision?.revisionId || null,
+        parentRevisionIds: item.revision?.parentRevisionIds || [],
+      })),
+      finalDeviceRevisions: finalDeviceRevisions.map(item => ({
+        revisionId: item.revisionId,
+        entityKey: item.entityKey,
+        parentRevisionIds: item.parentRevisionIds || [],
       })),
     };
   }, DB_NAME);
@@ -427,13 +475,37 @@ try {
   assert.equal(result.linkedProfileAfterInspect, 'profile-a');
 
   assert.equal(result.confirmedPhase, 'applying');
+  assert.equal(result.confirmedResumed, false);
   assert.equal(result.linkedProfileAfterConfirm, 'profile-b');
   assert.equal(result.devicesAfterConfirm.length, 1);
   assert.ok(result.outboxAfterConfirm >= 2);
+  assert.equal(result.deviceRevisionsAfterConfirm.length, 1);
+  assert.equal(
+    result.deviceRevisionsAfterConfirm[0].entityKey,
+    result.currentDeviceIdAfterConfirm,
+  );
+  assert.deepEqual(
+    result.deviceRevisionsAfterConfirm[0].parentRevisionIds,
+    [],
+  );
+  assert.notEqual(
+    result.deviceRevisionsAfterConfirm[0].revisionId,
+    'rev-old-account-device',
+  );
 
   assert.equal(result.mergedCycle.status, 'synced');
   assert.equal(result.mergedCycle.runtimeState, 'SYNCED');
   assert.equal(result.remoteFavorite, true);
+  assert.equal(result.switchCheckpointStatus, 'published');
+  assert.equal(result.switchCheckpointDeviceHeads.length, 1);
+  assert.equal(
+    result.switchCheckpointDeviceHeads[0].entityKey,
+    result.currentDeviceIdAfterConfirm,
+  );
+  assert.notEqual(
+    result.switchCheckpointDeviceHeads[0].revisionId,
+    'rev-old-account-device',
+  );
 
   assert.equal(result.revokedCycle.status, 'blocked');
   assert.equal(result.revokedCycle.reason, 'device-revoked');
@@ -446,14 +518,34 @@ try {
   assert.equal(result.unlink.revokedRemoteData, false);
   assert.equal(result.finalLinkedProfileId, null);
   assert.equal(result.finalRuntimeState, 'LOCAL_ONLY');
+  assert.equal(result.finalBlockReason, null);
   assert.equal(result.finalOutbox, 0);
   assert.equal(result.finalReceipts, 0);
   assert.equal(result.localQ1, true);
   assert.equal(result.localQ2, true);
   assert.equal(result.finalDevices.length, 1);
   assert.equal(result.finalDevices[0].status, 'active');
+  assert.deepEqual(result.finalDevices[0].parentRevisionIds, []);
+  assert.notEqual(
+    result.finalDevices[0].revisionId,
+    'rev-account-b-revoke-current',
+  );
+  assert.equal(result.finalDeviceRevisions.length, 1);
+  assert.equal(
+    result.finalDeviceRevisions[0].entityKey,
+    result.finalDevices[0].deviceId,
+  );
+  assert.equal(
+    result.finalDeviceRevisions[0].revisionId,
+    result.finalDevices[0].revisionId,
+  );
+  assert.deepEqual(result.finalDeviceRevisions[0].parentRevisionIds, []);
+  assert.notEqual(
+    result.finalDeviceRevisions[0].revisionId,
+    'rev-old-account-device',
+  );
 
-  console.log('V5 B13B account switch/revocation browser gate passed.');
+  console.log('V5 B13B.5 account lifecycle consistency browser gate passed.');
 } finally {
   await browser.close();
 }
