@@ -506,6 +506,30 @@ async function navigateAndAudit(page, selector, targetSelector, scope, label, op
   await auditLayout(page, `${scope}:${label}`, options);
 }
 
+async function navigateMoreAndAudit(
+  page,
+  itemSelector,
+  targetSelector,
+  scope,
+  label,
+  options = {},
+) {
+  const started = Date.now();
+  await page.locator('[data-nav-more]').first().click();
+  await page.waitForSelector('#mobileMoreMenuHost:not([hidden])', {
+    state: 'visible',
+    timeout: 5000,
+  });
+  await page.locator(itemSelector).first().click();
+  await page.waitForSelector(targetSelector, { state: 'visible', timeout: 15000 });
+  const elapsed = Date.now() - started;
+  addMetric(scope, `navigate-${label}`, elapsed);
+  if (elapsed > 5000) addFailure(scope, `${label} navigation took ${elapsed} ms`);
+  else if (elapsed > 1800) addWarning(scope, `${label} navigation took ${elapsed} ms`);
+  await page.waitForTimeout(80);
+  await auditLayout(page, `${scope}:${label}`, options);
+}
+
 async function runNewUser(browser) {
   const scope = 'new-user';
   const context = await browser.newContext({
@@ -530,10 +554,10 @@ async function runNewUser(browser) {
   await navigateAndAudit(page, '[data-nav-stats]', '#statsView:not([hidden])', scope, 'stats', { mobile: true });
   await snap(page, scope, 'stats-empty');
 
-  await navigateAndAudit(page, '[data-nav-tools]', '#toolsView:not([hidden])', scope, 'studio', { mobile: true });
+  await navigateMoreAndAudit(page, '[data-more-tools]', '#toolsView:not([hidden])', scope, 'studio', { mobile: true });
   await snap(page, scope, 'studio');
 
-  await navigateAndAudit(page, '[data-nav-settings]', '#settingsView:not([hidden])', scope, 'settings', { mobile: true });
+  await navigateMoreAndAudit(page, '[data-more-settings]', '#settingsView:not([hidden])', scope, 'settings', { mobile: true });
   await auditA11y(page, `${scope}:settings`);
   await snap(page, scope, 'settings');
 
@@ -844,16 +868,23 @@ async function runBackupRoundTrip(browser) {
     });
     const page = await context.newPage();
     attachRuntimeObservers(page, `${scope}:restore`);
-    page.on('dialog', async dialog => {
-      await dialog.accept();
-    });
-
     await loadPage(page, `${scope}:restore`);
     await page.locator('[data-nav-settings]').first().click();
     await page.waitForSelector('#settingsView:not([hidden])');
 
     await page.locator('[data-import-backup]').setInputFiles(backupPath);
-    await page.waitForTimeout(1200);
+
+    const confirmDialog = page.locator('[data-app-dialog] [role="dialog"]');
+    await confirmDialog.waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator('[data-app-dialog] .button.danger').click();
+
+    await confirmDialog.waitFor({ state: 'visible', timeout: 15000 });
+    const reloadPromise = page.waitForNavigation({
+      waitUntil: 'domcontentloaded',
+      timeout: 15000,
+    });
+    await page.locator('[data-app-dialog] .button.primary').click();
+    await reloadPromise;
     await waitReady(page);
 
     await page.locator('[data-nav-library]').first().click();
