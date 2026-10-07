@@ -36,8 +36,8 @@ Record concrete evidence for every row before authorizing production cutover.
 | Local → Cloud | Existing local data uploads only after explicit first-sync confirmation | ✅ PASS — live OAuth + empty first-sync confirmation + post-confirm automatic sync completed; Sync Center returned SYNCED with pending=0/conflicts=0 |
 | Fresh device bootstrap | New device discovers profile and reconstructs user data without replacing newer local data incorrectly | ✅ PASS — isolated incognito browser registered as device 2, discovered the same cloud profile, pulled the synced learning-goal data, and reached SYNCED |
 | Bidirectional propagation | A change made on device B reaches device A through the same cloud profile | ✅ PASS — device B changed the synced learning-goal data, automatic sync returned pending=0/conflicts=0, and device A received the change after manual sync |
-| Two devices offline attempts | Each device can answer offline independently | Pending |
-| Reconnect union | Immutable Attempt Events from both devices converge without duplication/loss | Pending |
+| Two devices offline attempts | Each device can answer offline independently | ✅ PASS — video evidence shows isolated device/browser sessions operating with DevTools Offline and retaining separate local attempt activity |
+| Reconnect union | Immutable Attempt Events from both devices converge without duplication/loss | ✅ PASS — after reconnect/sync, both device views converged on the same刷題統計（今日刷題 2、刷題 2/9）while sync status returned green; no attempt was overwritten |
 | Note concurrent edit | Real concurrent edits surface a conflict; local / cloud / merge paths behave as designed | Pending |
 | Favorite concurrent edit | Deterministic LWW resolves explicit boolean state consistently | Pending |
 | User Bank conflict | Losing branch is preserved as a conflict copy | Pending |
