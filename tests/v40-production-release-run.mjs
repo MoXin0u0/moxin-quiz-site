@@ -11,17 +11,20 @@ const sw = fs.readFileSync('service-worker.js', 'utf8');
 const plan = fs.readFileSync('docs/V4_0_PLAN.md', 'utf8');
 
 assert.equal(app, v3);
-assert.match(app, /<title>墨忻刷題網 v4\.\d+<\/title>/);
-assert.match(app, /<span class="version-badge">v4\.\d+<\/span>/);
 assert.doesNotMatch(app, /v4 preview|v3\.3|RC1/i);
 
 if (APP_CONFIG.features?.v5DataFoundation) {
+  assert.match(app, /<title>墨忻刷題網 v5<\/title>/);
+  assert.match(app, /<span class="version-badge">v5<\/span>/);
   assert.match(APP_CONFIG.appVersion, /^5\.0\.0(?:-[0-9A-Za-z.-]+)?$/);
   assert.equal(APP_CONFIG.releaseChannel, 'development');
+  assert.match(readme, /\*\*v5 開發分支\*\*/);
 } else {
+  assert.match(app, /<title>墨忻刷題網 v4\.\d+<\/title>/);
+  assert.match(app, /<span class="version-badge">v4\.\d+<\/span>/);
   assert.match(APP_CONFIG.appVersion, /^4\.\d+\.\d+$/);
   assert.equal(APP_CONFIG.releaseChannel, 'production');
-}
+  }
 assert.equal(APP_CONFIG.dbName, 'moxin-quiz-v3');
 assert.ok(APP_CONFIG.dbVersion >= 3);
 
