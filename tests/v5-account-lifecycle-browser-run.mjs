@@ -291,15 +291,20 @@ try {
 
     await setFavorite('bank-local-switch', 'Q2', true);
 
+    const revokePhysicalMs = Math.max(
+      Date.parse('2026-10-07T02:07:00.000Z'),
+      Number(currentDevice?.revision?.clock?.physicalMs || 0) + 1000,
+    );
+    const revokeChangedAt = new Date(revokePhysicalMs).toISOString();
     const revokeRevision = {
       revisionId: 'rev-account-b-revoke-current',
       parentRevisionIds: currentDevice?.revision?.revisionId
         ? [currentDevice.revision.revisionId]
         : [],
-      changedAt: '2026-10-07T02:07:00.000Z',
+      changedAt: revokeChangedAt,
       changedByDeviceId: 'device-b-controller',
       clock: {
-        physicalMs: Date.parse('2026-10-07T02:07:00.000Z'),
+        physicalMs: revokePhysicalMs,
         logical: 0,
         deviceId: 'device-b-controller',
       },
@@ -321,8 +326,8 @@ try {
           ...currentDevice,
           deviceId: meta.deviceId,
           status: 'revoked',
-          revokedAt: '2026-10-07T02:07:00.000Z',
-          updatedAt: '2026-10-07T02:07:00.000Z',
+          revokedAt: revokeChangedAt,
+          updatedAt: revokeChangedAt,
           revision: revokeRevision,
         },
       }],
