@@ -24,6 +24,23 @@ export function renderSettings(container, { settings, storage, checks, pwa, sync
       <article class="panel settings-card">
         <div class="section-heading">
           <div>
+            <p class="eyebrow">Privacy</p>
+            <h2>隱私與 Google 資料使用</h2>
+          </div>
+        </div>
+
+        <p class="settings-copy">
+          核心學習資料採本機優先保存；Google 雲端同步為選用功能，僅要求 Drive appDataFolder 權限。
+        </p>
+
+        <div class="settings-actions">
+          <a class="button secondary" href="./privacy.html" target="_blank" rel="noopener">查看隱私權政策</a>
+        </div>
+      </article>
+
+      <article class="panel settings-card">
+        <div class="section-heading">
+          <div>
             <p class="eyebrow">Appearance</p>
             <h2>外觀</h2>
           </div>

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="墨忻刷題網隱私權政策：說明本機資料、Google Drive appDataFolder 雲端同步與使用者控制。" />
+  <meta name="theme-color" content="#3559d9" />
+  <title>隱私權政策｜墨忻刷題網</title>
+  <link rel="icon" href="assets/pwa/icon-192.png" sizes="192x192" />
+  <script>
+    try {
+      const raw = localStorage.getItem('moxin.v3.settings');
+      const settings = raw ? JSON.parse(raw) : {};
+      const preference = ['system', 'light', 'dark'].includes(settings.theme) ? settings.theme : 'system';
+      const theme = preference === 'system'
+        ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : preference;
+      document.documentElement.dataset.themePreference = preference;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.reduceMotion = settings.reduceMotion === true ? 'true' : 'false';
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="styles/v41-landing.css" />
+</head>
+<body class="landing-body">
+  <a class="skip-link" href="#mainContent">跳到主要內容</a>
+
+  <header class="landing-header">
+    <a class="landing-brand" href="./" aria-label="墨忻刷題網首頁">
+      <span class="landing-brand-mark" aria-hidden="true">墨</span>
+      <span><strong>墨忻刷題網</strong><small>MoXin Quiz</small></span>
+    </a>
+    <nav class="landing-nav" aria-label="隱私權政策導覽">
+      <a href="#local">本機資料</a>
+      <a href="#google">Google 同步</a>
+      <a href="#control">使用者控制</a>
+    </nav>
+    <a class="landing-header-cta" href="./app.html">進入學習大廳</a>
+  </header>
+
+  <main id="mainContent">
+    <section class="landing-section">
+      <div class="landing-section-heading">
+        <span>Privacy Policy</span>
+        <h1>隱私權政策</h1>
+        <p>最後更新：2026-10-08</p>
+      </div>
+
+      <div class="landing-data-card">
+        <div>
+          <span class="landing-kicker">適用範圍</span>
+          <h2>本政策說明墨忻刷題網如何處理學習資料與 Google 雲端同步資料。</h2>
+          <p>
+            墨忻刷題網是本機優先的靜態網頁應用程式。核心功能不要求 Google 登入；
+            使用者只有在主動啟用跨裝置同步時，才會進行 Google OAuth 授權。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="local">
+      <div class="landing-section-heading">
+        <span>Local-first</span>
+        <h2>本機資料</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            題庫、題目與圖片、作答紀錄、錯題與複習資料、收藏、不熟題、筆記、Session、
+            學習目標、題庫工作室草稿及相關設定，主要保存在目前瀏覽器的 IndexedDB 或 localStorage。
+          </p>
+          <p>
+            使用者可以在不登入 Google 的情況下使用核心學習功能與 PWA 離線功能。
+            完整備份由使用者自行下載與保存，並與雲端同步機制分開運作。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="google">
+      <div class="landing-section-heading">
+        <span>Optional Cloud Sync</span>
+        <h2>Google 資料與雲端同步</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            啟用雲端同步時，墨忻刷題網使用 Google Identity Services 與 Google Drive API。
+            權限範圍限定為
+            <code>https://www.googleapis.com/auth/drive.appdata</code>，
+            用於讀寫本應用程式在使用者 Google Drive 中的 appDataFolder。
+          </p>
+          <p>
+            appDataFolder 是 Google Drive 提供的應用程式專屬隱藏資料空間。
+            墨忻刷題網不要求可讀取或管理使用者的一般 My Drive 檔案。
+          </p>
+          <p>
+            為了辨識目前連結的 Google 帳號與同步 profile，應用程式會透過 Google Drive API
+            取得帳號的穩定 permission ID，以及 Google 回傳的顯示名稱、電子郵件地址與照片連結（若有）。
+            這些資訊只用於帳號識別、同步狀態與切換帳號流程。
+          </p>
+          <p>
+            Google OAuth access token 僅保存在目前頁面的記憶體中，不會寫入完整備份；
+            備份還原也不會復原舊 OAuth 授權或舊裝置的雲端操作狀態。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section">
+      <div class="landing-section-heading">
+        <span>Use & Sharing</span>
+        <h2>資料用途與第三方服務</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            Google API 取得的資料與同步內容只用於提供帳號識別、跨裝置同步、衝突處理、
+            裝置管理與資料復原等使用者主動啟用的功能。
+          </p>
+          <p>
+            本網站目前沒有自建帳號伺服器或自建同步資料庫用來集中保存上述學習資料；
+            選用的雲端同步內容存放在使用者自己的 Google Drive appDataFolder。
+            網站由 GitHub Pages 提供靜態託管，因此一般網站連線仍受 GitHub 的服務與隱私政策約束。
+          </p>
+          <p>
+            墨忻刷題網對從 Google API 取得資訊的使用與傳輸，遵守 Google API Services User Data Policy，
+            包括 Limited Use requirements。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="control">
+      <div class="landing-section-heading">
+        <span>User Control</span>
+        <h2>使用者控制與刪除</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            使用者可以不啟用雲端同步，也可以在「資料與同步中心」解除目前裝置的雲端連結。
+            解除連結會保留目前裝置的本機資料，不會自動刪除其他裝置或既有雲端資料。
+          </p>
+          <p>
+            使用者也可以在 Google 帳戶的第三方應用程式存取設定中撤銷墨忻刷題網的 Google 授權。
+            Google Drive appDataFolder 的保存與刪除亦受 Google Drive 的應用程式資料規則控制。
+          </p>
+          <p>
+            若要清除目前瀏覽器的本機資料，可以使用瀏覽器的網站資料管理功能。
+            清除瀏覽器資料與刪除 Google Drive appDataFolder 是兩個彼此獨立的動作。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section">
+      <div class="landing-section-heading">
+        <span>Contact</span>
+        <h2>聯絡與政策更新</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            若對本政策、資料處理或雲端同步有疑問，可透過墨忻刷題網 GitHub Repository 的 Issues 提出。
+          </p>
+          <p>
+            本政策可能隨功能、Google API 使用方式或法規要求更新；更新時會修改本頁的最後更新日期。
+          </p>
+          <p>
+            <a href="https://github.com/MoXin0u0/moxin-quiz-site/issues" target="_blank" rel="noopener">前往 GitHub Issues</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="landing-footer">
+    <div class="landing-brand compact">
+      <span class="landing-brand-mark" aria-hidden="true">墨</span>
+      <span><strong>墨忻刷題網</strong><small>個人學習與刷題平台</small></span>
+    </div>
+    <a href="./">返回首頁</a>
+    <a href="./app.html">進入學習大廳</a>
+  </footer>
+</body>
+</html>
