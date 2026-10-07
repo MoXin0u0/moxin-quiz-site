@@ -37,7 +37,7 @@ assert.notEqual(SYNC_STATE_PRESENTATION.OFFLINE.tone, 'danger');
 assert.equal(normalizeRuntimeState('unknown'), 'LOCAL_ONLY');
 
 assert.equal(APP_CONFIG.features.syncUi, true);
-assert.equal(APP_CONFIG.features.cloudSync, false);
+assert.equal(APP_CONFIG.features.cloudSync, true);
 
 const appHtml = fs.readFileSync('app.html', 'utf8');
 const v3Html = fs.readFileSync('v3.html', 'utf8');
