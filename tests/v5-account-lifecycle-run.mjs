@@ -7,6 +7,7 @@ const sw = fs.readFileSync('service-worker.js', 'utf8');
 
 assert.match(lifecycle, /inspectAccountSwitch/);
 assert.match(lifecycle, /confirmAccountSwitch/);
+assert.match(lifecycle, /cancelAccountSwitch/);
 assert.match(lifecycle, /unlinkCurrentCloudProfile/);
 assert.match(lifecycle, /verifyLinkedCloudContext/);
 assert.match(lifecycle, /ACCOUNT_SWITCH_REQUIRED/);
@@ -23,7 +24,7 @@ assert.match(engine, /account-switch-required/);
 assert.match(lifecycle, /device-revoked/);
 assert.match(engine, /permissionAfterPull/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c1-3'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c2-1'/);
 assert.match(sw, /src\/sync\/account-lifecycle\.js/);
 
 console.log('V5 B13B.5 account lifecycle consistency contracts passed.');

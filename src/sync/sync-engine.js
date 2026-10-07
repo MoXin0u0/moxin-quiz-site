@@ -17,6 +17,7 @@ import { classifySyncFailure, nextRetryInstant } from './retry-policy.js';
 import { SYNC_RUNTIME_STATE } from './config.js';
 import { withSyncLock } from './sync-lock.js';
 import { publishCheckpointIfDue } from './checkpoint.js';
+import { ensureCloudProfile } from './cloud-profile.js';
 import {
   getCurrentDeviceSyncPermission,
   verifyLinkedCloudContext,
@@ -30,6 +31,9 @@ export async function inspectFirstSync(provider, {
   const profile = String(profileId || '').trim();
   if (!profile) throw new Error('profileId is required.');
 
+  const previousMeta = await getSyncMeta();
+  assertProfileCompatible(previousMeta, profile);
+
   const [localInventory, remoteInventory] = await Promise.all([
     buildLocalSyncInventory(),
     discoverRemoteSyncInventory(provider, { profileId: profile }),
@@ -40,6 +44,10 @@ export async function inspectFirstSync(provider, {
     kind,
     phase: 'planning',
     plan: plan.plan,
+    targetProfileId: profile,
+    previousLinkedProfileId: previousMeta?.linkedProfileId || null,
+    previousRuntimeState:
+      previousMeta?.runtimeState || SYNC_RUNTIME_STATE.LOCAL_ONLY,
     requiresConflictScan: plan.requiresConflictScan,
     localInventoryHash: localInventory.hash,
     remoteInventoryHash: remoteInventory.hash,
@@ -71,6 +79,7 @@ export async function inspectFirstSync(provider, {
 }
 
 export async function confirmFirstSyncReconciliation(reconciliationId, {
+  provider = null,
   now = new Date(),
 } = {}) {
   const id = String(reconciliationId || '');
@@ -83,6 +92,43 @@ export async function confirmFirstSyncReconciliation(reconciliationId, {
   }
   if (!['planning', 'conflicts'].includes(reconciliation.phase)) {
     return reconciliation;
+  }
+
+  let cloudProfile = null;
+  let account = null;
+  if (provider) {
+    const targetProfileId = String(
+      reconciliation.targetProfileId || meta.linkedProfileId || '',
+    );
+    if (!targetProfileId) {
+      throw new Error('First-sync target profile is missing.');
+    }
+
+    if (typeof provider.getAccountProfile === 'function') {
+      account = await provider.getAccountProfile({ interactive: false });
+    }
+    const ensured = await ensureCloudProfile(provider, {
+      profileId: targetProfileId,
+      now,
+    });
+    cloudProfile = ensured.profile;
+
+    await updateSyncMeta(current => ({
+      ...current,
+      linkedProfileId: targetProfileId,
+      cloudSchemaVersion:
+        cloudProfile?.cloudSchema || current.cloudSchemaVersion,
+      cloudAccount: account
+        ? {
+            provider: account.provider || 'google',
+            providerSubject: account.providerSubject || null,
+            displayName: account.displayName || null,
+            displayEmail: account.displayEmail || null,
+            photoUrl: account.photoUrl || null,
+          }
+        : current.cloudAccount,
+      blockReason: null,
+    }));
   }
 
   let seedResult = null;
@@ -106,6 +152,52 @@ export async function confirmFirstSyncReconciliation(reconciliationId, {
   return {
     reconciliation: next,
     seedResult,
+    cloudProfile,
+    account,
+  };
+}
+
+export async function cancelFirstSyncReconciliation(reconciliationId) {
+  const id = String(reconciliationId || '');
+  if (!id) throw new Error('reconciliationId is required.');
+
+  const meta = await getSyncMeta();
+  const reconciliation = meta?.reconciliation;
+  if (
+    !reconciliation ||
+    reconciliation.reconciliationId !== id ||
+    reconciliation.kind !== RECONCILIATION_KIND.FIRST_SYNC
+  ) {
+    throw new Error('First-sync reconciliation was not found.');
+  }
+
+  if (reconciliation.phase !== 'planning') {
+    return { status: 'not-cancellable', reconciliation };
+  }
+
+  const previousLinkedProfileId =
+    reconciliation.previousLinkedProfileId || null;
+  const previousRuntimeState =
+    reconciliation.previousRuntimeState ||
+    (previousLinkedProfileId
+      ? meta.runtimeState
+      : SYNC_RUNTIME_STATE.LOCAL_ONLY);
+
+  await updateSyncMeta(current => ({
+    ...current,
+    linkedProfileId: previousLinkedProfileId,
+    reconciliation: null,
+    runtimeState: previousRuntimeState,
+    cloudAccount: previousLinkedProfileId ? current.cloudAccount : null,
+    cloudSchemaVersion:
+      previousLinkedProfileId ? current.cloudSchemaVersion : null,
+    blockReason: null,
+  }));
+
+  return {
+    status: 'cancelled',
+    previousLinkedProfileId,
+    runtimeState: previousRuntimeState,
   };
 }
 

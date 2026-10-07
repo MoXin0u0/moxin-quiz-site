@@ -67,6 +67,9 @@ const sw = fs.readFileSync('service-worker.js', 'utf8');
 
 assert.match(engineSource, /inspectFirstSync/);
 assert.match(engineSource, /confirmFirstSyncReconciliation/);
+assert.match(engineSource, /cancelFirstSyncReconciliation/);
+assert.match(engineSource, /ensureCloudProfile/);
+assert.match(engineSource, /targetProfileId/);
 assert.match(engineSource, /runSyncCycle/);
 assert.match(engineSource, /Pull|stageRemoteCommits/);
 assert.match(engineSource, /publishPreparedCloudCommit/);
@@ -83,7 +86,7 @@ assert.match(seedSource, /syncTombstones/);
 assert.match(transportSource, /nextRetryInstant/);
 assert.match(transportSource, /OUTBOX_STATUS\.BLOCKED/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c1-3'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c2-1'/);
 assert.match(sw, /src\/sync\/sync-engine\.js/);
 assert.match(sw, /src\/sync\/initial-seed\.js/);
 assert.match(sw, /src\/sync\/retry-policy\.js/);

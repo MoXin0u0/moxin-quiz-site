@@ -246,6 +246,38 @@ export async function confirmAccountSwitch(
   };
 }
 
+export async function cancelAccountSwitch(reconciliationId) {
+  const id = String(reconciliationId || '');
+  if (!id) throw new Error('reconciliationId is required.');
+
+  const meta = await getSyncMeta();
+  const reconciliation = meta?.accountSwitch;
+  if (
+    !reconciliation ||
+    reconciliation.reconciliationId !== id ||
+    reconciliation.kind !== RECONCILIATION_KIND.ACCOUNT_SWITCH
+  ) {
+    throw new SyncProtocolError(
+      'Account-switch reconciliation was not found.',
+      { code: 'RECONCILIATION_REQUIRED' },
+    );
+  }
+
+  if (reconciliation.phase !== 'planning') {
+    return { status: 'not-cancellable', reconciliation };
+  }
+
+  await updateSyncMeta(current => ({
+    ...current,
+    accountSwitch: null,
+  }));
+
+  return {
+    status: 'cancelled',
+    linkedProfileId: meta.linkedProfileId || null,
+  };
+}
+
 export async function unlinkCurrentCloudProfile({
   now = new Date(),
 } = {}) {

@@ -147,3 +147,6 @@ jobs:
 
       - name: Run V5 Sync Center product UI audit
         run: npm run audit:v5-sync-ui
+
+      - name: Run V5 first-sync and account-switch reconciliation UX audit
+        run: npm run audit:v5-reconciliation-ui

@@ -51,7 +51,10 @@ export function renderSyncCenter(container, snapshot) {
     ? '<button class="button secondary" type="button" data-connect-cloud ' +
       (snapshot?.cloudConfigured && snapshot?.cloudRuntimeEnabled ? '' : 'disabled') +
       '>連結 Google</button>'
-    : '<button class="button danger-ghost" type="button" data-unlink-cloud>解除此裝置連結</button>';
+    : '<button class="button secondary" type="button" data-switch-cloud-account ' +
+      (snapshot?.cloudConfigured && snapshot?.cloudRuntimeEnabled ? '' : 'disabled') +
+      '>切換 Google 帳號</button>' +
+      '<button class="button danger-ghost" type="button" data-unlink-cloud>解除此裝置連結</button>';
 
   container.innerHTML = [
     '<div class="sync-center-backdrop" data-close-sync-center></div>',
@@ -154,7 +157,10 @@ export function renderCloudSettingsCard(snapshot) {
     ? '<button class="button secondary" type="button" data-connect-cloud ' +
       (snapshot?.cloudConfigured && snapshot?.cloudRuntimeEnabled ? '' : 'disabled') +
       '>連結 Google</button>'
-    : '<button class="button danger-ghost" type="button" data-unlink-cloud>解除此裝置連結</button>';
+    : '<button class="button secondary" type="button" data-switch-cloud-account ' +
+      (snapshot?.cloudConfigured && snapshot?.cloudRuntimeEnabled ? '' : 'disabled') +
+      '>切換 Google 帳號</button>' +
+      '<button class="button danger-ghost" type="button" data-unlink-cloud>解除此裝置連結</button>';
 
   return [
     '<article class="panel settings-card settings-cloud-card" data-cloud-settings-card>',

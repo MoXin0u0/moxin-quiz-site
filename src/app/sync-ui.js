@@ -1,5 +1,15 @@
 
 import { APP_CONFIG } from './config.js';
+import { GoogleDriveAppDataProvider } from '../cloud/google/google-drive.js';
+import {
+  planFirstCloudConnection,
+  applyFirstCloudConnection,
+  cancelFirstCloudConnection,
+  planCloudAccountSwitch,
+  applyCloudAccountSwitch,
+  cancelCloudAccountSwitch,
+  runLinkedCloudSync,
+} from './cloud-sync-flow.js';
 import {
   getSyncCenterSnapshot,
   getSyncStatusSnapshot,
@@ -19,6 +29,7 @@ import {
   renderSyncStatusButton,
 } from '../ui/sync-center.js';
 import { showToast } from '../ui/library.js';
+import { showReconciliationPlanDialog } from '../ui/first-sync.js';
 
 const statusHost = document.querySelector('#syncStatusHost');
 const centerHost = document.querySelector('#syncCenterHost');
@@ -28,6 +39,7 @@ const toastRegion = document.querySelector('#toastRegion');
 let centerPreviousFocus = null;
 let moreOpen = false;
 let statusTimer = null;
+let cloudProvider = null;
 
 initSyncUi().catch(error => {
   console.error('V5 sync UI initialization failed.', error);
@@ -154,12 +166,21 @@ function bindGlobalActions() {
       return;
     }
 
-    if (
-      event.target.closest('[data-connect-cloud]') ||
-      event.target.closest('[data-sync-now]')
-    ) {
+    if (event.target.closest('[data-connect-cloud]')) {
       event.preventDefault();
-      await showCloudRuntimeUnavailable();
+      await connectCloud();
+      return;
+    }
+
+    if (event.target.closest('[data-switch-cloud-account]')) {
+      event.preventDefault();
+      await switchCloudAccount({ selectAccount: true });
+      return;
+    }
+
+    if (event.target.closest('[data-sync-now]')) {
+      event.preventDefault();
+      await syncNow();
       return;
     }
 
@@ -306,6 +327,195 @@ async function unlinkCloud() {
     '此裝置已解除雲端連結，本機資料仍保留。',
     'success',
   );
+}
+
+async function connectCloud() {
+  const snapshot = await ensureCloudRuntimeReady();
+  if (!snapshot) return;
+  if (snapshot.connected) {
+    await switchCloudAccount({ selectAccount: true });
+    return;
+  }
+
+  try {
+    const provider = await getAuthorizedCloudProvider();
+    const planned = await planFirstCloudConnection(provider);
+    const accepted = await showReconciliationPlanDialog({
+      kind: 'first-sync',
+      account: planned.account,
+      localInventory: planned.localInventory,
+      remoteInventory: planned.remoteInventory,
+      plan: planned.plan,
+    });
+
+    if (!accepted) {
+      await cancelFirstCloudConnection(planned);
+      provider.clearAuthorization?.();
+      await refreshSyncStatus();
+      showToast(toastRegion, '已取消連結；仍維持僅此裝置模式。', 'info');
+      return;
+    }
+
+    const applied = await applyFirstCloudConnection(provider, planned);
+    await refreshSyncStatus();
+    announceCycleResult(applied.cycle, '首次同步');
+  } catch (error) {
+    await handleCloudActionError(error, 'Google 雲端連結失敗');
+  }
+}
+
+async function switchCloudAccount({ selectAccount = false } = {}) {
+  const snapshot = await ensureCloudRuntimeReady();
+  if (!snapshot || !snapshot.connected) return;
+
+  try {
+    const provider = await getAuthorizedCloudProvider({ selectAccount });
+    const planned = await planCloudAccountSwitch(provider);
+
+    if (planned.status === 'already-linked') {
+      showToast(
+        toastRegion,
+        '目前選取的 Google 帳號就是這個同步 profile。',
+        'info',
+      );
+      await refreshSyncStatus();
+      return;
+    }
+
+    const accepted = await showReconciliationPlanDialog({
+      kind: 'account-switch',
+      account: planned.account,
+      localInventory: planned.localInventory,
+      remoteInventory: planned.remoteInventory,
+      plan: planned.plan,
+    });
+
+    if (!accepted) {
+      await cancelCloudAccountSwitch(planned);
+      provider.clearAuthorization?.();
+      await refreshSyncStatus();
+      showToast(
+        toastRegion,
+        '已取消帳號切換；原本的雲端連結保持不變。',
+        'info',
+      );
+      return;
+    }
+
+    const applied = await applyCloudAccountSwitch(provider, planned);
+    await refreshSyncStatus();
+    announceCycleResult(applied.cycle, '帳號切換');
+  } catch (error) {
+    await handleCloudActionError(error, 'Google 帳號切換失敗');
+  }
+}
+
+async function syncNow() {
+  const snapshot = await ensureCloudRuntimeReady();
+  if (!snapshot) return;
+  if (!snapshot.connected) {
+    await connectCloud();
+    return;
+  }
+
+  try {
+    const provider = await getAuthorizedCloudProvider();
+    const cycle = await runLinkedCloudSync(
+      provider,
+      snapshot.linkedProfileId,
+    );
+
+    if (
+      cycle?.status === 'blocked' &&
+      cycle?.reason === 'account-switch-required'
+    ) {
+      await switchCloudAccount({ selectAccount: false });
+      return;
+    }
+
+    await refreshSyncStatus();
+    announceCycleResult(cycle, '同步');
+  } catch (error) {
+    await handleCloudActionError(error, '同步失敗');
+  }
+}
+
+async function ensureCloudRuntimeReady() {
+  const snapshot = await getSyncStatusSnapshot();
+  if (!snapshot.cloudConfigured || !snapshot.cloudRuntimeEnabled) {
+    await showCloudRuntimeUnavailable();
+    return null;
+  }
+  return snapshot;
+}
+
+async function getAuthorizedCloudProvider({
+  selectAccount = false,
+} = {}) {
+  cloudProvider ||= new GoogleDriveAppDataProvider();
+
+  const activeToken =
+    cloudProvider.tokenManager?.peekAccessToken?.() || null;
+  if (!activeToken || selectAccount) {
+    await cloudProvider.authorize({
+      prompt: selectAccount ? 'select_account' : '',
+    });
+  }
+  return cloudProvider;
+}
+
+function announceCycleResult(cycle, label) {
+  if (cycle?.status === 'synced') {
+    showToast(toastRegion, label + '完成。', 'success');
+    return;
+  }
+  if (cycle?.status === 'conflict') {
+    showToast(
+      toastRegion,
+      '同步已暫停：有 ' + String(cycle.openConflicts || 0) +
+        ' 項衝突需要處理。',
+      'warning',
+    );
+    return;
+  }
+  if (cycle?.status === 'pending') {
+    showToast(
+      toastRegion,
+      '仍有資料等待同步，稍後會繼續處理。',
+      'info',
+    );
+    return;
+  }
+  if (cycle?.status === 'deferred') {
+    showToast(
+      toastRegion,
+      '同步正在等待重試時間，資料仍安全保留在本機。',
+      'info',
+    );
+    return;
+  }
+  showToast(
+    toastRegion,
+    label + '尚未完成；請查看資料與同步中心。',
+    'warning',
+  );
+}
+
+async function handleCloudActionError(error, title) {
+  console.error(title, error);
+  const code = String(error?.code || '');
+  if (code === 'AUTH_CANCELLED') {
+    showToast(toastRegion, '已取消 Google 授權。', 'info');
+    return;
+  }
+
+  await showMessageDialog({
+    title,
+    message:
+      String(error?.message || '雲端操作無法完成。') +
+      (code ? '\n\n錯誤代碼：' + code : ''),
+  });
+  await refreshSyncStatus();
 }
 
 async function showCloudRuntimeUnavailable() {
