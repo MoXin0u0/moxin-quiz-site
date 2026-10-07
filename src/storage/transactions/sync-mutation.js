@@ -73,6 +73,8 @@ export async function createRevisionMutationInTransaction(tx, {
   entityType,
   entityKey,
   previousRevision = null,
+  parentRevisionIds = null,
+  remoteClock = null,
   operation = 'upsert',
   coalesceKey = null,
   now = new Date(),
@@ -83,14 +85,20 @@ export async function createRevisionMutationInTransaction(tx, {
   const meta = await ensureSyncIdentityInTransaction(tx);
   const clock = nextHybridClock({
     local: meta.clock,
+    remote: remoteClock,
     deviceId: meta.deviceId,
     nowMs: now.getTime(),
   });
 
+  const explicitParents = Array.isArray(parentRevisionIds)
+    ? [...new Set(parentRevisionIds.filter(Boolean).map(String))]
+    : null;
   const revision = createRevisionMeta({
-    parentRevisionIds: previousRevision?.revisionId
-      ? [previousRevision.revisionId]
-      : [],
+    parentRevisionIds: explicitParents || (
+      previousRevision?.revisionId
+        ? [previousRevision.revisionId]
+        : []
+    ),
     changedAt: now.toISOString(),
     changedByDeviceId: meta.deviceId,
     clock,
