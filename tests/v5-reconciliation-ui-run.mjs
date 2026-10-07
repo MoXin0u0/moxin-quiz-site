@@ -68,7 +68,7 @@ assert.match(syncUi, /showReconciliationPlanDialog/);
 assert.match(syncUi, /data-switch-cloud-account/);
 assert.match(center, /data-switch-cloud-account/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-2'/);
 assert.match(sw, /src\/app\/cloud-sync-flow\.js/);
 assert.match(sw, /src\/ui\/first-sync\.js/);
 
