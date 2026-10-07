@@ -13,9 +13,9 @@ import {
   escapeDriveQueryLiteral,
 } from '../src/cloud/google/google-drive.js';
 
-assert.equal(APP_CONFIG.features.cloudSync, false, 'B08 provider code must remain dormant by default');
+assert.equal(APP_CONFIG.features.cloudSync, true, 'Live RC must enable the cloud runtime explicitly');
 assert.equal(APP_CONFIG.cloud.provider, 'google-drive');
-assert.equal(APP_CONFIG.cloud.googleClientId, '');
+assert.equal(APP_CONFIG.cloud.googleClientId, '465928667951-721b0udej0814jjelmepk0h98c57cf2a.apps.googleusercontent.com');
 assert.equal(APP_CONFIG.cloud.googleDriveScope, 'https://www.googleapis.com/auth/drive.appdata');
 assert.equal(APP_CONFIG.cloud.googleIdentityScriptUrl, 'https://accounts.google.com/gsi/client');
 
