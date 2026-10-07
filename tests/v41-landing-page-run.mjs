@@ -22,12 +22,12 @@ assert.equal(app, v3);
 assert.match(app, /data-nav-library/);
 
 if (APP_CONFIG.features?.v5DataFoundation) {
-  assert.match(landing, /2026-10-07/);
+  assert.match(landing, /2026-10-08/);
   assert.match(landing, /Optional Cloud Sync/);
   assert.match(app, /<title>墨忻刷題網 v5<\/title>/);
   assert.match(app, /<span class="version-badge">v5<\/span>/);
   assert.equal(APP_CONFIG.appVersion, '5.0.0');
-  assert.equal(APP_CONFIG.releaseChannel, 'development');
+  assert.equal(APP_CONFIG.releaseChannel, 'production');
 } else {
   assert.match(landing, /2026-10-04/);
   assert.match(app, /<title>墨忻刷題網 v4\.1<\/title>/);
