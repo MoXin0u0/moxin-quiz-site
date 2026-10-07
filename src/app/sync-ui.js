@@ -391,7 +391,7 @@ async function mergeNoteConflict(conflictId) {
   try {
     const result = await resolveSyncConflict(conflict.conflictId, {
       choice: CONFLICT_RESOLUTION_CHOICE.MERGED,
-      mergedValue: { content: mergedContent },
+      mergedValue: { text: mergedContent },
     });
     if (await handleConflictRefreshRequired(result)) return;
 
