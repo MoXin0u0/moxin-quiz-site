@@ -31,6 +31,7 @@
     "audit:v5-note-merge": "node tests/v5-note-merge-browser-run.mjs",
     "audit:v5-release-readiness": "node tests/v5-release-readiness-browser-run.mjs",
     "preflight:v4": "node scripts/v4-release-preflight.mjs",
-    "preflight:cloud-cutover": "node scripts/v5-cloud-cutover-preflight.mjs"
+    "preflight:cloud-cutover": "node scripts/v5-cloud-cutover-preflight.mjs",
+    "audit:v5-conflict-convergence": "node tests/v5-conflict-convergence-browser-run.mjs"
   }
 }
