@@ -1,6 +1,6 @@
 # MoXin Quiz V5 Implementation Status
 
-Updated: 2026-10-06
+Updated: 2026-10-07
 
 ## Baseline
 
@@ -39,6 +39,7 @@ Updated: 2026-10-06
 | B12 Sync Cycle + First-sync Execution | ✅ Complete | First-sync inventory/confirmation, legacy seed, Pull→Apply→Push orchestration, retry/backoff/runtime states |
 | B12.5 Sync Reliability Repair | ✅ Complete | Cycle-level retry gate covers pull/object/push failures; online NETWORK ≠ OFFLINE; failure-path browser matrix added |
 | G7 Sync Cycle + Reliability | ✅ PASS | Unit/release preflight + full browser matrix green at `db6cda5b3fdff742b74f477a40e01671f6283010` |
+| B13A Cloud Profile / Checkpoint / Device Registry | 🚧 Implemented / gating | Mutable cloud profile pointer, immutable acceleration checkpoint, commit frontier/entity-head index, revisioned device rename/revoke |
 
 ## Current green CI evidence
 
@@ -125,4 +126,4 @@ B12.5 closed the pre-B13 reliability gaps:
 5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
-G7 is now closed. The next target is B13: checkpoint/profile frontier, device registry integration, account switching/revocation flows, and Sync Center product UI wiring. B13 has not started yet.
+G7 is closed. B13 has started with B13A: cloud profile/checkpoint frontier and revisioned device-registry lifecycle. After B13A gates green, continue with B13B account switching/revocation enforcement and B13C Sync Center/product UI wiring.

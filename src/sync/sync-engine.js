@@ -16,6 +16,7 @@ import { seedInitialSyncOutbox } from './initial-seed.js';
 import { classifySyncFailure, nextRetryInstant } from './retry-policy.js';
 import { SYNC_RUNTIME_STATE } from './config.js';
 import { withSyncLock } from './sync-lock.js';
+import { publishCheckpointIfDue } from './checkpoint.js';
 
 export async function inspectFirstSync(provider, {
   profileId,
@@ -219,6 +220,25 @@ export async function runSyncCycle(provider, {
           ? SYNC_RUNTIME_STATE.PENDING
           : SYNC_RUNTIME_STATE.SYNCED;
 
+      let checkpoint = null;
+      try {
+        checkpoint = await publishCheckpointIfDue(provider, {
+          profileId: profile,
+          now,
+        });
+      } catch (checkpointError) {
+        checkpoint = {
+          status: 'error',
+          error: checkpointError,
+        };
+        await updateSyncMeta(current => ({
+          ...current,
+          lastCheckpointError: String(
+            checkpointError?.message || checkpointError,
+          ),
+        }));
+      }
+
       await updateSyncMeta(current => ({
         ...current,
         lastSuccessfulSyncAt: now().toISOString(),
@@ -241,6 +261,7 @@ export async function runSyncCycle(provider, {
         pushed,
         pendingCount,
         openConflicts: conflictsAfter,
+        checkpoint,
         runtimeState,
       };
     } catch (error) {

@@ -14,6 +14,7 @@ export const APP_CONFIG = Object.freeze({
   }),
   cloud: Object.freeze({
     provider: 'google-drive',
+    minimumClientVersion: '5.0.0',
     googleClientId: '',
     googleIdentityScriptUrl: 'https://accounts.google.com/gsi/client',
     googleDriveScope: 'https://www.googleapis.com/auth/drive.appdata',

@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v5-dev-b12r-1';
+const CACHE_VERSION = 'moxin-quiz-v5-dev-b13a-1';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
@@ -119,6 +119,8 @@ const APP_SHELL = [
   './src/sync/object-mutation-transport.js',
   './src/sync/retry-policy.js',
   './src/sync/initial-seed.js',
+  './src/sync/cloud-profile.js',
+  './src/sync/checkpoint.js',
   './src/sync/sync-engine.js',
 
   './src/studio/asset-manager.js',

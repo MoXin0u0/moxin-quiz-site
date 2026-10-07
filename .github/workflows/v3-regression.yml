@@ -136,3 +136,6 @@ jobs:
 
       - name: Run V5 sync-cycle engine audit
         run: npm run audit:v5-sync-engine
+
+      - name: Run V5 cloud profile, checkpoint and device registry audit
+        run: npm run audit:v5-profile-checkpoint
