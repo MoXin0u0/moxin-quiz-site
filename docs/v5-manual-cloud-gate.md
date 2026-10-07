@@ -1,6 +1,6 @@
 # MoXin Quiz V5｜Manual Cloud / Production Cutover Gate
 
-Status: **BLOCKED — dormant cloud runtime / no live Google credentials configured**
+Status: **MANUAL CLOUD GATE COMPLETE — production cutover pending release configuration and explicit authorization**
 
 This checklist is the manual half of the V5 release gate. Automated CI can validate Local-first behavior, deterministic sync semantics, failure handling, accessibility, and provider boundaries, but it cannot replace real Google account / Drive / two-device validation.
 
@@ -25,7 +25,7 @@ npm run preflight
 npm run preflight:cloud-cutover
 ```
 
-The second command is intentionally expected to fail while the branch is still dormant.
+The cloud-cutover preflight is expected to remain blocked while the RC still uses the development app version / release channel; those markers are changed only during the authorized production cutover.
 
 ## Manual two-device matrix
 
@@ -50,7 +50,7 @@ Record concrete evidence for every row before authorizing production cutover.
 | Account switch | Old-profile pending data is not silently uploaded into the new account | ✅ PASS — live two-account test succeeded: selecting a different Google account entered inventory/reconciliation planning without uploading before explicit Apply, cancelling preserved the original profile and pending local data, and confirming the switch then rebound the device to the target profile and synchronized the preserved local data without deleting the old account's cloud data. |
 | Device revoke | Revoked device may observe revocation but cannot push afterward | ✅ PASS — live two-device test succeeded: device A revoked device B, B subsequently observed its revoked state and could no longer push new local changes, while B's local data remained intact and A never received the post-revocation test mutation. An additional unlink/relink retest also succeeded: after locally unlinking a device, reconnecting to the cloud profile restored normal synchronization and upload behavior. |
 | Backup restore → reconcile | Restore creates a new device identity, then reconciles without restoring OAuth/device cloud state | ✅ PASS — live restore test succeeded: restoring Backup v2 replaced local user data while resetting cloud operational state, created a fresh device identity, required an explicit reconnect/reconciliation flow, and then converged with the newer cloud state without rolling the cloud profile backward. |
-| PWA offline boot | Installed app opens offline and existing local learning remains usable | Pending |
+| PWA offline boot | Installed app opens offline and existing local learning remains usable | ✅ PASS — installed PWA cold-started successfully with the network fully unavailable, loaded the cached App Shell and existing IndexedDB learning data, allowed new offline learning activity, preserved that activity across a second offline cold start, and synchronized normally after connectivity returned. |
 
 ## Additional safety observations
 
@@ -90,11 +90,11 @@ Cloud can be disabled through the feature flag while preserving Local-first oper
 
 ## Sign-off
 
-- Automated gate head: `6deca330d36826c0b8202505b2e73c6c878ec1d8`
+- Automated gate head: `c9e3ceee0c817bb50ab0428f5c3249ed82ca27b6`
 - Push workflow: ✅ PASS — Unit + release preflight and full browser/accessibility gate
 - PR workflow: _Pending_
-- Real Google account used: _Pending_
+- Real Google account used: ✅ PASS — live Google OAuth / Drive appDataFolder validation completed, including two-account switching
 - Device A / Browser: Chrome normal profile on Codespaces forwarded-port RC
 - Device B / Browser: Chrome incognito profile on the same RC origin (isolated browser storage)
-- Manual matrix completed by: _Pending_
+- Manual matrix completed by: ✅ Live user validation completed 2026-10-08
 - Production merge authorized by: _Pending_
