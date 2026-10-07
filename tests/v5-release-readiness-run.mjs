@@ -5,7 +5,7 @@ import { APP_CONFIG } from '../src/app/config.js';
 
 assert.equal(APP_CONFIG.appVersion, '5.0.0-dev');
 assert.equal(APP_CONFIG.dbVersion, 4);
-assert.equal(APP_CONFIG.features.cloudSync, false);
+assert.equal(APP_CONFIG.features.cloudSync, true);
 assert.equal(APP_CONFIG.features.syncUi, true);
 assert.equal(
   APP_CONFIG.cloud.googleDriveScope,
