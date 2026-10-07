@@ -33,8 +33,8 @@ Record concrete evidence for every row before authorizing production cutover.
 
 | Scenario | Required result | Evidence |
 | --- | --- | --- |
-| Local → Cloud | Existing local data uploads only after explicit first-sync confirmation | Pending |
-| Fresh device bootstrap | New device discovers profile and reconstructs user data without replacing newer local data incorrectly | Pending |
+| Local → Cloud | Existing local data uploads only after explicit first-sync confirmation | ✅ PASS — live OAuth + empty first-sync confirmation + post-confirm automatic sync completed; Sync Center returned SYNCED with pending=0/conflicts=0 |
+| Fresh device bootstrap | New device discovers profile and reconstructs user data without replacing newer local data incorrectly | ✅ PASS — isolated incognito browser registered as device 2, discovered the same cloud profile, pulled the synced learning-goal data, and reached SYNCED |
 | Two devices offline attempts | Each device can answer offline independently | Pending |
 | Reconnect union | Immutable Attempt Events from both devices converge without duplication/loss | Pending |
 | Note concurrent edit | Real concurrent edits surface a conflict; local / cloud / merge paths behave as designed | Pending |
@@ -88,11 +88,11 @@ Cloud can be disabled through the feature flag while preserving Local-first oper
 
 ## Sign-off
 
-- Automated gate head: _Pending_
-- Push workflow: _Pending_
+- Automated gate head: `6deca330d36826c0b8202505b2e73c6c878ec1d8`
+- Push workflow: ✅ PASS — Unit + release preflight and full browser/accessibility gate
 - PR workflow: _Pending_
 - Real Google account used: _Pending_
-- Device A / Browser: _Pending_
-- Device B / Browser: _Pending_
+- Device A / Browser: Chrome normal profile on Codespaces forwarded-port RC
+- Device B / Browser: Chrome incognito profile on the same RC origin (isolated browser storage)
 - Manual matrix completed by: _Pending_
 - Production merge authorized by: _Pending_
