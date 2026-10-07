@@ -16,7 +16,7 @@ assert.match(lifecycle, /preservedLocalData:\s*true/);
 
 assert.match(engine, /getCurrentDeviceSyncPermission/);
 assert.match(engine, /account-switch-required/);
-assert.match(engine, /device-revoked/);
+assert.match(lifecycle, /device-revoked/);
 assert.match(engine, /permissionAfterPull/);
 
 assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13b-1'/);
