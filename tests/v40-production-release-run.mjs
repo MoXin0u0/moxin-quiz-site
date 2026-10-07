@@ -24,12 +24,12 @@ if (APP_CONFIG.features?.v5DataFoundation) {
   assert.match(app, /<span class="version-badge">v4\.\d+<\/span>/);
   assert.match(APP_CONFIG.appVersion, /^4\.\d+\.\d+$/);
   assert.equal(APP_CONFIG.releaseChannel, 'production');
-  }
+  assert.match(readme, /\*\*v4\.\d+\*\*/);
+}
 assert.equal(APP_CONFIG.dbName, 'moxin-quiz-v3');
 assert.ok(APP_CONFIG.dbVersion >= 3);
 
 assert.equal(manifest.scope, './');
-assert.match(readme, /\*\*v4\.\d+\*\*/);
 assert.equal(pkg.scripts.preflight, 'node scripts/v4-release-preflight.mjs');
 assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3|5)-[^']+'/);
 assert.match(plan, /## v4\.0 Production/);
