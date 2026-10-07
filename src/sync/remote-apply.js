@@ -220,12 +220,21 @@ export async function applyRemoteMutationInTransaction(tx, mutation, commit, {
 
   if (decision.action === MERGE_ACTION.SKIP_EQUAL ||
       decision.action === MERGE_ACTION.KEEP_LOCAL) {
+    const supersededConflicts = await resolveConflictsCoveredByRevision(
+      tx,
+      entityType,
+      entityKey,
+      local.revision,
+      now,
+      { source: 'local-descendant' },
+    );
     return {
       mutationId: mutation.mutationId,
       entityType,
       entityKey,
       action: decision.action,
       reason: decision.reason,
+      supersededConflicts,
     };
   }
 
@@ -257,12 +266,22 @@ export async function applyRemoteMutationInTransaction(tx, mutation, commit, {
     await applyRemoteUpsert(tx, entityType, entityKey, remoteValue, remoteRevision);
   }
 
+  const supersededConflicts = await resolveConflictsCoveredByRevision(
+    tx,
+    entityType,
+    entityKey,
+    remoteRevision,
+    now,
+    { source: 'remote-descendant' },
+  );
+
   return {
     mutationId: mutation.mutationId,
     entityType,
     entityKey,
     action: MERGE_ACTION.APPLY_REMOTE,
     reason: decision.reason,
+    supersededConflicts,
   };
 }
 
@@ -591,6 +610,62 @@ async function persistRemoteRevision(tx, entityType, entityKey, revision) {
     });
   }
   if (!existing) store.put(record);
+}
+
+async function resolveConflictsCoveredByRevision(
+  tx,
+  entityType,
+  entityKey,
+  descendantRevision,
+  now,
+  { source = 'descendant' } = {},
+) {
+  if (!descendantRevision?.revisionId) return [];
+
+  const conflictStore = tx.objectStore('syncConflicts');
+  const rows = await requestToPromise(
+    conflictStore.index('entityKey').getAll(IDBKeyRange.only(entityKey)),
+  );
+  const resolved = [];
+
+  for (const conflict of rows || []) {
+    if (
+      conflict?.status !== 'open' ||
+      String(conflict?.entityType || '') !== String(entityType || '')
+    ) {
+      continue;
+    }
+
+    const localRevisionId =
+      conflict.localRevision?.revisionId ||
+      conflict.localValue?.revision?.revisionId ||
+      null;
+    const remoteRevisionId =
+      conflict.remoteRevision?.revisionId ||
+      conflict.remoteValue?.revision?.revisionId ||
+      null;
+
+    if (!localRevisionId || !remoteRevisionId) continue;
+
+    const [coversLocal, coversRemote] = await Promise.all([
+      isKnownRevisionAncestor(tx, localRevisionId, descendantRevision),
+      isKnownRevisionAncestor(tx, remoteRevisionId, descendantRevision),
+    ]);
+    if (!coversLocal || !coversRemote) continue;
+
+    const resolvedAt = now.toISOString();
+    conflictStore.put({
+      ...conflict,
+      status: 'resolved',
+      resolvedAt,
+      resolutionChoice: 'descendant',
+      resolutionSource: source,
+      resolutionRevisionId: descendantRevision.revisionId,
+    });
+    resolved.push(conflict.conflictId);
+  }
+
+  return resolved;
 }
 
 async function isKnownRevisionAncestor(tx, ancestorRevisionId, descendantRevision) {
