@@ -93,7 +93,7 @@
 
 .status-badge.neutral {
   background: var(--surface-3);
-  color: var(--text-muted);
+  color: var(--text);
 }
 
 .sync-center-host[hidden],

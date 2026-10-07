@@ -7,6 +7,20 @@ const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:4173/app.html';
 
 const browser = await chromium.launch({ headless: true });
 
+async function assertNoSevereA11y(page, selector, scope) {
+  const report = await new AxeBuilder({ page })
+    .include(selector)
+    .analyze();
+  const severe = report.violations
+    .filter(item => ['critical', 'serious'].includes(item.impact))
+    .map(item => ({
+      id: item.id,
+      impact: item.impact,
+      nodes: item.nodes.slice(0, 6).map(node => node.target),
+    }));
+  assert.deepEqual(severe, [], scope + ' must have no serious/critical Axe violations.');
+}
+
 try {
   const context = await browser.newContext({
     viewport: { width: 1280, height: 900 },
@@ -63,13 +77,23 @@ try {
     true,
   );
 
-  const centerA11y = await new AxeBuilder({ page })
-    .include('#syncCenterHost')
-    .analyze();
-  const severeCenterViolations = centerA11y.violations
-    .filter(item => ['critical', 'serious'].includes(item.impact))
-    .map(item => item.id);
-  assert.deepEqual(severeCenterViolations, []);
+  await assertNoSevereA11y(
+    page,
+    '#syncCenterHost',
+    'Sync Center light theme',
+  );
+
+  await page.evaluate(() => {
+    document.documentElement.dataset.theme = 'dark';
+  });
+  await assertNoSevereA11y(
+    page,
+    '#syncCenterHost',
+    'Sync Center dark theme',
+  );
+  await page.evaluate(() => {
+    document.documentElement.dataset.theme = 'light';
+  });
 
   const activeInCenter = await page.evaluate(() =>
     Boolean(
@@ -121,6 +145,11 @@ try {
     ),
     true,
   );
+  await assertNoSevereA11y(
+    page,
+    '#appDialogHost',
+    'Custom confirmation dialog',
+  );
   await page.keyboard.press('Escape');
   await dialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() =>
@@ -159,6 +188,11 @@ try {
   assert.match(moreText, /帳號與同步/);
   assert.match(moreText, /設定/);
   assert.match(moreText, /完整備份/);
+  await assertNoSevereA11y(
+    page,
+    '#mobileMoreMenuHost',
+    'Mobile More menu',
+  );
 
   await page.click('[data-more-sync]');
   await center.waitFor({ state: 'visible' });
