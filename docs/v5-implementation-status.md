@@ -8,7 +8,7 @@ Updated: 2026-10-07
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head: `e4dec29b5bbdd1613c1ecd3bdb8704f69e2f3931`
+- Current validated head: `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`
 
 ## Gate status
 
@@ -53,11 +53,14 @@ Updated: 2026-10-07
 | G8C4 Automatic Sync Scheduling | ✅ PASS | Unit/release preflight + full browser suite + dedicated scheduler gate green at `2591d37e446034508163a2b560e3b8ec99bfb4f1` |
 | B13C5 Note Conflict Merge UX | ✅ Complete | Note conflicts support local / cloud / merge-textarea choices; merged revision descends from both branches; delete-vs-edit remains explicit-choice only |
 | G8C5 Note Merge UX | ✅ PASS | Unit/release preflight + full browser suite + note merge UI/Axe gate green at `e4dec29b5bbdd1613c1ecd3bdb8704f69e2f3931` |
-| B13C5.1 Conflict Consistency Repair | 🚧 Implemented / gating | Core rejects merged delete-vs-edit/deleted branches; stale local conflict snapshots refresh without applying the stale user choice; re-confirmation uses the latest local revision |
+| B13C5.1 Conflict Consistency Repair | ✅ Complete | Core rejects merged delete-vs-edit/deleted branches; stale local conflict snapshots refresh without applying the stale user choice; re-confirmation uses the latest local revision |
+| G8C5.1 Conflict Consistency Safety | ✅ PASS | Unit/release preflight + full browser suite + stale-local/delete-vs-edit regression green at `b7eccfeea6eca28f69cbf39bacea0c25216bef7f` |
+| B13C Product Integration | ✅ Complete | Sync Center, first-sync/account-switch UX, conflict resolution + note merge, device controls, mobile 5-tab IA, automatic scheduler, accessibility/product integration all closed |
+| G8C Product Integration | ✅ PASS | Push + PR workflows fully green at `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`; no merge to main and cloud runtime remains dormant |
 
 ## Current green CI evidence
 
-At `e4dec29b5bbdd1613c1ecd3bdb8704f69e2f3931`:
+At `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`:
 
 - Unit + release preflight: PASS
 - Existing app browser audit: PASS
@@ -96,6 +99,9 @@ At `e4dec29b5bbdd1613c1ecd3bdb8704f69e2f3931`:
 - B13C5 note local/cloud/merge-textarea path: PASS
 - Merged note revision descends from both conflict revisions
 - Note merge dialog serious/critical Axe violations: 0
+- B13C5.1 delete-vs-edit merge rejection: PASS
+- B13C5.1 stale-local snapshot refresh-before-resolution: PASS
+- Re-confirmed resolution parents latest local revision + remote revision: PASS
 
 ## B07.5 repair notes
 
@@ -163,9 +169,9 @@ B12.5 closed the pre-B13 reliability gaps:
 5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
-G7, B13A/G8A, B13B/G8B, B13B.5/G8B.5, B13C1, and B13C2 are closed. B13C2 adds provider-neutral first-sync/account-switch orchestration, inventory-first confirmation dialogs, cancellation paths that restore or preserve the previous local/cloud link, and explicit cloud-profile creation only after the user confirms Apply. A bootstrap/readiness race exposed by the new UI was also repaired so background status refresh cannot reopen a deliberately closed/blocked database during restore/migration/reset work. Cloud runtime remains disabled and Google OAuth remains unconfigured, so these production paths remain dormant until configuration is intentionally activated. The next target is B13C3 conflict-resolution UX, followed by automatic sync scheduling.
+G7, B13A/G8A, B13B/G8B, B13B.5/G8B.5, and the full B13C/G8C product-integration track are closed. The final B13C5.1 repair makes conflict resolution safe even when the local entity changes after a conflict card was created: the stale choice is not applied, the local conflict snapshot is refreshed, and the user must review and confirm again. Note text merge is domain-gated so delete-vs-edit or deleted branches cannot bypass the UI guard. Cloud runtime remains disabled and Google OAuth remains unconfigured, so live Drive operations are still intentionally dormant. The remaining B13 work is release/readiness integration and diagnostics; production cutover, live OAuth, real two-device validation, and merging to main remain explicitly out of scope until authorized.
 
 
-## B13C3 current target
+## B13 remaining target
 
-Conflict-resolution UX is implemented and under gating before automatic sync scheduling.
+B13C product integration is complete. Remaining work is release/readiness integration: diagnostics/preflight, release-facing copy, dormant cloud configuration checks, and final automated readiness gates. Live Google credentials, manual two-device cloud validation, release tagging, production cutover, and merge to `main` require a separate explicit authorization step.
