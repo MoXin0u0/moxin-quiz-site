@@ -59,10 +59,10 @@ try {
   assert.match(rowFor('V5 資料遷移').text, /遷移已完成/);
   assert.match(rowFor('雲端授權狀態').text, /Local-only/);
   assert.match(rowFor('雲端 Schema').text, /Cloud Schema v1/);
-  assert.match(rowFor('雲端功能開關').text, /目前停用/);
+  assert.match(rowFor('雲端功能開關').text, /已啟用/);
   assert.match(
     rowFor('Google OAuth 設定').text,
-    /不會觸發登入/,
+    /已配置/,
   );
 
   assert.equal(
