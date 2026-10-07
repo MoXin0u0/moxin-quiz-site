@@ -1,6 +1,7 @@
 
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
+import AxeBuilder from '@axe-core/playwright';
 
 const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:4173/app.html';
 
@@ -61,6 +62,14 @@ try {
     await center.locator('[data-sync-now]').isDisabled(),
     true,
   );
+
+  const centerA11y = await new AxeBuilder({ page })
+    .include('#syncCenterHost')
+    .analyze();
+  const severeCenterViolations = centerA11y.violations
+    .filter(item => ['critical', 'serious'].includes(item.impact))
+    .map(item => item.id);
+  assert.deepEqual(severeCenterViolations, []);
 
   const activeInCenter = await page.evaluate(() =>
     Boolean(
@@ -155,6 +164,12 @@ try {
   await center.waitFor({ state: 'visible' });
   await page.keyboard.press('Escape');
   await center.waitFor({ state: 'hidden' });
+  assert.equal(
+    await page.evaluate(() =>
+      document.activeElement?.matches('[data-nav-more]') === true,
+    ),
+    true,
+  );
 
   assert.equal(
     await page.evaluate(() =>

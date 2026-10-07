@@ -98,8 +98,9 @@ function bindGlobalActions() {
 
     const moreSync = event.target.closest('[data-more-sync]');
     if (moreSync) {
+      const moreNavButton = document.querySelector('[data-nav-more]');
       closeMoreMenu();
-      await openSyncCenter(moreSync);
+      await openSyncCenter(moreNavButton);
       return;
     }
 
