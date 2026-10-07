@@ -72,7 +72,7 @@ jobs:
 
   v5-browser-audit:
     name: V5 browser + accessibility baseline
-    if: github.ref == 'refs/heads/v5-cloud-sync' || github.head_ref == 'v5-cloud-sync'
+    if: github.ref == 'refs/heads/v5-cloud-sync' || github.head_ref == 'v5-cloud-sync' || github.ref == 'refs/heads/v5-cloud-sync-live-rc' || github.head_ref == 'v5-cloud-sync-live-rc'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
