@@ -120,7 +120,7 @@ try {
     '[data-cloud-settings-card]',
   ).innerText();
   assert.match(cloudCardText, /帳號與雲端/);
-  assert.match(cloudCardText, /Google OAuth Client ID/);
+  assert.match(cloudCardText, /尚未連結 Google/);
 
   await page.evaluate(async () => {
     const { showConfirmDialog } = await import('/src/ui/dialogs.js');
