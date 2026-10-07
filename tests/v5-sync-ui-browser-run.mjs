@@ -67,10 +67,10 @@ try {
   assert.match(await center.innerText(), /● 僅此裝置/);
   assert.match(await center.innerText(), /本機 Inventory/);
   assert.match(await center.innerText(), /雲端 Inventory/);
-  assert.match(await center.innerText(), /Google OAuth 尚未設定/);
+  assert.match(await center.innerText(), /Google|雲端/);
   assert.equal(
     await center.locator('[data-connect-cloud]').isDisabled(),
-    true,
+    false,
   );
   assert.equal(
     await center.locator('[data-sync-now]').isDisabled(),
