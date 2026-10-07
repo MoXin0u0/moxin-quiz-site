@@ -8,7 +8,7 @@ Updated: 2026-10-07
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head: `06fbc9c1c61fa96215b0b6c3e55c7196bc41b72c`
+- Current validated head: `613f6da4d79f1e40b8a659be5313990ddd019dc9`
 
 ## Gate status
 
@@ -46,10 +46,11 @@ Updated: 2026-10-07
 | B13B.5 Account Lifecycle Consistency Repair | ✅ Complete | Purge profile-scoped device revision ancestry on switch/unlink, fresh local device genesis revision, stable resume semantics, stale block-state cleanup |
 | G8B.5 Profile Boundary Consistency | ✅ PASS | Unit/release preflight + full browser suite green at `dd0281027cb73ecc27fae07e5e417e28142ea5a3` |
 | B13C1 Sync Center / Settings / Mobile IA Shell | ✅ Complete | Canonical sync-state vocabulary, Data & Sync Center, Account & Cloud settings card, Data Safety home action, 5-tab mobile More, accessible custom dialogs; light/dark Axe gate green at `06fbc9c1c61fa96215b0b6c3e55c7196bc41b72c` |
+| B13C2 First Sync / Account Switch Reconciliation UX | ✅ Complete | Inventory-first planning, zero-cloud-write pre-confirmation, explicit Apply/Cancel dialogs, confirmed profile bootstrap, account-switch cancel preserves original link; full gate green at `613f6da4d79f1e40b8a659be5313990ddd019dc9` |
 
 ## Current green CI evidence
 
-At `06fbc9c1c61fa96215b0b6c3e55c7196bc41b72c`:
+At `613f6da4d79f1e40b8a659be5313990ddd019dc9`:
 
 - Unit + release preflight: PASS
 - Existing app browser audit: PASS
@@ -71,6 +72,10 @@ At `06fbc9c1c61fa96215b0b6c3e55c7196bc41b72c`:
 - B13C1 Sync Center / Settings / Mobile IA accessibility audit: PASS
 - Sync Center light + dark theme serious/critical Axe violations: 0
 - Mobile More + custom confirmation dialog serious/critical Axe violations: 0
+- B13C2 first-sync/account-switch reconciliation UX audit: PASS
+- First-sync planning before confirmation: 0 cloud writes
+- First-sync cancel returns to LOCAL_ONLY without cloud mutation
+- Account-switch planning/cancel preserves original linked profile and performs 0 writes to target account
 
 ## B07.5 repair notes
 
@@ -138,4 +143,4 @@ B12.5 closed the pre-B13 reliability gaps:
 5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
-G7, B13A/G8A, B13B/G8B, B13B.5/G8B.5, and B13C1 are closed. B13C1 now wires the canonical sync-state vocabulary into the header/system-status layer, adds the Data & Sync Center and Account & Cloud settings card, upgrades the home Backup action to Data Safety, formalizes mobile 5-tab + More navigation, replaces Backup/Restore native confirm/alert with accessible app dialogs, restores focus correctly after mobile Sync Center use, and passes dedicated light/dark contrast/a11y gates. Cloud runtime remains disabled and Google OAuth remains unconfigured, so the shell cannot trigger login or upload. The next target is B13C2 first-sync/account-switch reconciliation UX, followed by conflict resolution and automatic scheduling.
+G7, B13A/G8A, B13B/G8B, B13B.5/G8B.5, B13C1, and B13C2 are closed. B13C2 adds provider-neutral first-sync/account-switch orchestration, inventory-first confirmation dialogs, cancellation paths that restore or preserve the previous local/cloud link, and explicit cloud-profile creation only after the user confirms Apply. A bootstrap/readiness race exposed by the new UI was also repaired so background status refresh cannot reopen a deliberately closed/blocked database during restore/migration/reset work. Cloud runtime remains disabled and Google OAuth remains unconfigured, so these production paths remain dormant until configuration is intentionally activated. The next target is B13C3 conflict-resolution UX, followed by automatic sync scheduling.
