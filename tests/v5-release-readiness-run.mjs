@@ -66,7 +66,7 @@ assert.match(manifest.description, /可選用跨裝置雲端同步/);
 
 assert.match(readme, /Local-first \/ Offline-ready/);
 assert.match(readme, /Optional Cloud Sync/);
-assert.match(readme, /features\.cloudSync=false/);
+assert.match(readme, /live cloud RC/i);
 assert.match(readme, /Backup 與 Sync/);
 
 assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-1'/);
