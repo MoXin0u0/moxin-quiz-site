@@ -118,7 +118,7 @@ assert.match(main, /openReviewCenter\(\{ show: false \}\)/);
 assert.match(main, /openStats\(\{ show: false \}\)/);
 assert.match(main, /openExamCenter\(\{ show: false \}\)/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-3'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5.0.0-prod-1'/);
 assert.match(sw, /src\/app\/sync-data-refresh\.js/);
 
 console.log('V5 runtime sync data-refresh contracts passed.');
