@@ -119,6 +119,7 @@ import { createExamSprintSaveInput } from '../ui/exam-sprint.js';
 import { renderLearningStats } from '../ui/stats.js';
 import { renderHomeDashboard } from '../ui/home-dashboard.js';
 import { getSyncStatusSnapshot } from '../ui/sync-status.js';
+import { SYNC_DATA_REFRESH_EVENT } from './sync-data-refresh.js';
 import { renderExamCenter } from '../ui/exam-center.js';
 import {
   collectExamAnswer,
@@ -137,6 +138,7 @@ import {
 
 const state = {
   inspectedPackage: null,
+  currentView: null,
   banks: [],
   authorCatalog: [],
   librarySourceTab: 'author',
@@ -148,6 +150,7 @@ const state = {
   resumeSession: null,
   practice: null,
   practiceQuestionMap: new Map(),
+  practiceNoteDirty: false,
   assetUrls: [],
   reviewGroups: [],
   learningGoalScope: null,
@@ -164,6 +167,8 @@ const state = {
   examSaveTimerId: null,
   examSubmitting: false,
 };
+
+let syncDataRefreshPromise = Promise.resolve();
 
 const elements = {
   libraryView: document.querySelector('#libraryView'),
@@ -227,6 +232,14 @@ async function bootstrap() {
 }
 
 function bindEvents() {
+  window.addEventListener(SYNC_DATA_REFRESH_EVENT, event => {
+    syncDataRefreshPromise = syncDataRefreshPromise
+      .then(() => refreshVisibleDataAfterSync(event.detail || {}))
+      .catch(error => {
+        console.error('V5 runtime data refresh failed.', error);
+      });
+  });
+
   document.addEventListener('click', async event => {
     const sourceTab = event.target.closest('[data-library-source-tab]');
     if (sourceTab) {
@@ -616,6 +629,12 @@ function bindEvents() {
     }
   });
 
+  elements.practiceArea.addEventListener('input', event => {
+    if (event.target.closest?.('[data-note-input]')) {
+      state.practiceNoteDirty = true;
+    }
+  });
+
   elements.practiceArea.addEventListener('submit', async event => {
     if (!event.target.closest('[data-answer-form]')) return;
     event.preventDefault();
@@ -983,7 +1002,29 @@ function downloadTextFile(filename, text) {
 async function openBankDetail(bankId) {
   revokeAssetUrls();
 
-  const [bank, questions, progress, favorites, unfamiliar, notes, due, resumeSession] = await Promise.all([
+  const detail = await loadBankDetailData(bankId);
+  if (!detail.bank) {
+    showToast(elements.toastRegion, '找不到這個題庫。', 'error');
+    await refreshBanks();
+    showView('library');
+    return;
+  }
+
+  applyBankDetailData(detail, { resetLearningFilter: true });
+  showView('bank-detail');
+}
+
+async function loadBankDetailData(bankId) {
+  const [
+    bank,
+    questions,
+    progress,
+    favorites,
+    unfamiliar,
+    notes,
+    due,
+    resumeSession,
+  ] = await Promise.all([
     getBank(bankId),
     getQuestionsByBank(bankId),
     listQuestionProgress(bankId),
@@ -994,17 +1035,43 @@ async function openBankDetail(bankId) {
     getLatestUnfinishedSessionForBank(bankId),
   ]);
 
-  if (!bank) {
-    showToast(elements.toastRegion, '找不到這個題庫。', 'error');
-    await refreshBanks();
-    showView('library');
-    return;
-  }
+  return {
+    bank,
+    questions,
+    progress,
+    favorites,
+    unfamiliar,
+    notes,
+    due,
+    resumeSession,
+  };
+}
+
+function applyBankDetailData(detail, {
+  resetLearningFilter = false,
+  preservedFilters = null,
+} = {}) {
+  const {
+    bank,
+    questions,
+    progress,
+    favorites,
+    unfamiliar,
+    notes,
+    due,
+    resumeSession,
+  } = detail;
 
   state.currentBank = bank;
   state.allQuestions = questions;
-  state.learningFilter = 'all';
-  state.learning = buildLearningState(progress, favorites, unfamiliar, notes, due);
+  if (resetLearningFilter) state.learningFilter = 'all';
+  state.learning = buildLearningState(
+    progress,
+    favorites,
+    unfamiliar,
+    notes,
+    due,
+  );
   state.resumeSession = resumeSession;
   state.filteredQuestions = [...questions];
 
@@ -1023,7 +1090,53 @@ async function openBankDetail(bankId) {
       resumeTotal: resumeStats?.total || 0,
     },
   });
-  showView('bank-detail');
+
+  if (preservedFilters) {
+    restoreBankDetailFilters(preservedFilters);
+    applyDetailFilters();
+  }
+}
+
+function restoreBankDetailFilters(filters = {}) {
+  const keyword = elements.bankDetailArea.querySelector('[data-filter-keyword]');
+  if (keyword) keyword.value = filters.keyword || '';
+
+  for (const [selector, value] of [
+    ['[data-filter-type]', filters.type],
+    ['[data-filter-difficulty]', filters.difficulty],
+    ['[data-filter-chapter]', filters.chapter],
+  ]) {
+    const select = elements.bankDetailArea.querySelector(selector);
+    if (!select) continue;
+    const normalized = String(value || 'all');
+    select.value = [...select.options].some(option => option.value === normalized)
+      ? normalized
+      : 'all';
+  }
+}
+
+async function refreshCurrentBankDetailAfterSync() {
+  const bankId = state.currentBank?.id;
+  if (!bankId) return;
+
+  const preservedFilters = readBankFilters(elements.bankDetailArea);
+  const detail = await loadBankDetailData(bankId);
+  if (!detail.bank) {
+    showToast(
+      elements.toastRegion,
+      '目前題庫已由同步更新或移除，已回到我的題庫。',
+      'info',
+    );
+    await refreshBanks();
+    await refreshHomeDashboard();
+    showView('library');
+    return;
+  }
+
+  applyBankDetailData(detail, {
+    resetLearningFilter: false,
+    preservedFilters,
+  });
 }
 
 function applyDetailFilters() {
@@ -1036,7 +1149,7 @@ function applyDetailFilters() {
   renderFilteredQuestions(elements.bankDetailArea, state.filteredQuestions, learning);
 }
 
-async function openReviewCenter() {
+async function openReviewCenter({ show = true } = {}) {
   await refreshBanks();
   const timeZone = await getStudyTimeZone();
 
@@ -1151,7 +1264,7 @@ async function openReviewCenter() {
   };
 
   renderLearningHubFromCache();
-  showView('review');
+  if (show) showView('review');
 }
 
 function renderLearningHubFromCache() {
@@ -1290,7 +1403,7 @@ async function startDedicatedReview(bankId, mode) {
   await startPractice(selected, mode);
 }
 
-async function openStats() {
+async function openStats({ show = true } = {}) {
   await refreshBanks();
   const timeZone = await getStudyTimeZone();
 
@@ -1378,7 +1491,7 @@ async function openStats() {
   if (!validScopes.has(state.statsScope)) state.statsScope = 'global';
 
   renderStatsFromCache();
-  showView('stats');
+  if (show) showView('stats');
 }
 
 function renderStatsFromCache() {
@@ -1409,7 +1522,7 @@ function renderStatsFromCache() {
 }
 
 
-async function openExamCenter() {
+async function openExamCenter({ show = true } = {}) {
   stopExamTimer();
   await refreshBanks();
 
@@ -1427,7 +1540,7 @@ async function openExamCenter() {
   }));
 
   renderExamCenter(elements.examCenterArea, groups);
-  showView('exam-center');
+  if (show) showView('exam-center');
 }
 
 async function startExam(bankId, questionCount, durationMinutes) {
@@ -1823,6 +1936,7 @@ async function renderCurrentPracticeQuestion() {
   setFavoriteButton(elements.practiceArea, Boolean(favorite));
   setUnfamiliarButton(elements.practiceArea, Boolean(unfamiliar));
   setNoteValue(elements.practiceArea, note);
+  state.practiceNoteDirty = false;
 
   await hydrateAssetImages(question.images || [], '[data-question-images]');
   await persistPracticeSession();
@@ -1898,6 +2012,7 @@ async function saveCurrentNote() {
 
   const text = getNoteValue(elements.practiceArea);
   await saveNote(state.currentBank.id, questionId, text);
+  state.practiceNoteDirty = false;
   showToast(
     elements.toastRegion,
     text.trim() ? '筆記已儲存。' : '空白筆記已移除。',
@@ -1993,7 +2108,156 @@ function createEmptyLearningState() {
   };
 }
 
+
+const RUNTIME_DATA_ENTITY_TYPES = new Set([
+  'attempt',
+  'favorite',
+  'unfamiliar',
+  'note',
+  'learning-goal',
+  'account-settings',
+  'author-library',
+  'user-bank',
+  'practice-session',
+  'exam-session',
+  'exam-answer',
+]);
+
+function hasRuntimeEntityType(entityTypes, allowedTypes = null) {
+  const source = entityTypes instanceof Set
+    ? entityTypes
+    : new Set(entityTypes || []);
+  if (source.size === 0) return false;
+
+  const target = allowedTypes || RUNTIME_DATA_ENTITY_TYPES;
+  return [...source].some(type => target.has(type));
+}
+
+async function refreshVisibleDataAfterSync(detail = {}) {
+  const entityTypes = new Set(detail?.entityTypes || []);
+  if (!hasRuntimeEntityType(entityTypes)) return;
+
+  if (state.currentView === 'library') {
+    await refreshBanks();
+    await refreshHomeDashboard();
+    return;
+  }
+
+  if (state.currentView === 'bank-detail') {
+    if (hasRuntimeEntityType(entityTypes, new Set([
+      'attempt',
+      'favorite',
+      'unfamiliar',
+      'note',
+      'practice-session',
+      'user-bank',
+    ]))) {
+      await refreshCurrentBankDetailAfterSync();
+    }
+    return;
+  }
+
+  if (state.currentView === 'practice') {
+    if (hasRuntimeEntityType(entityTypes, new Set([
+      'favorite',
+      'unfamiliar',
+      'note',
+    ]))) {
+      await refreshCurrentPracticeLearningMetadata();
+    }
+    return;
+  }
+
+  if (state.currentView === 'review') {
+    if (
+      !isUserEditingWithin(elements.reviewArea) &&
+      hasRuntimeEntityType(entityTypes, new Set([
+        'attempt',
+        'favorite',
+        'unfamiliar',
+        'note',
+        'learning-goal',
+        'account-settings',
+        'practice-session',
+        'user-bank',
+      ]))
+    ) {
+      await openReviewCenter({ show: false });
+    }
+    return;
+  }
+
+  if (state.currentView === 'stats') {
+    if (hasRuntimeEntityType(entityTypes, new Set([
+      'attempt',
+      'account-settings',
+      'user-bank',
+    ]))) {
+      await openStats({ show: false });
+    }
+    return;
+  }
+
+  if (state.currentView === 'exam-center') {
+    if (hasRuntimeEntityType(entityTypes, new Set([
+      'exam-session',
+      'exam-answer',
+      'user-bank',
+    ]))) {
+      await openExamCenter({ show: false });
+    }
+  }
+}
+
+async function refreshCurrentPracticeLearningMetadata() {
+  const questionId = state.practice?.currentQuestionId;
+  const bankId = state.currentBank?.id;
+  if (!questionId || !bankId) return;
+
+  const [favorite, unfamiliar, note] = await Promise.all([
+    getFavorite(bankId, questionId),
+    getUnfamiliar(bankId, questionId),
+    getNote(bankId, questionId),
+  ]);
+
+  const favoriteActive = Boolean(favorite);
+  const unfamiliarActive = Boolean(unfamiliar);
+  const noteActive = Boolean(String(note?.text || '').trim());
+
+  setFavoriteButton(elements.practiceArea, favoriteActive);
+  setUnfamiliarButton(elements.practiceArea, unfamiliarActive);
+  updateLearningSet(state.learning.favoriteIds, questionId, favoriteActive);
+  updateLearningSet(
+    state.learning.unfamiliarIds,
+    questionId,
+    unfamiliarActive,
+  );
+  updateLearningSet(state.learning.noteIds, questionId, noteActive);
+
+  // Preserve text typed into the editor but not saved yet. A later save
+  // descends from the newly applied remote Note revision in IndexedDB.
+  if (!state.practiceNoteDirty) {
+    setNoteValue(elements.practiceArea, note);
+  }
+}
+
+function updateLearningSet(set, value, active) {
+  if (!(set instanceof Set)) return;
+  if (active) set.add(value);
+  else set.delete(value);
+}
+
+function isUserEditingWithin(container) {
+  const active = document.activeElement;
+  return Boolean(
+    active &&
+    container?.contains(active) &&
+    active.matches('input, textarea, select, [contenteditable="true"]'),
+  );
+}
+
 function showView(name) {
+  state.currentView = name;
   const views = {
     library: elements.libraryView,
     review: elements.reviewView,

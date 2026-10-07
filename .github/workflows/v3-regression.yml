@@ -181,5 +181,8 @@ jobs:
       - name: Run V5 cross-device conflict convergence audit
         run: npm run audit:v5-conflict-convergence
 
+      - name: Run V5 sync runtime UI refresh audit
+        run: npm run audit:v5-sync-runtime-refresh
+
       - name: Run V5 release readiness diagnostics audit
         run: npm run audit:v5-release-readiness

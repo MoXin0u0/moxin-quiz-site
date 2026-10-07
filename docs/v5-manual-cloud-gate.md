@@ -38,8 +38,8 @@ Record concrete evidence for every row before authorizing production cutover.
 | Bidirectional propagation | A change made on device B reaches device A through the same cloud profile | ✅ PASS — device B changed the synced learning-goal data, automatic sync returned pending=0/conflicts=0, and device A received the change after manual sync |
 | Two devices offline attempts | Each device can answer offline independently | ✅ PASS — video evidence shows isolated device/browser sessions operating with DevTools Offline and retaining separate local attempt activity |
 | Reconnect union | Immutable Attempt Events from both devices converge without duplication/loss | ✅ PASS — after reconnect/sync, both device views converged on the same刷題統計（今日刷題 2、刷題 2/9）while sync status returned green; no attempt was overwritten |
-| Note concurrent edit | Real concurrent edits surface a conflict; local / cloud / merge paths behave as designed | ⚠️ RETEST REQUIRED — live test exposed two defects: merged Note text was written to non-canonical `content` instead of `text`, and another device could retain an obsolete open conflict after receiving a descendant resolution revision. Repairs are implemented on the live RC and automated gating is running. |
-| Favorite concurrent edit | Deterministic LWW resolves explicit boolean state consistently | Pending |
+| Note concurrent edit | Real concurrent edits surface a conflict; local / cloud / merge paths behave as designed | ✅ PASS — post-repair live retest succeeded: the manual merged Note value propagated correctly, both devices converged to the merged text, and the stale conflict no longer remained actionable. |
+| Favorite concurrent edit | Deterministic LWW resolves explicit boolean state consistently | ⚠️ UI RETEST REQUIRED — live test confirmed the underlying deterministic LWW converged to the later `isFavorite=false` state after re-entering the question, but the already-open Practice UI retained the stale favorite marker until rerender. Runtime UI rehydration repair is being added before final PASS. |
 | User Bank conflict | Losing branch is preserved as a conflict copy | Pending |
 | Studio Draft conflict | Losing branch is preserved as a conflict copy | Pending |
 | Unfinished Practice | Resume state survives cross-device reconciliation according to revision rules | Pending |
@@ -64,6 +64,7 @@ During manual testing verify:
 - Asset upload ordering remains binary first, pointer/document last.
 - Open conflicts block automatic push.
 - Automatic sync never opens OAuth/GIS by itself.
+- Remote-applied learning state refreshes the currently visible learning UI without requiring navigation/reload, while unsaved Note textarea input is preserved.
 - Backup remains independent from Sync.
 
 ## Production cutover sequence

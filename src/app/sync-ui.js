@@ -43,6 +43,10 @@ import {
   buildNoteMergeSeed,
   getConflictPresentation,
 } from '../ui/conflicts.js';
+import {
+  dispatchSyncDataRefresh,
+  notifyCycleDataRefresh,
+} from './sync-data-refresh.js';
 
 const statusHost = document.querySelector('#syncStatusHost');
 const centerHost = document.querySelector('#syncCenterHost');
@@ -395,6 +399,13 @@ async function mergeNoteConflict(conflictId) {
     });
     if (await handleConflictRefreshRequired(result)) return;
 
+    dispatchSyncDataRefresh({
+      source: 'conflict-resolution',
+      entities: [{
+        entityType: conflict.entityType,
+        entityKey: conflict.entityKey,
+      }],
+    }, window);
     await refreshSyncStatus();
     showToast(
       toastRegion,
@@ -445,6 +456,20 @@ async function resolveConflict(conflictId, choice) {
     const result = await resolveSyncConflict(conflict.conflictId, { choice });
     if (await handleConflictRefreshRequired(result)) return;
 
+    const changedEntities = [{
+      entityType: conflict.entityType,
+      entityKey: conflict.entityKey,
+    }];
+    if (result.preservedCopy?.entityType && result.preservedCopy?.entityKey) {
+      changedEntities.push({
+        entityType: result.preservedCopy.entityType,
+        entityKey: result.preservedCopy.entityKey,
+      });
+    }
+    dispatchSyncDataRefresh({
+      source: 'conflict-resolution',
+      entities: changedEntities,
+    }, window);
     await refreshSyncStatus();
 
     const copyNote = result.preservedCopy
@@ -527,6 +552,10 @@ async function connectCloud() {
     }
 
     const applied = await applyFirstCloudConnection(provider, planned);
+    notifyCycleDataRefresh(applied.cycle, {
+      source: 'first-sync',
+      target: window,
+    });
     await refreshSyncStatus();
     announceCycleResult(applied.cycle, '首次同步');
   } catch (error) {
@@ -573,6 +602,10 @@ async function switchCloudAccount({ selectAccount = false } = {}) {
     }
 
     const applied = await applyCloudAccountSwitch(provider, planned);
+    notifyCycleDataRefresh(applied.cycle, {
+      source: 'account-switch',
+      target: window,
+    });
     await refreshSyncStatus();
     announceCycleResult(applied.cycle, '帳號切換');
   } catch (error) {
@@ -617,6 +650,10 @@ async function runAutomaticSync({ snapshot } = {}) {
     cloudProvider,
     current.linkedProfileId,
   );
+  notifyCycleDataRefresh(cycle, {
+    source: 'automatic-sync',
+    target: window,
+  });
   await refreshSyncStatus();
   return cycle;
 }
@@ -635,6 +672,10 @@ async function syncNow() {
       provider,
       snapshot.linkedProfileId,
     );
+    notifyCycleDataRefresh(cycle, {
+      source: 'manual-sync',
+      target: window,
+    });
 
     if (
       cycle?.status === 'blocked' &&
