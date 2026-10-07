@@ -298,11 +298,11 @@ function buildMergedBranch(conflict, {
     );
   }
 
-  const content = typeof mergedValue === 'string'
+  const text = typeof mergedValue === 'string'
     ? mergedValue
-    : mergedValue?.content;
-  const normalizedContent = String(content ?? '').trim();
-  if (!normalizedContent) {
+    : mergedValue?.text ?? mergedValue?.content;
+  const normalizedText = String(text ?? '').trim();
+  if (!normalizedText) {
     throw conflictError(
       'Merged note content cannot be empty.',
       'CONFLICT_MERGE_EMPTY',
@@ -317,14 +317,16 @@ function buildMergedBranch(conflict, {
       ? remoteBranch.value
       : null) ||
     {};
+  const value = {
+    ...source,
+    text: normalizedText,
+  };
+  delete value.content;
 
   return {
     revision: null,
     deleted: false,
-    value: {
-      ...source,
-      content: normalizedContent,
-    },
+    value,
   };
 }
 
