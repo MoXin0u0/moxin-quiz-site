@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="墨忻刷題網 v4.1｜本機優先、可離線使用的個人學習與刷題平台。" />
+  <meta name="description" content="墨忻刷題網 v5｜本機優先、可離線使用，並可選用跨裝置雲端同步的個人學習與刷題平台。" />
   <meta name="theme-color" content="#3559d9" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -58,13 +58,13 @@
         <div class="landing-eyebrow">
           <span>Local-first</span>
           <span>PWA</span>
-          <span>v4.1</span>
+          <span>v5</span>
         </div>
 
         <h1 id="landingHeroTitle">把每一次練習，<br />都留在自己的學習節奏裡。</h1>
         <p class="landing-hero-lead">
           從題庫、練習、複習到學習統計，墨忻刷題網把個人刷題流程整理在同一個本機優先的學習空間。
-          不強迫登入；已加入的題庫可離線繼續使用。
+          不強迫登入；已加入的題庫可離線繼續使用。V5 的雲端同步是選用功能，完整備份仍獨立保留。
         </p>
 
         <div class="landing-hero-actions">
@@ -76,6 +76,7 @@
           <span><i aria-hidden="true"></i> 不強迫登入</span>
           <span><i aria-hidden="true"></i> 本機保存學習資料</span>
           <span><i aria-hidden="true"></i> 支援離線使用</span>
+          <span><i aria-hidden="true"></i> 雲端同步可選用</span>
         </div>
       </div>
 
@@ -119,7 +120,7 @@
 
     <section class="landing-strip" aria-label="產品定位">
       <div><strong>本機優先</strong><span>核心資料保存在目前瀏覽器</span></div>
-      <div><strong>跨裝置自由</strong><span>可用完整備份自行轉移資料</span></div>
+      <div><strong>跨裝置自由</strong><span>可選用雲端同步，也可用完整備份自行轉移</span></div>
       <div><strong>離線可用</strong><span>PWA App Shell 支援離線學習</span></div>
       <div><strong>題庫自主</strong><span>匯入、製作、匯出自己的題庫</span></div>
     </section>
@@ -205,9 +206,18 @@
         <article class="update-item current reveal">
           <div class="update-marker" aria-hidden="true"></div>
           <div>
-            <div class="update-meta"><strong>v4.1</strong><time datetime="2026-10-04">2026-10-04</time><span>目前版本</span></div>
-            <h3>Public Landing &amp; App Entry</h3>
-            <p>新增正式網站首頁，將「認識網站」與「進入學習大廳」分層；PWA 仍直接進入 App。</p>
+            <div class="update-meta"><strong>v5</strong><time datetime="2026-10-07">2026-10-07</time><span>開發分支</span></div>
+            <h3>Local-first + Optional Cloud Sync</h3>
+            <p>加入可選用的跨裝置同步、資料與同步中心、衝突處理與裝置管理；未登入與離線使用仍是完整路徑。</p>
+          </div>
+        </article>
+
+        <article class="update-item reveal">
+          <div class="update-marker" aria-hidden="true"></div>
+          <div>
+            <div class="update-meta"><strong>v4.1</strong><span>Public Landing</span></div>
+            <h3>正式首頁與 App 入口</h3>
+            <p>將「認識網站」與「進入學習大廳」分層；PWA 維持直接進入 App。</p>
           </div>
         </article>
 
@@ -234,9 +244,9 @@
         </div>
 
         <div class="data-points">
-          <div><strong>換裝置前</strong><span>建議先下載完整備份</span></div>
-          <div><strong>清除網站資料前</strong><span>先確認已有可還原備份</span></div>
-          <div><strong>跨裝置雲端同步</strong><span>規劃於後續主版本獨立處理</span></div>
+          <div><strong>本機優先</strong><span>不登入也能完整練習與離線使用</span></div>
+          <div><strong>雲端同步</strong><span>需要時才自行連結，不會強迫啟用</span></div>
+          <div><strong>完整備份</strong><span>獨立於同步，可自行保存與還原</span></div>
         </div>
       </div>
     </section>
@@ -244,7 +254,7 @@
     <section class="landing-final-cta reveal" aria-labelledby="finalCtaTitle">
       <span>準備好了嗎？</span>
       <h2 id="finalCtaTitle">進入自己的學習空間。</h2>
-      <p>不需要建立帳號。先選一個題庫，就可以開始。</p>
+      <p>不需要建立帳號。先選一個題庫就能開始；需要跨裝置時，再自行選擇是否連結雲端。</p>
       <a class="landing-button primary" href="./app.html">開始使用墨忻刷題網</a>
     </section>
   </main>
@@ -254,7 +264,7 @@
       <span class="landing-brand-mark" aria-hidden="true">墨</span>
       <span><strong>墨忻刷題網</strong><small>個人學習與刷題平台</small></span>
     </div>
-    <p>v4.1 · 最後更新 2026-10-04</p>
+    <p>v5 development preview · 最後更新 2026-10-07</p>
     <a href="./app.html">進入學習大廳</a>
   </footer>
 

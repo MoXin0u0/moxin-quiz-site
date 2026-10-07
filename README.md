@@ -1,10 +1,10 @@
 # 墨忻刷題網
 
-墨忻刷題網 **v4.1** 是一個部署於 GitHub Pages 的 **Local-first 個人學習與刷題平台**。網站不需要後端、登入系統或付費伺服器；題庫、學習紀錄、目標、工作室草稿與大部分設定保存在目前瀏覽器，並支援 PWA 離線使用。
+墨忻刷題網 **v5 開發分支** 是部署於 GitHub Pages 的 **Local-first / Offline-ready 個人學習與刷題平台**。核心功能不要求登入：題庫、學習紀錄、目標與工作室草稿先寫入本機 IndexedDB，PWA 離線時仍可使用。V5 另外加入 **可選用的 Google Drive appDataFolder 跨裝置同步**；完整備份仍是獨立的資料安全機制，不會被同步取代。
 
-> v4.1 新增正式公開首頁與 App 入口分層；v4.0 Learning Studio 核心功能維持不變。
+> 目前 `v5-cloud-sync` 分支的同步 UI 與同步引擎已完成自動化 Gate，但 `features.cloudSync=false`、Google OAuth Client ID 仍留白，因此不會在背景登入或上傳。正式啟用前仍維持完整的 Local-only 路徑。
 
-## v4.1 公開首頁與 App 入口
+## V5 定位與入口
 
 v4.1 將網站拆成兩層：
 
@@ -16,6 +16,18 @@ v3.html     → 舊網址相容入口（與 app.html 相同）
 
 公開首頁提供功能介紹、開始使用、使用流程、更新日誌與資料說明；不初始化 IndexedDB。
 PWA 的 `start_url` 為 `./app.html`，因此安裝後仍直接進入學習大廳。
+
+### V5 可選用雲端同步
+
+V5 採 **Local-first + Optional Cloud Sync**：
+
+- 不登入仍可完整練習、複習、模擬考、統計與使用題庫工作室。
+- 本機 mutation 先成功寫入 IndexedDB，再由同步流程處理雲端。
+- Google Drive 僅使用 `drive.appdata` / `appDataFolder`，不把題庫資料散落到一般 Drive。
+- 作者題庫內容不重複上傳；同步的是 membership/reference 與個人學習資料。
+- 首次同步與切換帳號會先做 Inventory / Reconciliation，確認前不把本機資料寫進目標帳號。
+- 衝突敏感資料不會 silent overwrite；Note 可選本機、雲端或文字合併。
+- 完整備份與同步彼此獨立；備份檔不包含 OAuth token、裝置雲端操作狀態。
 
 ## v4.0 主要功能
 
@@ -206,7 +218,7 @@ Schema 版本目前為 `2.0`。
 
 少量 UI / release metadata 使用 localStorage。
 
-如果清除網站資料、更換瀏覽器或更換裝置，本機資料不會自動同步。請定期到「設定」下載完整備份。
+如果沒有啟用可選用的雲端同步，清除網站資料、更換瀏覽器或更換裝置時，本機資料不會自動搬移。無論是否使用同步，都建議定期到「設定」下載完整備份。
 
 ### 內部相容性名稱
 
@@ -223,7 +235,7 @@ Settings:  moxin.v3.settings
 
 ## 完整備份
 
-完整備份涵蓋題庫、assets、學習紀錄、Session、工作室草稿與學習目標。
+完整備份涵蓋題庫、assets、學習紀錄、Session、工作室草稿與學習目標。V5 仍把 Backup 與 Sync 視為兩個不同的安全層；還原備份會建立新的裝置身分，不會還原 OAuth token 或舊裝置的雲端操作狀態。
 
 v4.0 發布前已以真實 Chromium 做過：
 

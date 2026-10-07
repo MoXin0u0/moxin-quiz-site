@@ -57,6 +57,7 @@ Updated: 2026-10-07
 | G8C5.1 Conflict Consistency Safety | ✅ PASS | Unit/release preflight + full browser suite + stale-local/delete-vs-edit regression green at `b7eccfeea6eca28f69cbf39bacea0c25216bef7f` |
 | B13C Product Integration | ✅ Complete | Sync Center, first-sync/account-switch UX, conflict resolution + note merge, device controls, mobile 5-tab IA, automatic scheduler, accessibility/product integration all closed |
 | G8C Product Integration | ✅ PASS | Push + PR workflows fully green at `b7eccfeea6eca28f69cbf39bacea0c25216bef7f`; no merge to main and cloud runtime remains dormant |
+| B13D1 Release Readiness / Diagnostics | 🚧 Implemented / gating | V5 landing/app/manifest positioning, DB v4 + migration + cloud/auth/schema/outbox/conflict/last-sync diagnostics, dormant cloud release checks |
 
 ## Current green CI evidence
 
@@ -174,4 +175,4 @@ G7, B13A/G8A, B13B/G8B, B13B.5/G8B.5, and the full B13C/G8C product-integration 
 
 ## B13 remaining target
 
-B13C product integration is complete. Remaining work is release/readiness integration: diagnostics/preflight, release-facing copy, dormant cloud configuration checks, and final automated readiness gates. Live Google credentials, manual two-device cloud validation, release tagging, production cutover, and merge to `main` require a separate explicit authorization step.
+B13C product integration is complete. B13D1 release/readiness integration is implemented and under gating: the public/app metadata now describes V5 as Local-first / Offline-ready / Optional Cloud Sync, while the Settings preflight exposes DB v4, migration, cloud runtime/config/auth/schema, Outbox, conflicts, last sync, and storage readiness without activating OAuth. Live Google credentials, manual two-device cloud validation, release tagging, production cutover, and merge to `main` still require a separate explicit authorization step.
