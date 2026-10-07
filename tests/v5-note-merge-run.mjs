@@ -35,12 +35,12 @@ const conflict = {
   remoteRevision,
   localValue: {
     key: 'bank::Q1',
-    content: '本機段落',
+    text: '本機段落',
     revision: localRevision,
   },
   remoteValue: {
     key: 'bank::Q1',
-    content: '雲端段落',
+    text: '雲端段落',
     revision: remoteRevision,
   },
   createdAt: '2026-10-07T08:02:00.000Z',
@@ -96,10 +96,13 @@ assert.match(resolution, /CONFLICT_MERGE_REVISION_MISSING/);
 assert.match(resolution, /status:\s*'refresh-required'/);
 assert.match(resolution, /localSnapshotPreviousRevisionId/);
 assert.match(resolution, /CONFLICT_MERGE_EMPTY/);
+assert.match(resolution, /text:\s*normalizedText/);
+assert.match(resolution, /delete value\.content/);
 assert.match(dialogs, /showTextAreaDialog/);
 assert.match(dialogs, /input\.multiline/);
 assert.match(syncUi, /mergeNoteConflict/);
 assert.match(syncUi, /showTextAreaDialog/);
+assert.match(syncUi, /mergedValue:\s*\{ text: mergedContent \}/);
 assert.match(dialogCss, /\.app-dialog-textarea/);
 
 assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13d1-1'/);
