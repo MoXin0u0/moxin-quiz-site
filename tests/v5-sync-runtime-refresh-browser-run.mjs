@@ -94,7 +94,15 @@ try {
     await done;
   });
 
-  await page.click('#refreshBanksButton');
+  await page.reload({
+    waitUntil: 'domcontentloaded',
+    timeout: 15000,
+  });
+  await page.waitForFunction(() =>
+    (document.querySelector('#storageStatus')?.textContent || '')
+      .includes('IndexedDB 已就緒'),
+  null, { timeout: 15000 });
+
   await page.click('[data-library-source-tab="user"]');
   await page.click('[data-open-bank="bank-runtime-refresh"]');
   await page.waitForSelector('#bankDetailView:not([hidden])');
