@@ -1,5 +1,6 @@
 
 import { APP_CONFIG } from './config.js';
+import { getDatabaseRuntimeState } from '../storage/db.js';
 import { GoogleDriveAppDataProvider } from '../cloud/google/google-drive.js';
 import {
   planFirstCloudConnection,
@@ -72,6 +73,15 @@ async function initSyncUi() {
 
 async function refreshSyncStatus() {
   if (!APP_CONFIG.features.syncUi) return null;
+
+  // Database maintenance owns the connection lifecycle. Status refreshes must
+  // not reopen a deliberately closed or blocked database behind restore,
+  // migration, or test reset work.
+  const dbState = getDatabaseRuntimeState();
+  if (['closed', 'blocked', 'versionchange'].includes(dbState.status)) {
+    return null;
+  }
+
   const snapshot = await getSyncStatusSnapshot();
   renderSyncStatusButton(statusHost, snapshot);
 

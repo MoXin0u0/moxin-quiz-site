@@ -215,15 +215,15 @@ async function bootstrap() {
   });
   await runV5MigrationToCompletion();
   bindEvents();
-  renderStorageStatus(elements.storageStatus, {
-    ok: true,
-    message: 'IndexedDB 已就緒；目前為本機優先模式。',
-  });
   await refreshBanks();
   await refreshAuthorCatalog();
   await refreshHomeDashboard();
   setLibrarySourceTab(state.librarySourceTab);
   showView('library');
+  renderStorageStatus(elements.storageStatus, {
+    ok: true,
+    message: 'IndexedDB 已就緒；目前為本機優先模式。',
+  });
 }
 
 function bindEvents() {
