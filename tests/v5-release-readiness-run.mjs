@@ -40,6 +40,14 @@ const readme = fs.readFileSync('README.md', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const v5Preflight = fs.readFileSync('scripts/v5-release-preflight.mjs', 'utf8');
+const cutoverPreflight = fs.readFileSync(
+  'scripts/v5-cloud-cutover-preflight.mjs',
+  'utf8',
+);
+const manualGate = fs.readFileSync(
+  'docs/v5-manual-cloud-gate.md',
+  'utf8',
+);
 
 assert.match(index, /墨忻刷題網 v5/);
 assert.match(index, /雲端同步是選用功能/);
@@ -67,5 +75,17 @@ assert.equal(pkg.scripts['preflight:v4'], 'node scripts/v4-release-preflight.mjs
 assert.match(v5Preflight, /Cloud runtime cannot be enabled without a Google Client ID/);
 assert.match(v5Preflight, /drive\.appdata/);
 assert.match(v5Preflight, /cloud runtime dormant/);
+assert.equal(
+  pkg.scripts['preflight:cloud-cutover'],
+  'node scripts/v5-cloud-cutover-preflight.mjs',
+);
+assert.doesNotMatch(pkg.scripts.ci, /cloud-cutover/);
+assert.match(cutoverPreflight, /Cloud runtime is still disabled/);
+assert.match(cutoverPreflight, /Google OAuth Client ID is not configured/);
+assert.match(cutoverPreflight, /Release channel is still development/);
+assert.match(manualGate, /Manual two-device matrix/);
+assert.match(manualGate, /Backup restore → reconcile/);
+assert.match(manualGate, /Production cutover sequence/);
+assert.match(manualGate, /DB-v4-compatible hotfix branch/);
 
 console.log('V5 B13D1 release readiness contracts passed.');
