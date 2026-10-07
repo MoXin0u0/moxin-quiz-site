@@ -1,4 +1,6 @@
 
+import { renderConflictCards } from './conflicts.js';
+
 export function renderSyncStatusButton(container, snapshot) {
   if (!container) return;
   if (!snapshot?.syncUiEnabled) {
@@ -107,6 +109,20 @@ export function renderSyncCenter(container, snapshot) {
       ? escapeHtml(planLabel(snapshot.cloudInventory.plan))
       : '首次連結或切換帳號時才會建立盤點。',
     '</small></article></div></section>',
+
+    ...(snapshot?.conflictCount
+      ? [
+          '<section class="sync-center-section sync-conflicts-section" data-sync-conflicts-section>',
+          '<div class="sync-center-section-heading"><div>',
+          '<span>Conflict Resolution</span><h3>同步衝突</h3>',
+          '<p>衝突處理前不會把任何一邊靜默覆寫。請比較此裝置與雲端版本，再明確選擇。</p>',
+          '</div><span class="status-badge warning">',
+          String(Number(snapshot.conflictCount || 0)), ' 項待處理</span></div>',
+          '<div class="sync-conflict-list">',
+          renderConflictCards(snapshot.conflicts || []),
+          '</div></section>',
+        ]
+      : []),
 
     '<section class="sync-center-section"><div class="sync-center-section-heading"><div>',
     '<span>Devices</span><h3>已知裝置</h3>',

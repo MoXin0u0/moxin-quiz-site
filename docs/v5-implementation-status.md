@@ -47,6 +47,7 @@ Updated: 2026-10-07
 | G8B.5 Profile Boundary Consistency | ✅ PASS | Unit/release preflight + full browser suite green at `dd0281027cb73ecc27fae07e5e417e28142ea5a3` |
 | B13C1 Sync Center / Settings / Mobile IA Shell | ✅ Complete | Canonical sync-state vocabulary, Data & Sync Center, Account & Cloud settings card, Data Safety home action, 5-tab mobile More, accessible custom dialogs; light/dark Axe gate green at `06fbc9c1c61fa96215b0b6c3e55c7196bc41b72c` |
 | B13C2 First Sync / Account Switch Reconciliation UX | ✅ Complete | Inventory-first planning, zero-cloud-write pre-confirmation, explicit Apply/Cancel dialogs, confirmed profile bootstrap, account-switch cancel preserves original link; full gate green at `613f6da4d79f1e40b8a659be5313990ddd019dc9` |
+| B13C3 Conflict Resolution UX | 🚧 Implemented / gating | Revisioned two-parent resolution for conflict-sensitive data, explicit local/cloud choice UI, preserved conflict copies for practice sessions / Studio drafts / user banks, immutable collision manual-recovery guard |
 
 ## Current green CI evidence
 
@@ -76,6 +77,7 @@ At `613f6da4d79f1e40b8a659be5313990ddd019dc9`:
 - First-sync planning before confirmation: 0 cloud writes
 - First-sync cancel returns to LOCAL_ONLY without cloud mutation
 - Account-switch planning/cancel preserves original linked profile and performs 0 writes to target account
+- B13C3 conflict resolution core and UI are implemented and awaiting the dedicated conflict gate
 
 ## B07.5 repair notes
 
@@ -144,3 +146,8 @@ B12.5 closed the pre-B13 reliability gaps:
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
 G7, B13A/G8A, B13B/G8B, B13B.5/G8B.5, B13C1, and B13C2 are closed. B13C2 adds provider-neutral first-sync/account-switch orchestration, inventory-first confirmation dialogs, cancellation paths that restore or preserve the previous local/cloud link, and explicit cloud-profile creation only after the user confirms Apply. A bootstrap/readiness race exposed by the new UI was also repaired so background status refresh cannot reopen a deliberately closed/blocked database during restore/migration/reset work. Cloud runtime remains disabled and Google OAuth remains unconfigured, so these production paths remain dormant until configuration is intentionally activated. The next target is B13C3 conflict-resolution UX, followed by automatic sync scheduling.
+
+
+## B13C3 current target
+
+Conflict-resolution UX is implemented and under gating before automatic sync scheduling.

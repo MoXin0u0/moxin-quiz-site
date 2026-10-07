@@ -150,3 +150,6 @@ jobs:
 
       - name: Run V5 first-sync and account-switch reconciliation UX audit
         run: npm run audit:v5-reconciliation-ui
+
+      - name: Run V5 conflict resolution UI audit
+        run: npm run audit:v5-conflict-resolution

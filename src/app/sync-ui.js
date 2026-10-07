@@ -31,6 +31,14 @@ import {
 } from '../ui/sync-center.js';
 import { showToast } from '../ui/library.js';
 import { showReconciliationPlanDialog } from '../ui/first-sync.js';
+import {
+  resolveSyncConflict,
+  CONFLICT_RESOLUTION_CHOICE,
+} from '../sync/conflict-resolution.js';
+import {
+  buildConflictResolutionMessage,
+  getConflictPresentation,
+} from '../ui/conflicts.js';
 
 const statusHost = document.querySelector('#syncStatusHost');
 const centerHost = document.querySelector('#syncCenterHost');
@@ -167,6 +175,26 @@ function bindGlobalActions() {
     if (revokeButton) {
       event.preventDefault();
       await revokeDevice(revokeButton.dataset.revokeDevice);
+      return;
+    }
+
+    const resolveLocal = event.target.closest('[data-resolve-conflict-local]');
+    if (resolveLocal) {
+      event.preventDefault();
+      await resolveConflict(
+        resolveLocal.dataset.resolveConflictLocal,
+        CONFLICT_RESOLUTION_CHOICE.LOCAL,
+      );
+      return;
+    }
+
+    const resolveRemote = event.target.closest('[data-resolve-conflict-remote]');
+    if (resolveRemote) {
+      event.preventDefault();
+      await resolveConflict(
+        resolveRemote.dataset.resolveConflictRemote,
+        CONFLICT_RESOLUTION_CHOICE.REMOTE,
+      );
       return;
     }
 
@@ -312,6 +340,58 @@ async function revokeDevice(deviceId) {
     'success',
   );
   await refreshSyncStatus();
+}
+
+async function resolveConflict(conflictId, choice) {
+  const snapshot = await getSyncCenterSnapshot();
+  const conflict = snapshot.conflicts.find(
+    item => String(item.conflictId) === String(conflictId),
+  );
+  if (!conflict) {
+    showToast(toastRegion, '找不到這筆待處理衝突，狀態可能已經更新。', 'warning');
+    await refreshSyncStatus();
+    return;
+  }
+
+  const presentation = getConflictPresentation(conflict);
+  if (!presentation.directlyResolvable) {
+    await showMessageDialog({
+      title: '這筆衝突需要人工復原',
+      message:
+        '此資料涉及不可變識別或目前不支援直接改寫的類型。' +
+        '系統不會自動選邊。請先建立完整備份，再依進階診斷資訊處理。',
+    });
+    return;
+  }
+
+  const selectedLabel = choice === CONFLICT_RESOLUTION_CHOICE.REMOTE
+    ? '採用雲端版本'
+    : '保留此裝置版本';
+
+  const confirmed = await showConfirmDialog({
+    title: selectedLabel + '？',
+    message: buildConflictResolutionMessage(conflict, choice),
+    confirmLabel: selectedLabel,
+    cancelLabel: '先不處理',
+    danger: false,
+  });
+  if (!confirmed) return;
+
+  try {
+    const result = await resolveSyncConflict(conflict.conflictId, { choice });
+    await refreshSyncStatus();
+
+    const copyNote = result.preservedCopy
+      ? '；另一個版本已另存為衝突副本'
+      : '';
+    showToast(
+      toastRegion,
+      '衝突已建立解決版本' + copyNote + '，會在下一次同步送出。',
+      'success',
+    );
+  } catch (error) {
+    await handleCloudActionError(error, '衝突處理失敗');
+  }
 }
 
 async function unlinkCloud() {
