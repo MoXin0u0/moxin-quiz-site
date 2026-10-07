@@ -9,13 +9,13 @@ export const APP_CONFIG = Object.freeze({
   legacyStoragePrefix: 'moxin.',
   features: Object.freeze({
     v5DataFoundation: true,
-    cloudSync: false,
+    cloudSync: true,
     syncUi: true,
   }),
   cloud: Object.freeze({
     provider: 'google-drive',
     minimumClientVersion: '5.0.0',
-    googleClientId: '',
+    googleClientId: '465928667951-721b0udej0814jjelmepk0h98c57cf2a.apps.googleusercontent.com',
     googleIdentityScriptUrl: 'https://accounts.google.com/gsi/client',
     googleDriveScope: 'https://www.googleapis.com/auth/drive.appdata',
     googleDriveApiBaseUrl: 'https://www.googleapis.com/drive/v3',
