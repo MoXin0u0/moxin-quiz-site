@@ -8,7 +8,7 @@ Updated: 2026-10-07
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head: `db6cda5b3fdff742b74f477a40e01671f6283010`
+- Current validated head: `dd0281027cb73ecc27fae07e5e417e28142ea5a3`
 
 ## Gate status
 
@@ -43,11 +43,12 @@ Updated: 2026-10-07
 | G8A Cloud Lifecycle Foundation | ✅ PASS | Unit/release preflight + full browser suite green at `61bc4565fc049e85f4667fbb06a9b014c6e96504` |
 | B13B Account Switching / Revocation Enforcement | ✅ Complete | Account identity preflight, zero-cloud-mutation switch inspection, explicit reconcile, remote revocation push-block, unlink-preserves-local |
 | G8B Account Lifecycle Safety | ✅ PASS | Unit/release preflight + full browser suite green at `f158defb2a96d28b5fec6bde8547785541a71963` |
-| B13B.5 Account Lifecycle Consistency Repair | 🚧 Implemented / gating | Purge profile-scoped device revision ancestry on switch/unlink, fresh local device genesis revision, stable resume semantics, stale block-state cleanup |
+| B13B.5 Account Lifecycle Consistency Repair | ✅ Complete | Purge profile-scoped device revision ancestry on switch/unlink, fresh local device genesis revision, stable resume semantics, stale block-state cleanup |
+| G8B.5 Profile Boundary Consistency | ✅ PASS | Unit/release preflight + full browser suite green at `dd0281027cb73ecc27fae07e5e417e28142ea5a3` |
 
 ## Current green CI evidence
 
-At `db6cda5b3fdff742b74f477a40e01671f6283010`:
+At `dd0281027cb73ecc27fae07e5e417e28142ea5a3`:
 
 - Unit + release preflight: PASS
 - Existing app browser audit: PASS
@@ -63,6 +64,9 @@ At `db6cda5b3fdff742b74f477a40e01671f6283010`:
 - Cloud object + object-backed repository audits: PASS
 - Sync-cycle engine audit: PASS
 - B12.5 retry / offline-reconnect / object-upload failure / cloud-only bootstrap browser matrix: PASS
+- B13A cloud profile / checkpoint / device registry audit: PASS
+- B13B account switching / revocation audit: PASS
+- B13B.5 device-revision profile-boundary / fresh-genesis / resume-semantics assertions: PASS
 
 ## B07.5 repair notes
 
@@ -130,4 +134,4 @@ B12.5 closed the pre-B13 reliability gaps:
 5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
-G7, B13A/G8A, and B13B/G8B are closed. B13B.5 is implemented and under gating after a post-disconnect audit found profile-scoped device revision ancestry could survive account switch/unlink. The repair purges only device revision lineage (user learning/content revisions remain intact), creates a fresh current-device genesis revision, fixes first-confirm vs resumed semantics, and clears stale block state. B13C remains intentionally unstarted until this repair gate is green.
+G7, B13A/G8A, B13B/G8B, and B13B.5/G8B.5 are closed. The post-disconnect consistency repair now removes profile-scoped device revision ancestry during account switch/unlink while preserving user learning/content revisions, creates a fresh current-device genesis revision, prevents old device heads from leaking into a new-profile checkpoint, fixes first-confirm vs resumed semantics, and clears stale block state. The next target is B13C Sync Center/product UI wiring, first-sync/account-switch dialogs, conflict/device management UI, and automatic sync scheduling.
