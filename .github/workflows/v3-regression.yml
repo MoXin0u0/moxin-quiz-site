@@ -8,6 +8,7 @@ on:
       - "v3.*"
       - "v4.*"
       - v5-cloud-sync
+      - v5-cloud-sync-live-rc
     paths:
       - "index.html"
       - "author-banks.json"
