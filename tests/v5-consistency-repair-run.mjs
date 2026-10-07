@@ -8,7 +8,7 @@ import { normalizeResumedExam } from '../src/quiz/exam-engine.js';
 import { resolveSessionStatus } from '../src/storage/repositories/sessions.js';
 
 assert.equal(APP_CONFIG.appVersion, '5.0.0');
-assert.equal(APP_CONFIG.releaseChannel, 'development');
+assert.equal(APP_CONFIG.releaseChannel, 'production');
 
 const previousReview = {
   level: 4,
