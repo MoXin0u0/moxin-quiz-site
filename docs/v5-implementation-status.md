@@ -41,7 +41,8 @@ Updated: 2026-10-07
 | G7 Sync Cycle + Reliability | ✅ PASS | Unit/release preflight + full browser matrix green at `db6cda5b3fdff742b74f477a40e01671f6283010` |
 | B13A Cloud Profile / Checkpoint / Device Registry | ✅ Complete | Mutable cloud profile pointer, immutable acceleration checkpoint, commit frontier/entity-head index, revisioned device rename/revoke |
 | G8A Cloud Lifecycle Foundation | ✅ PASS | Unit/release preflight + full browser suite green at `61bc4565fc049e85f4667fbb06a9b014c6e96504` |
-| B13B Account Switching / Revocation Enforcement | 🚧 Implemented / gating | Account identity preflight, zero-cloud-mutation switch inspection, explicit reconcile, remote revocation push-block, unlink-preserves-local |
+| B13B Account Switching / Revocation Enforcement | ✅ Complete | Account identity preflight, zero-cloud-mutation switch inspection, explicit reconcile, remote revocation push-block, unlink-preserves-local |
+| G8B Account Lifecycle Safety | ✅ PASS | Unit/release preflight + full browser suite green at `f158defb2a96d28b5fec6bde8547785541a71963` |
 
 ## Current green CI evidence
 
@@ -128,4 +129,4 @@ B12.5 closed the pre-B13 reliability gaps:
 5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
-G7 and B13A/G8A are closed. B13B is now implemented and under gating: account identity is verified before sync, account switching remains planning-only until explicit confirmation, operational state is rebound only after confirmation, revoked devices cannot push, and unlinking preserves local user data. After B13B gates green, continue with B13C Sync Center/product UI wiring.
+G7, B13A/G8A, and B13B/G8B are closed. Account identity is verified before sync, account switching remains planning-only until explicit confirmation, operational state is rebound only after confirmation, revoked devices cannot push, and unlinking preserves local user data. The next target is B13C Sync Center/product UI wiring, first-sync/account-switch dialogs, conflict/device management UI, and automatic sync scheduling.
