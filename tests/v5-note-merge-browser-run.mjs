@@ -232,7 +232,312 @@ try {
     ),
   );
 
-  console.log('V5 B13C5 note merge browser gate passed.');
+
+  const repairSeed = await page.evaluate(async () => {
+    const {
+      openDatabase,
+      requestToPromise,
+      transactionDone,
+    } = await import('/src/storage/db.js');
+    const { resolveSyncConflict, CONFLICT_RESOLUTION_CHOICE } =
+      await import('/src/sync/conflict-resolution.js');
+
+    const db = await openDatabase();
+    const tx = db.transaction(
+      ['notes', 'syncMeta', 'syncOutbox', 'syncRevisions', 'syncConflicts'],
+      'readwrite',
+    );
+    const done = transactionDone(tx);
+    const metaStore = tx.objectStore('syncMeta');
+    const meta = await requestToPromise(metaStore.get('global'));
+
+    const deleteLocal = {
+      revisionId: 'rev-b13c51-delete-local',
+      parentRevisionIds: ['rev-b13c51-delete-base'],
+      changedAt: '2026-10-07T08:10:00.000Z',
+      changedByDeviceId: 'device-local',
+      clock: {
+        physicalMs: 1791360600000,
+        logical: 0,
+        deviceId: 'device-local',
+      },
+    };
+    const deleteRemote = {
+      revisionId: 'rev-b13c51-delete-remote',
+      parentRevisionIds: ['rev-b13c51-delete-base'],
+      changedAt: '2026-10-07T08:11:00.000Z',
+      changedByDeviceId: 'device-remote',
+      clock: {
+        physicalMs: 1791360660000,
+        logical: 0,
+        deviceId: 'device-remote',
+      },
+    };
+
+    tx.objectStore('notes').put({
+      key: 'bank-b13c51::Q-delete',
+      bankId: 'bank-b13c51',
+      questionId: 'Q-delete',
+      content: '不可直接與刪除分支合併的本機筆記',
+      updatedAt: deleteLocal.changedAt,
+      revision: deleteLocal,
+    });
+    tx.objectStore('syncRevisions').put({
+      ...deleteLocal,
+      entityType: 'note',
+      entityKey: 'bank-b13c51::Q-delete',
+    });
+    tx.objectStore('syncRevisions').put({
+      ...deleteRemote,
+      entityType: 'note',
+      entityKey: 'bank-b13c51::Q-delete',
+    });
+    tx.objectStore('syncConflicts').put({
+      conflictId: 'conflict-b13c51-delete-edit',
+      entityType: 'note',
+      entityKey: 'bank-b13c51::Q-delete',
+      kind: 'delete-vs-edit',
+      localRevision: deleteLocal,
+      remoteRevision: deleteRemote,
+      commonParentRevisionId: 'rev-b13c51-delete-base',
+      localValue: {
+        key: 'bank-b13c51::Q-delete',
+        bankId: 'bank-b13c51',
+        questionId: 'Q-delete',
+        content: '不可直接與刪除分支合併的本機筆記',
+        revision: deleteLocal,
+      },
+      remoteValue: {
+        tombstoneId: 'tomb-b13c51-delete',
+        entityType: 'note',
+        entityKey: 'bank-b13c51::Q-delete',
+        deletedAt: deleteRemote.changedAt,
+        revision: deleteRemote,
+      },
+      createdAt: '2026-10-07T08:12:00.000Z',
+      status: 'open',
+      resolutionRevisionId: null,
+    });
+
+    const staleLocalSnapshot = {
+      revisionId: 'rev-b13c51-stale-l1',
+      parentRevisionIds: ['rev-b13c51-stale-base'],
+      changedAt: '2026-10-07T08:20:00.000Z',
+      changedByDeviceId: 'device-local',
+      clock: {
+        physicalMs: 1791361200000,
+        logical: 0,
+        deviceId: 'device-local',
+      },
+    };
+    const currentLocal = {
+      revisionId: 'rev-b13c51-stale-l2',
+      parentRevisionIds: ['rev-b13c51-stale-l1'],
+      changedAt: '2026-10-07T08:21:00.000Z',
+      changedByDeviceId: 'device-local',
+      clock: {
+        physicalMs: 1791361260000,
+        logical: 0,
+        deviceId: 'device-local',
+      },
+    };
+    const staleRemote = {
+      revisionId: 'rev-b13c51-stale-r1',
+      parentRevisionIds: ['rev-b13c51-stale-base'],
+      changedAt: '2026-10-07T08:22:00.000Z',
+      changedByDeviceId: 'device-remote',
+      clock: {
+        physicalMs: 1791361320000,
+        logical: 0,
+        deviceId: 'device-remote',
+      },
+    };
+
+    tx.objectStore('notes').put({
+      key: 'bank-b13c51::Q-stale',
+      bankId: 'bank-b13c51',
+      questionId: 'Q-stale',
+      content: 'L2：衝突建立後又修改的最新本機內容',
+      updatedAt: currentLocal.changedAt,
+      revision: currentLocal,
+    });
+    for (const revision of [
+      staleLocalSnapshot,
+      currentLocal,
+      staleRemote,
+    ]) {
+      tx.objectStore('syncRevisions').put({
+        ...revision,
+        entityType: 'note',
+        entityKey: 'bank-b13c51::Q-stale',
+      });
+    }
+    tx.objectStore('syncConflicts').put({
+      conflictId: 'conflict-b13c51-stale',
+      entityType: 'note',
+      entityKey: 'bank-b13c51::Q-stale',
+      kind: 'concurrent-edit',
+      localRevision: staleLocalSnapshot,
+      remoteRevision: staleRemote,
+      commonParentRevisionId: 'rev-b13c51-stale-base',
+      localValue: {
+        key: 'bank-b13c51::Q-stale',
+        bankId: 'bank-b13c51',
+        questionId: 'Q-stale',
+        content: 'L1：衝突建立當下的舊本機內容',
+        revision: staleLocalSnapshot,
+      },
+      remoteValue: {
+        key: 'bank-b13c51::Q-stale',
+        bankId: 'bank-b13c51',
+        questionId: 'Q-stale',
+        content: 'R1：雲端衝突內容',
+        revision: staleRemote,
+      },
+      createdAt: '2026-10-07T08:23:00.000Z',
+      status: 'open',
+      resolutionRevisionId: null,
+    });
+
+    metaStore.put({
+      ...meta,
+      runtimeState: 'CONFLICT',
+      blockReason: null,
+    });
+
+    await done;
+
+    let deleteMergeCode = null;
+    try {
+      await resolveSyncConflict('conflict-b13c51-delete-edit', {
+        choice: CONFLICT_RESOLUTION_CHOICE.MERGED,
+        mergedValue: { content: '這個合併不應被接受' },
+      });
+    } catch (error) {
+      deleteMergeCode = error?.code || null;
+    }
+
+    const checkDb = await openDatabase();
+    const checkTx = checkDb.transaction(
+      ['syncConflicts'],
+      'readonly',
+    );
+    const deleteConflict = await requestToPromise(
+      checkTx.objectStore('syncConflicts')
+        .get('conflict-b13c51-delete-edit'),
+    );
+
+    window.dispatchEvent(new CustomEvent('moxin:v5-sync-refresh'));
+
+    return {
+      deleteMergeCode,
+      deleteConflictStatus: deleteConflict?.status || null,
+    };
+  });
+
+  assert.equal(
+    repairSeed.deleteMergeCode,
+    'CONFLICT_MERGE_DELETE_EDIT',
+  );
+  assert.equal(repairSeed.deleteConflictStatus, 'open');
+
+  await page.waitForSelector(
+    '[data-conflict-id="conflict-b13c51-stale"]',
+  );
+  const staleCard = center.locator(
+    '[data-conflict-id="conflict-b13c51-stale"]',
+  );
+  assert.match(await staleCard.innerText(), /L1：衝突建立當下的舊本機內容/);
+
+  await staleCard.locator('[data-resolve-conflict-remote]').click();
+  await dialog.waitFor({ state: 'visible' });
+  assert.match(await dialog.innerText(), /採用雲端版本/);
+  await dialog.locator('.button.primary').click();
+
+  await dialog.waitFor({ state: 'visible' });
+  assert.match(await dialog.innerText(), /本機內容已更新/);
+  assert.match(
+    await dialog.innerText(),
+    /沒有套用剛才的選擇/,
+  );
+  await dialog.locator('.button.primary').click();
+  await dialog.waitFor({ state: 'hidden' });
+
+  await page.waitForFunction(() => {
+    const card = document.querySelector(
+      '[data-conflict-id="conflict-b13c51-stale"]',
+    );
+    return (card?.textContent || '').includes(
+      'L2：衝突建立後又修改的最新本機內容',
+    );
+  });
+
+  assert.match(
+    await staleCard.innerText(),
+    /L2：衝突建立後又修改的最新本機內容/,
+  );
+
+  await staleCard.locator('[data-resolve-conflict-remote]').click();
+  await dialog.waitFor({ state: 'visible' });
+  await dialog.locator('.button.primary').click();
+  await dialog.waitFor({ state: 'hidden' });
+
+  await page.waitForFunction(() =>
+    !document.querySelector(
+      '[data-conflict-id="conflict-b13c51-stale"]',
+    ),
+  );
+
+  const staleResolved = await page.evaluate(async () => {
+    const {
+      openDatabase,
+      requestToPromise,
+    } = await import('/src/storage/db.js');
+
+    const db = await openDatabase();
+    const tx = db.transaction(
+      ['notes', 'syncConflicts'],
+      'readonly',
+    );
+    const [note, conflict] = await Promise.all([
+      requestToPromise(
+        tx.objectStore('notes').get('bank-b13c51::Q-stale'),
+      ),
+      requestToPromise(
+        tx.objectStore('syncConflicts')
+          .get('conflict-b13c51-stale'),
+      ),
+    ]);
+
+    return {
+      content: note?.content || null,
+      parents: note?.revision?.parentRevisionIds || [],
+      status: conflict?.status || null,
+      choice: conflict?.resolutionChoice || null,
+      previousLocalRevisionId:
+        conflict?.localSnapshotPreviousRevisionId || null,
+      localRevisionId:
+        conflict?.localRevision?.revisionId || null,
+    };
+  });
+
+  assert.equal(staleResolved.content, 'R1：雲端衝突內容');
+  assert.equal(staleResolved.status, 'resolved');
+  assert.equal(staleResolved.choice, 'remote');
+  assert.equal(
+    staleResolved.previousLocalRevisionId,
+    'rev-b13c51-stale-l1',
+  );
+  assert.equal(
+    staleResolved.localRevisionId,
+    'rev-b13c51-stale-l2',
+  );
+  assert.deepEqual(
+    [...staleResolved.parents].sort(),
+    ['rev-b13c51-stale-l2', 'rev-b13c51-stale-r1'].sort(),
+  );
+
+  console.log('V5 B13C5.1 conflict consistency browser gate passed.');
 } finally {
   await browser.close();
 }

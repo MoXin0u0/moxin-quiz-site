@@ -75,7 +75,7 @@ export async function resolveSyncConflict(conflictId, {
   if (!id) throw conflictError('conflictId is required.', 'CONFLICT_ID_REQUIRED');
   if (!Object.values(CONFLICT_RESOLUTION_CHOICE).includes(selectedChoice)) {
     throw conflictError(
-      'Conflict resolution choice must be local or remote.',
+      'Conflict resolution choice must be local, remote, or merged.',
       'CONFLICT_RESOLUTION_INVALID',
     );
   }
@@ -109,14 +109,44 @@ export async function resolveSyncConflict(conflictId, {
 
     const entityType = String(conflict.entityType);
     const entityKey = String(conflict.entityKey);
+    const conflictLocalBranch = branchFromConflict(conflict, 'local');
     const currentLocal = await readCurrentEntityState(
       tx,
       entityType,
       entityKey,
     );
+
+    const conflictLocalRevisionId =
+      conflictLocalBranch.revision?.revisionId || null;
+    const currentLocalRevisionId =
+      currentLocal.revision?.revisionId || null;
+
+    if (
+      conflictLocalRevisionId &&
+      currentLocalRevisionId &&
+      conflictLocalRevisionId !== currentLocalRevisionId
+    ) {
+      const refreshedConflict = {
+        ...conflict,
+        localRevision: currentLocal.revision,
+        localValue: currentLocal.value,
+        localSnapshotRefreshedAt: now.toISOString(),
+        localSnapshotPreviousRevisionId: conflictLocalRevisionId,
+      };
+      conflictStore.put(refreshedConflict);
+      await done;
+      return {
+        status: 'refresh-required',
+        reason: 'local-advanced',
+        conflict: refreshedConflict,
+        previousLocalRevisionId: conflictLocalRevisionId,
+        currentLocalRevisionId,
+      };
+    }
+
     const localBranch = currentLocal.revision
       ? currentLocal
-      : branchFromConflict(conflict, 'local');
+      : conflictLocalBranch;
     const remoteBranch = branchFromConflict(conflict, 'remote');
     const mergedBranch = selectedChoice === CONFLICT_RESOLUTION_CHOICE.MERGED
       ? buildMergedBranch(conflict, {
@@ -242,6 +272,29 @@ function buildMergedBranch(conflict, {
       'Manual merged content is only supported for note conflicts.',
       'CONFLICT_MERGE_UNSUPPORTED',
       { entityType: conflict?.entityType || null },
+    );
+  }
+  if (String(conflict?.kind || '') === 'delete-vs-edit') {
+    throw conflictError(
+      'Delete-vs-edit note conflicts require an explicit branch choice.',
+      'CONFLICT_MERGE_DELETE_EDIT',
+      { entityType: conflict?.entityType || null, kind: conflict?.kind || null },
+    );
+  }
+  if (localBranch?.deleted || remoteBranch?.deleted) {
+    throw conflictError(
+      'Deleted note branches cannot be merged as text.',
+      'CONFLICT_MERGE_DELETED_BRANCH',
+      { entityType: conflict?.entityType || null },
+    );
+  }
+  if (
+    !localBranch?.revision?.revisionId ||
+    !remoteBranch?.revision?.revisionId
+  ) {
+    throw conflictError(
+      'Both note branches require revision metadata before merge.',
+      'CONFLICT_MERGE_REVISION_MISSING',
     );
   }
 

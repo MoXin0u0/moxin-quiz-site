@@ -8,7 +8,7 @@ Updated: 2026-10-07
 - V4.1 base: `bc71d9514ef7d66f314c7e6d64f680c2f88fd7a9`
 - Draft PR: #7
 - `main` remains unchanged.
-- Current validated head: `2591d37e446034508163a2b560e3b8ec99bfb4f1`
+- Current validated head: `e4dec29b5bbdd1613c1ecd3bdb8704f69e2f3931`
 
 ## Gate status
 
@@ -51,11 +51,13 @@ Updated: 2026-10-07
 | G8C3 Conflict Resolution Safety | ✅ PASS | Unit/release preflight + full browser suite + dedicated conflict UI/Axe gate green at `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe` |
 | B13C4 Automatic Sync Scheduler | ✅ Complete | 5s idle debounce, 30s active-pending ceiling, reconnect/resume triggers, retry scheduling, conflict/offline gates, no automatic OAuth popup |
 | G8C4 Automatic Sync Scheduling | ✅ PASS | Unit/release preflight + full browser suite + dedicated scheduler gate green at `2591d37e446034508163a2b560e3b8ec99bfb4f1` |
-| B13C5 Note Conflict Merge UX | 🚧 Implemented / gating | Note conflicts support local / cloud / merge-textarea choices; merged revision descends from both branches; delete-vs-edit remains explicit-choice only |
+| B13C5 Note Conflict Merge UX | ✅ Complete | Note conflicts support local / cloud / merge-textarea choices; merged revision descends from both branches; delete-vs-edit remains explicit-choice only |
+| G8C5 Note Merge UX | ✅ PASS | Unit/release preflight + full browser suite + note merge UI/Axe gate green at `e4dec29b5bbdd1613c1ecd3bdb8704f69e2f3931` |
+| B13C5.1 Conflict Consistency Repair | 🚧 Implemented / gating | Core rejects merged delete-vs-edit/deleted branches; stale local conflict snapshots refresh without applying the stale user choice; re-confirmation uses the latest local revision |
 
 ## Current green CI evidence
 
-At `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe`:
+At `e4dec29b5bbdd1613c1ecd3bdb8704f69e2f3931`:
 
 - Unit + release preflight: PASS
 - Existing app browser audit: PASS
@@ -91,6 +93,9 @@ At `8928ed83c265c5378fc6e80c6f6bd9c53fadfcbe`:
 - Offline → reconnect trigger: PASS
 - Conflict state automatic-sync block: PASS
 - Dormant cloud runtime performs no automatic Google authorization
+- B13C5 note local/cloud/merge-textarea path: PASS
+- Merged note revision descends from both conflict revisions
+- Note merge dialog serious/critical Axe violations: 0
 
 ## B07.5 repair notes
 

@@ -90,6 +90,11 @@ const sw = fs.readFileSync('service-worker.js', 'utf8');
 assert.match(resolution, /CONFLICT_RESOLUTION_CHOICE\.MERGED/);
 assert.match(resolution, /buildMergedBranch/);
 assert.match(resolution, /CONFLICT_MERGE_UNSUPPORTED/);
+assert.match(resolution, /CONFLICT_MERGE_DELETE_EDIT/);
+assert.match(resolution, /CONFLICT_MERGE_DELETED_BRANCH/);
+assert.match(resolution, /CONFLICT_MERGE_REVISION_MISSING/);
+assert.match(resolution, /status:\s*'refresh-required'/);
+assert.match(resolution, /localSnapshotPreviousRevisionId/);
 assert.match(resolution, /CONFLICT_MERGE_EMPTY/);
 assert.match(dialogs, /showTextAreaDialog/);
 assert.match(dialogs, /input\.multiline/);
@@ -97,8 +102,8 @@ assert.match(syncUi, /mergeNoteConflict/);
 assert.match(syncUi, /showTextAreaDialog/);
 assert.match(dialogCss, /\.app-dialog-textarea/);
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c5-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-dev-b13c51-1'/);
 assert.match(sw, /src\/ui\/conflicts\.js/);
 assert.match(sw, /src\/sync\/conflict-resolution\.js/);
 
-console.log('V5 B13C5 note conflict merge contracts passed.');
+console.log('V5 B13C5.1 note conflict consistency contracts passed.');

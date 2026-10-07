@@ -389,10 +389,12 @@ async function mergeNoteConflict(conflictId) {
   if (!mergedContent) return;
 
   try {
-    await resolveSyncConflict(conflict.conflictId, {
+    const result = await resolveSyncConflict(conflict.conflictId, {
       choice: CONFLICT_RESOLUTION_CHOICE.MERGED,
       mergedValue: { content: mergedContent },
     });
+    if (await handleConflictRefreshRequired(result)) return;
+
     await refreshSyncStatus();
     showToast(
       toastRegion,
@@ -441,6 +443,8 @@ async function resolveConflict(conflictId, choice) {
 
   try {
     const result = await resolveSyncConflict(conflict.conflictId, { choice });
+    if (await handleConflictRefreshRequired(result)) return;
+
     await refreshSyncStatus();
 
     const copyNote = result.preservedCopy
@@ -454,6 +458,20 @@ async function resolveConflict(conflictId, choice) {
   } catch (error) {
     await handleCloudActionError(error, '衝突處理失敗');
   }
+}
+
+async function handleConflictRefreshRequired(result) {
+  if (result?.status !== 'refresh-required') return false;
+
+  await refreshSyncStatus();
+  await showMessageDialog({
+    title: '本機內容已更新',
+    message:
+      '這筆衝突建立後，此裝置又產生了新的本機版本。' +
+      '為避免用舊畫面覆寫最新內容，系統已更新比較內容，但沒有套用剛才的選擇。\n\n' +
+      '請重新檢查此裝置與雲端版本，再確認要保留、採用或合併哪一個版本。',
+  });
+  return true;
 }
 
 async function unlinkCloud() {

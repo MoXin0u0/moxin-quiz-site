@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v5-dev-b13c5-1';
+const CACHE_VERSION = 'moxin-quiz-v5-dev-b13c51-1';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
