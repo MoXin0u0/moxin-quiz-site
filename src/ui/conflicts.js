@@ -56,8 +56,8 @@ export function getConflictPresentation(conflict) {
 export function buildNoteMergeSeed(conflict) {
   if (String(conflict?.entityType || '') !== 'note') return '';
 
-  const local = String(conflict?.localValue?.content || '').trim();
-  const remote = String(conflict?.remoteValue?.content || '').trim();
+  const local = noteText(conflict?.localValue);
+  const remote = noteText(conflict?.remoteValue);
 
   if (local && remote && local !== remote) {
     return local + '\n\n--- 雲端版本 ---\n\n' + remote;
@@ -206,14 +206,16 @@ function summarizeConflictBranch(value, {
     entityType === 'exam-answer' ? answerLabel(value) : '',
   ) || '內容版本';
 
-  let detail = firstNonEmpty(
-    value.content,
-    value.text,
-    value.note,
-    value.description,
-    value.goalText,
-    value.bank?.description,
-  );
+  let detail = entityType === 'note'
+    ? firstNonEmpty(value.text, value.content, value.note)
+    : firstNonEmpty(
+        value.content,
+        value.text,
+        value.note,
+        value.description,
+        value.goalText,
+        value.bank?.description,
+      );
 
   if (!detail && entityType?.includes('session')) {
     detail = sessionSummary(value);
@@ -276,6 +278,15 @@ function isDeletedValue(value) {
     value?.operation === 'delete' ||
     value?.deleted === true
   );
+}
+
+function noteText(value) {
+  return String(
+    value?.text ??
+    value?.content ??
+    value?.note ??
+    '',
+  ).trim();
 }
 
 function firstNonEmpty(...values) {
