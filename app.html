@@ -62,6 +62,8 @@
   <link rel="stylesheet" href="styles/v4-home.css" />
   <link rel="stylesheet" href="styles/v4-learning-goals.css" />
   <link rel="stylesheet" href="styles/v4-exam-sprint.css" />
+  <link rel="stylesheet" href="styles/v5-sync.css" />
+  <link rel="stylesheet" href="styles/v5-dialogs.css" />
 </head>
 <body>
   <header class="app-header">
@@ -79,7 +81,9 @@
       <button class="nav-item" type="button" data-nav-stats>學習統計</button>
       <button class="nav-item" type="button" data-nav-tools>題庫工作室</button>
       <button class="nav-item" type="button" data-nav-settings>設定</button>
+      <button class="nav-item nav-more-mobile" type="button" data-nav-more aria-haspopup="menu" aria-expanded="false">更多</button>
     </nav>
+    <div id="syncStatusHost" class="sync-status-host" hidden aria-live="polite"></div>
   </header>
 
   <main class="app-main">
@@ -216,8 +220,12 @@
   </main>
 
   <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <div id="syncCenterHost" class="sync-center-host" hidden></div>
+  <div id="mobileMoreMenuHost" class="mobile-more-menu-host" hidden></div>
+  <div id="appDialogHost"></div>
   <script type="module" src="src/ui/scene-assets.js"></script>
   <script type="module" src="src/app/main.js"></script>
   <script type="module" src="src/app/p7.js"></script>
+  <script type="module" src="src/app/sync-ui.js"></script>
 </body>
 </html>

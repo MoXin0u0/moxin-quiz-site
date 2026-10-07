@@ -7,6 +7,7 @@ export function renderHomeDashboard(container, model = {}) {
   const review = model.review || {};
   const sprint = model.sprint || {};
   const backup = model.backup || {};
+  const dataSafety = model.dataSafety || null;
 
   container.innerHTML = `
     <section class="home-dashboard" aria-labelledby="homeDashboardTitle">
@@ -48,7 +49,7 @@ export function renderHomeDashboard(container, model = {}) {
           label: review.wrongBankId ? '開始錯題練習' : '查看複習',
         })}
         ${renderSprintAction(sprint)}
-        ${renderBackupAction(backup)}
+        ${renderDataSafetyAction(dataSafety, backup)}
       </div>
     </section>
   `;
@@ -155,7 +156,53 @@ function renderSprintAction(sprint) {
   });
 }
 
-function renderBackupAction(backup) {
+function renderDataSafetyAction(sync, backup) {
+  if (!sync) {
+    return renderBackupFallback(backup);
+  }
+
+  const state = sync.runtimeState || 'LOCAL_ONLY';
+  const pending = Number(sync.pendingCount || 0);
+  const conflicts = Number(sync.conflictCount || 0);
+  let value = sync.presentation?.shortLabel || '僅此裝置';
+  let note = sync.presentation?.description ||
+    '本機資料保持可用；雲端同步是選用功能。';
+
+  if (state === 'LOCAL_ONLY') {
+    const lastBackup = backup?.status && backup.status !== 'never'
+      ? (Number(backup.daysAgo || 0) === 0
+          ? '今天已有完整備份'
+          : String(Number(backup.daysAgo || 0)) + ' 天前有完整備份')
+      : '尚未建立完整備份';
+    note = '資料目前只在此裝置 · ' + lastBackup;
+  } else if (state === 'PENDING') {
+    value = pending ? String(pending) + ' 項等待同步' : '等待同步';
+  } else if (state === 'CONFLICT') {
+    value = conflicts ? String(conflicts) + ' 項需要處理' : '需要處理';
+  } else if (state === 'OFFLINE') {
+    value = '離線使用中';
+    note = '本機資料仍可正常使用；恢復連線後再同步。';
+  } else if (state === 'ERROR') {
+    value = '上次同步失敗';
+  } else if (state === 'AUTH_REQUIRED') {
+    value = '請重新連結 Google';
+  } else if (state === 'SYNCED') {
+    value = '雲端同步正常';
+  }
+
+  return renderAction({
+    kind: state === 'ERROR' || state === 'CONFLICT' || state === 'AUTH_REQUIRED'
+      ? 'data-safety warning'
+      : 'data-safety',
+    kicker: '資料安全',
+    value,
+    note,
+    attrs: 'data-open-sync-center',
+    label: '開啟資料與同步中心',
+  });
+}
+
+function renderBackupFallback(backup) {
   const status = backup.status || 'never';
   const stale = backup.stale === true;
   let value = '尚未完整備份';
@@ -163,7 +210,7 @@ function renderBackupAction(backup) {
 
   if (status !== 'never') {
     const days = Number(backup.daysAgo || 0);
-    value = days === 0 ? '今天已備份' : `${days} 天前`;
+    value = days === 0 ? '今天已備份' : String(days) + ' 天前';
     note = stale
       ? '距離上次完整備份已超過 7 天，建議重新備份。'
       : '完整備份狀態正常。';

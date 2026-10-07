@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v5-dev-b13b5-1';
+const CACHE_VERSION = 'moxin-quiz-v5-dev-b13c1-1';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
@@ -27,6 +27,8 @@ const APP_SHELL = [
   './styles/v4-studio.css',
   './styles/v4-studio-r1.css',
   './styles/v4-studio-batch.css',
+  './styles/v5-sync.css',
+  './styles/v5-dialogs.css',
   './assets/pwa/icon-192.png',
   './assets/pwa/icon-512.png',
   './assets/pwa/icon-maskable-512.png',
@@ -38,6 +40,7 @@ const APP_SHELL = [
   './src/app/config.js',
   './src/app/main.js',
   './src/app/p7.js',
+  './src/app/sync-ui.js',
   './src/app/preflight.js',
 
   './src/data/migration/legacy-v1-to-v2.js',
@@ -139,6 +142,9 @@ const APP_SHELL = [
   './src/ui/practice.js',
   './src/ui/review-center.js',
   './src/ui/settings.js',
+  './src/ui/sync-status.js',
+  './src/ui/sync-center.js',
+  './src/ui/dialogs.js',
   './src/ui/scene-assets.js',
   './src/ui/stats.js',
   './src/ui/home-dashboard.js',

@@ -10,7 +10,7 @@ export const APP_CONFIG = Object.freeze({
   features: Object.freeze({
     v5DataFoundation: true,
     cloudSync: false,
-    syncUi: false,
+    syncUi: true,
   }),
   cloud: Object.freeze({
     provider: 'google-drive',

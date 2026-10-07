@@ -118,6 +118,7 @@ import {
 import { createExamSprintSaveInput } from '../ui/exam-sprint.js';
 import { renderLearningStats } from '../ui/stats.js';
 import { renderHomeDashboard } from '../ui/home-dashboard.js';
+import { getSyncStatusSnapshot } from '../ui/sync-status.js';
 import { renderExamCenter } from '../ui/exam-center.js';
 import {
   collectExamAnswer,
@@ -884,7 +885,7 @@ async function refreshHomeDashboard() {
   if (!elements.homeDashboardArea) return;
 
   const timeZone = await getStudyTimeZone();
-  const [goals, attempts, resumeSession, summaries] = await Promise.all([
+  const [goals, attempts, resumeSession, summaries, syncStatus] = await Promise.all([
     listLearningGoals(),
     listAllAttempts(),
     getLatestUnfinishedPracticeSession({
@@ -909,9 +910,10 @@ async function refreshHomeDashboard() {
         wrong,
       };
     })),
+    getSyncStatusSnapshot(),
   ]);
 
-  renderHomeDashboard(elements.homeDashboardArea, buildHomeDashboard({
+  const model = buildHomeDashboard({
     banks: state.banks,
     goals,
     attempts,
@@ -919,7 +921,10 @@ async function refreshHomeDashboard() {
     resumeSession,
     lastBackupAt: getLastFullBackupAt(),
     timeZone,
-  }));
+  });
+  model.dataSafety = syncStatus;
+
+  renderHomeDashboard(elements.homeDashboardArea, model);
 }
 
 async function exportCurrentBank() {

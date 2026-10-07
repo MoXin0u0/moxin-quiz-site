@@ -1,4 +1,6 @@
-export function renderSettings(container, { settings, storage, checks, pwa }) {
+import { renderCloudSettingsCard } from './sync-center.js';
+
+export function renderSettings(container, { settings, storage, checks, pwa, sync }) {
   const counts = storage?.counts || {};
   const estimate = storage?.estimate;
 
@@ -18,6 +20,7 @@ export function renderSettings(container, { settings, storage, checks, pwa }) {
     </section>
 
     <section class="settings-grid">
+      ${renderCloudSettingsCard(sync)}
       <article class="panel settings-card">
         <div class="section-heading">
           <div>
@@ -142,7 +145,7 @@ export function renderSettings(container, { settings, storage, checks, pwa }) {
         </div>
       </article>
 
-      <article class="panel settings-card">
+      <article class="panel settings-card" data-backup-card>
         <div class="section-heading">
           <div>
             <p class="eyebrow">Backup & Restore</p>

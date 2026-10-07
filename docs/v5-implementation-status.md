@@ -45,6 +45,7 @@ Updated: 2026-10-07
 | G8B Account Lifecycle Safety | ✅ PASS | Unit/release preflight + full browser suite green at `f158defb2a96d28b5fec6bde8547785541a71963` |
 | B13B.5 Account Lifecycle Consistency Repair | ✅ Complete | Purge profile-scoped device revision ancestry on switch/unlink, fresh local device genesis revision, stable resume semantics, stale block-state cleanup |
 | G8B.5 Profile Boundary Consistency | ✅ PASS | Unit/release preflight + full browser suite green at `dd0281027cb73ecc27fae07e5e417e28142ea5a3` |
+| B13C1 Sync Center / Settings / Mobile IA Shell | 🚧 Implemented / gating | Canonical sync-state vocabulary, Data & Sync Center, Account & Cloud settings card, Data Safety home action, 5-tab mobile More, accessible custom dialogs |
 
 ## Current green CI evidence
 
@@ -134,4 +135,4 @@ B12.5 closed the pre-B13 reliability gaps:
 5. Real-browser regression now exercises online network failure, deferred retry, 429, 5xx, true offline → reconnect, object upload/materialization failure, and cloud-only first bootstrap.
 6. The existing deterministic merge browser gate continues to cover concurrent conflict behavior.
 
-G7, B13A/G8A, B13B/G8B, and B13B.5/G8B.5 are closed. The post-disconnect consistency repair now removes profile-scoped device revision ancestry during account switch/unlink while preserving user learning/content revisions, creates a fresh current-device genesis revision, prevents old device heads from leaking into a new-profile checkpoint, fixes first-confirm vs resumed semantics, and clears stale block state. The next target is B13C Sync Center/product UI wiring, first-sync/account-switch dialogs, conflict/device management UI, and automatic sync scheduling.
+G7, B13A/G8A, B13B/G8B, and B13B.5/G8B.5 are closed. B13C has started with B13C1, which wires the canonical sync-state vocabulary into the header/system-status layer, adds the Data & Sync Center and Account & Cloud settings card, upgrades the home Backup action to Data Safety, formalizes mobile 5-tab + More navigation, and replaces Backup/Restore native confirm/alert with accessible app dialogs. Cloud runtime remains disabled and Google OAuth remains unconfigured, so this UI shell cannot trigger login or upload. B13C1 is under gating before first-sync/account-switch/conflict/scheduler wiring.

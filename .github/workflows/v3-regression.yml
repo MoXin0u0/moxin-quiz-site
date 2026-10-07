@@ -20,6 +20,7 @@ on:
       - "src/**"
       - "styles/v3*.css"
       - "styles/v4*.css"
+      - "styles/v5*.css"
       - "assets/learning/**"
       - "tests/**"
       - "scripts/v3-release-preflight.mjs"
@@ -38,6 +39,7 @@ on:
       - "src/**"
       - "styles/v3*.css"
       - "styles/v4*.css"
+      - "styles/v5*.css"
       - "assets/learning/**"
       - "tests/**"
       - "scripts/v3-release-preflight.mjs"
@@ -142,3 +144,6 @@ jobs:
 
       - name: Run V5 account switching and revocation audit
         run: npm run audit:v5-account-lifecycle
+
+      - name: Run V5 Sync Center product UI audit
+        run: npm run audit:v5-sync-ui
