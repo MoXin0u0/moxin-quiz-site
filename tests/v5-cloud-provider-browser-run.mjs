@@ -24,7 +24,7 @@ try {
   assert.deepEqual(
     googleRequests,
     [],
-    'local-only app boot must not contact Google while cloud sync is disabled',
+    'app boot must not contact Google before explicit cloud authorization',
   );
   assert.equal(
     await page.locator('script[src*="accounts.google.com/gsi/client"]').count(),
@@ -109,8 +109,8 @@ try {
     };
   });
 
-  assert.equal(result.cloudSyncEnabled, false);
-  assert.equal(result.clientId, '');
+  assert.equal(result.cloudSyncEnabled, true);
+  assert.equal(result.clientId, '465928667951-721b0udej0814jjelmepk0h98c57cf2a.apps.googleusercontent.com');
   assert.equal(result.tokenState.hasToken, true);
   assert.equal(result.profile.providerSubject, 'browser-permission');
   assert.deepEqual(result.listed.files, []);
