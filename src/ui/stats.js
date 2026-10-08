@@ -43,10 +43,10 @@ export function renderLearningStats(container, data = {}) {
       <div class="learning-hero-content learning-stats-hero-content">
         <span class="learning-kicker">學習統計</span>
         <h2>先看全局，再深入趨勢與弱點</h2>
-        <p>統計資料只來自這個瀏覽器的 IndexedDB；分頁後不再把所有分析堆在同一張長頁面。</p>
+        <p>統計由目前保存在此裝置的學習紀錄計算；啟用跨裝置同步後，將納入已同步裝置的歷史紀錄。</p>
 
         <div class="learning-focus-strip stats learning-hero-stat-strip">
-          ${metricCard('總作答', overall.attempts || 0, '▤')}
+          ${metricCard('歷史總作答', overall.attempts || 0, '▤')}
           ${metricCard('已作答題', overall.answeredQuestions || 0, '✓')}
           ${metricCard('今日到期', overall.due || 0, '↻')}
         </div>
@@ -177,6 +177,7 @@ function renderOverview({ overall, globalAnalytics, banks }) {
           ${summaryRow('總作答', overall.attempts || 0)}
           ${summaryRow('正確作答', globalAnalytics.overall?.correct || 0)}
           ${summaryRow('錯誤作答', globalAnalytics.overall?.wrong || 0)}
+          ${summaryRow('未作答', globalAnalytics.overall?.unanswered || 0)}
           ${summaryRow('跨題庫已碰觸題目', globalAnalytics.overall?.uniqueQuestions || 0)}
         </div>
       </article>
@@ -440,7 +441,7 @@ function dimensionRow(label, item) {
     <div class="stats-dimension-row">
       <div class="stats-dimension-copy">
         <strong>${escapeHtml(label)}</strong>
-        <small>${Number(item.attempts || 0)} 次 · ${Number(item.wrong || 0)} 錯</small>
+        <small>${Number(item.attempts || 0)} 次 · ${Number(item.wrong || 0)} 錯${Number(item.unanswered || 0) ? ` · ${Number(item.unanswered || 0)} 未作答` : ''}</small>
       </div>
       <div class="stats-dimension-meter" aria-label="${escapeAttr(label)}正確率 ${accuracy}%">
         <i style="width:${accuracy}%"></i>

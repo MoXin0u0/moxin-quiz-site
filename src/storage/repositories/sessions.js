@@ -1,20 +1,71 @@
 import { deleteRecord, getAllByIndex, getAllRecords, getRecord, putRecord } from '../db.js';
 import { createSessionId } from '../../utils/ids.js';
+import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
+import {
+  attachMutationPayloadInTransaction,
+  createRevisionMutationInTransaction,
+} from '../transactions/sync-mutation.js';
 
 export async function saveSession(session) {
-  const now = new Date().toISOString();
-  const record = {
-    ...session,
-    id: session.id || createSessionId(),
-    createdAt: session.createdAt || now,
-    updatedAt: now,
-  };
-  await putRecord('sessions', record);
-  return record;
+  const now = new Date();
+  const id = session.id || createSessionId();
+
+  return runReadwriteTransaction([
+    'sessions',
+    'syncMeta',
+    'syncOutbox',
+    'syncRevisions',
+  ], async ({ store, request, tx }) => {
+    const existing = await request(store('sessions').get(id));
+    const sessionType = session.sessionType || (session.mode === 'exam' ? 'exam' : 'practice');
+    const entityType = sessionType === 'exam' ? 'exam-session' : 'practice-session';
+    const status = resolveSessionStatus({ ...(existing || {}), ...session });
+
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
+      entityType,
+      entityKey: id,
+      previousRevision: existing?.revision || session.revision || null,
+      operation: 'upsert',
+      coalesceKey: `${entityType}:${id}`,
+      now,
+    });
+
+    const record = {
+      ...(existing || {}),
+      ...session,
+      id,
+      sessionType,
+      status,
+      createdAt: existing?.createdAt || session.createdAt || now.toISOString(),
+      updatedAt: now.toISOString(),
+      revision,
+    };
+    store('sessions').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, record);
+    return record;
+  });
 }
 
 export function getSession(sessionId) {
   return getRecord('sessions', sessionId);
+}
+
+export async function saveSessionCheckpoint(session) {
+  if (!session?.id) throw new Error('Session checkpoint requires id.');
+  const existing = await getSession(session.id);
+  const merged = {
+    ...(existing || {}),
+    ...session,
+    id: session.id,
+  };
+  const record = {
+    ...merged,
+    status: resolveSessionStatus(merged),
+    revision: existing?.revision || session.revision || null,
+    updatedAt: new Date().toISOString(),
+  };
+  await putRecord('sessions', record);
+  return record;
 }
 
 export function listSessionsForBank(bankId) {
@@ -59,6 +110,13 @@ export function deleteSession(sessionId) {
   return deleteRecord('sessions', sessionId);
 }
 
+export function resolveSessionStatus(session = {}) {
+  if (session.submittedAt || session.status === 'submitted') return 'submitted';
+  if (session.abandonedAt || session.status === 'abandoned') return 'abandoned';
+  if (session.finishedAt || session.status === 'finished') return 'finished';
+  return 'active';
+}
+
 function isUnfinishedPractice(session) {
   if (!session || session.finishedAt || session.submittedAt) return false;
   if (session.sessionType === 'exam' || session.mode === 'exam') return false;
@@ -68,7 +126,8 @@ function isUnfinishedPractice(session) {
 }
 
 function isUnfinishedExam(session) {
-  if (!session || session.finishedAt || session.submittedAt) return false;
+  if (!session || session.finishedAt || session.submittedAt || session.abandonedAt) return false;
+  if (session.status && session.status !== 'active') return false;
   if (session.sessionType !== 'exam' && session.mode !== 'exam') return false;
   return Array.isArray(session.questionIds) && session.questionIds.length > 0;
 }

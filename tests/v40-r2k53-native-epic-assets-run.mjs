@@ -10,7 +10,7 @@ assert.equal(assets.length, 16);
 assert.ok(sources.every(source => source.sourceKind === 'single-scene'));
 assert.ok(assets.every(asset => asset.sourceKind === 'single-scene'));
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 assert.match(sw, /SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k\.5-\d+'/);
 assert.match(sw, /cacheFirstScene/);
 

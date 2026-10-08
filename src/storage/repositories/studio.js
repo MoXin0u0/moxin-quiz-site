@@ -1,9 +1,18 @@
 import {
-  deleteRecord,
   getAllRecords,
   getRecord,
-  putRecord,
 } from '../db.js';
+import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
+import {
+  attachMutationPayloadInTransaction,
+  createRevisionMutationInTransaction,
+  getLatestTombstoneRevisionInTransaction,
+} from '../transactions/sync-mutation.js';
+import { createUuid } from '../../utils/ids.js';
+import {
+  computeAssetContentHash,
+  computeDraftFingerprint,
+} from '../../content/fingerprints.js';
 
 export const STUDIO_DRAFT_STATUS = Object.freeze({
   DRAFT: 'draft',
@@ -41,24 +50,68 @@ export function normalizeStudioDraft(input = {}) {
       ? source.assets.map(asset => normalizeDraftAsset(asset))
       : [],
     sourceBankVersion: source.sourceBankVersion ? String(source.sourceBankVersion) : null,
+    sourceBankFingerprint: source.sourceBankFingerprint ? String(source.sourceBankFingerprint) : null,
+    contentFingerprint: source.contentFingerprint ? String(source.contentFingerprint) : null,
+    conflictOfDraftId: source.conflictOfDraftId ? String(source.conflictOfDraftId) : null,
     createdAt: normalizeDateString(source.createdAt),
     updatedAt: normalizeDateString(source.updatedAt),
+    revision: source.revision || null,
   };
 }
 
 export async function saveStudioDraft(input) {
-  const existing = input?.id ? await getRecord('studioDrafts', String(input.id)) : null;
-  const now = new Date().toISOString();
-  const draft = normalizeStudioDraft({
+  const now = new Date();
+  const id = String(input?.id || createDraftId());
+  const existing = input?.id ? await getRecord('studioDrafts', id) : null;
+
+  let draft = normalizeStudioDraft({
     ...existing,
     ...input,
-    id: input?.id || existing?.id || createDraftId(),
-    createdAt: existing?.createdAt || input?.createdAt || now,
-    updatedAt: now,
+    id,
+    createdAt: existing?.createdAt || input?.createdAt || now.toISOString(),
+    updatedAt: now.toISOString(),
   });
 
-  await putRecord('studioDrafts', draft);
-  return draft;
+  draft = {
+    ...draft,
+    assets: await hydrateDraftAssetHashes(draft.assets),
+  };
+  draft.contentFingerprint = await computeDraftFingerprint(draft);
+
+  return runReadwriteTransaction([
+    'studioDrafts',
+    'syncMeta',
+    'syncOutbox',
+    'syncRevisions',
+    'syncTombstones',
+  ], async ({ store, request, tx }) => {
+    const fresh = await request(store('studioDrafts').get(id));
+    const tombstoneRevision = fresh
+      ? null
+      : await getLatestTombstoneRevisionInTransaction(tx, {
+          entityType: 'studio-draft',
+          entityKey: id,
+        });
+
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
+      entityType: 'studio-draft',
+      entityKey: id,
+      previousRevision: fresh?.revision || tombstoneRevision || null,
+      operation: 'upsert',
+      coalesceKey: `studio-draft:${id}`,
+      now,
+    });
+
+    const record = {
+      ...draft,
+      createdAt: fresh?.createdAt || draft.createdAt,
+      updatedAt: now.toISOString(),
+      revision,
+    };
+    store('studioDrafts').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, record);
+    return record;
+  });
 }
 
 export function getStudioDraft(id) {
@@ -72,8 +125,42 @@ export async function listStudioDrafts() {
   );
 }
 
-export function deleteStudioDraft(id) {
-  return deleteRecord('studioDrafts', String(id));
+export async function deleteStudioDraft(id) {
+  const key = String(id);
+  const now = new Date();
+
+  return runReadwriteTransaction([
+    'studioDrafts',
+    'syncMeta',
+    'syncOutbox',
+    'syncRevisions',
+    'syncTombstones',
+  ], async ({ store, request, tx }) => {
+    const existing = await request(store('studioDrafts').get(key));
+    if (!existing) return false;
+
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
+      entityType: 'studio-draft',
+      entityKey: key,
+      previousRevision: existing.revision || null,
+      operation: 'delete',
+      coalesceKey: `studio-draft:${key}`,
+      now,
+    });
+
+    const tombstone = {
+      tombstoneId: createUuid('tombstone'),
+      entityType: 'studio-draft',
+      entityKey: key,
+      deletedAt: now.toISOString(),
+      revision,
+    };
+
+    store('studioDrafts').delete(key);
+    store('syncTombstones').put(tombstone);
+    attachMutationPayloadInTransaction(tx, mutation, tombstone);
+    return true;
+  });
 }
 
 export function createDraftFromBankPackage(pkg, { id = null } = {}) {
@@ -88,7 +175,20 @@ export function createDraftFromBankPackage(pkg, { id = null } = {}) {
     questions: pkg.questions,
     assets: pkg.assets || [],
     sourceBankVersion: pkg.manifest.version || null,
+    sourceBankFingerprint: pkg.manifest.contentFingerprint || null,
   });
+}
+
+async function hydrateDraftAssetHashes(assets) {
+  const output = [];
+  for (const asset of Array.isArray(assets) ? assets : []) {
+    const normalized = normalizeDraftAsset(asset);
+    output.push({
+      ...normalized,
+      contentHash: normalized.contentHash || await computeAssetContentHash(normalized),
+    });
+  }
+  return output;
 }
 
 function normalizeDraftAsset(asset = {}) {
@@ -101,6 +201,8 @@ function normalizeDraftAsset(asset = {}) {
     mimeType: String(asset.mimeType || blob?.type || 'application/octet-stream'),
     size: Number(asset.size ?? blob?.size ?? 0) || 0,
     blob,
+    contentHash: asset.contentHash ? String(asset.contentHash) : null,
+    hashStatus: asset.hashStatus || (asset.contentHash ? 'ready' : 'pending'),
   };
 }
 

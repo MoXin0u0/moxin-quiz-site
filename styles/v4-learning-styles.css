@@ -233,7 +233,7 @@ html[data-learning-style="epic"] :is(
   #practiceView
 ) .button.primary {
   background: linear-gradient(105deg, var(--learn-page-accent, var(--learn-primary)), var(--learn-primary-2));
-  color: #fff;
+  color: var(--learn-primary-action-fg, #fff);
   box-shadow:
     0 10px 26px color-mix(in srgb, var(--learn-primary) 25%, transparent),
     0 0 0 1px color-mix(in srgb, var(--epic-gold) 18%, transparent);
@@ -249,7 +249,7 @@ html[data-theme="dark"][data-learning-style="epic"] :is(
   #bankDetailView,
   #practiceView
 ) .button.primary {
-  color: #fff;
+  color: var(--learn-primary-action-fg, #fff);
 }
 
 html[data-learning-style="epic"] .learning-kicker {
@@ -315,6 +315,8 @@ html[data-learning-style="focus"] :is(
   --learn-line-strong: #c7cfd9;
   --learn-primary: #4f65b7;
   --learn-primary-2: #6779c7;
+  --learn-primary-action-fg: #fff;
+  --learn-selected-fg: #fff;
   --learn-cyan: #4d8796;
   --learn-teal: #478576;
   --learn-gold: #a97f43;
@@ -348,6 +350,8 @@ html[data-theme="dark"][data-learning-style="focus"] :is(
   --learn-line-strong: #46536a;
   --learn-primary: #98a6df;
   --learn-primary-2: #a9b5e9;
+  --learn-primary-action-fg: #171e29;
+  --learn-selected-fg: #171e29;
   --learn-cyan: #80aeb9;
   --learn-teal: #83b3a6;
   --learn-gold: #c8a773;
@@ -417,8 +421,17 @@ html[data-learning-style="focus"] #examView .exam-shell {
 }
 
 html[data-learning-style="focus"] .learning-hero-primary-cta,
-html[data-learning-style="focus"] .button.primary {
+html[data-learning-style="focus"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #examView,
+  #statsView,
+  #bankDetailView,
+  #practiceView
+) .button.primary {
   background: var(--learn-primary);
+  color: var(--learn-primary-action-fg, #fff);
   box-shadow: none;
 }
 
@@ -815,6 +828,9 @@ html[data-learning-style="academy"] :is(
   --learn-shadow-soft: 0 9px 25px rgba(78, 58, 38, .09);
   --academy-brass: #b88948;
   --academy-walnut: #67462f;
+  --academy-action-start: #67462f;
+  --academy-action-end: #8d633d;
+  --learn-primary-action-fg: #fffaf0;
   --academy-parchment: #efe0c6;
   --style-card-radius: 14px;
   --style-hero-radius: 18px;
@@ -854,6 +870,9 @@ html[data-theme="dark"][data-learning-style="academy"] :is(
   --learn-shadow-soft: 0 12px 30px rgba(0,0,0,.24);
   --academy-brass: #d5ad6a;
   --academy-walnut: #9a6b43;
+  --academy-action-start: #805734;
+  --academy-action-end: #8d633d;
+  --learn-selected-fg: #17100b;
   --academy-parchment: #57432f;
 
   border-color: rgba(117, 91, 62, .72);
@@ -974,8 +993,8 @@ html[data-learning-style="academy"] :is(
   #bankDetailView,
   #practiceView
 ) .button.primary {
-  background: linear-gradient(105deg, var(--academy-walnut), var(--academy-brass));
-  color: #fffaf0;
+  background: linear-gradient(105deg, var(--academy-action-start, var(--academy-walnut)), var(--academy-action-end, var(--academy-brass)));
+  color: var(--learn-primary-action-fg, #fffaf0);
   box-shadow: 0 8px 20px color-mix(in srgb, var(--academy-walnut) 22%, transparent);
 }
 
@@ -1033,6 +1052,7 @@ html[data-learning-style="epic"] :is(
   --epic-gold: #e0af53;
   --epic-violet: #815cff;
   --epic-cyan: #4ac4eb;
+  --learn-primary-action-fg: #0d081d;
   --epic-glow: rgba(132, 85, 246, .30);
   --style-card-radius: 24px;
   --style-hero-radius: 30px;
@@ -1074,6 +1094,7 @@ html[data-theme="dark"][data-learning-style="epic"] :is(
   --epic-gold: #f1c56f;
   --epic-violet: #ad85ff;
   --epic-cyan: #72dcff;
+  --learn-selected-fg: #130f2a;
   --epic-glow: rgba(139, 91, 255, .36);
 
   border-color: rgba(105, 76, 166, .70);
@@ -1183,7 +1204,7 @@ html[data-learning-style="epic"] :is(
     var(--learn-page-accent, var(--epic-violet)),
     var(--epic-violet) 52%,
     var(--epic-cyan));
-  color: #fff;
+  color: var(--learn-primary-action-fg, #fff);
   box-shadow:
     0 12px 30px color-mix(in srgb, var(--epic-violet) 30%, transparent),
     0 0 22px color-mix(in srgb, var(--epic-cyan) 13%, transparent),

@@ -44,7 +44,7 @@ assert.equal(inspected.questions.length, 443);
 assert.equal(inspected.manifest.version, '1.2.0');
 
 const sw = fs.readFileSync('service-worker.js', 'utf8');
-assert.match(sw, /const CACHE_VERSION = 'moxin-quiz-v3-[^']+';/);
+assert.match(sw, /const CACHE_VERSION = 'moxin-quiz-v(?:3|5)-[^']+';/);
 
 // Author bank payload must NOT be preloaded in APP_SHELL.
 const shell = sw.match(/const APP_SHELL = \[([\s\S]*?)\];/)?.[1] || '';

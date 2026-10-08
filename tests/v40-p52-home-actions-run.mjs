@@ -146,6 +146,6 @@ assert.match(sw, /\.\/styles\/v4-home\.css/);
 assert.match(sw, /\.\/src\/learning\/home-dashboard\.js/);
 assert.match(sw, /\.\/src\/ui\/home-dashboard\.js/);
 assert.match(sw, /\.\/src\/storage\/backup-meta\.js/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 
 console.log('MoXin Quiz v4.0 P5.2 home actions tests passed.');

@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="墨忻刷題網 v4.1 本機優先個人學習平台：題庫工作室、練習、複習、學習目標、考前衝刺、模擬考與統計" />
+  <meta name="description" content="墨忻刷題網 v5 本機優先個人學習平台：離線練習、題庫工作室、複習、模擬考、統計，以及可選用的跨裝置雲端同步" />
   <meta name="theme-color" content="#3559d9" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="墨忻刷題" />
-  <title>墨忻刷題網 v4.1</title>
+  <title>墨忻刷題網 v5</title>
 
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/pwa/icon-192.png" sizes="192x192" />
@@ -62,14 +62,16 @@
   <link rel="stylesheet" href="styles/v4-home.css" />
   <link rel="stylesheet" href="styles/v4-learning-goals.css" />
   <link rel="stylesheet" href="styles/v4-exam-sprint.css" />
+  <link rel="stylesheet" href="styles/v5-sync.css" />
+  <link rel="stylesheet" href="styles/v5-dialogs.css" />
 </head>
 <body>
   <header class="app-header">
     <div class="brand-block">
       <div class="brand-mark" aria-hidden="true">墨</div>
       <div>
-        <h1>墨忻刷題網 <span class="version-badge">v4.1</span></h1>
-        <p>你的本機學習空間</p>
+        <h1>墨忻刷題網 <span class="version-badge">v5</span></h1>
+        <p>本機優先 · 雲端同步可選用</p>
       </div>
     </div>
     <nav class="main-nav" aria-label="主要導覽">
@@ -79,7 +81,9 @@
       <button class="nav-item" type="button" data-nav-stats>學習統計</button>
       <button class="nav-item" type="button" data-nav-tools>題庫工作室</button>
       <button class="nav-item" type="button" data-nav-settings>設定</button>
+      <button class="nav-item nav-more-mobile" type="button" data-nav-more aria-haspopup="menu" aria-expanded="false">更多</button>
     </nav>
+    <div id="syncStatusHost" class="sync-status-host" hidden aria-live="polite"></div>
   </header>
 
   <main class="app-main">
@@ -216,8 +220,12 @@
   </main>
 
   <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <div id="syncCenterHost" class="sync-center-host" hidden></div>
+  <div id="mobileMoreMenuHost" class="mobile-more-menu-host" hidden></div>
+  <div id="appDialogHost"></div>
   <script type="module" src="src/ui/scene-assets.js"></script>
   <script type="module" src="src/app/main.js"></script>
   <script type="module" src="src/app/p7.js"></script>
+  <script type="module" src="src/app/sync-ui.js"></script>
 </body>
 </html>

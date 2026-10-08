@@ -1,14 +1,16 @@
 import { openDatabase } from '../storage/db.js';
+import { runV5MigrationToCompletion } from '../storage/migrations/v5-migration.js';
+import { commitPracticeAnswer } from '../storage/transactions/learning-mutation.js';
 import {
   deleteBank,
   getAsset,
+  getAssetsByBank,
   getBank,
   getBankPackage,
   getQuestionsByBank,
   listBanks,
 } from '../storage/repositories/banks.js';
 import {
-  addAttempt,
   getAttemptsByBank,
   listAllAttempts,
 } from '../storage/repositories/attempts.js';
@@ -23,20 +25,17 @@ import {
   setFavorite,
   setUnfamiliar,
 } from '../storage/repositories/learning.js';
-import {
-  listQuestionProgress,
-  recordQuestionResult,
-} from '../storage/repositories/progress.js';
+import { listQuestionProgress } from '../storage/repositories/progress.js';
 import {
   listDueReviews,
   listReviewSchedules,
-  updateReviewScheduleFromResult,
 } from '../storage/repositories/review.js';
 import {
   getLatestUnfinishedExamForBank,
   getLatestUnfinishedPracticeSession,
   getLatestUnfinishedSessionForBank,
   saveSession,
+  saveSessionCheckpoint,
 } from '../storage/repositories/sessions.js';
 import {
   importAuthorPackage,
@@ -75,8 +74,9 @@ import {
   getRemainingSeconds,
   gradeExam,
   normalizeResumedExam,
-  setExamAnswer,
 } from '../quiz/exam-engine.js';
+import { saveExamAnswerState } from '../storage/transactions/exam-session.js';
+import { commitExamSubmission } from '../storage/transactions/exam-submission.js';
 import {
   filterQuestions,
   readBankFilters,
@@ -110,6 +110,7 @@ import { buildLearningGoalProgress } from '../learning/goal-progress.js';
 import { buildLearningAnalytics } from '../learning/analytics.js';
 import { buildHomeDashboard } from '../learning/home-dashboard.js';
 import { getLastFullBackupAt } from '../storage/backup-meta.js';
+import { getStudyTimeZone } from '../learning/study-time-zone.js';
 import {
   EXAM_SPRINT_GOAL_ID,
   buildExamSprintPlan,
@@ -117,6 +118,8 @@ import {
 import { createExamSprintSaveInput } from '../ui/exam-sprint.js';
 import { renderLearningStats } from '../ui/stats.js';
 import { renderHomeDashboard } from '../ui/home-dashboard.js';
+import { getSyncStatusSnapshot } from '../ui/sync-status.js';
+import { SYNC_DATA_REFRESH_EVENT } from './sync-data-refresh.js';
 import { renderExamCenter } from '../ui/exam-center.js';
 import {
   collectExamAnswer,
@@ -135,6 +138,7 @@ import {
 
 const state = {
   inspectedPackage: null,
+  currentView: null,
   banks: [],
   authorCatalog: [],
   librarySourceTab: 'author',
@@ -146,6 +150,7 @@ const state = {
   resumeSession: null,
   practice: null,
   practiceQuestionMap: new Map(),
+  practiceNoteDirty: false,
   assetUrls: [],
   reviewGroups: [],
   learningGoalScope: null,
@@ -162,6 +167,8 @@ const state = {
   examSaveTimerId: null,
   examSubmitting: false,
 };
+
+let syncDataRefreshPromise = Promise.resolve();
 
 const elements = {
   libraryView: document.querySelector('#libraryView'),
@@ -205,21 +212,34 @@ bootstrap().catch(error => {
 
 async function bootstrap() {
   cleanupLegacyAnswerQuery();
-  bindEvents();
   renderQuestionBankTools(elements.toolsArea);
   await openDatabase();
   renderStorageStatus(elements.storageStatus, {
     ok: true,
-    message: 'IndexedDB 已就緒，資料只保存在這個瀏覽器。',
+    message: '正在檢查並升級本機學習資料…',
   });
+  await runV5MigrationToCompletion();
+  bindEvents();
   await refreshBanks();
   await refreshAuthorCatalog();
   await refreshHomeDashboard();
   setLibrarySourceTab(state.librarySourceTab);
   showView('library');
+  renderStorageStatus(elements.storageStatus, {
+    ok: true,
+    message: 'IndexedDB 已就緒；目前為本機優先模式。',
+  });
 }
 
 function bindEvents() {
+  window.addEventListener(SYNC_DATA_REFRESH_EVENT, event => {
+    syncDataRefreshPromise = syncDataRefreshPromise
+      .then(() => refreshVisibleDataAfterSync(event.detail || {}))
+      .catch(error => {
+        console.error('V5 runtime data refresh failed.', error);
+      });
+  });
+
   document.addEventListener('click', async event => {
     const sourceTab = event.target.closest('[data-library-source-tab]');
     if (sourceTab) {
@@ -609,6 +629,12 @@ function bindEvents() {
     }
   });
 
+  elements.practiceArea.addEventListener('input', event => {
+    if (event.target.closest?.('[data-note-input]')) {
+      state.practiceNoteDirty = true;
+    }
+  });
+
   elements.practiceArea.addEventListener('submit', async event => {
     if (!event.target.closest('[data-answer-form]')) return;
     event.preventDefault();
@@ -877,7 +903,8 @@ async function refreshBanks() {
 async function refreshHomeDashboard() {
   if (!elements.homeDashboardArea) return;
 
-  const [goals, attempts, resumeSession, summaries] = await Promise.all([
+  const timeZone = await getStudyTimeZone();
+  const [goals, attempts, resumeSession, summaries, syncStatus] = await Promise.all([
     listLearningGoals(),
     listAllAttempts(),
     getLatestUnfinishedPracticeSession({
@@ -902,16 +929,21 @@ async function refreshHomeDashboard() {
         wrong,
       };
     })),
+    getSyncStatusSnapshot(),
   ]);
 
-  renderHomeDashboard(elements.homeDashboardArea, buildHomeDashboard({
+  const model = buildHomeDashboard({
     banks: state.banks,
     goals,
     attempts,
     summaries,
     resumeSession,
     lastBackupAt: getLastFullBackupAt(),
-  }));
+    timeZone,
+  });
+  model.dataSafety = syncStatus;
+
+  renderHomeDashboard(elements.homeDashboardArea, model);
 }
 
 async function exportCurrentBank() {
@@ -970,7 +1002,29 @@ function downloadTextFile(filename, text) {
 async function openBankDetail(bankId) {
   revokeAssetUrls();
 
-  const [bank, questions, progress, favorites, unfamiliar, notes, due, resumeSession] = await Promise.all([
+  const detail = await loadBankDetailData(bankId);
+  if (!detail.bank) {
+    showToast(elements.toastRegion, '找不到這個題庫。', 'error');
+    await refreshBanks();
+    showView('library');
+    return;
+  }
+
+  applyBankDetailData(detail, { resetLearningFilter: true });
+  showView('bank-detail');
+}
+
+async function loadBankDetailData(bankId) {
+  const [
+    bank,
+    questions,
+    progress,
+    favorites,
+    unfamiliar,
+    notes,
+    due,
+    resumeSession,
+  ] = await Promise.all([
     getBank(bankId),
     getQuestionsByBank(bankId),
     listQuestionProgress(bankId),
@@ -981,17 +1035,43 @@ async function openBankDetail(bankId) {
     getLatestUnfinishedSessionForBank(bankId),
   ]);
 
-  if (!bank) {
-    showToast(elements.toastRegion, '找不到這個題庫。', 'error');
-    await refreshBanks();
-    showView('library');
-    return;
-  }
+  return {
+    bank,
+    questions,
+    progress,
+    favorites,
+    unfamiliar,
+    notes,
+    due,
+    resumeSession,
+  };
+}
+
+function applyBankDetailData(detail, {
+  resetLearningFilter = false,
+  preservedFilters = null,
+} = {}) {
+  const {
+    bank,
+    questions,
+    progress,
+    favorites,
+    unfamiliar,
+    notes,
+    due,
+    resumeSession,
+  } = detail;
 
   state.currentBank = bank;
   state.allQuestions = questions;
-  state.learningFilter = 'all';
-  state.learning = buildLearningState(progress, favorites, unfamiliar, notes, due);
+  if (resetLearningFilter) state.learningFilter = 'all';
+  state.learning = buildLearningState(
+    progress,
+    favorites,
+    unfamiliar,
+    notes,
+    due,
+  );
   state.resumeSession = resumeSession;
   state.filteredQuestions = [...questions];
 
@@ -1010,7 +1090,53 @@ async function openBankDetail(bankId) {
       resumeTotal: resumeStats?.total || 0,
     },
   });
-  showView('bank-detail');
+
+  if (preservedFilters) {
+    restoreBankDetailFilters(preservedFilters);
+    applyDetailFilters();
+  }
+}
+
+function restoreBankDetailFilters(filters = {}) {
+  const keyword = elements.bankDetailArea.querySelector('[data-filter-keyword]');
+  if (keyword) keyword.value = filters.keyword || '';
+
+  for (const [selector, value] of [
+    ['[data-filter-type]', filters.type],
+    ['[data-filter-difficulty]', filters.difficulty],
+    ['[data-filter-chapter]', filters.chapter],
+  ]) {
+    const select = elements.bankDetailArea.querySelector(selector);
+    if (!select) continue;
+    const normalized = String(value || 'all');
+    select.value = [...select.options].some(option => option.value === normalized)
+      ? normalized
+      : 'all';
+  }
+}
+
+async function refreshCurrentBankDetailAfterSync() {
+  const bankId = state.currentBank?.id;
+  if (!bankId) return;
+
+  const preservedFilters = readBankFilters(elements.bankDetailArea);
+  const detail = await loadBankDetailData(bankId);
+  if (!detail.bank) {
+    showToast(
+      elements.toastRegion,
+      '目前題庫已由同步更新或移除，已回到我的題庫。',
+      'info',
+    );
+    await refreshBanks();
+    await refreshHomeDashboard();
+    showView('library');
+    return;
+  }
+
+  applyBankDetailData(detail, {
+    resetLearningFilter: false,
+    preservedFilters,
+  });
 }
 
 function applyDetailFilters() {
@@ -1023,8 +1149,9 @@ function applyDetailFilters() {
   renderFilteredQuestions(elements.bankDetailArea, state.filteredQuestions, learning);
 }
 
-async function openReviewCenter() {
+async function openReviewCenter({ show = true } = {}) {
   await refreshBanks();
+  const timeZone = await getStudyTimeZone();
 
   const [goals, attempts, groups] = await Promise.all([
     listLearningGoals(),
@@ -1083,14 +1210,14 @@ async function openReviewCenter() {
     dailyReviewTarget: 0,
   });
 
-  const progress = buildLearningGoalProgress(goal, attempts, { historyDays: 7 });
+  const progress = buildLearningGoalProgress(goal, attempts, { historyDays: 7, timeZone });
   const summaryProgress = buildLearningGoalProgress({
     id: GLOBAL_GOAL_ID,
     bankId: null,
     enabled: false,
     dailyPracticeTarget: 0,
     dailyReviewTarget: 0,
-  }, attempts, { historyDays: 7 });
+  }, attempts, { historyDays: 7, timeZone });
 
   const explicitSprintGoal = goals.find(item => item.id === EXAM_SPRINT_GOAL_ID) || null;
   const legacySprintGoal = explicitSprintGoal
@@ -1114,7 +1241,7 @@ async function openReviewCenter() {
 
   const sprintData = await collectSprintData(sprintGoal.sprintBankIds);
   sprintData.attempts = attempts;
-  const sprintPlan = buildExamSprintPlan(sprintGoal, sprintData);
+  const sprintPlan = buildExamSprintPlan(sprintGoal, sprintData, { timeZone });
 
   state.reviewGroups = groups;
   state.sprintPlan = sprintPlan;
@@ -1137,7 +1264,7 @@ async function openReviewCenter() {
   };
 
   renderLearningHubFromCache();
-  showView('review');
+  if (show) showView('review');
 }
 
 function renderLearningHubFromCache() {
@@ -1276,8 +1403,9 @@ async function startDedicatedReview(bankId, mode) {
   await startPractice(selected, mode);
 }
 
-async function openStats() {
+async function openStats({ show = true } = {}) {
   await refreshBanks();
+  const timeZone = await getStudyTimeZone();
 
   const attempts = await listAllAttempts();
 
@@ -1338,32 +1466,32 @@ async function openStats() {
     };
   });
 
-  const totalAttempts = bankStats.reduce((sum, item) => sum + item.attempts, 0);
-  const totalCorrect = bankStats.reduce((sum, item) => sum + item.correct, 0);
+  const globalAnalytics = buildLearningAnalytics({
+    attempts,
+    questions,
+  }, {
+    timeZone,
+  });
 
   state.statsModel = {
     attempts,
     questions,
     banks: bankStats,
+    timeZone,
     overall: {
-      attempts: totalAttempts,
-      accuracy: totalAttempts
-        ? Math.round((totalCorrect / totalAttempts) * 100)
-        : 0,
-      answeredQuestions: bankStats.reduce((sum, item) => sum + item.answered, 0),
+      attempts: globalAnalytics.overall.attempts,
+      accuracy: globalAnalytics.overall.accuracy,
+      answeredQuestions: globalAnalytics.overall.uniqueQuestions,
       due: bankStats.reduce((sum, item) => sum + item.due, 0),
     },
-    globalAnalytics: buildLearningAnalytics({
-      attempts,
-      questions,
-    }),
+    globalAnalytics,
   };
 
   const validScopes = new Set(['global', ...state.banks.map(bank => String(bank.id))]);
   if (!validScopes.has(state.statsScope)) state.statsScope = 'global';
 
   renderStatsFromCache();
-  showView('stats');
+  if (show) showView('stats');
 }
 
 function renderStatsFromCache() {
@@ -1377,6 +1505,7 @@ function renderStatsFromCache() {
         questions: state.statsModel.questions,
       }, {
         bankId: scope,
+        timeZone: state.statsModel.timeZone,
       });
 
   renderLearningStats(elements.statsArea, {
@@ -1393,7 +1522,7 @@ function renderStatsFromCache() {
 }
 
 
-async function openExamCenter() {
+async function openExamCenter({ show = true } = {}) {
   stopExamTimer();
   await refreshBanks();
 
@@ -1411,13 +1540,15 @@ async function openExamCenter() {
   }));
 
   renderExamCenter(elements.examCenterArea, groups);
-  showView('exam-center');
+  if (show) showView('exam-center');
 }
 
 async function startExam(bankId, questionCount, durationMinutes) {
-  const [bank, questions] = await Promise.all([
+  const [bank, questions, assets, existingExam] = await Promise.all([
     getBank(bankId),
     getQuestionsByBank(bankId),
+    getAssetsByBank(bankId),
+    getLatestUnfinishedExamForBank(bankId),
   ]);
 
   if (!bank || !questions.length) {
@@ -1428,23 +1559,44 @@ async function startExam(bankId, questionCount, durationMinutes) {
   const normalizedCount = Math.max(1, Math.min(Number(questionCount) || 20, questions.length, 100));
   const normalizedDuration = Math.max(1, Math.min(Number(durationMinutes) || 30, 240));
 
+  const existingExamNotice = existingExam
+    ? '\n\n注意：這個題庫已有一場未完成的模擬考。開始新考試後，上一場才會被標記為已放棄。'
+    : '';
   const confirmed = confirm(
-    `開始模擬考？\n\n題庫：${bank.name || bank.id}\n題數：${normalizedCount}\n時間：${normalizedDuration} 分鐘\n\n開始後會立即倒數。`,
+    `開始模擬考？\n\n題庫：${bank.name || bank.id}\n題數：${normalizedCount}\n時間：${normalizedDuration} 分鐘\n\n開始後會立即倒數；離開畫面也不會暫停。${existingExamNotice}`,
   );
   if (!confirmed) return;
 
+  if (existingExam) {
+    await saveSession({
+      ...existingExam,
+      status: 'abandoned',
+      abandonedAt: new Date().toISOString(),
+      activeLease: null,
+    });
+  }
+
+  const assetHashes = new Map(
+    (assets || []).map(asset => [String(asset.path), asset.contentHash || null]),
+  );
+
   state.currentBank = bank;
   state.allQuestions = questions;
-  state.examQuestionMap = new Map(questions.map(question => [question.id, question]));
   state.exam = createExamSession({
     bankId,
     bankName: bank.name || bank.title || bank.id,
+    bankVersion: bank.version || null,
+    bankFingerprint: bank.contentFingerprint || null,
     questions,
     questionCount: normalizedCount,
     durationMinutes: normalizedDuration,
+    assetHashes,
   });
+  state.examQuestionMap = new Map(
+    state.exam.questionSnapshot.map(question => [question.questionId, question]),
+  );
 
-  await persistExamSession();
+  await persistExamSession({ syncLifecycle: true });
   showView('exam');
   await renderCurrentExamQuestion();
   startExamTimer();
@@ -1465,8 +1617,21 @@ async function resumeExam(bankId) {
 
   state.currentBank = bank;
   state.allQuestions = questions;
-  state.examQuestionMap = new Map(questions.map(question => [question.id, question]));
-  state.exam = normalizeResumedExam(resume, questions.map(question => question.id));
+  state.exam = normalizeResumedExam(resume, questions);
+  state.examQuestionMap = new Map(
+    (state.exam.questionSnapshot || []).map(question => [question.questionId, question]),
+  );
+
+  if (state.exam.integrityError) {
+    const missing = state.exam.integrityError.missingQuestionIds.join('、');
+    showToast(
+      elements.toastRegion,
+      `這份模擬考的凍結題目資料不完整，已停止恢復：${missing}`,
+      'error',
+    );
+    await openExamCenter();
+    return;
+  }
 
   if (!state.exam.questionIds.length) {
     showToast(elements.toastRegion, '這份模擬考的題目已不存在，無法恢復。', 'error');
@@ -1536,8 +1701,11 @@ async function saveCurrentExamAnswer() {
   if (!question) return;
 
   const answer = collectExamAnswer(elements.examArea, question);
-  setExamAnswer(state.exam, questionId, answer);
-  await persistExamSession();
+  state.exam = await saveExamAnswerState({
+    sessionId: state.exam.id,
+    questionId,
+    value: answer,
+  });
 }
 
 function startExamTimer() {
@@ -1584,34 +1752,13 @@ async function submitExam({ auto = false } = {}) {
   stopExamTimer();
 
   try {
-    const result = gradeExam(state.exam, state.examQuestionMap);
-    const submittedAt = new Date().toISOString();
-
-    for (const detail of result.details) {
-      await Promise.all([
-        addAttempt({
-          bankId: state.currentBank.id,
-          questionId: detail.questionId,
-          selectedAnswer: detail.userAnswer,
-          correct: detail.correct,
-          responseTime: null,
-          mode: 'exam',
-        }),
-        recordQuestionResult(state.currentBank.id, detail.questionId, detail.correct),
-        updateReviewScheduleFromResult(state.currentBank.id, detail.questionId, detail.correct),
-      ]);
-    }
-
-    state.exam.submittedAt = submittedAt;
-    state.exam.finishedAt = submittedAt;
-    state.exam.result = {
-      total: result.total,
-      correctCount: result.correctCount,
-      wrongCount: result.wrongCount,
-      unansweredCount: result.unansweredCount,
-      score: result.score,
-    };
-    await persistExamSession();
+    const committed = await commitExamSubmission({
+      sessionId: state.exam.id,
+      bank: state.currentBank,
+      reason: auto ? 'timeout' : 'manual',
+    });
+    state.exam = committed.session;
+    const result = committed.result;
 
     revokeAssetUrls();
     renderExamResult(elements.examArea, {
@@ -1627,25 +1774,32 @@ async function submitExam({ auto = false } = {}) {
   } catch (error) {
     console.error(error);
     showToast(elements.toastRegion, `交卷失敗：${error.message}`, 'error');
-    startExamTimer();
+    if (getRemainingSeconds(state.exam) > 0) {
+      startExamTimer();
+    }
   } finally {
     state.examSubmitting = false;
   }
 }
 
-async function persistExamSession() {
+async function persistExamSession({ syncLifecycle = false } = {}) {
   if (!state.exam) return;
-  const saved = await saveSession(state.exam);
-  state.exam.id = saved.id;
-  state.exam.createdAt = saved.createdAt;
-  state.exam.updatedAt = saved.updatedAt;
+  const saved = syncLifecycle
+    ? await saveSession(state.exam)
+    : await saveSessionCheckpoint(state.exam);
+  state.exam = {
+    ...state.exam,
+    ...saved,
+  };
 }
 
 async function hydrateExamImages(paths) {
   const container = elements.examArea.querySelector('[data-exam-question-images]');
   if (!container || !Array.isArray(paths) || !paths.length) return;
 
-  for (const path of paths) {
+  for (const item of paths) {
+    const path = typeof item === 'string' ? item : item?.path;
+    if (!path) continue;
     try {
       const asset = await getAsset(state.currentBank.id, path);
       if (!asset?.blob) {
@@ -1697,7 +1851,7 @@ async function startPractice(questions, modeOverride = null, options = {}) {
     shuffleQuestions: options.shuffleQuestions !== false,
   });
 
-  await persistPracticeSession();
+  await persistPracticeSession({ syncLifecycle: true });
   showView('practice');
   await showNextPracticeQuestion();
 }
@@ -1731,7 +1885,7 @@ async function showNextPracticeQuestion() {
 
   if (isSessionFinished(state.practice)) {
     state.practice.finishedAt = new Date().toISOString();
-    await persistPracticeSession();
+    await persistPracticeSession({ syncLifecycle: true });
     revokeAssetUrls();
     renderPracticeFinished(elements.practiceArea, {
       bank: state.currentBank,
@@ -1782,6 +1936,7 @@ async function renderCurrentPracticeQuestion() {
   setFavoriteButton(elements.practiceArea, Boolean(favorite));
   setUnfamiliarButton(elements.practiceArea, Boolean(unfamiliar));
   setNoteValue(elements.practiceArea, note);
+  state.practiceNoteDirty = false;
 
   await hydrateAssetImages(question.images || [], '[data-question-images]');
   await persistPracticeSession();
@@ -1806,19 +1961,20 @@ async function submitPracticeAnswer() {
 
   recordSessionAnswer(state.practice, question.id, correct);
 
-  await Promise.all([
-    addAttempt({
-      bankId: state.currentBank.id,
-      questionId: question.id,
-      selectedAnswer: userAnswer,
-      correct,
-      responseTime,
-      mode: state.practice.mode,
-    }),
-    recordQuestionResult(state.currentBank.id, question.id, correct),
-    updateReviewScheduleFromResult(state.currentBank.id, question.id, correct),
-    persistPracticeSession(),
-  ]);
+  const committed = await commitPracticeAnswer({
+    bank: state.currentBank,
+    question,
+    session: state.practice,
+    selectedAnswer: userAnswer,
+    correct,
+    responseTime,
+    mode: state.practice.mode,
+  });
+
+  state.practice = {
+    ...state.practice,
+    ...committed.session,
+  };
 
   renderAnswerFeedback(elements.practiceArea, {
     question,
@@ -1856,6 +2012,7 @@ async function saveCurrentNote() {
 
   const text = getNoteValue(elements.practiceArea);
   await saveNote(state.currentBank.id, questionId, text);
+  state.practiceNoteDirty = false;
   showToast(
     elements.toastRegion,
     text.trim() ? '筆記已儲存。' : '空白筆記已移除。',
@@ -1863,15 +2020,19 @@ async function saveCurrentNote() {
   );
 }
 
-async function persistPracticeSession() {
+async function persistPracticeSession({ syncLifecycle = false } = {}) {
   if (!state.practice) return;
-  const saved = await saveSession({
+  const snapshot = {
     ...state.practice,
     currentQuestionId: state.practice.currentQuestionId,
-  });
-  state.practice.id = saved.id;
-  state.practice.createdAt = saved.createdAt;
-  state.practice.updatedAt = saved.updatedAt;
+  };
+  const saved = syncLifecycle
+    ? await saveSession(snapshot)
+    : await saveSessionCheckpoint(snapshot);
+  state.practice = {
+    ...state.practice,
+    ...saved,
+  };
 }
 
 async function hydrateAssetImages(paths, selector) {
@@ -1947,7 +2108,156 @@ function createEmptyLearningState() {
   };
 }
 
+
+const RUNTIME_DATA_ENTITY_TYPES = new Set([
+  'attempt',
+  'favorite',
+  'unfamiliar',
+  'note',
+  'learning-goal',
+  'account-settings',
+  'author-library',
+  'user-bank',
+  'practice-session',
+  'exam-session',
+  'exam-answer',
+]);
+
+function hasRuntimeEntityType(entityTypes, allowedTypes = null) {
+  const source = entityTypes instanceof Set
+    ? entityTypes
+    : new Set(entityTypes || []);
+  if (source.size === 0) return false;
+
+  const target = allowedTypes || RUNTIME_DATA_ENTITY_TYPES;
+  return [...source].some(type => target.has(type));
+}
+
+async function refreshVisibleDataAfterSync(detail = {}) {
+  const entityTypes = new Set(detail?.entityTypes || []);
+  if (!hasRuntimeEntityType(entityTypes)) return;
+
+  if (state.currentView === 'library') {
+    await refreshBanks();
+    await refreshHomeDashboard();
+    return;
+  }
+
+  if (state.currentView === 'bank-detail') {
+    if (hasRuntimeEntityType(entityTypes, new Set([
+      'attempt',
+      'favorite',
+      'unfamiliar',
+      'note',
+      'practice-session',
+      'user-bank',
+    ]))) {
+      await refreshCurrentBankDetailAfterSync();
+    }
+    return;
+  }
+
+  if (state.currentView === 'practice') {
+    if (hasRuntimeEntityType(entityTypes, new Set([
+      'favorite',
+      'unfamiliar',
+      'note',
+    ]))) {
+      await refreshCurrentPracticeLearningMetadata();
+    }
+    return;
+  }
+
+  if (state.currentView === 'review') {
+    if (
+      !isUserEditingWithin(elements.reviewArea) &&
+      hasRuntimeEntityType(entityTypes, new Set([
+        'attempt',
+        'favorite',
+        'unfamiliar',
+        'note',
+        'learning-goal',
+        'account-settings',
+        'practice-session',
+        'user-bank',
+      ]))
+    ) {
+      await openReviewCenter({ show: false });
+    }
+    return;
+  }
+
+  if (state.currentView === 'stats') {
+    if (hasRuntimeEntityType(entityTypes, new Set([
+      'attempt',
+      'account-settings',
+      'user-bank',
+    ]))) {
+      await openStats({ show: false });
+    }
+    return;
+  }
+
+  if (state.currentView === 'exam-center') {
+    if (hasRuntimeEntityType(entityTypes, new Set([
+      'exam-session',
+      'exam-answer',
+      'user-bank',
+    ]))) {
+      await openExamCenter({ show: false });
+    }
+  }
+}
+
+async function refreshCurrentPracticeLearningMetadata() {
+  const questionId = state.practice?.currentQuestionId;
+  const bankId = state.currentBank?.id;
+  if (!questionId || !bankId) return;
+
+  const [favorite, unfamiliar, note] = await Promise.all([
+    getFavorite(bankId, questionId),
+    getUnfamiliar(bankId, questionId),
+    getNote(bankId, questionId),
+  ]);
+
+  const favoriteActive = Boolean(favorite);
+  const unfamiliarActive = Boolean(unfamiliar);
+  const noteActive = Boolean(String(note?.text || '').trim());
+
+  setFavoriteButton(elements.practiceArea, favoriteActive);
+  setUnfamiliarButton(elements.practiceArea, unfamiliarActive);
+  updateLearningSet(state.learning.favoriteIds, questionId, favoriteActive);
+  updateLearningSet(
+    state.learning.unfamiliarIds,
+    questionId,
+    unfamiliarActive,
+  );
+  updateLearningSet(state.learning.noteIds, questionId, noteActive);
+
+  // Preserve text typed into the editor but not saved yet. A later save
+  // descends from the newly applied remote Note revision in IndexedDB.
+  if (!state.practiceNoteDirty) {
+    setNoteValue(elements.practiceArea, note);
+  }
+}
+
+function updateLearningSet(set, value, active) {
+  if (!(set instanceof Set)) return;
+  if (active) set.add(value);
+  else set.delete(value);
+}
+
+function isUserEditingWithin(container) {
+  const active = document.activeElement;
+  return Boolean(
+    active &&
+    container?.contains(active) &&
+    active.matches('input, textarea, select, [contenteditable="true"]'),
+  );
+}
+
 function showView(name) {
+  state.currentView = name;
   const views = {
     library: elements.libraryView,
     review: elements.reviewView,

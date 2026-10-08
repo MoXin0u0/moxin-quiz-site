@@ -258,8 +258,20 @@ function markOptions(container, question, userAnswer) {
 
   container.querySelectorAll('[data-option-id]').forEach(row => {
     const value = String(row.dataset.optionId);
-    row.classList.toggle('is-correct', correct.has(value));
-    row.classList.toggle('is-wrong', selected.has(value) && !correct.has(value));
+    const isCorrect = correct.has(value);
+    const isWrong = selected.has(value) && !isCorrect;
+
+    row.classList.toggle('is-correct', isCorrect);
+    row.classList.toggle('is-wrong', isWrong);
+
+    row.querySelector('.practice-option-feedback')?.remove();
+
+    if (isCorrect || isWrong) {
+      const feedback = document.createElement('span');
+      feedback.className = 'practice-option-feedback';
+      feedback.textContent = isCorrect ? '✓ 正確答案' : '✕ 你的答案';
+      row.append(feedback);
+    }
   });
 }
 

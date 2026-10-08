@@ -119,6 +119,6 @@ assert.match(css, /@media \(max-width: 520px\)/);
 assert.match(htmlSource, /styles\/v4-learning-goals\.css/);
 assert.match(sw, /\.\/styles\/v4-learning-goals\.css/);
 assert.match(sw, /\.\/src\/ui\/learning-goals\.js/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 
 console.log('MoXin Quiz v4.0 P3.1 learning goal UI tests passed.');

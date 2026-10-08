@@ -50,9 +50,14 @@ const resumed = normalizeResumedExam({
   currentIndex: 99,
 }, ['Q1', 'Q2'], now);
 
-assert.deepEqual(resumed.questionIds, ['Q1', 'Q2']);
-assert.deepEqual(resumed.answers, { Q1: 'A', Q2: false });
-assert.equal(resumed.currentIndex, 1);
+assert.deepEqual(
+  resumed.questionIds,
+  ['Q1', 'Q2', 'REMOVED'],
+  'V5 must not silently shrink a frozen exam when snapshot data is missing',
+);
+assert.deepEqual(resumed.answers, { Q1: 'A', Q2: false, REMOVED: 'x' });
+assert.equal(resumed.currentIndex, 2);
+assert.deepEqual(resumed.integrityError?.missingQuestionIds, ['REMOVED']);
 assert.equal(resumed.expired, false);
 
 const expired = normalizeResumedExam({

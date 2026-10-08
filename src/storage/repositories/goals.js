@@ -1,15 +1,26 @@
 import {
-  deleteRecord,
   getAllRecords,
   getRecord,
-  putRecord,
 } from '../db.js';
+import { createUuid } from '../../utils/ids.js';
+import { runReadwriteTransaction } from '../transactions/transaction-utils.js';
+import {
+  attachMutationPayloadInTransaction,
+  createRevisionMutationInTransaction,
+  getLatestTombstoneRevisionInTransaction,
+} from '../transactions/sync-mutation.js';
 
 export const GLOBAL_GOAL_ID = 'global';
 
 export function normalizeLearningGoal(input = {}, now = new Date()) {
   const source = input && typeof input === 'object' ? input : {};
   const id = String(source.id || GLOBAL_GOAL_ID);
+  const examDate = normalizeOptionalDate(source.examDate);
+  const examDateKey = source.examDateKey
+    ? String(source.examDateKey).slice(0, 10)
+    : examDate
+      ? examDate.slice(0, 10)
+      : null;
 
   return {
     id,
@@ -17,7 +28,8 @@ export function normalizeLearningGoal(input = {}, now = new Date()) {
     enabled: source.enabled === true,
     dailyPracticeTarget: clampInteger(source.dailyPracticeTarget, 0, 10000),
     dailyReviewTarget: clampInteger(source.dailyReviewTarget, 0, 10000),
-    examDate: normalizeOptionalDate(source.examDate),
+    examDate,
+    examDateKey,
     examLabel: String(source.examLabel || '').trim(),
     sprintEnabled: source.sprintEnabled === true,
     sprintBankIds: normalizeStringArray(source.sprintBankIds),
@@ -29,18 +41,44 @@ export function normalizeLearningGoal(input = {}, now = new Date()) {
 
 export async function saveLearningGoal(input) {
   const id = String(input?.id || GLOBAL_GOAL_ID);
-  const existing = await getRecord('learningGoals', id);
   const now = new Date();
-  const goal = normalizeLearningGoal({
-    ...existing,
-    ...input,
-    id,
-    createdAt: existing?.createdAt || input?.createdAt || now.toISOString(),
-    updatedAt: now.toISOString(),
-  }, now);
 
-  await putRecord('learningGoals', goal);
-  return goal;
+  return runReadwriteTransaction([
+    'learningGoals',
+    'syncMeta',
+    'syncOutbox',
+    'syncRevisions',
+    'syncTombstones',
+  ], async ({ store, request, tx }) => {
+    const existing = await request(store('learningGoals').get(id));
+    const tombstoneRevision = existing
+      ? null
+      : await getLatestTombstoneRevisionInTransaction(tx, {
+          entityType: 'learning-goal',
+          entityKey: id,
+        });
+    const goal = normalizeLearningGoal({
+      ...existing,
+      ...input,
+      id,
+      createdAt: existing?.createdAt || input?.createdAt || now.toISOString(),
+      updatedAt: now.toISOString(),
+    }, now);
+
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
+      entityType: 'learning-goal',
+      entityKey: id,
+      previousRevision: existing?.revision || tombstoneRevision || null,
+      operation: 'upsert',
+      coalesceKey: `learning-goal:${id}`,
+      now,
+    });
+
+    const record = { ...goal, revision };
+    store('learningGoals').put(record);
+    attachMutationPayloadInTransaction(tx, mutation, record);
+    return record;
+  });
 }
 
 export function getLearningGoal(id = GLOBAL_GOAL_ID) {
@@ -54,8 +92,41 @@ export async function listLearningGoals() {
   );
 }
 
-export function deleteLearningGoal(id = GLOBAL_GOAL_ID) {
-  return deleteRecord('learningGoals', String(id));
+export async function deleteLearningGoal(id = GLOBAL_GOAL_ID) {
+  const key = String(id);
+  const now = new Date();
+
+  return runReadwriteTransaction([
+    'learningGoals',
+    'syncMeta',
+    'syncOutbox',
+    'syncRevisions',
+    'syncTombstones',
+  ], async ({ store, request, tx }) => {
+    const existing = await request(store('learningGoals').get(key));
+    if (!existing) return false;
+
+    const { revision, mutation } = await createRevisionMutationInTransaction(tx, {
+      entityType: 'learning-goal',
+      entityKey: key,
+      previousRevision: existing.revision || null,
+      operation: 'delete',
+      coalesceKey: `learning-goal:${key}`,
+      now,
+    });
+
+    const tombstone = {
+      tombstoneId: createUuid('tombstone'),
+      entityType: 'learning-goal',
+      entityKey: key,
+      deletedAt: now.toISOString(),
+      revision,
+    };
+    store('learningGoals').delete(key);
+    store('syncTombstones').put(tombstone);
+    attachMutationPayloadInTransaction(tx, mutation, tombstone);
+    return true;
+  });
 }
 
 function clampInteger(value, min, max) {

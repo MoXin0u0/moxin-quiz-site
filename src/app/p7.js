@@ -21,6 +21,11 @@ import {
   renderSettings,
 } from '../ui/settings.js';
 import { showToast } from '../ui/library.js';
+import { getSyncCenterSnapshot } from '../ui/sync-status.js';
+import {
+  showConfirmDialog,
+  showMessageDialog,
+} from '../ui/dialogs.js';
 
 const settingsView = document.querySelector('#settingsView');
 const settingsArea = document.querySelector('#settingsArea');
@@ -114,9 +119,10 @@ function bindSettingsActions() {
 }
 
 async function openSettings() {
-  const [storage, checks] = await Promise.all([
+  const [storage, checks, sync] = await Promise.all([
     getStorageSummary(),
     runPreflightChecks(),
+    getSyncCenterSnapshot(),
   ]);
 
   const settings = loadSettings();
@@ -125,6 +131,7 @@ async function openSettings() {
     storage,
     checks,
     pwa: getPwaState(),
+    sync,
   });
 
   document.querySelectorAll('[data-view]').forEach(node => {
@@ -180,6 +187,7 @@ async function exportBackup() {
     const blob = await backupSnapshotToBlob(snapshot);
     downloadBlob(blob, createBackupFilename());
     markFullBackupCompleted(snapshot.exportedAt || new Date());
+    window.dispatchEvent(new CustomEvent('moxin:v5-sync-refresh'));
 
     const summary = summarizeSnapshot(snapshot);
     showToast(toastRegion, `備份完成，共 ${summary.totalRecords} 筆本機資料。`, 'success');
@@ -199,16 +207,25 @@ async function restoreFromFile(file) {
     const snapshot = await readBackupFile(file);
     const summary = summarizeSnapshot(snapshot);
 
-    const confirmed = confirm(
-      `確定從這份備份還原？\n\n` +
-      `匯出時間：${snapshot.exportedAt || '未提供'}\n` +
-      `資料筆數：約 ${summary.totalRecords}\n\n` +
-      '目前瀏覽器中的 v3 題庫與學習資料將被完整取代。建議先下載目前備份。',
-    );
+    const confirmed = await showConfirmDialog({
+      title: '從完整備份還原？',
+      message:
+        '匯出時間：' + (snapshot.exportedAt || '未提供') + '\n' +
+        '資料筆數：約 ' + summary.totalRecords + '\n\n' +
+        '目前瀏覽器中的本機題庫與學習資料將被完整取代。' +
+        '建議先下載一份目前備份。',
+      confirmLabel: '取代並還原',
+      cancelLabel: '取消',
+      danger: true,
+    });
     if (!confirmed) return;
 
     await restoreBackupSnapshot(snapshot, { replace: true });
-    alert('還原完成。頁面將重新載入，讓所有資料與設定重新初始化。');
+    await showMessageDialog({
+      title: '還原完成',
+      message: '頁面將重新載入，讓所有資料與設定重新初始化。',
+      confirmLabel: '重新載入',
+    });
     location.reload();
   } catch (error) {
     console.error(error);

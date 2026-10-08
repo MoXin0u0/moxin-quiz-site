@@ -356,7 +356,7 @@ const questions = [
   ]) {
     assert.ok(sw.includes(`'${asset}'`), `APP_SHELL missing ${asset}`);
   }
-  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 }
 
 // 15. Release entries stay byte-for-byte identical.

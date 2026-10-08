@@ -1,7 +1,7 @@
 {
   "name": "墨忻刷題網",
   "short_name": "墨忻刷題",
-  "description": "墨忻刷題網 v4.1：本機優先、可離線使用的個人學習與刷題平台。",
+  "description": "墨忻刷題網 v5：本機優先、可離線使用，並可選用跨裝置雲端同步的個人學習與刷題平台。",
   "lang": "zh-TW",
   "start_url": "./app.html",
   "scope": "./",

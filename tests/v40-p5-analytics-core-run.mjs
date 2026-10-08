@@ -157,7 +157,7 @@ assert.equal(shiftDateKey('2026-03-01', -1), '2026-02-28');
 {
   const sw = fs.readFileSync('service-worker.js', 'utf8');
   assert.match(sw, /\.\/src\/learning\/analytics\.js/);
-  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v3-4\.\d+\.\d+-[^']+'/);
+  assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v(?:3-4\.\d+\.\d+|5)-[^']+'/);
 }
 
 console.log('MoXin Quiz v4.0 P5 analytics core: 16 regression cases passed.');

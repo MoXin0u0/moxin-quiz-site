@@ -7,6 +7,8 @@ on:
       - next-v3
       - "v3.*"
       - "v4.*"
+      - v5-cloud-sync
+      - v5-cloud-sync-live-rc
     paths:
       - "index.html"
       - "author-banks.json"
@@ -19,6 +21,7 @@ on:
       - "src/**"
       - "styles/v3*.css"
       - "styles/v4*.css"
+      - "styles/v5*.css"
       - "assets/learning/**"
       - "tests/**"
       - "scripts/v3-release-preflight.mjs"
@@ -37,6 +40,7 @@ on:
       - "src/**"
       - "styles/v3*.css"
       - "styles/v4*.css"
+      - "styles/v5*.css"
       - "assets/learning/**"
       - "tests/**"
       - "scripts/v3-release-preflight.mjs"
@@ -64,3 +68,108 @@ jobs:
 
       - name: Run full v3 regression suite
         run: npm run ci
+
+      - name: Verify live RC cloud cutover readiness
+        if: github.ref == 'refs/heads/v5-cloud-sync-live-rc' || github.head_ref == 'v5-cloud-sync-live-rc'
+        run: npm run preflight:cloud-cutover
+
+
+  v5-browser-audit:
+    name: V5 browser + accessibility baseline
+    if: github.ref == 'refs/heads/v5-cloud-sync' || github.head_ref == 'v5-cloud-sync' || github.ref == 'refs/heads/v5-cloud-sync-live-rc' || github.head_ref == 'v5-cloud-sync-live-rc'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install browser audit dependencies
+        run: |
+          npm install --no-save playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/moxin-v5-http.log 2>&1 &
+          echo $! > /tmp/moxin-v5-http.pid
+
+      - name: Run app browser audit
+        run: npm run audit:browser
+
+      - name: Run landing browser audit
+        run: npm run audit:landing
+
+      - name: Run V5 P0A browser matrix
+        run: npm run audit:v5-theme
+
+      - name: Run V5 IndexedDB v4 structural audit
+        run: npm run audit:v5-db
+
+      - name: Run V5 deterministic migration audit
+        run: npm run audit:v5-migration
+
+      - name: Run V5 Backup v2 recovery audit
+        run: npm run audit:v5-backup
+
+      - name: Run V5 transactional outbox audit
+        run: npm run audit:v5-outbox
+
+      - name: Run V5 exam integrity audit
+        run: npm run audit:v5-exam
+
+      - name: Run V5 consistency repair audit
+        run: npm run audit:v5-consistency
+
+      - name: Run V5 cloud provider foundation audit
+        run: npm run audit:v5-cloud-provider
+
+      - name: Run V5 immutable commit transport audit
+        run: npm run audit:v5-sync-transport
+
+      - name: Run V5 deterministic merge and reconciliation audit
+        run: npm run audit:v5-sync-merge
+
+      - name: Run V5 cloud object transport audit
+        run: npm run audit:v5-cloud-object
+
+      - name: Run V5 object-backed repository sync audit
+        run: npm run audit:v5-object-sync
+
+      - name: Run V5 sync-cycle engine audit
+        run: npm run audit:v5-sync-engine
+
+      - name: Run V5 cloud profile, checkpoint and device registry audit
+        run: npm run audit:v5-profile-checkpoint
+
+      - name: Run V5 account switching and revocation audit
+        run: npm run audit:v5-account-lifecycle
+
+      - name: Run V5 Sync Center product UI audit
+        run: npm run audit:v5-sync-ui
+
+      - name: Run V5 first-sync and account-switch reconciliation UX audit
+        run: npm run audit:v5-reconciliation-ui
+
+      - name: Run V5 conflict resolution UI audit
+        run: npm run audit:v5-conflict-resolution
+
+      - name: Run V5 automatic sync scheduler audit
+        run: npm run audit:v5-sync-scheduler
+
+      - name: Run V5 note conflict merge audit
+        run: npm run audit:v5-note-merge
+
+      - name: Run V5 cross-device conflict convergence audit
+        run: npm run audit:v5-conflict-convergence
+
+      - name: Run V5 sync runtime UI refresh audit
+        run: npm run audit:v5-sync-runtime-refresh
+
+      - name: Run V5 release readiness diagnostics audit
+        run: npm run audit:v5-release-readiness
