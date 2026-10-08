@@ -1,6 +1,6 @@
 # MoXin Quiz V5｜Manual Cloud / Production Cutover Gate
 
-Status: **PRODUCTION CANDIDATE READY — automated + manual gates passed; main merge pending explicit authorization**
+Status: **V5.0.0 PRODUCTION RELEASE COMPLETE — main deployed, OAuth in production, final public OAuth smoke test passed**
 
 This checklist is the manual half of the V5 release gate. Automated CI can validate Local-first behavior, deterministic sync semantics, failure handling, accessibility, and provider boundaries, but it cannot replace real Google account / Drive / two-device validation.
 
@@ -97,6 +97,8 @@ Cloud can be disabled through the feature flag while preserving Local-first oper
 - Device A / Browser: Chrome normal profile on Codespaces forwarded-port RC
 - Device B / Browser: Chrome incognito profile on the same RC origin (isolated browser storage)
 - Manual matrix completed by: ✅ Live user validation completed 2026-10-08
-- Pages deployment: ✅ PASS — GitHub Pages deployment for production-candidate head `03f33ed3fbde3ab0fb46ee737d14591260d936b2` completed successfully; configured homepage/privacy/terms paths are included in that deployment
-- OAuth audience: _Testing — ready for the user to switch to In production now that the public Pages deployment contains the configured policy URLs_
-- Production merge authorized by: _Pending_
+- Pages deployment: ✅ PASS — production `main` merge commit `2eaef7dd0c4fd5bbcaffa2ec3eb1761f8d663b2d` deployed successfully from `main / (root)` via GitHub Pages run `37830902435`
+- OAuth audience: ✅ PASS — Google Auth Platform switched from Testing to In production with External audience; `drive.appdata` remains the only requested Drive scope
+- Production merge authorized by: ✅ User explicitly authorized PR #7 merge to `main`
+- Production merge: ✅ PR #7 merged; merge commit `2eaef7dd0c4fd5bbcaffa2ec3eb1761f8d663b2d`
+- Final public OAuth smoke test: ✅ PASS — a non-Test-User Google account successfully authorized and used cloud sync on the production website
