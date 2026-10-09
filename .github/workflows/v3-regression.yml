@@ -70,6 +70,9 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/moxin-v5-http.log 2>&1 &
           echo $! > /tmp/moxin-v5-http.pid
 
+      - name: Verify known conflict UI contrast first
+        run: npm run audit:v5-conflict-resolution
+
       - name: Run app browser audit
         run: npm run audit:browser
 
