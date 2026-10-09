@@ -9,10 +9,16 @@ const browser = await chromium.launch({ headless: true });
 try {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
-  await page.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 15000 });
-  await page.waitForFunction(() =>
-    (document.querySelector('#storageStatus')?.textContent || '').includes('IndexedDB 已就緒'),
-  null, { timeout: 15000 });
+  // This test owns the IndexedDB lifecycle. Use a static same-origin document
+  // rather than starting the App, whose async sync-status observers can reopen
+  // the database while test reset() is deleting it.
+  const fixtureUrl = new URL('terms.html', BASE_URL).href;
+  const response = await page.goto(fixtureUrl, {
+    waitUntil: 'domcontentloaded',
+    timeout: 15000,
+  });
+  assert.equal(response.status(), 200);
+  await page.locator('main h1').waitFor({ state: 'visible' });
 
   const result = await page.evaluate(async dbName => {
     const {
