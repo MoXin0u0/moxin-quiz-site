@@ -581,6 +581,11 @@
   color: var(--text);
 }
 
+/* B01 regression: warning surface must not inherit low-contrast muted text. */
+.sync-conflict-manual p {
+  color: var(--text);
+}
+
 @media (max-width: 940px) {
   .app-header {
     gap: .55rem;
