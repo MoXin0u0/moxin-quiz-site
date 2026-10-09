@@ -215,7 +215,19 @@ try {
   const severe = a11y.violations
     .filter(item => ['critical', 'serious'].includes(item.impact))
     .map(item => item.id);
-  assert.deepEqual(severe, []);
+  assert.deepEqual(severe, [], JSON.stringify(
+    a11y.violations.filter(item => ['critical', 'serious'].includes(item.impact))
+      .map(item => ({
+        id: item.id,
+        nodes: item.nodes.map(node => ({
+          target: node.target,
+          summary: node.failureSummary,
+          data: node.any.map(check => check.data),
+        })),
+      })),
+    null,
+    2,
+  ));
 
   await center.locator(
     '[data-conflict-id="conflict-b13c3-note"] ' +
