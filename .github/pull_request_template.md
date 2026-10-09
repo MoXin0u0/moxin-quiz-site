@@ -42,4 +42,4 @@
 - [ ] 涉及對外 Terms／Privacy 或品牌：另附法律／品牌核准（未核准不得發布）
 - [ ] 未經明確授權不合併 `main` 或開始下一批
 
-參考：[工作索引](../docs/roadmap/README.md)／[V5 正式基準](../docs/roadmap/V5_PRODUCTION_BASELINE.md)。
+參考：[工作索引](https://github.com/MoXin0u0/moxin-quiz-site/blob/main/docs/roadmap/README.md)／[V5 正式基準](https://github.com/MoXin0u0/moxin-quiz-site/blob/main/docs/roadmap/V5_PRODUCTION_BASELINE.md)。
