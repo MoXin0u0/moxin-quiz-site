@@ -60,12 +60,41 @@ try {
     const syncNotice = page.locator('#settingsView [data-cloud-link-disclosure]');
     assert.equal(await syncNotice.count(), 1);
     assert.match(await syncNotice.innerText(), /Drive appDataFolder/);
+
+    const settingsFeedback = page.locator('#settingsView [data-open-feedback-form]');
+    assert.equal(await settingsFeedback.count(), 1);
+    assert.equal(await settingsFeedback.getAttribute('href'), 'https://forms.gle/3Vhia7MFyvzyV6s2A');
+    assert.equal(await settingsFeedback.getAttribute('target'), '_blank');
+    assert.match(await settingsFeedback.getAttribute('rel'), /noopener/);
+    assert.match(await page.locator('[data-feedback-privacy-notice]').innerText(), /Google Forms/);
     for (const doc of ['privacy.html', 'terms.html']) {
       const policy = await page.goto(new URL(doc, ROOT).href, { waitUntil: 'domcontentloaded' });
       assert.equal(policy.status(), 200);
       assert.equal(await page.locator('main h1').count(), 1);
       assert.equal(await page.locator('a[href="./app.html"]').count() > 0, true);
     }
+
+    const landing = await page.goto(new URL('./', ROOT).href, { waitUntil: 'domcontentloaded' });
+    assert.equal(landing.status(), 200);
+    assert.equal(await page.locator('#contact h2').count(), 1);
+    const landingFeedback = page.locator('#contact [data-feedback-link]');
+    await landingFeedback.scrollIntoViewIfNeeded();
+    assert.equal(await landingFeedback.getAttribute('href'), 'https://forms.gle/3Vhia7MFyvzyV6s2A');
+    assert.equal(await page.locator('.landing-footer-links [data-feedback-footer-link]').count(), 1);
+    const notice = await page.locator('#contact .landing-contact-notice').innerText();
+    assert.match(notice, /Google Forms/);
+    assert.match(notice, /不填寫表單也能繼續使用/);
+    const contactBox = await page.locator('#contact .landing-contact-card').boundingBox();
+    assert.ok(contactBox && contactBox.x >= -3 && contactBox.x + contactBox.width <= profile.width + 3,
+      `${profile.name}: public feedback card overflows viewport`);
+    const feedbackBox = await landingFeedback.boundingBox();
+    assert.ok(feedbackBox && feedbackBox.x >= -3 && feedbackBox.x + feedbackBox.width <= profile.width + 3,
+      `${profile.name}: public form CTA overflows viewport`);
+
+    const contactA11y = await new AxeBuilder({ page }).include('#contact').analyze();
+    const contactSevere = contactA11y.violations.filter(v => v.impact === 'critical' || v.impact === 'serious');
+    assert.deepEqual(contactSevere.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) })), [],
+      `${profile.name}: public feedback must remain accessible`);
 
     await context.close();
     console.log(`B02 legal access ${profile.name} PASS`);
