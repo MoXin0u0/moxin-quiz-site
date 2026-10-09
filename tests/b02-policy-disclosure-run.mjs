@@ -43,6 +43,24 @@ assert.match(settingsHTML, /不等於刪除/);
 assert.match(settingsHTML, /rel="noopener noreferrer"/);
 assert.match(settingsHTML, /Google 官方第三方授權管理說明/);
 
+// User-supplied feedback respondent link must be visible without requiring OAuth.
+const feedbackUrl = 'https://forms.gle/3Vhia7MFyvzyV6s2A';
+const landingHTML = read('index.html');
+assert.match(settingsHTML, /data-feedback-card/);
+assert.match(settingsHTML, /data-open-feedback-form/);
+assert.match(settingsHTML, /透過 Google Forms 處理/);
+assert.ok(settingsHTML.includes(`href="${feedbackUrl}"`));
+assert.match(landingHTML, /id="contact"/);
+assert.match(landingHTML, /href="#contact"/);
+assert.match(landingHTML, /data-feedback-link/);
+assert.match(landingHTML, /data-feedback-footer-link/);
+assert.match(landingHTML, /回報表單由 Google Forms 提供/);
+assert.equal((landingHTML.matchAll(/href="https:\/\/forms\.gle\/3Vhia7MFyvzyV6s2A"/g)).toArray().length, 2);
+assert.equal((settingsHTML.matchAll(/href="https:\/\/forms\.gle\/3Vhia7MFyvzyV6s2A"/g)).toArray().length, 1);
+assert.doesNotMatch(landingHTML + settingsHTML, /moxin82771@gmail\.com/);
+assert.match(read('docs/roadmap/legal/B02_GOOGLE_FORMS_INTAKE_SPEC.md'), /尚未由無痕視窗實測/);
+
+
 const cloudHTML = renderCloudSettingsCard(sync);
 assert.match(cloudHTML, /data-cloud-link-disclosure/);
 assert.match(cloudHTML, /Drive appDataFolder/);
