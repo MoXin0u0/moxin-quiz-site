@@ -1,0 +1,45 @@
+## 批次與來源追蹤
+
+- Batch：`B00` / `B01` / … / `B09`
+- 原始 ID：`AUD-`／`UI-`／`BR-`／`LEG-`（逐項列出，不重編）
+- 基準 commit：
+- Issue 連結：
+- 實作／審查負責人：
+- 狀態：Draft／待驗收／已通過
+
+## 修改摘要與依據
+
+- 解決的使用者問題：
+- 原始碼位置／重現條件／截圖：
+- 證據分類（AUD C/R/D/V/I；UI A/B/C；LEG 尚待法律查核等）：
+- 已知限制與不確定性：
+
+## 影響與不可變條件
+
+- [ ] 確認 Local-only、不登入、離線核心操作不受阻
+- [ ] 確認不會非預期改動 `moxin-quiz-v3` DB v4、既有 key、題庫／題目 ID、備份格式
+- [ ] 確認不會跨 Google 帳號錯誤推送、不恢復 OAuth token、不讓撤銷裝置再 Push
+- [ ] 確認考試快照／原截止日／冪等交卷不受影響
+- [ ] 確認 PWA scope、Cloud schema、OAuth／GitHub Pages origin 無非預期變更
+- [ ] 若有變更上述契約：附獨立遷移與復原計畫，並說明哪項不變條件會改變
+
+## 實測證據
+
+| 測試／環境 | 結果（PASS／FAIL／待測／不適用） | 日誌、Workflow、截圖或錄影連結 |
+| --- | --- | --- |
+| Unit + preflight（`npm run ci`） | 待測 | |
+| 瀏覽器／無障礙（受影響頁面） | 待測 | |
+| 深色／淺色與三主題（如適用） | 待測 | |
+| 實體手機／雙裝置／離線／同步（如適用） | 待測 | |
+| 特定惡意或失敗情境（如適用） | 待測 | |
+
+## 回滾與驗收
+
+- 回滾版本及方法：
+- 無法用單純 `git revert` 回滾的資料影響（如有）：
+- [ ] 各來源 ID 的完成條件有獨立核對
+- [ ] 不把舊 CI PASS、推論或政策文字當作本 PR 的新驗收證據
+- [ ] 涉及對外 Terms／Privacy 或品牌：另附法律／品牌核准（未核准不得發布）
+- [ ] 未經明確授權不合併 `main` 或開始下一批
+
+參考：[工作索引](https://github.com/MoXin0u0/moxin-quiz-site/blob/main/docs/roadmap/README.md)／[V5 正式基準](https://github.com/MoXin0u0/moxin-quiz-site/blob/main/docs/roadmap/V5_PRODUCTION_BASELINE.md)。
