@@ -14,6 +14,16 @@
 - 儲存策略：`readZip` 全部成功才返回 Map；後續 package/schema 驗證仍在匯入路徑中執行。**沒有把解壓過程中的錯誤當成合法的部分匯入。**
 - 預期範圍：常規 Stored（method 0）與 DEFLATE（method 8）；原本已不支援加密 ZIP 與 Zip64，仍維持。
 
+### Folder／JSON 的相同輸入限制（AUD-029）
+- `src/question-bank/package-reader.js` 的資料夾匯入**先盤點所有 File 數量、單檔大小、總量與重複路徑**，全部合格才進行 `arrayBuffer()`；每檔讀入後再次核對實際大小，避免僅信任提供的 size。
+- JSON 檔匯入在 `file.text()` 前先檢查單檔大小與有效 size，沿用 APP_CONFIG 的 packageLimits，不對正常合格資料任意修改題庫 Schema。
+- 新增 `tests/b01-import-boundaries-run.mjs`，與 ZIP 攻擊樣本分開測試；這不等於已涵蓋所有巢狀 JSON／圖片解析器的記憶體攻擊情境。
+
+### CI 揭露的局部無障礙阻擋
+- 重新開啟 V5 browser CI 後，`tests/v5-conflict-resolution-browser-run.mjs` 的 axe 揭露 `.sync-conflict-manual > p`：前景 `#667085`、淡紅底 `#fdecea` 僅 **4.35:1**，低於一般文字 4.5:1。
+- 以 `var(--text)` 覆蓋該危險提示元件的 muted 文字色，其他頁面語意色不變；保留測試失敗時的 selector 和 ratio 輸出。
+- 這是 B01 的 CI 阻擋修復，不取代 B04 的**全站**深／淺色與語意色驗收；不得把一次局部 axe PASS 宣稱全站 WCAG AA。
+
 ### CI 與依賴（AUD-002／003／024）
 - `.github/workflows/v3-regression.yml` 沿用歷史檔名，Workflow 顯示名更新為 `V5 Regression`；push 覆蓋 `main`、`improvement/**` 等現有分支，**pull_request 無 paths 排除**，避免只改 `app.html` 漏跑。
 - `V5 browser + accessibility baseline` 對所有適用 PR、`main` push 執行，並要求 `Unit + release preflight` 先成功。
@@ -33,7 +43,7 @@
 ## 2. XSS／CSP 與輸入邊界（AUD-029）— 分清已驗證與剩餘風險
 
 ### 本批自動化證據
-- ZIP 適用惡意檔案測試：過度膨脹、偽裝宣告大小、CRC、目錄路徑、local/central 不一致、重複、累計上限、正常 ZIP round trip。
+- ZIP 與資料夾／JSON 適用惡意輸入測試：過度膨脹、偽裝宣告大小、CRC、目錄路徑、local/central 不一致、重複、累計上限、讀取前大小限制、正常 ZIP round trip。
 - `scripts/b01-security-audit.mjs` 偵測 `src/` 的動態代碼執行構造（`eval`／`new Function`）、公共 HTML 中的 `javascript:` 導覽連結，守護 ZIP 串流限額與最小 Google Drive scope；這是**基礎靜態合約掃描，不等同完整 SAST 或滲透測試**。
 
 ### CSP 尚不能直接強制上線
