@@ -9,6 +9,7 @@ on:
       - "v4.*"
       - v5-cloud-sync
       - v5-cloud-sync-live-rc
+      - "improvement/**"
     paths:
       - "index.html"
       - "author-banks.json"
@@ -65,6 +66,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: B01 one-time dependency lock generation (temporary)
+        run: |
+          npm install --package-lock-only --ignore-scripts --save-exact --save-dev playwright@1.55.1 @axe-core/playwright@4.10.2
+          echo B01_LOCK_JSON_BEGIN
+          cat package-lock.json
+          echo B01_LOCK_JSON_END
 
       - name: Run full v3 regression suite
         run: npm run ci
