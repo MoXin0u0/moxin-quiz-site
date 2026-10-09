@@ -91,7 +91,13 @@ export function renderSyncCenter(container, snapshot) {
     '<div class="settings-actions">',
     '<button class="button primary" type="button" data-sync-now ',
     snapshot?.connected && snapshot?.cloudConfigured && snapshot?.cloudRuntimeEnabled ? '' : 'disabled',
-    '>立即同步</button>', cloudAction, '</div></section>',
+    '>立即同步</button>', cloudAction, '</div>',
+    '<p class="settings-note" data-sync-privacy-notice>',
+    '選擇連結 Google 時，網站會請求 Google Drive appDataFolder 權限，用於所選的跨裝置同步；',
+    '不連結也能繼續本機學習。Google 授權不等於本站服務條款的接受。',
+    '可先閱讀 <a href="./privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a>',
+    '與 <a href="./terms.html" target="_blank" rel="noopener noreferrer">服務條款</a>。',
+    '</p></section>',
 
     '<section class="sync-center-section"><div class="sync-center-section-heading"><div>',
     '<span>Inventory</span><h3>資料盤點</h3>',
@@ -197,7 +203,10 @@ export function renderCloudSettingsCard(snapshot) {
     '<div class="settings-actions">',
     '<button class="button primary" type="button" data-open-sync-center>',
     '開啟資料與同步中心</button>', action,
-    '</div></article>',
+    '</div><p class="settings-note" data-cloud-link-disclosure>',
+    '雲端功能為選用；連結 Google 會請求 Drive appDataFolder 權限。',
+    '請先閱讀 <a href="./privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a>。',
+    '</p></article>',
   ].join('');
 }
 
