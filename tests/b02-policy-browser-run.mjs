@@ -1,0 +1,75 @@
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+import AxeBuilder from '@axe-core/playwright';
+
+const ROOT = process.env.BASE_URL || 'http://127.0.0.1:4173/app.html';
+const browser = await chromium.launch({ headless: true });
+const profiles = [
+  { name: 'desktop-light', width: 1366, height: 768, theme: 'light' },
+  { name: 'mobile-dark', width: 390, height: 844, theme: 'dark' },
+  { name: 'small-mobile-light', width: 320, height: 640, theme: 'light' },
+];
+
+try {
+  for (const profile of profiles) {
+    const context = await browser.newContext({
+      viewport: { width: profile.width, height: profile.height },
+      serviceWorkers: 'block',
+    });
+    const page = await context.newPage();
+    await page.addInitScript(({ theme }) => {
+      localStorage.setItem('moxin.v3.settings', JSON.stringify({
+        theme,
+        learningStyle: 'academy',
+        sceneIntensity: 'off',
+        reduceMotion: true,
+        fontScale: 'normal',
+      }));
+    }, { theme: profile.theme });
+
+    const response = await page.goto(ROOT, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    assert.equal(response.status(), 200);
+    await page.waitForFunction(() =>
+      (document.querySelector('#storageStatus')?.textContent || '').includes('IndexedDB 已就緒'),
+    null, { timeout: 15000 });
+
+    if (profile.width <= 620) {
+      await page.locator('[data-nav-more]').first().click();
+      await page.locator('[data-more-settings]').first().click();
+    } else {
+      await page.locator('[data-nav-settings]').first().click();
+    }
+    await page.locator('#settingsView:not([hidden])').waitFor({ state: 'visible' });
+    const details = page.locator('[data-legal-data-controls]');
+    await details.locator('summary').click();
+    assert.equal(await details.evaluate(el => el.open), true);
+    assert.match(await details.innerText(), /撤銷 Google 存取權/);
+    assert.equal(await details.locator('li').count(), 4);
+    assert.equal(await page.locator('#settingsView a[href="./terms.html"]').count(), 1);
+    assert.equal(await page.locator('#settingsView a[href="./privacy.html"]').count(), 2);
+
+    const box = await details.boundingBox();
+    assert.ok(box && box.x >= -3 && box.x + box.width <= profile.width + 3,
+      `${profile.name}: data-controls detail overflows viewport`);
+
+    const axe = await new AxeBuilder({ page }).include('[data-legal-data-controls]').analyze();
+    const severe = axe.violations.filter(v => v.impact === 'critical' || v.impact === 'serious');
+    assert.deepEqual(severe.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) })), [],
+      `${profile.name}: B02 details must remain accessible`);
+
+    const syncNotice = page.locator('#settingsView [data-cloud-link-disclosure]');
+    assert.equal(await syncNotice.count(), 1);
+    assert.match(await syncNotice.innerText(), /Drive appDataFolder/);
+    for (const doc of ['privacy.html', 'terms.html']) {
+      const policy = await page.goto(new URL(doc, ROOT).href, { waitUntil: 'domcontentloaded' });
+      assert.equal(policy.status(), 200);
+      assert.equal(await page.locator('main h1').count(), 1);
+      assert.equal(await page.locator('a[href="./app.html"]').count() > 0, true);
+    }
+
+    await context.close();
+    console.log(`B02 legal access ${profile.name} PASS`);
+  }
+} finally {
+  await browser.close();
+}
