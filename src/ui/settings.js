@@ -51,6 +51,28 @@ export function renderSettings(container, { settings, storage, checks, pwa, sync
         </details>
       </article>
 
+      <article class="panel settings-card" data-feedback-card>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Contact & Feedback</p>
+            <h2>聯絡與意見回饋</h2>
+          </div>
+        </div>
+        <p class="settings-copy">
+          有功能建議、錯誤回報、題庫勘誤或資料權益問題，可以透過 Google 表單聯絡個人開發者。
+        </p>
+        <p class="settings-note" data-feedback-privacy-notice>
+          開啟表單後，你自願提交的內容與聯絡方式會透過 Google Forms 處理。
+          請勿提供密碼、Google 授權憑證、身分證件或私人完整備份；
+          本機練習與 Google Drive 同步都不需要填寫這份表單。
+        </p>
+        <div class="settings-actions">
+          <a class="button secondary" href="https://forms.gle/3Vhia7MFyvzyV6s2A"
+             target="_blank" rel="noopener noreferrer"
+             data-open-feedback-form aria-label="開啟 Google 意見回饋表單（新分頁）">填寫意見回饋表單</a>
+        </div>
+      </article>
+
       <article class="panel settings-card">
         <div class="section-heading">
           <div>
