@@ -1,5 +1,8 @@
 # MoXin Quiz V5 Implementation Status
 
+> **歷史開發紀錄（封存用途）— 2026-10-09 註記**  
+> 本文件正文保留 2026-10-07 `v5-cloud-sync` 開發分支當時的狀態；其中「main remains unchanged」「PR remains Draft」「Cloud runtime disabled / OAuth unconfigured」等敘述**不是目前正式版本狀態**。V5.0.0 已於 2026-10-08 經 PR #7 合併至 `main`，並在正式發布檢核中記錄生產環境啟用與測試。請以 [V5 正式基準](roadmap/V5_PRODUCTION_BASELINE.md)、[實際正式驗收](v5-manual-cloud-gate.md) 和 [現行後續工作索引](roadmap/README.md) 為準。此處不改寫當時的歷史紀錄。
+
 Updated: 2026-10-07
 
 ## Baseline
