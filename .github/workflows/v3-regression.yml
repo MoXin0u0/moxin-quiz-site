@@ -1,4 +1,4 @@
-name: V3 Regression
+name: V5 Regression
 
 on:
   push:
@@ -9,47 +9,17 @@ on:
       - "v4.*"
       - v5-cloud-sync
       - v5-cloud-sync-live-rc
-    paths:
-      - "index.html"
-      - "author-banks.json"
-      - "author-banks/**"
-      - "v3.html"
-      - "legacy-v2.html"
-      - "manifest.webmanifest"
-      - "service-worker.js"
-      - "package.json"
-      - "src/**"
-      - "styles/v3*.css"
-      - "styles/v4*.css"
-      - "styles/v5*.css"
-      - "assets/learning/**"
-      - "tests/**"
-      - "scripts/v3-release-preflight.mjs"
-      - "scripts/audit-scene-assets.mjs"
-      - ".github/workflows/v3-regression.yml"
+      - "improvement/**"
   pull_request:
-    paths:
-      - "index.html"
-      - "author-banks.json"
-      - "author-banks/**"
-      - "v3.html"
-      - "legacy-v2.html"
-      - "manifest.webmanifest"
-      - "service-worker.js"
-      - "package.json"
-      - "src/**"
-      - "styles/v3*.css"
-      - "styles/v4*.css"
-      - "styles/v5*.css"
-      - "assets/learning/**"
-      - "tests/**"
-      - "scripts/v3-release-preflight.mjs"
-      - "scripts/audit-scene-assets.mjs"
-      - ".github/workflows/v3-regression.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
+
+# Avoid duplicate push / pull_request runs on the same in-progress branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   regression:
@@ -66,8 +36,14 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Run full v3 regression suite
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Run full regression and release preflight
         run: npm run ci
+
+      - name: Verify security boundary contracts
+        run: npm run audit:security
 
       - name: Verify live RC cloud cutover readiness
         if: github.ref == 'refs/heads/v5-cloud-sync-live-rc' || github.head_ref == 'v5-cloud-sync-live-rc'
@@ -76,9 +52,9 @@ jobs:
 
   v5-browser-audit:
     name: V5 browser + accessibility baseline
-    if: github.ref == 'refs/heads/v5-cloud-sync' || github.head_ref == 'v5-cloud-sync' || github.ref == 'refs/heads/v5-cloud-sync-live-rc' || github.head_ref == 'v5-cloud-sync-live-rc'
+    needs: regression
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -89,15 +65,18 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install browser audit dependencies
+      - name: Install pinned browser audit dependencies
         run: |
-          npm install --no-save playwright @axe-core/playwright
+          npm ci --ignore-scripts
           npx playwright install --with-deps chromium
 
       - name: Start static server
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/moxin-v5-http.log 2>&1 &
           echo $! > /tmp/moxin-v5-http.pid
+
+      - name: Verify known conflict UI contrast first
+        run: npm run audit:v5-conflict-resolution
 
       - name: Run app browser audit
         run: npm run audit:browser

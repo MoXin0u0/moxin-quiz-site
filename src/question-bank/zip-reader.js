@@ -34,10 +34,13 @@ export async function readZip(input, limits = APP_CONFIG.packageLimits) {
   if (centralOffset + centralSize > bytes.length) throw new Error('ZIP central directory 超出檔案範圍。');
 
   const entries = [];
+  const seenPaths = new Set();
   let offset = centralOffset;
   let totalUncompressed = 0;
+  const centralEnd = centralOffset + centralSize;
 
   for (let i = 0; i < entryCount; i += 1) {
+    if (offset + 46 > centralEnd) throw new Error('ZIP central directory 檔頭資料不完整。');
     ensureSignature(view, offset, SIG_CENTRAL, 'central directory');
     const flags = view.getUint16(offset + 8, true);
     const method = view.getUint16(offset + 10, true);
@@ -50,7 +53,9 @@ export async function readZip(input, limits = APP_CONFIG.packageLimits) {
     const localOffset = view.getUint32(offset + 42, true);
     const nameStart = offset + 46;
     const nameEnd = nameStart + nameLength;
-    if (nameEnd > bytes.length) throw new Error('ZIP 檔名資料損壞。');
+    if (nameEnd + extraLength + commentLength > centralEnd) {
+      throw new Error('ZIP central directory 項目超出宣告範圍。');
+    }
 
     const decodedName = UTF8.decode(bytes.subarray(nameStart, nameEnd));
     const isDirectory = decodedName.replace(/\\/g, '/').endsWith('/');
@@ -70,34 +75,67 @@ export async function readZip(input, limits = APP_CONFIG.packageLimits) {
       throw new Error(`ZIP 解壓後總大小超過 ${formatBytes(limits.maxUncompressedBytes)}。`);
     }
 
-    if (!isDirectory) entries.push({ path, flags, method, crc, compressedSize, uncompressedSize, localOffset });
+    if (!isDirectory) {
+      if (seenPaths.has(path)) throw new Error(`ZIP 內含重複路徑：${path}`);
+      seenPaths.add(path);
+      entries.push({ path, flags, method, crc, compressedSize, uncompressedSize, localOffset });
+    }
     offset = nameEnd + extraLength + commentLength;
   }
 
+  if (offset !== centralEnd) throw new Error('ZIP central directory 大小與項目數不符。');
+
   const output = new Map();
+  let actualTotal = 0;
   for (const entry of entries) {
-    if (output.has(entry.path)) throw new Error(`ZIP 內含重複路徑：${entry.path}`);
-    const data = await extractEntry(bytes, view, entry);
+    const remaining = limits.maxUncompressedBytes - actualTotal;
+    const data = await extractEntry(bytes, view, entry, {
+      maxBytes: Math.min(limits.maxSingleFileBytes, remaining),
+      maxCompressionRatio: limits.maxCompressionRatio,
+      centralOffset,
+    });
+    actualTotal += data.byteLength;
     output.set(entry.path, data);
   }
   return output;
 }
 
-async function extractEntry(bytes, view, entry) {
+async function extractEntry(bytes, view, entry, { maxBytes, maxCompressionRatio, centralOffset }) {
   const offset = entry.localOffset;
+  if (offset < 0 || offset + 30 > centralOffset) {
+    throw new Error(`ZIP local file header 超出範圍：${entry.path}`);
+  }
   ensureSignature(view, offset, SIG_LOCAL, 'local file header');
+  const localFlags = view.getUint16(offset + 6, true);
+  const localMethod = view.getUint16(offset + 8, true);
   const localNameLength = view.getUint16(offset + 26, true);
   const localExtraLength = view.getUint16(offset + 28, true);
-  const start = offset + 30 + localNameLength + localExtraLength;
+  const nameStart = offset + 30;
+  const start = nameStart + localNameLength + localExtraLength;
   const end = start + entry.compressedSize;
-  if (start < 0 || end > bytes.length) throw new Error(`ZIP 資料範圍損壞：${entry.path}`);
+  if (start > centralOffset || end > centralOffset) {
+    throw new Error(`ZIP 資料範圍損壞：${entry.path}`);
+  }
+  if (localFlags !== entry.flags || localMethod !== entry.method) {
+    throw new Error(`ZIP 本地檔頭與目錄不一致：${entry.path}`);
+  }
+  const localName = UTF8.decode(bytes.subarray(nameStart, nameStart + localNameLength));
+  if (normalizePackagePath(localName) !== entry.path) {
+    throw new Error(`ZIP 本地檔名與目錄不一致：${entry.path}`);
+  }
 
-  const compressed = bytes.slice(start, end);
+  const compressed = bytes.subarray(start, end);
+  const limit = Math.min(maxBytes, entry.uncompressedSize);
   let data;
   if (entry.method === 0) {
-    data = compressed;
+    if (compressed.byteLength > limit) throw new Error(`ZIP 解壓輸出超過限制：${entry.path}`);
+    data = compressed.slice();
   } else {
-    data = await inflateRaw(compressed);
+    data = await inflateRaw(compressed, {
+      maxBytes: limit,
+      maxCompressionRatio,
+      path: entry.path,
+    });
   }
 
   if (data.length !== entry.uncompressedSize) {
@@ -109,7 +147,7 @@ async function extractEntry(bytes, view, entry) {
   return data;
 }
 
-async function inflateRaw(compressed) {
+async function inflateRaw(compressed, { maxBytes, maxCompressionRatio, path }) {
   if (!globalThis.DecompressionStream) {
     throw new Error('此瀏覽器不支援 DecompressionStream，暫時無法解壓縮 DEFLATE ZIP。');
   }
@@ -119,7 +157,35 @@ async function inflateRaw(compressed) {
   } catch (error) {
     throw new Error(`瀏覽器無法建立 ZIP 解壓縮串流：${error.message}`);
   }
-  return new Uint8Array(await new Response(stream).arrayBuffer());
+
+  const reader = stream.getReader();
+  const chunks = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      // Enforce the *actual* decompressed byte count before buffering another chunk.
+      if (total > maxBytes || (compressed.byteLength > 0 && total / compressed.byteLength > maxCompressionRatio)) {
+        throw new Error(`ZIP 解壓輸出超過限制：${path}`);
+      }
+      chunks.push(value);
+    }
+  } catch (error) {
+    await reader.cancel().catch(() => {});
+    throw error;
+  } finally {
+    reader.releaseLock();
+  }
+
+  const output = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    output.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return output;
 }
 
 function findEndOfCentralDirectory(view) {

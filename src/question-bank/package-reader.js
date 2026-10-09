@@ -1,3 +1,4 @@
+import { APP_CONFIG } from '../app/config.js';
 import { SAFE_IMAGE_EXTENSIONS } from '../data/schema/question-bank.js';
 import { migrateLegacyBank } from '../data/migration/legacy-v1-to-v2.js';
 import { extensionOf, normalizePackagePath, stripCommonRoot } from '../utils/path.js';
@@ -15,17 +16,46 @@ export async function readQuestionBankZip(file) {
 }
 
 export async function readQuestionBankFolder(fileList) {
+  const limits = APP_CONFIG.packageLimits;
+  const files = Array.from(fileList || []);
+  if (files.length > limits.maxFiles) {
+    throw new Error(`資料夾內檔案數過多：${files.length}，上限 ${limits.maxFiles}。`);
+  }
+  // Preflight all file sizes before reading any Blob into memory.
+  let total = 0;
+  const paths = new Set();
+  for (const file of files) {
+    const path = normalizePackagePath(file.webkitRelativePath || file.name);
+    if (paths.has(path)) throw new Error(`資料夾內含重複路徑：${path}`);
+    paths.add(path);
+    if (!Number.isSafeInteger(file.size) || file.size < 0 ||
+        file.size > limits.maxSingleFileBytes) {
+      throw new Error(`資料夾單檔過大或大小不合法：${path}`);
+    }
+    total += file.size;
+    if (total > limits.maxUncompressedBytes) {
+      throw new Error('資料夾總大小超過題庫匯入限制。');
+    }
+  }
+
   const rawEntries = new Map();
-  for (const file of Array.from(fileList || [])) {
-    const rawPath = file.webkitRelativePath || file.name;
-    const path = normalizePackagePath(rawPath);
-    rawEntries.set(path, new Uint8Array(await file.arrayBuffer()));
+  for (const file of files) {
+    const path = normalizePackagePath(file.webkitRelativePath || file.name);
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (bytes.byteLength !== file.size) {
+      throw new Error(`資料夾讀取大小不符：${path}`);
+    }
+    rawEntries.set(path, bytes);
   }
   const entries = remapCommonRoot(rawEntries);
   return buildPackageFromEntries(entries, { source: 'folder', kind: 'folder' });
 }
 
 export async function readQuestionBankJson(file) {
+  if (!Number.isSafeInteger(file?.size) || file.size < 0 ||
+      file.size > APP_CONFIG.packageLimits.maxSingleFileBytes) {
+    throw new Error('JSON 題庫檔案過大或大小不合法。');
+  }
   const data = JSON.parse(await file.text());
   if (data?.bankId && Array.isArray(data.questions)) {
     const migrated = migrateLegacyBank(data);
