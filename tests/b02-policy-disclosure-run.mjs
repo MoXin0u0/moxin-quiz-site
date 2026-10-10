@@ -142,6 +142,14 @@ assert.match(draftTerms, /官方考試題目及網路資料整理/);
 assert.match(draftTerms, /不代表每題均為原創/);
 assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /LEG-020/);
 
+// D-06: cloud full deletion is deferred, without misrepresenting user rights or implemented APIs.
+assert.match(releaseGate, /決策紀錄 D-06/);
+assert.match(releaseGate, /暫緩/);
+assert.match(draftTerms, /暫緩此專用功能/);
+assert.match(draftTerms, /不能保證代刪私人 appDataFolder/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /暫緩的是全量刪除的產品功能/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /不是規劃立即開發該功能/);
+
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
