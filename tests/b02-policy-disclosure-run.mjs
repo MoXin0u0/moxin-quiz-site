@@ -101,6 +101,13 @@ for (const file of ['index.html', 'terms.html', 'privacy.html']) {
 assert.match(read('index.html'), /href="\.\/privacy\.html"/);
 assert.match(read('index.html'), /href="\.\/terms\.html"/);
 
+// Fee language must describe the current free offering without promising perpetual free access.
+const draftTerms = read('docs/roadmap/legal/B02_TERMS_DRAFT.md');
+const releaseGate = read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md');
+assert.match(draftTerms, /目前墨忻刷題網完全免費/);
+assert.match(draftTerms, /不代表承諾永久免費/);
+assert.match(releaseGate, /D-03 已確認目前完全免費|D-03（2026-10-10）/);
+
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
