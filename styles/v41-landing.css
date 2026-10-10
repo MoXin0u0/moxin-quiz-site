@@ -749,9 +749,26 @@ a {
   color: var(--landing-muted);
 }
 
-.landing-contact-card .landing-contact-notice {
+.landing-contact-card .landing-contact-notice,
+.landing-contact-card .landing-contact-backup {
   font-size: .82rem;
   line-height: 1.7;
+}
+
+.landing-contact-backup {
+  overflow-wrap: anywhere;
+}
+
+.landing-contact-backup a {
+  color: var(--landing-primary);
+  text-decoration: underline;
+  text-underline-offset: .18em;
+  font-weight: 750;
+}
+
+.landing-contact-backup a:hover,
+.landing-contact-backup a:focus-visible {
+  color: var(--landing-primary-strong);
 }
 
 .landing-contact-link {
