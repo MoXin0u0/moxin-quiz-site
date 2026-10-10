@@ -95,6 +95,7 @@ export function renderSyncCenter(container, snapshot) {
     '<p class="settings-note" data-sync-privacy-notice>',
     '選擇連結 Google 時，網站會請求 Google Drive appDataFolder 權限，用於所選的跨裝置同步；',
     '不連結也能繼續本機學習。Google 授權不等於本站服務條款的接受。',
+    '未成年使用者需符合 Google 帳戶年齡與家長監護規定；如無法取得授權，仍可使用本機功能。',
     '可先閱讀 <a href="./privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a>',
     '與 <a href="./terms.html" target="_blank" rel="noopener noreferrer">服務條款</a>。',
     '</p></section>',
