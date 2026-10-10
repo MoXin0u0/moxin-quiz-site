@@ -19,6 +19,7 @@
 | 同步用裝置與歷史資料 | `src/storage/db.js` 定義 `devices`, `syncMeta`, `syncOutbox`, `syncReceipts`, `syncRevisions`, `syncConflicts`, `syncTombstones`, `cloudObjects` | 用來防止跨帳號錯誤推送、保留修訂與衝突處理；離線不同裝置資料仍各自存在 | 雲端 object/commit/checkpoint 真正保留週期；目前不應填入任意「30 天」等期限 |
 | **Draft PR 中** Google Forms 回報入口（已提供短連結，正式 main 尚未啟用） | 使用者自願送出的回饋內容／可能自願提供的電子郵件；預計由 Google Forms／擁有者帳戶處理 | 本機學習及 OAuth 不依賴填表；已提供回覆者短連結，2026-10-10 產品負責人已實測未登入／Email 非必填可提交；後台資料處理設定仍待查，正式 main 尚未接入，不宣稱未來回報不含個資 | 公開前需確認匿名可填、告知、第三方存取、保存／刪除、備用信箱公開同意；見 [表單規格](./B02_GOOGLE_FORMS_INTAKE_SPEC.md) |
 | GitHub Pages 主機與網路連線 | `index.html`、`app.html`、`service-worker.js` 靜態部署，網站入口使用 GitHub Pages；`privacy.html` 也告知第三方託管 | 網站請求、網域存取紀錄等可能由託管／網路第三方依各自政策處理 | GitHub Pages 日誌保存、Cookie、訪客識別與實際 CDN 網路行為須核對供應商文件，不能寫「沒有任何日誌」 |
+| Gmail 備援聯絡途徑（已獲准公開，B02 Draft PR） | 寄件人自願寄送的電子郵件地址、主旨、內文及可能附帶的檔案，由寄件平台／Google Gmail 與個人開發者處理 | 僅用於受理、回覆與跟進使用者主動聯絡；請勿提供密碼、存取 token 或完整私人備份 | 信件保留／刪除、存取者與安全事件流程仍待確定；對外信箱為 `moxin82771@gmail.com` |
 | 題庫原作者／使用者自製內容 | `src/question-bank/package-reader.js`、`src/question-bank/importer.js` 將匯入／使用者資料保存本機；作者題庫由 `author-banks.json` 等靜態來源提供 | 使用者自行匯入內容必須有使用權；並非上傳後即轉讓著作權給網站 | 作者題庫的原始授權、公開分享功能、侵權／勘誤的實際受理管道 |
 | 第三方代碼與 API | `src/cloud/google/gis-loader.js` 載入 GIS；`src/app/config.js` 宣告 Google API host，網站在 GitHub Pages 運行 | 第三方可能獨立依服務條款處理請求 | 用瀏覽器 Network 實測有無 analytics、第三方字型/CDN、其他資料流；本次**不保證**完全沒有 |
 
@@ -49,7 +50,7 @@
 | 待核實事項 | 來源依據／應填證據 | 狀態 |
 | --- | --- | --- |
 | 服務提供者／個資管理者名稱（不得直接以未知別名冒充法律實體） | 2026-10-10 已決定採個人開發者身分；正式對外署名／必要法律識別尚待確認 | **類型已決議，名稱與法律告知仍待確認** |
-| 可非公開提交私密資料的聯絡管道 | 已決定 Google Forms 為主要入口、專用 Gmail 備援；公開 Email 需另獲核准 | **策略已選、連結已提供、基本未登入提交已由使用者實測通過；待後台權限、保存與正式公開審核** |
+| 可非公開提交私密資料的聯絡管道 | 已決定 Google Forms 為主要入口、專用 Gmail 備援；公開 Email `moxin82771@gmail.com` 已於 2026-10-10 獲准 | **策略已選、連結已提供、基本未登入提交已由使用者實測通過；待後台權限、保存與正式公開審核** |
 | 個資類別與蒐集目的 | 本清冊及實際 OAuth scope／本機 SyncMeta | 程式部分已核對；待資料流測試 |
 | 處理與保存期間／地區／對象／方式 | 本機、Google Drive、GitHub Pages 供應商政策及產品停止流程 | **待查證** |
 | 個資當事人的查詢、更正、停止處理、刪除等權利 | 不宣稱可遠端處理操作者無法存取的私有 Browser/Drive，需提供可行步驟 | **待產品／法律審核** |
@@ -61,5 +62,5 @@
 ## 5. 稽核結論與發布阻擋
 
 - 已核實：Local-first、IndexedDB v4、Google `drive.appdata` 權限、帳號顯示資訊欄位、TokenManager 記憶體儲存、備份與同步的分離、解除連結的本機／雲端差別。
-- 尚未確認：服務提供者正式法律署名、Google 表單欄位／後台權限、資料保存與聯絡公開核准（基本免登入提交已實測）、Google Console 真正審查狀態、所有網路端來源、是否有可用的雲端完整刪除工具、資料保存期限、最終法律適用與未成年規則。
+- 尚未確認：服務提供者正式法律署名、Google 表單欄位／後台權限、Google Forms／Gmail 資料保存與服務提供者正式法律署名（基本免登入提交已實測）、Google Console 真正審查狀態、所有網路端來源、是否有可用的雲端完整刪除工具、資料保存期限、最終法律適用與未成年規則。
 - **禁止上線**：將不確定資訊填進現行 Terms／Privacy、強制 Local-only 訪客授權、默認同步刪除、把「Google OAuth 同意」誤寫為「服務條款同意」。
