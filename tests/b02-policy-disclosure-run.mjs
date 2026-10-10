@@ -113,6 +113,13 @@ assert.match(draftTerms, /臺灣使用者為主要服務對象/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /臺灣使用者為主要對象/);
 assert.match(releaseGate, /決策紀錄 D-04/);
 assert.match(draftTerms, /未成年人／兒童/);
+assert.match(draftTerms, /全年齡/);
+assert.match(draftTerms, /本機練習不設 18 歲/);
+assert.match(draftTerms, /Family Link/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /全年齡適用/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /不以年齡辨識為由蒐集生日/);
+assert.match(releaseGate, /決策紀錄 D-04 年齡補充/);
+assert.match(releaseGate, /受監護帳號/);
 
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
