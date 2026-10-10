@@ -150,6 +150,16 @@ assert.match(draftTerms, /不能保證代刪私人 appDataFolder/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /暫緩的是全量刪除的產品功能/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /不是規劃立即開發該功能/);
 
+// D-02: owner-attested access is not an independently verified Google Forms permission audit.
+const intakeSpec = read('docs/roadmap/legal/B02_GOOGLE_FORMS_INTAKE_SPEC.md');
+const draftPrivacy = read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md');
+assert.match(intakeSpec, /只有個人開發者本人查看、管理/);
+assert.match(intakeSpec, /尚未經我們直接檢查 Google Forms 後台/);
+assert.match(intakeSpec, /Google Sheets/);
+assert.match(draftPrivacy, /開發者本人一人/);
+assert.match(draftPrivacy, /未經我們獨立查看/);
+assert.match(releaseGate, /單人存取為負責人確認/);
+
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
