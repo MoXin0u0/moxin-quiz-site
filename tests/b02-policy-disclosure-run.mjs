@@ -131,6 +131,10 @@ assert.match(draftTerms, /已有必要授權/);
 assert.match(draftTerms, /第 9 條/);
 assert.match(releaseGate, /決策紀錄 D-05/);
 assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /私人使用與公開分享的界線/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /既有作者題庫的來源初步盤點/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /legacySource/);
+assert.match(draftTerms, /官方考試題目及網路資料整理/);
+assert.match(draftTerms, /不代表每題均為原創/);
 assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /LEG-020/);
 
 // Drafts must not be silently copied into public policy pages without approval.
