@@ -67,6 +67,10 @@ try {
     assert.equal(await settingsFeedback.getAttribute('target'), '_blank');
     assert.match(await settingsFeedback.getAttribute('rel'), /noopener/);
     assert.match(await page.locator('[data-feedback-privacy-notice]').innerText(), /Google Forms/);
+    const backupEmail = page.locator('#settingsView [data-feedback-email]');
+    assert.equal(await backupEmail.count(), 1);
+    assert.equal(await backupEmail.getAttribute('href'), 'mailto:moxin82771@gmail.com');
+    assert.match(await page.locator('#settingsView [data-feedback-backup]').innerText(), /Google 表單無法使用/);
     for (const doc of ['privacy.html', 'terms.html']) {
       const policy = await page.goto(new URL(doc, ROOT).href, { waitUntil: 'domcontentloaded' });
       assert.equal(policy.status(), 200);
@@ -81,12 +85,19 @@ try {
     await landingFeedback.scrollIntoViewIfNeeded();
     assert.equal(await landingFeedback.getAttribute('href'), 'https://forms.gle/3Vhia7MFyvzyV6s2A');
     assert.equal(await page.locator('.landing-footer-links [data-feedback-footer-link]').count(), 1);
+    assert.equal(await page.locator('.landing-footer-links [data-feedback-email-footer]').getAttribute('href'), 'mailto:moxin82771@gmail.com');
+    const contactEmail = page.locator('#contact [data-contact-email]');
+    assert.equal(await contactEmail.getAttribute('href'), 'mailto:moxin82771@gmail.com');
+    assert.match(await page.locator('[data-contact-backup]').innerText(), /表單無法使用/);
     const notice = await page.locator('#contact .landing-contact-notice').innerText();
     assert.match(notice, /Google Forms/);
     assert.match(notice, /不填寫表單也能繼續使用/);
     const contactBox = await page.locator('#contact .landing-contact-card').boundingBox();
     assert.ok(contactBox && contactBox.x >= -3 && contactBox.x + contactBox.width <= profile.width + 3,
       `${profile.name}: public feedback card overflows viewport`);
+    const emailLinkBox = await contactEmail.boundingBox();
+    assert.ok(emailLinkBox && emailLinkBox.x >= -3 && emailLinkBox.x + emailLinkBox.width <= profile.width + 3,
+      `${profile.name}: backup email overflows viewport`);
     const feedbackBox = await landingFeedback.boundingBox();
     assert.ok(feedbackBox && feedbackBox.x >= -3 && feedbackBox.x + feedbackBox.width <= profile.width + 3,
       `${profile.name}: public form CTA overflows viewport`);
