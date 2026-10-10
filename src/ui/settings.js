@@ -65,6 +65,7 @@ export function renderSettings(container, { settings, storage, checks, pwa, sync
           開啟表單後，你自願提交的內容與聯絡方式會透過 Google Forms 處理。
           請勿提供密碼、Google 授權憑證、身分證件或私人完整備份；
           本機練習與 Google Drive 同步都不需要填寫這份表單。
+          未成年使用者如需提供聯絡資訊，建議請家長或監護人協助。
         </p>
         <div class="settings-actions">
           <a class="button secondary" href="https://forms.gle/3Vhia7MFyvzyV6s2A"
