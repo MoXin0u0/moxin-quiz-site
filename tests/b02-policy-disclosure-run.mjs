@@ -124,6 +124,15 @@ assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /不以年齡辨�
 assert.match(releaseGate, /決策紀錄 D-04 年齡補充/);
 assert.match(releaseGate, /受監護帳號/);
 
+// D-05: private import permission does not grant unrestricted public redistribution.
+assert.match(draftTerms, /允許使用者將第三方題庫/);
+assert.match(draftTerms, /公開分享題庫/);
+assert.match(draftTerms, /已有必要授權/);
+assert.match(draftTerms, /第 9 條/);
+assert.match(releaseGate, /決策紀錄 D-05/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /私人使用與公開分享的界線/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /LEG-020/);
+
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
