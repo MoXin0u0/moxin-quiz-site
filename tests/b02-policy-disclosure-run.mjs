@@ -169,7 +169,7 @@ assert.match(releaseGate, /目前未連結 Google Sheets/);
 
 assert.match(draftPrivacy, /案件處理完成日起保留 1 年/);
 assert.match(intakeSpec, /案件處理完成後保留 1 年/);
-assert.match(releaseGate, /一般 Google 表單回覆結案後保留 1 年/);
+assert.match(releaseGate, /一般 Google Forms 回覆結案後保留 1 年/);
 assert.match(draftPrivacy, /Gmail 保存期限尚未決定/);
 
 // Drafts must not be silently copied into public policy pages without approval.
