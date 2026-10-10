@@ -71,6 +71,11 @@ export function renderSettings(container, { settings, storage, checks, pwa, sync
              target="_blank" rel="noopener noreferrer"
              data-open-feedback-form aria-label="開啟 Google 意見回饋表單（新分頁）">填寫意見回饋表單</a>
         </div>
+        <p class="settings-note" data-feedback-backup>
+          若 Google 表單無法使用，或需要另行聯繫，
+          可使用備用電子郵件 <a href="mailto:moxin82771@gmail.com" data-feedback-email>moxin82771@gmail.com</a>。
+          郵件內容將由個人開發者用於處理你主動提出的事項。
+        </p>
       </article>
 
       <article class="panel settings-card">
