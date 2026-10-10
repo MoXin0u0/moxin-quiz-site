@@ -126,7 +126,7 @@ assert.match(releaseGate, /受監護帳號/);
 
 // D-05: private import permission does not grant unrestricted public redistribution.
 assert.match(draftTerms, /允許使用者將第三方題庫/);
-assert.match(draftTerms, /公開分享題庫/);
+assert.match(draftTerms, /公開下載/);
 assert.match(draftTerms, /已有必要授權/);
 assert.match(draftTerms, /第 9 條/);
 assert.match(releaseGate, /決策紀錄 D-05/);
