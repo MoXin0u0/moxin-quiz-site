@@ -28,6 +28,10 @@
 
 **注意**：此表依 `src/storage/db.js`、`src/storage/backup.js`、`src/cloud/google/google-auth.js`、`src/cloud/google/google-drive.js`、`src/sync/account-lifecycle.js` 核對，但不是全面封包側錄；未核實的第三方 SDK、瀏覽器擴充套件與 GitHub Pages 網路記錄不應概括否認。
 
+### 使用者的第三方素材與權利
+
+使用者可將第三方題目、教材與圖片匯入本機供個人學習，但仍須遵守適用著作權規範。本機保存、個人備份及選用的 Google appDataFolder 同步不同於網站向公眾提供題庫下載；未來如公開分享，須確認具有對外分享的授權或其他合法利用依據。詳細請參閱 [B02 D-05 題庫授權規劃](./B02_CONTENT_RIGHTS_AND_SHARING.md)。這項規劃不表示網站現在已設置公開分享審核功能。
+
 ## 3. 資料如何提供給 Google
 
 - 使用者可不登入使用本機功能；選擇連結時，網站透過 Google Identity Services 授權。
