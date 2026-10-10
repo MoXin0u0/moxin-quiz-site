@@ -697,6 +697,18 @@
 }
 
 /* B02: Plain-language privacy and data-control guidance is readable in both themes. */
+[data-feedback-backup] {
+  overflow-wrap: anywhere;
+  margin-top: .75rem;
+  line-height: 1.65;
+}
+
+[data-feedback-backup] a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: .16em;
+}
+
 .settings-data-control {
   margin-top: .9rem;
   padding: .8rem .9rem;
