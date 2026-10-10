@@ -108,6 +108,12 @@ assert.match(draftTerms, /目前墨忻刷題網完全免費/);
 assert.match(draftTerms, /不代表承諾永久免費/);
 assert.match(releaseGate, /D-03 已確認目前完全免費|D-03（2026-10-10）/);
 
+// Region decision: Taiwan is the primary audience, not an implicit overseas access ban.
+assert.match(draftTerms, /臺灣使用者為主要服務對象/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /臺灣使用者為主要對象/);
+assert.match(releaseGate, /決策紀錄 D-04/);
+assert.match(draftTerms, /未成年人／兒童/);
+
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
