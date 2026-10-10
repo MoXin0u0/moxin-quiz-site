@@ -165,7 +165,7 @@ assert.match(intakeSpec, /目前沒有連結 Google Sheets/);
 assert.match(intakeSpec, /尚未進行後台獨立驗證/);
 assert.match(intakeSpec, /不代表 Google Forms 不保存回覆/);
 assert.match(draftPrivacy, /沒有將 Google Forms 回覆連結 Google Sheets 試算表/);
-assert.match(releaseGate, /目前未連結 Google Sheets/);
+assert.match(releaseGate, /未連結 Google Sheets/);
 
 assert.match(draftPrivacy, /案件處理完成日起保留 1 年/);
 assert.match(intakeSpec, /案件處理完成後保留 1 年/);
