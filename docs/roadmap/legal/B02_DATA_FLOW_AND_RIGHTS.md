@@ -20,7 +20,7 @@
 | **Draft PR 中** Google Forms 回報入口（已提供短連結，正式 main 尚未啟用） | 使用者自願送出的回饋內容／可能自願提供的電子郵件；預計由 Google Forms／擁有者帳戶處理 | 本機學習及 OAuth 不依賴填表；已提供回覆者短連結，2026-10-10 產品負責人已實測未登入／Email 非必填可提交；後台資料處理設定仍待查，正式 main 尚未接入，不宣稱未來回報不含個資 | 公開前需確認匿名可填、告知、第三方存取、保存／刪除、備用信箱公開同意；見 [表單規格](./B02_GOOGLE_FORMS_INTAKE_SPEC.md) |
 | GitHub Pages 主機與網路連線 | `index.html`、`app.html`、`service-worker.js` 靜態部署，網站入口使用 GitHub Pages；`privacy.html` 也告知第三方託管 | 網站請求、網域存取紀錄等可能由託管／網路第三方依各自政策處理 | GitHub Pages 日誌保存、Cookie、訪客識別與實際 CDN 網路行為須核對供應商文件，不能寫「沒有任何日誌」 |
 | Gmail 備援聯絡途徑（已獲准公開，B02 Draft PR） | 寄件人自願寄送的電子郵件地址、主旨、內文及可能附帶的檔案，由寄件平台／Google Gmail 與個人開發者處理 | 僅用於受理、回覆與跟進使用者主動聯絡；請勿提供密碼、存取 token 或完整私人備份 | 信件保留／刪除、存取者與安全事件流程仍待確定；對外信箱為 `moxin82771@gmail.com` |
-| 題庫原作者／使用者自製內容 | `src/question-bank/package-reader.js`、`src/question-bank/importer.js` 將匯入／使用者資料保存本機；作者題庫由 `author-banks.json` 等靜態來源提供 | 使用者自行匯入內容必須有使用權；並非上傳後即轉讓著作權給網站 | 作者題庫的原始授權、公開分享功能、侵權／勘誤的實際受理管道 |
+| 題庫原作者／使用者匯入第三方內容 | `src/question-bank/package-reader.js`、`src/question-bank/importer.js` 處理本機匯入；作者題庫由 `author-banks.json` 等靜態來源提供 | D-05 已確認可為私人學習匯入第三方內容，但仍須具個別合法利用依據；私人同步／備份不同於公開分享，ZIP 匯出不代表取得再散布權 | 作者題庫約 443 題、各場景圖片來源授權待核；日後公開分享前的合法利用依據及侵權處理另見 [D-05 規格](./B02_CONTENT_RIGHTS_AND_SHARING.md) |
 | 第三方代碼與 API | `src/cloud/google/gis-loader.js` 載入 GIS；`src/app/config.js` 宣告 Google API host，網站在 GitHub Pages 運行 | 第三方可能獨立依服務條款處理請求 | 用瀏覽器 Network 實測有無 analytics、第三方字型/CDN、其他資料流；本次**不保證**完全沒有 |
 
 ## 2. 四種「刪除／解除」不是同義詞
