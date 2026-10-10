@@ -160,6 +160,13 @@ assert.match(draftPrivacy, /開發者本人一人/);
 assert.match(draftPrivacy, /未經我們獨立查看/);
 assert.match(releaseGate, /單人存取為負責人確認/);
 
+// Forms responses currently have no owner-reported linked Google Sheets, but are still held by Google Forms.
+assert.match(intakeSpec, /目前沒有連結 Google Sheets/);
+assert.match(intakeSpec, /尚未進行後台獨立驗證/);
+assert.match(intakeSpec, /不代表 Google Forms 不保存回覆/);
+assert.match(draftPrivacy, /沒有將 Google Forms 回覆連結 Google Sheets 試算表/);
+assert.match(releaseGate, /目前未連結 Google Sheets/);
+
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
