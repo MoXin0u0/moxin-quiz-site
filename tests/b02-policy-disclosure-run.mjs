@@ -1,0 +1,189 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { renderSettings } from '../src/ui/settings.js';
+import { renderCloudSettingsCard, renderSyncCenter } from '../src/ui/sync-center.js';
+import { APP_CONFIG } from '../src/app/config.js';
+
+const read = name => fs.readFileSync(name, 'utf8');
+const settingsRoot = { innerHTML: '' };
+const baseSettings = {
+  theme: 'system',
+  fontScale: 'normal',
+  optionSpacing: 'normal',
+  reduceMotion: false,
+  learningStyle: 'academy',
+  sceneIntensity: 'full',
+  studioTypeSwitchConfirm: true,
+};
+const sync = {
+  syncUiEnabled: true,
+  cloudConfigured: true,
+  cloudRuntimeEnabled: true,
+  connected: false,
+  presentation: { tone: 'neutral', label: '僅此裝置' },
+};
+
+renderSettings(settingsRoot, {
+  settings: baseSettings,
+  storage: { counts: {}, estimate: null },
+  checks: [],
+  pwa: {},
+  sync,
+});
+
+const settingsHTML = settingsRoot.innerHTML;
+assert.match(settingsHTML, /href="\.\/privacy\.html"/);
+assert.match(settingsHTML, /href="\.\/terms\.html"/);
+assert.match(settingsHTML, /data-legal-data-controls/);
+assert.match(settingsHTML, /解除此裝置連結/);
+assert.match(settingsHTML, /撤銷 Google 存取權/);
+assert.match(settingsHTML, /清除瀏覽器網站資料/);
+assert.match(settingsHTML, /Google 雲端同步資料/);
+assert.match(settingsHTML, /不等於刪除/);
+assert.match(settingsHTML, /rel="noopener noreferrer"/);
+assert.match(settingsHTML, /Google 官方第三方授權管理說明/);
+
+// User-supplied feedback respondent link must be visible without requiring OAuth.
+const feedbackUrl = 'https://forms.gle/3Vhia7MFyvzyV6s2A';
+const landingHTML = read('index.html');
+assert.match(settingsHTML, /data-feedback-card/);
+assert.match(settingsHTML, /data-open-feedback-form/);
+assert.match(settingsHTML, /透過 Google Forms 處理/);
+assert.match(settingsHTML, /未成年使用者如需提供聯絡資訊/);
+assert.ok(settingsHTML.includes(`href="${feedbackUrl}"`));
+assert.match(landingHTML, /id="contact"/);
+assert.match(landingHTML, /href="#contact"/);
+assert.match(landingHTML, /data-feedback-link/);
+assert.match(landingHTML, /data-feedback-footer-link/);
+assert.match(landingHTML, /回報表單由 Google Forms 提供/);
+assert.match(landingHTML, /未成年使用者如需提供聯絡資訊/);
+assert.match(landingHTML, /開發者：墨忻（MoXin）/);
+assert.match(settingsHTML, /個人開發者墨忻（MoXin）/);
+assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /公開開發者署名為「墨忻（MoXin）」/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /公開署名「墨忻（MoXin）」/);
+assert.equal(Array.from(landingHTML.matchAll(/href="https:\/\/forms\.gle\/3Vhia7MFyvzyV6s2A"/g)).length, 2);
+assert.equal(Array.from(settingsHTML.matchAll(/href="https:\/\/forms\.gle\/3Vhia7MFyvzyV6s2A"/g)).length, 1);
+assert.match(landingHTML, /href="mailto:moxin82771@gmail\.com" data-contact-email/);
+assert.match(landingHTML, /href="mailto:moxin82771@gmail\.com" data-feedback-email-footer/);
+assert.match(settingsHTML, /href="mailto:moxin82771@gmail\.com" data-feedback-email/);
+assert.match(landingHTML + settingsHTML, /moxin82771@gmail.com/);
+assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /moxin82771@gmail.com/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /moxin82771@gmail.com/);
+assert.match(read('docs/roadmap/legal/B02_GOOGLE_FORMS_INTAKE_SPEC.md'), /基本匿名填寫驗收（使用者實測）/);
+assert.match(read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md'), /無痕視窗未登入可提交/);
+
+
+const cloudHTML = renderCloudSettingsCard(sync);
+assert.match(cloudHTML, /data-cloud-link-disclosure/);
+assert.match(cloudHTML, /Drive appDataFolder/);
+assert.match(cloudHTML, /href="\.\/privacy\.html"/);
+
+const modalRoot = { innerHTML: '' };
+renderSyncCenter(modalRoot, sync);
+assert.match(modalRoot.innerHTML, /data-sync-privacy-notice/);
+assert.match(modalRoot.innerHTML, /Google 授權不等於本站服務條款的接受/);
+assert.match(modalRoot.innerHTML, /未成年使用者需符合 Google 帳戶年齡與家長監護規定/);
+assert.match(modalRoot.innerHTML, /href="\.\/terms\.html"/);
+assert.match(modalRoot.innerHTML, /href="\.\/privacy\.html"/);
+
+// The same disclosure must remain available to linked users without changing their actions.
+const linkedRoot = { innerHTML: '' };
+renderSyncCenter(linkedRoot, {
+  ...sync,
+  connected: true,
+  account: { displayName: 'Mock Account', displayEmail: 'mock@example.invalid' },
+});
+assert.match(linkedRoot.innerHTML, /data-unlink-cloud/);
+assert.match(linkedRoot.innerHTML, /data-switch-cloud-account/);
+assert.match(linkedRoot.innerHTML, /data-sync-privacy-notice/);
+
+for (const file of ['index.html', 'terms.html', 'privacy.html']) {
+  const html = read(file);
+  assert.match(html, /href="\.\/app\.html"/, `${file} should link to app`);
+}
+assert.match(read('index.html'), /href="\.\/privacy\.html"/);
+assert.match(read('index.html'), /href="\.\/terms\.html"/);
+
+// Fee language must describe the current free offering without promising perpetual free access.
+const draftTerms = read('docs/roadmap/legal/B02_TERMS_DRAFT.md');
+const releaseGate = read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md');
+assert.match(draftTerms, /目前墨忻刷題網完全免費/);
+assert.match(draftTerms, /不代表承諾永久免費/);
+assert.match(releaseGate, /D-03 已確認目前完全免費|D-03（2026-10-10）/);
+
+// Region decision: Taiwan is the primary audience, not an implicit overseas access ban.
+assert.match(draftTerms, /臺灣使用者為主要服務對象/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /臺灣使用者為主要對象/);
+assert.match(releaseGate, /決策紀錄 D-04/);
+assert.match(draftTerms, /未成年人／兒童/);
+assert.match(draftTerms, /全年齡/);
+assert.match(draftTerms, /本機練習不設 18 歲/);
+assert.match(draftTerms, /Family Link/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /全年齡適用/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /不以年齡辨識為由蒐集生日/);
+assert.match(releaseGate, /決策紀錄 D-04 年齡補充/);
+assert.match(releaseGate, /受監護帳號/);
+
+// D-05: private import permission does not grant unrestricted public redistribution.
+assert.match(draftTerms, /允許使用者將第三方題庫/);
+assert.match(draftTerms, /公開下載/);
+assert.match(draftTerms, /已有必要授權/);
+assert.match(draftTerms, /第 9 條/);
+assert.match(releaseGate, /決策紀錄 D-05/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /私人使用與公開分享的界線/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /既有作者題庫的來源初步盤點/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /已取得 ERP 官方 PDF 原始出處/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /Q206_2/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /Q411_2/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /公開再利用權限尚未核准/);
+assert.match(releaseGate, /來源已確認、授權未確認/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /legacySource/);
+assert.match(draftTerms, /官方考試題目及網路資料整理/);
+assert.match(draftTerms, /不代表每題均為原創/);
+assert.match(read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md'), /LEG-020/);
+
+// D-06: cloud full deletion is deferred, without misrepresenting user rights or implemented APIs.
+assert.match(releaseGate, /決策紀錄 D-06/);
+assert.match(releaseGate, /暫緩/);
+assert.match(draftTerms, /暫緩此專用功能/);
+assert.match(draftTerms, /不能保證代刪私人 appDataFolder/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /暫緩的是全量刪除的產品功能/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /不是規劃立即開發該功能/);
+
+// D-02: owner-attested access is not an independently verified Google Forms permission audit.
+const intakeSpec = read('docs/roadmap/legal/B02_GOOGLE_FORMS_INTAKE_SPEC.md');
+const draftPrivacy = read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md');
+assert.match(intakeSpec, /只有個人開發者本人查看、管理/);
+assert.match(intakeSpec, /尚未經我們直接檢查 Google Forms 後台/);
+assert.match(intakeSpec, /Google Sheets/);
+assert.match(draftPrivacy, /開發者本人一人/);
+assert.match(draftPrivacy, /未經我們獨立查看/);
+assert.match(releaseGate, /單人存取/);
+
+// Forms responses currently have no owner-reported linked Google Sheets, but are still held by Google Forms.
+assert.match(intakeSpec, /目前沒有連結 Google Sheets/);
+assert.match(intakeSpec, /尚未進行後台獨立驗證/);
+assert.match(intakeSpec, /不代表 Google Forms 不保存回覆/);
+assert.match(draftPrivacy, /沒有將 Google Forms 回覆連結 Google Sheets 試算表/);
+assert.match(releaseGate, /未連結 Google Sheets/);
+
+assert.match(draftPrivacy, /案件處理完成日起保留 1 年/);
+assert.match(intakeSpec, /案件處理完成後保留 1 年/);
+assert.match(releaseGate, /一般 Google Forms 回覆結案後保留 1 年/);
+assert.match(draftPrivacy, /Gmail 保存期限尚未決定/);
+
+// Drafts must not be silently copied into public policy pages without approval.
+assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
+assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
+assert.match(read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md'), /LEG-020/);
+for (const file of ['terms.html','privacy.html']) {
+  assert.match(read(file), /最後更新：2026-10-08/);
+  assert.doesNotMatch(read(file), /【待確認】|B02.*待審稿草案/);
+}
+
+// The whole B02 does not alter the Local-first identity or expand the Google OAuth scope.
+assert.equal(APP_CONFIG.dbVersion, 4);
+assert.equal(APP_CONFIG.dbName, 'moxin-quiz-v3');
+assert.equal(APP_CONFIG.cloud.googleDriveScope, 'https://www.googleapis.com/auth/drive.appdata');
+assert.equal(APP_CONFIG.features.cloudSync, true);
+console.log('B02 policy links, user control guidance, draft boundary and Local-first contracts PASS.');
