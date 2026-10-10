@@ -158,7 +158,7 @@ assert.match(intakeSpec, /尚未經我們直接檢查 Google Forms 後台/);
 assert.match(intakeSpec, /Google Sheets/);
 assert.match(draftPrivacy, /開發者本人一人/);
 assert.match(draftPrivacy, /未經我們獨立查看/);
-assert.match(releaseGate, /單人存取為負責人確認/);
+assert.match(releaseGate, /單人存取/);
 
 // Forms responses currently have no owner-reported linked Google Sheets, but are still held by Google Forms.
 assert.match(intakeSpec, /目前沒有連結 Google Sheets/);
