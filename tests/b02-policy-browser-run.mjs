@@ -67,6 +67,7 @@ try {
     assert.equal(await settingsFeedback.getAttribute('target'), '_blank');
     assert.match(await settingsFeedback.getAttribute('rel'), /noopener/);
     assert.match(await page.locator('[data-feedback-privacy-notice]').innerText(), /Google Forms/);
+    assert.match(await page.locator('[data-feedback-privacy-notice]').innerText(), /未成年使用者如需提供聯絡資訊/);
     const backupEmail = page.locator('#settingsView [data-feedback-email]');
     assert.equal(await backupEmail.count(), 1);
     assert.equal(await backupEmail.getAttribute('href'), 'mailto:moxin82771@gmail.com');
@@ -92,6 +93,7 @@ try {
     const notice = await page.locator('#contact .landing-contact-notice').innerText();
     assert.match(notice, /Google Forms/);
     assert.match(notice, /不填寫表單也能繼續使用/);
+    assert.match(notice, /未成年使用者如需提供聯絡資訊/);
     const contactBox = await page.locator('#contact .landing-contact-card').boundingBox();
     assert.ok(contactBox && contactBox.x >= -3 && contactBox.x + contactBox.width <= profile.width + 3,
       `${profile.name}: public feedback card overflows viewport`);
