@@ -59,7 +59,7 @@ export function renderSettings(container, { settings, storage, checks, pwa, sync
           </div>
         </div>
         <p class="settings-copy">
-          有功能建議、錯誤回報、題庫勘誤或資料權益問題，可以透過 Google 表單聯絡個人開發者。
+          有功能建議、錯誤回報、題庫勘誤或資料權益問題，可以透過 Google 表單聯絡個人開發者墨忻（MoXin）。
         </p>
         <p class="settings-note" data-feedback-privacy-notice>
           開啟表單後，你自願提交的內容與聯絡方式會透過 Google Forms 處理。
