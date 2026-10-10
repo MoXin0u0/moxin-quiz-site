@@ -17,7 +17,7 @@
 | Google 帳號識別 | `src/cloud/google/google-drive.js:getAccountProfile` 請求 `/about?fields=user(permissionId,displayName,emailAddress,photoLink)`，返回 providerSubject/displayName/displayEmail/photoUrl | 用於確認帳戶、連結與切換；`src/sync/account-lifecycle.js` 的 reconciliation 本機持有帳號識別資訊，解除連結會清理部分雲端操作狀態 | 檢查 accountSettings/syncMeta 裡的可識別字段，以及實際備份是否含關聯字段 |
 | Google appDataFolder 同步 | `src/cloud/google/google-drive.js`：`/files?spaces=appDataFolder` 與 `parents:['appDataFolder']` 上傳，僅使用使用者授權的 Google API | 用戶主動開啟、查看同步盤點並確認；`src/app/sync-ui.js` 無 token 時自動同步跳過；同步不取代獨立備份 | 雲端檔案物件的完整格式／保留策略、裝置實測、Google 端刪除功能 |
 | 同步用裝置與歷史資料 | `src/storage/db.js` 定義 `devices`, `syncMeta`, `syncOutbox`, `syncReceipts`, `syncRevisions`, `syncConflicts`, `syncTombstones`, `cloudObjects` | 用來防止跨帳號錯誤推送、保留修訂與衝突處理；離線不同裝置資料仍各自存在 | 雲端 object/commit/checkpoint 真正保留週期；目前不應填入任意「30 天」等期限 |
-| **Draft PR 中** Google Forms 回報入口（已提供短連結，正式 main 尚未啟用） | 使用者自願送出的回饋內容／可能自願提供的電子郵件，透過 Google Forms 與表單擁有者帳戶處理 | 本機學習與 OAuth 不依賴填表；負責人已實測未登入／Email 非必填可提交，並**聲明目前只有本人查看、管理回覆**；不是 Google 後台共用權限的獨立驗證 | 正式發布前須核實表單欄位、編輯者、是否連結 Google Sheets 及其分享權限、是否顯示結果摘要、Google 平台處理、保存／刪除；見 [表單規格](./B02_GOOGLE_FORMS_INTAKE_SPEC.md) |
+| **Draft PR 中** Google Forms 回報入口（已提供短連結，正式 main 尚未啟用） | 使用者自願送出的回饋內容／可能自願提供的電子郵件，透過 Google Forms 與表單擁有者帳戶處理 | 本機學習與 OAuth 不依賴填表；負責人已實測未登入／Email 非必填可提交，並**聲明目前只有本人查看、管理回覆**；不是 Google 後台共用權限的獨立驗證 | 負責人已確認目前未連結 Google Sheets（未獨立查核）；正式發布前仍須核實表單欄位、編輯者、是否顯示結果摘要、Google 平台處理、保存／刪除；如日後新增 Sheets 再評估獨立分享權限；見 [表單規格](./B02_GOOGLE_FORMS_INTAKE_SPEC.md) |
 | GitHub Pages 主機與網路連線 | `index.html`、`app.html`、`service-worker.js` 靜態部署，網站入口使用 GitHub Pages；`privacy.html` 也告知第三方託管 | 網站請求、網域存取紀錄等可能由託管／網路第三方依各自政策處理 | GitHub Pages 日誌保存、Cookie、訪客識別與實際 CDN 網路行為須核對供應商文件，不能寫「沒有任何日誌」 |
 | Gmail 備援聯絡途徑（已獲准公開，B02 Draft PR） | 寄件人自願寄送的電子郵件地址、主旨、內文及可能附帶的檔案，由寄件平台／Google Gmail 與個人開發者處理 | 僅用於受理、回覆與跟進使用者主動聯絡；請勿提供密碼、存取 token 或完整私人備份 | 信件保留／刪除、存取者與安全事件流程仍待確定；對外信箱為 `moxin82771@gmail.com` |
 | 題庫原作者／使用者匯入第三方內容 | `src/question-bank/package-reader.js`、`src/question-bank/importer.js` 處理本機匯入；作者題庫由 `author-banks.json` 等靜態來源提供 | D-05 已確認可為私人學習匯入第三方內容，但仍須具個別合法利用依據；私人同步／備份不同於公開分享，ZIP 匯出不代表取得再散布權 | 現有 ERP 規劃師資料有 443 筆（`ERP_Planner_202509_V06`），已確認 CERPS「ERP 規劃師－試題指南 2025.09 V06」官方 PDF 共 441 題號；其中 Q206_2／Q411_2 為重複紀錄；**來源已知不代表取得公開再利用授權**，解析／圖片與法定考試例外仍待逐項核對；日後公開分享前的合法利用依據及侵權處理另見 [D-05 規格](./B02_CONTENT_RIGHTS_AND_SHARING.md) |
@@ -52,7 +52,7 @@
 | 待核實事項 | 來源依據／應填證據 | 狀態 |
 | --- | --- | --- |
 | 服務提供者／個資管理者名稱（不得直接以未知別名冒充法律實體） | 2026-10-10 已決定採個人開發者身分，公開署名「墨忻（MoXin）」；如適用法律要求法定自然人身分，須另取本人提供及公開同意 | **創作者署名已決議；個資蒐集者法定識別仍待核對** |
-| 可非公開提交私密資料的聯絡管道 | 已決定 Google Forms 為主要入口、專用 Gmail 備援；公開 Email `moxin82771@gmail.com` 已於 2026-10-10 獲准 | **策略已選、連結已提供、未登入提交已實測；負責人聲明僅本人查看回覆，後台共用／Sheets 與保存期限待核對** |
+| 可非公開提交私密資料的聯絡管道 | 已決定 Google Forms 為主要入口、專用 Gmail 備援；公開 Email `moxin82771@gmail.com` 已於 2026-10-10 獲准 | **策略已選、連結已提供、未登入提交已實測；負責人聲明僅本人查看回覆，未連結 Sheets 為負責人聲明，後台共用權限與保存期限仍待核對** |
 | 個資類別與蒐集目的 | 本清冊及實際 OAuth scope／本機 SyncMeta | 程式部分已核對；待資料流測試 |
 | 處理與保存期間／地區／對象／方式 | 本機、Google Drive、GitHub Pages 供應商政策及產品停止流程 | **待查證** |
 | 個資當事人的查詢、更正、停止處理、刪除等權利 | 不宣稱可遠端處理操作者無法存取的私有 Browser/Drive，需提供可行步驟 | **待產品／法律審核** |
