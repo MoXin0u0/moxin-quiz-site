@@ -25,6 +25,8 @@
 
 ## 2. 四種「刪除／解除」不是同義詞
 
+**D-06（2026-10-10）已決議：暫緩新建「完整刪除 Google appDataFolder 同步資料」及跨裝置防重建功能**。此處保留能力與限制的盤點，是為了準確描述現有使用者控制及依法資料請求流程，**不是規劃立即開發該功能**；同時不得宣稱解除連結或撤銷 Google OAuth 即可刪除全部遠端資料。開發者不能預設可直接存取或清空使用者私人 appDataFolder；依法提出的個資權益請求仍應依可處理的實際資料、權限及適用法律受理、說明可行途徑。
+
 | 動作 | 目前核實可說的事實 | 不可寫成 |
 | --- | --- | --- |
 | 解除這個裝置的雲端連結 | `src/app/sync-ui.js:unlinkCloud` 顯示確認；`src/sync/account-lifecycle.js:unlinkCurrentCloudProfile` 清理本機雲端運行與連結狀態、保留本機題庫與學習資料，返回 `revokedRemoteData:false` | 「已刪除 Google 雲端檔案」「已清空所有裝置」 |
