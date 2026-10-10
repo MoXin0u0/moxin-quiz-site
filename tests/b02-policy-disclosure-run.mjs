@@ -167,6 +167,11 @@ assert.match(intakeSpec, /不代表 Google Forms 不保存回覆/);
 assert.match(draftPrivacy, /沒有將 Google Forms 回覆連結 Google Sheets 試算表/);
 assert.match(releaseGate, /目前未連結 Google Sheets/);
 
+assert.match(draftPrivacy, /案件處理完成日起保留 1 年/);
+assert.match(intakeSpec, /案件處理完成後保留 1 年/);
+assert.match(releaseGate, /一般 Google 表單回覆結案後保留 1 年/);
+assert.match(draftPrivacy, /Gmail 保存期限尚未決定/);
+
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
