@@ -69,7 +69,7 @@ assert.match(settingsHTML, /href="mailto:moxin82771@gmail\.com" data-feedback-em
 assert.match(landingHTML + settingsHTML, /moxin82771@gmail.com/);
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /moxin82771@gmail.com/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /moxin82771@gmail.com/);
-assert.match(read('docs/roadmap/legal/B02_GOOGLE_FORMS_INTAKE_SPEC.md'), /基本匿名填寫驗收（使用者實測）/);
+assert.match(read('docs/roadmap/legal/B02_GOOGLE_FORMS_INTAKE_SPEC.md'), /歷史免登入填寫測試紀錄（2026-10-10）/);
 assert.match(read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md'), /無痕視窗未登入可提交/);
 
 
