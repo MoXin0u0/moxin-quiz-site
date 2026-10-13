@@ -170,6 +170,14 @@ assert.match(releaseGate, /未連結 Google Sheets/);
 // D-02 (2026-10-13): owner-provided Forms UI screenshots show results summary OFF; this is not an independent backend audit.
 assert.match(intakeSpec, /查看結果摘要：關閉/);
 assert.match(intakeSpec, /截圖已確認/);
+assert.match(intakeSpec, /共用」與「發布選項/);
+assert.match(intakeSpec, /僅顯示表單擁有者本人/);
+assert.match(intakeSpec, /未顯示其他共同編輯者/);
+assert.match(intakeSpec, /編輯者檢視權限/);
+assert.match(intakeSpec, /接受回應：開啟/);
+assert.match(releaseGate, /編輯者一般存取權為「限制」/);
+assert.match(draftPrivacy, /沒有其他共同編輯者/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /作答者知道連結即可存取/);
 assert.match(intakeSpec, /表單編輯者/);
 assert.match(releaseGate, /設定 → 簡報/);
 assert.match(draftPrivacy, /查看結果摘要：關閉/);
