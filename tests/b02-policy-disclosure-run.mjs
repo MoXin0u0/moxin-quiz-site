@@ -170,7 +170,17 @@ assert.match(releaseGate, /未連結 Google Sheets/);
 assert.match(draftPrivacy, /案件處理完成日起保留 1 年/);
 assert.match(intakeSpec, /案件處理完成後保留 1 年/);
 assert.match(releaseGate, /一般 Google Forms 回覆結案後保留 1 年/);
-assert.match(draftPrivacy, /Gmail 保存期限尚未決定/);
+const gmailSop = read('docs/roadmap/legal/B02_GMAIL_RETENTION_SOP.md');
+assert.match(draftPrivacy, /Gmail 備援信件一般案件自結案後保留 2 年/);
+assert.match(draftPrivacy, /每 3 個月人工檢查到期案件/);
+assert.match(releaseGate, /Gmail 一般案件結案後保留 2 年/);
+assert.match(intakeSpec, /Gmail 備援一般案件另採結案後 2 年/);
+assert.match(gmailSop, /結案後保留 2 年/);
+assert.match(gmailSop, /每 3 個月人工檢查/);
+assert.match(gmailSop, /沒有自動刪除/);
+assert.match(draftTerms, /備用 Gmail 一般案件於結案後保留 2 年/);
+assert.doesNotMatch(draftPrivacy, /Gmail 保存期限尚未決定|Gmail 備援信件的保存與刪除期限尚未決議/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /Gmail 的墨忻刷題網一般聯絡案件：結案後 2 年/);
 
 // Drafts must not be silently copied into public policy pages without approval.
 assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
