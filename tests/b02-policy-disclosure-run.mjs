@@ -163,6 +163,11 @@ assert.match(d07Audit, /drive.appdata.*非敏感/);
 assert.match(d07Audit, /include_granted_scopes: true/);
 assert.match(d07Audit, /Branding、Audience、Clients、Data Access、Verification Center/);
 assert.match(d07Audit, /只讀盤點/);
+assert.match(d07Audit, /八張 Google Auth Platform 截圖審查/);
+assert.match(d07Audit, /目前不需要資料存取權限驗證/);
+assert.match(d07Audit, /品牌驗證仍未完成/);
+assert.match(d07Audit, /支援信箱與已核准公開的網站備援 Gmail 不是同一個信箱/);
+assert.match(releaseGate, /D-07 八張 Console 實際截圖核對結果/);
 assert.match(releaseGate, /D-07 Google Auth Platform 稽核啟動/);
 
 const draftPrivacy = read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md');
