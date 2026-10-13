@@ -184,7 +184,11 @@ assert.match(intakeSpec, /實際 Google 帳戶／Forms 權限獨立核對/);
 // documentation must not silently keep the older anonymous-submission PASS as a current gate.
 assert.match(intakeSpec, /發生頁面」為檔案上傳題型/);
 assert.match(intakeSpec, /表單說明空白/);
-assert.match(intakeSpec, /目前匿名填答再驗收（BLOCKED）/);
+assert.match(intakeSpec, /目前匿名填答再驗收（BLOCKED｜結果待確認）/);
+assert.match(intakeSpec, /負責人表示已執行測試/);
+assert.match(intakeSpec, /不得僅以「完成」視為 PASS/);
+assert.match(releaseGate, /已收到負責人重新填寫操作「完成」回報/);
+assert.match(draftPrivacy, /2026-10-13 匿名填答重測進度/);
 // Screenshot-verified remediation is distinct from unverified historical uploads and a new anonymous submission.
 assert.match(intakeSpec, /題型／告知兩項截圖修正（2026-10-13）/);
 assert.match(intakeSpec, /類別整理後續截圖驗收/);
