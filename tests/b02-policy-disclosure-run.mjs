@@ -152,6 +152,19 @@ assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /不是規�
 
 // D-02: owner-attested access is not an independently verified Google Forms permission audit.
 const intakeSpec = read('docs/roadmap/legal/B02_GOOGLE_FORMS_INTAKE_SPEC.md');
+// Owner accepts the Forms UI/configuration phase; retention/delete implementation is still an independent release blocker.
+assert.match(intakeSpec, /Google Forms 設定階段總結與轉序/);
+assert.match(intakeSpec, /負責人接受的表單功能／設定階段結束/);
+assert.match(releaseGate, /LEG-012／018／020 整體 Gate 繼續未通過/);
+// D-07 code facts must not be misrepresented as independent Cloud Console review.
+const d07Audit = read('docs/roadmap/legal/B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md');
+assert.match(d07Audit, /Google Cloud Console 實際設定、品牌驗證與正式發布狀態尚未查核/);
+assert.match(d07Audit, /drive.appdata.*非敏感/);
+assert.match(d07Audit, /include_granted_scopes: true/);
+assert.match(d07Audit, /Branding、Audience、Clients、Data Access、Verification Center/);
+assert.match(d07Audit, /只讀盤點/);
+assert.match(releaseGate, /D-07 Google Auth Platform 稽核啟動/);
+
 const draftPrivacy = read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md');
 assert.match(intakeSpec, /只有個人開發者本人查看、管理/);
 assert.match(intakeSpec, /尚未經我們直接檢查 Google Forms 後台/);
