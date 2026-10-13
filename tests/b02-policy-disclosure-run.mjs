@@ -227,6 +227,22 @@ assert.match(draftPrivacy, /案件處理完成日起保留 1 年/);
 assert.match(intakeSpec, /案件處理完成後保留 1 年/);
 assert.match(releaseGate, /一般 Google Forms 回覆結案後保留 1 年/);
 const gmailSop = read('docs/roadmap/legal/B02_GMAIL_RETENTION_SOP.md');
+// D-02 (2026-10-13): quarterly owner-approved Forms reviews are distinct from one-year expiry and actual deletion execution.
+const formsSop = read('docs/roadmap/legal/B02_GOOGLE_FORMS_RETENTION_SOP.md');
+assert.match(formsSop, /每 3 個月人工檢查/);
+assert.match(formsSop, /結案後保留 1 年/);
+assert.match(formsSop, /不是將結案後一年的保存期限自動延長三個月/);
+assert.match(formsSop, /回覆.*個別/);
+assert.match(formsSop, /不刪任何真實使用者回覆/);
+assert.match(formsSop, /沒有自動刪除/);
+assert.match(formsSop, /沒有連結 Google Sheets/);
+assert.match(intakeSpec, /人工保存與清理決策（2026-10-13 已同意）/);
+assert.match(releaseGate, /每 3 個月人工檢查到期回覆/);
+assert.match(draftPrivacy, /每 3 個月人工檢查/);
+assert.match(draftTerms, /兩者均每 3 個月人工檢查/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /Forms 與 Gmail 均已決議每 3 個月人工檢查/);
+assert.match(gmailSop, /跨管道對照（2026-10-13 補充）/);
+
 assert.match(draftPrivacy, /Gmail 備援信件一般案件自結案後保留 2 年/);
 assert.match(draftPrivacy, /每 3 個月人工檢查到期案件/);
 assert.match(releaseGate, /Gmail 一般案件結案後保留 2 年/);
