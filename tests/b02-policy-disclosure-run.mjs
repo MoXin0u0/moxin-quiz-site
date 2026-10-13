@@ -178,7 +178,7 @@ assert.match(intakeSpec, /接受回應：開啟/);
 assert.match(releaseGate, /編輯者一般存取權為「限制」/);
 assert.match(draftPrivacy, /沒有其他共同編輯者/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /作答者知道連結即可存取/);
-assert.match(intakeSpec, /表單編輯者/);
+assert.match(intakeSpec, /實際 Google 帳戶／Forms 權限獨立核對/);
 
 // D-02: the 2026-10-13 owner-provided question screenshots found a blocking upload field;
 // documentation must not silently keep the older anonymous-submission PASS as a current gate.
