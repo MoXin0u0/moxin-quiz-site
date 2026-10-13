@@ -157,7 +157,7 @@ assert.match(intakeSpec, /只有個人開發者本人查看、管理/);
 assert.match(intakeSpec, /尚未經我們直接檢查 Google Forms 後台/);
 assert.match(intakeSpec, /Google Sheets/);
 assert.match(draftPrivacy, /開發者本人一人/);
-assert.match(draftPrivacy, /未經我們獨立查看/);
+assert.match(draftPrivacy, /此非我們獨立取得 Google 管理端權限清單/);
 assert.match(releaseGate, /單人存取/);
 
 // Forms responses currently have no owner-reported linked Google Sheets, but are still held by Google Forms.
@@ -192,7 +192,7 @@ assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /意外使�
 assert.match(releaseGate, /設定 → 簡報/);
 assert.match(draftPrivacy, /查看結果摘要：關閉/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /查看結果摘要關閉/);
-assert.match(draftPrivacy, /共同編輯者清單/);
+assert.match(draftPrivacy, /沒有其他共同編輯者/);
 
 assert.match(draftPrivacy, /案件處理完成日起保留 1 年/);
 assert.match(intakeSpec, /案件處理完成後保留 1 年/);
