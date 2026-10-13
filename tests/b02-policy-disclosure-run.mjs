@@ -184,11 +184,13 @@ assert.match(intakeSpec, /實際 Google 帳戶／Forms 權限獨立核對/);
 // documentation must not silently keep the older anonymous-submission PASS as a current gate.
 assert.match(intakeSpec, /發生頁面」為檔案上傳題型/);
 assert.match(intakeSpec, /表單說明空白/);
-assert.match(intakeSpec, /目前匿名填答再驗收（BLOCKED｜結果待確認）/);
-assert.match(intakeSpec, /負責人表示已執行測試/);
-assert.match(intakeSpec, /不得僅以「完成」視為 PASS/);
-assert.match(releaseGate, /已收到負責人重新填寫操作「完成」回報/);
-assert.match(draftPrivacy, /2026-10-13 匿名填答重測進度/);
+assert.match(intakeSpec, /修正後桌面端無痕匿名填答 PASS/);
+assert.match(intakeSpec, /不需登入 Google、電子郵件選填且成功送出/);
+assert.match(intakeSpec, /手機端與其他情境仍待驗證/);
+assert.match(intakeSpec, /桌面匿名提交子項 PASS，但 LEG-012 與 LEG-020 整體仍未通過/);
+assert.match(releaseGate, /修正後桌面無痕匿名提交複驗/);
+assert.match(draftPrivacy, /桌面匿名填答三項/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /修正後桌面無痕免登入填答三項/);
 // Screenshot-verified remediation is distinct from unverified historical uploads and a new anonymous submission.
 assert.match(intakeSpec, /題型／告知兩項截圖修正（2026-10-13）/);
 assert.match(intakeSpec, /類別整理後續截圖驗收/);
@@ -206,7 +208,7 @@ assert.match(draftPrivacy, /修改後表單無須登入/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /頂端已補用途/);
 assert.match(intakeSpec, /既存附件資料夾|舊附件資料夾|附件資料夾/);
 assert.match(releaseGate, /題型更正為簡答選填、頂端告知已補/);
-assert.match(draftPrivacy, /Google Forms 修正後匿名提交與手機實測仍未通過驗收/);
+assert.match(draftPrivacy, /Google Forms 修正後桌面匿名提交已由負責人確認 PASS；手機實測仍未通過驗收/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /後續同日截圖已確認該題改為簡答選填/);
 assert.match(releaseGate, /設定 → 簡報/);
 assert.match(draftPrivacy, /查看結果摘要：關閉/);
