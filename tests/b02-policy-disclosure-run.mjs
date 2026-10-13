@@ -202,6 +202,10 @@ assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /分類重�
 assert.match(intakeSpec, /題型下拉已顯示/);
 assert.match(intakeSpec, /舊附件資料夾與已存資料/);
 assert.match(intakeSpec, /歷史檔案上傳資料夾檢查/);
+assert.match(intakeSpec, /負責人明確確認：「詳細說明」欄位目前為必填/);
+assert.match(releaseGate, /詳細說明必填狀態/);
+assert.match(draftPrivacy, /PASS（負責人確認）/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /負責人明確確認：「詳細說明」欄位目前為必填/);
 assert.match(releaseGate, /檢查當下資料夾內沒有檔案/);
 assert.match(draftPrivacy, /不表示從未上傳檔案/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /原 Google Forms 檔案上傳題型/);
