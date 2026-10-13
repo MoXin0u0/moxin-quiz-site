@@ -203,7 +203,7 @@ assert.match(intakeSpec, /題型下拉已顯示/);
 assert.match(intakeSpec, /舊附件資料夾與已存資料/);
 assert.match(intakeSpec, /歷史檔案上傳資料夾檢查/);
 assert.match(releaseGate, /檢查當下資料夾內沒有檔案/);
-assert.match(draftPrivacy, /不代表從未上傳檔案/);
+assert.match(draftPrivacy, /不表示從未上傳檔案/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /原 Google Forms 檔案上傳題型/);
 assert.match(releaseGate, /同日後續截圖修正確認/);
 assert.match(releaseGate, /法律發布仍 BLOCKED/);
