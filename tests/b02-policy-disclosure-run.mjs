@@ -179,6 +179,16 @@ assert.match(releaseGate, /編輯者一般存取權為「限制」/);
 assert.match(draftPrivacy, /沒有其他共同編輯者/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /作答者知道連結即可存取/);
 assert.match(intakeSpec, /表單編輯者/);
+
+// D-02: the 2026-10-13 owner-provided question screenshots found a blocking upload field;
+// documentation must not silently keep the older anonymous-submission PASS as a current gate.
+assert.match(intakeSpec, /發生頁面」為檔案上傳題型/);
+assert.match(intakeSpec, /表單說明空白/);
+assert.match(intakeSpec, /目前匿名填答再驗收（BLOCKED）/);
+assert.match(intakeSpec, /既存附件資料夾|舊附件資料夾|附件資料夾/);
+assert.match(releaseGate, /檔案上傳與告知缺漏/);
+assert.match(draftPrivacy, /Google Forms 資料最小化與匿名提交尚未通過/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /意外使用檔案上傳題型/);
 assert.match(releaseGate, /設定 → 簡報/);
 assert.match(draftPrivacy, /查看結果摘要：關閉/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /查看結果摘要關閉/);
