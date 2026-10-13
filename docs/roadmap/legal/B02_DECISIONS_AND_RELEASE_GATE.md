@@ -208,3 +208,7 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-14｜D-07 使用者支援信箱分流決策
 
 產品負責人明確要求**維持 Google OAuth Console 目前獨立的使用者支援信箱**，**不與網站一般聯絡的 `moxin82771@gmail.com` 合併**；此配置已獲本人確認，標為 **D-07 聯絡配置決策 PASS**，不再列為待決策的衝突。一般網站回報仍以 Forms 為主、公開 Gmail 備用。OAuth 獨立信箱實際地址不得加入公開 GitHub 文件或政策，Google Console 也不修改；此決策不保證信箱已經通過可收信實測。剩餘 D-07 為 URL 可訪問、Google Search Console 網域所有權、OAuth 實機授權及 Branding 驗證／發布；LEG-020 仍未通過。詳見 [D-07](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
+
+## 2026-10-14｜D-07 Search Console 尚無可確認資源
+
+負責人 Search Console 畫面左側顯示「找不到相符資源」、可「新增資源」，**此帳號目前沒有可供核實的網站所有權資源**；D07-08 未通過。下一步先以 Google Search Console **網址前置字元**候選資源 `https://moxin0u0.github.io/moxin-quiz-site/` 觀察驗證方式，不使用 GitHub 共享 `github.io` 的 DNS 驗證。即使專案路徑的 URL-prefix 完成驗證，也不可自動斷言 OAuth 已授權網域 `moxin0u0.github.io` 之 Google 品牌驗證要求全部滿足，須核對 OAuth 接受範圍及 top-private-domain 規則。若需上線 HTML meta tag／驗證檔，仍要另外得到負責人修改正式網站的明確批准。B02 Draft PR、LEG-020 Gate 仍保留；見 [D-07 OAuth 稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。

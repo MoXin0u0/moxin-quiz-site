@@ -169,13 +169,18 @@ assert.match(d07Audit, /品牌驗證仍未完成/);
 assert.match(d07Audit, /支援信箱與已核准公開的網站備援 Gmail 不是同一個信箱/);
 assert.match(d07Audit, /維持目前獨立的信箱/);
 assert.match(d07Audit, /支援信箱配置決策 PASS/);
+assert.match(d07Audit, /Google Search Console 資源清單截圖（尚無資源）/);
+assert.match(d07Audit, /D07-08：網域所有權確認 PENDING/);
+assert.match(d07Audit, /不能直接宣稱整個/);
+assert.match(releaseGate, /D-07 Search Console 尚無可確認資源/);
 assert.match(d07Audit, /不等於.*已獨立測試該信箱的可收信性/);
 assert.match(releaseGate, /D-07 聯絡配置決策 PASS/);
-assert.match(draftPrivacy, /原先的信箱不一致屬刻意分工/);
+
 assert.match(releaseGate, /D-07 八張 Console 實際截圖核對結果/);
 assert.match(releaseGate, /D-07 Google Auth Platform 稽核啟動/);
 
 const draftPrivacy = read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md');
+assert.match(draftPrivacy, /原先的信箱不一致屬刻意分工/);
 assert.match(intakeSpec, /只有個人開發者本人查看、管理/);
 assert.match(intakeSpec, /尚未經我們直接檢查 Google Forms 後台/);
 assert.match(intakeSpec, /Google Sheets/);

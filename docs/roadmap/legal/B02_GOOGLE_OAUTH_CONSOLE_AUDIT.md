@@ -72,3 +72,14 @@
 **判定：D-07 支援信箱配置決策 PASS（負責人授權保留現狀）**。不公開或複製 OAuth 獨立信箱實際地址到 GitHub、政策草案、網站或公用 issue，也不在 Google Console 變更帳號；本決策**不等於**已獨立測試該信箱的可收信性、處理時效、私人帳號防護或 Google 品牌驗證所需的其他條件。
 
 **後續待辦**：有需要時由負責人自行確認 OAuth 獨立信箱能持續收到使用者支援信件，以及 Branding 顯示值仍正確；D-07 接續核查 GitHub Pages 首頁／Privacy／Terms URL 能否由未登入訪客存取、Google Search Console 網域所有權、實機 OAuth 同意畫面及品牌驗證／發布狀態。無須再要求統一兩信箱；仍不擅自送出品牌驗證或修改正式政策。
+## G. 2026-10-14｜Google Search Console 資源清單截圖（尚無資源）
+
+**負責人提供 Search Console 登入畫面截圖**，左上資源選單顯示「找不到相符資源」與「新增資源」；**在此登入帳號與畫面下未找到任何可驗證的 Search Console 資源**。因此 **D07-08：網域所有權確認 PENDING**，不能宣稱 GitHub Pages 已通過 Google Search Console 所有權驗證。這不表示網站已經驗證失敗、其他 Google 帳號也無資源或網站目前無法使用。
+
+**安全優先的下一步**：在同一個對應 OAuth Cloud 專案的 Google 帳號，Search Console 選「新增資源」→「網址前置字元」，先填入 `https://moxin0u0.github.io/moxin-quiz-site/`（**含最後斜線**），讓 Google 顯示該網址前置字元資源的驗證方式。此為確認 GitHub Pages 專案路徑實際控制權的候選方式，**尚未完成驗證**。Google Search Console 官方說明 URL-prefix 可透過 HTML 標記或 HTML 檔案證明所有權；HTML 標記須出現在資源首頁 `<head>`，且要先正式部署成為訪客可見的原始碼，才可按 Verify。請勿使用無法控制的 `github.io` DNS 建立網域資源。參考：[新增資源](https://support.google.com/webmasters/answer/34592?hl=zh-Hant)、[驗證網站擁有權](https://support.google.com/webmasters/answer/9008080?hl=zh-Hant)。
+
+**OAuth 驗證重要限制**：Google OAuth 品牌驗證要求確認**已授權網域（authorized domain）**的所有權，即 Google 文件稱的 top private domain；因此**就算 `/moxin-quiz-site/` 路徑層級的 URL-prefix 成功驗證，也不能直接宣稱整個 `moxin0u0.github.io` 授權網域已符合 OAuth 品牌驗證**。必須回到 OAuth Console 檢視驗證接受情況；若 Google 要求網域更高層級所有權而無法在 GitHub Pages 控制其根目錄，可能需評估可控自訂網域或其他經 Google 支援的方案，不能保證不需付費，也不應先動 DNS。參考：[Google OAuth 品牌驗證所需網域](https://developers.google.com/identity/verification/authentication-verification)。
+
+**發布邊界**：此階段只完成資源類型選擇及查看驗證方式。若 Google 給 HTML meta tag 或檔案，正式驗證需要修改／部署網站頁面；**本次未取得使用者同意修改 main 或發布網站，因此不得擅自改動正式 `index.html`、部署 HTML 驗證檔、變更 DNS 或按品牌驗證**。可先在 B02 Draft PR 做具體部署計畫，等使用者另行授權。若 Search Console 要求驗證檔／標記，勿把帳號與私人主控台畫面貼到公開 Issue。
+
+**尚待**：D07-08 Search Console 實際驗證、D07-06 對外 URL 可訪問性、D07-07 實機 OAuth 與品牌驗證／發布、D-01／D-10 法律發布審核。
