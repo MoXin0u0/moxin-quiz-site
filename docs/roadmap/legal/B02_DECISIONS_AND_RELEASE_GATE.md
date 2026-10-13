@@ -204,3 +204,7 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-14｜D-07 八張 Console 實際截圖核對結果
 
 產品負責人提供 Google Auth Platform Branding、Audience、Web OAuth Client、Data Access、Verification Center 與 Settings 的八張截圖。**現行 Client ID 對應網站程式碼**，授權 JavaScript 來源包含 GitHub Pages HTTPS 及 localhost:4173；**Audience 是 External／In production**；**唯一 API scope 是非敏感 drive.appdata**，沒有敏感或受限制權限。Google 驗證中心表明**Data Access 驗證目前不需要，但 Branding 尚未驗證**，不能混為一談。品牌名稱、首頁、Privacy／Terms URL 已填入同網域，但實際公開可訪問、Search Console 網域所有權、實機 OAuth 同意畫面與品牌正式驗證／發布尚未通過。**OAuth 使用者支援信箱不同於使用者已同意公開的網站備援信箱**，需確認是否刻意分流。Google Console masked secret 不代表已外洩，但不可向前端或 GitHub 公開。D-07 仍 PARTIAL，LEG-020 未解除。詳見 [Google Auth Platform 截圖稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。未擅自更改 Console、正式法律頁或 main。
+
+## 2026-10-14｜D-07 使用者支援信箱分流決策
+
+產品負責人明確要求**維持 Google OAuth Console 目前獨立的使用者支援信箱**，**不與網站一般聯絡的 `moxin82771@gmail.com` 合併**；此配置已獲本人確認，標為 **D-07 聯絡配置決策 PASS**，不再列為待決策的衝突。一般網站回報仍以 Forms 為主、公開 Gmail 備用。OAuth 獨立信箱實際地址不得加入公開 GitHub 文件或政策，Google Console 也不修改；此決策不保證信箱已經通過可收信實測。剩餘 D-07 為 URL 可訪問、Google Search Console 網域所有權、OAuth 實機授權及 Branding 驗證／發布；LEG-020 仍未通過。詳見 [D-07](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。

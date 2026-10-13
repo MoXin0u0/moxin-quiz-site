@@ -160,3 +160,6 @@ Google OAuth access token 由目前頁面記憶體管理；一般資料交換使
 
 
 **D-07 進度（2026-10-14）**：Google Auth Platform 的品牌、Audience、授權 scope 與 Client origin 等尚未獲負責人 Console 證據；程式碼已確認 `drive.appdata`，官方將此 scope 列為 non-sensitive，不應誤稱 restricted。詳細待核對項目在 [D-07 稽核規格](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)；不表示目前已通過品牌或發布驗證。
+
+
+**D-07 聯絡管道決策（2026-10-14）**：產品負責人確認 Google OAuth 使用者支援信箱**維持 Google Console 目前的獨立信箱**，不要求與網站公開備用 Gmail 統一；原先的信箱不一致屬刻意分工，不再是未決衝突。網站一般聯絡仍使用 Google Forms 與已核准公開的 `moxin82771@gmail.com`。OAuth 私人支援地址不寫入公開政策或 repo，尚未獨立實測收信能力；品牌驗證及正式隱私政策發布仍待處理。參見 [D-07 稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。

@@ -65,3 +65,10 @@
 **Google 官方依據**：[Manage OAuth App Branding](https://support.google.com/cloud/answer/15549049?hl=en) 區分 Branding verification 與 Data Access verification；品牌核准後如需要公開顯示經驗證的品牌，仍須執行 Publish branding。單獨看到 Audience In production 不等於品牌已驗證。
 
 **安全規則**：不公開私人 Google 帳戶、完整 Console URL、Client secret、token、原始管理畫面；不替使用者切回 Testing、修改 scopes／client origins、送出品牌驗證或變更正式網站政策。全部先以 Draft PR 文書追蹤，LEG-020 仍未通過。
+## F. 2026-10-14｜D-07 OAuth 使用者支援信箱分流已決議
+
+**產品負責人明確決定：「維持目前獨立的信箱」。** Google Auth Platform Branding 的 **OAuth 使用者支援 Email 繼續沿用 Console 目前所選的獨立信箱**，不要求與墨忻刷題網的一般回報／備用 Gmail 相同。網站一般意見回報、題庫勘誤、隱私請求與其他非 OAuth 聯絡仍使用先前同意公開的 `moxin82771@gmail.com`（主要入口仍為 Google Forms）。
+
+**判定：D-07 支援信箱配置決策 PASS（負責人授權保留現狀）**。不公開或複製 OAuth 獨立信箱實際地址到 GitHub、政策草案、網站或公用 issue，也不在 Google Console 變更帳號；本決策**不等於**已獨立測試該信箱的可收信性、處理時效、私人帳號防護或 Google 品牌驗證所需的其他條件。
+
+**後續待辦**：有需要時由負責人自行確認 OAuth 獨立信箱能持續收到使用者支援信件，以及 Branding 顯示值仍正確；D-07 接續核查 GitHub Pages 首頁／Privacy／Terms URL 能否由未登入訪客存取、Google Search Console 網域所有權、實機 OAuth 同意畫面及品牌驗證／發布狀態。無須再要求統一兩信箱；仍不擅自送出品牌驗證或修改正式政策。
