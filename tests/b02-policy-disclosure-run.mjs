@@ -187,6 +187,12 @@ assert.match(intakeSpec, /表單說明空白/);
 assert.match(intakeSpec, /目前匿名填答再驗收（BLOCKED）/);
 // Screenshot-verified remediation is distinct from unverified historical uploads and a new anonymous submission.
 assert.match(intakeSpec, /題型／告知兩項截圖修正（2026-10-13）/);
+assert.match(intakeSpec, /類別整理後續截圖驗收/);
+assert.match(intakeSpec, /儲存中/);
+assert.match(intakeSpec, /著作權或授權／安全／其他/);
+assert.match(releaseGate, /類別清理再確認/);
+assert.match(draftPrivacy, /問題分類修正截圖/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /分類重疊已由後續編輯截圖更正/);
 assert.match(intakeSpec, /題型下拉已顯示/);
 assert.match(intakeSpec, /舊附件資料夾與已存資料/);
 assert.match(releaseGate, /同日後續截圖修正確認/);
