@@ -46,3 +46,22 @@
 - [ ] 正式首頁與 Privacy URL／授權網域及 OAuth 使用者可見內容完成比對；D-01／D-10 法律審閱門檻仍獨立存在。
 - [ ] 完成實機 OAuth 授權與取消測試，確認真實畫面、未驗證警告和帳號範圍；不得以靜態測試當實機證明。
 - [ ] D-07 全項完成後仍不自動解除 LEG-020；須負責人核准正式法律版本及發布。
+
+## E. 2026-10-14｜八張 Google Auth Platform 截圖審查（最新狀態）
+
+> **此節為最新證據，取代上方原訂核對表尚無截圖的 PENDING 記錄。** 下方是產品負責人提供的 Console 截圖觀察，而非我們登入 Google 後台做獨立稽核；包含個人 Google 帳戶及遮罩憑證的原始截圖**不上傳公開 GitHub**。
+
+| 核對區域 | 最新觀察與結果 |
+| --- | --- |
+| Branding | **PARTIAL**：應用程式名稱「墨忻刷題網」；首頁、隱私頁、服務條款均填入同一 GitHub Pages 網域，授權網域已登記；品牌驗證仍未完成，Logo 尚未上傳。OAuth 使用者支援信箱與已核准公開的網站備援 Gmail 不是同一個信箱；不一定是錯誤，待負責人確認是否刻意分流。私有支援地址不記錄在公開文件。 |
+| Audience | **設定 PASS**：External／In production（實際運作中）；UI 顯示 OAuth 使用者 1／100。這只是當下 UI 指示，不應在未核實政策適用前宣稱非敏感權限永遠只有 100 人上限。 |
+| Web OAuth Client | **配置 PASS**：Client ID 與 src/app/config.js 一致；JavaScript origins 包含正式 GitHub Pages HTTPS origin 與 localhost:4173，沒有 redirect URI，符合目前 Google GIS token client 用法。Console 有被遮罩的啟用中 Client secret；僅此**不代表秘密已外洩**，也不應將 secret 寫入前端。 |
+| Data Access | **PASS**：非敏感範圍只有 drive.appdata；敏感範圍與受限制範圍均空白，與網站程式碼相符。 |
+| Verification Center | **品牌待處理**：Branding 尚未驗證，Google 表示品牌尚未向使用者顯示；Data Access status 因未要求敏感或受限制 scope，表示**目前不需要資料存取權限驗證**。兩個驗證不是同一回事。 |
+| Settings | **可見設定已核對**：兩個 OIDC 進階安全性相關開關未勾；此專案使用 Google OAuth token client，而不是以登入 Google 作為自建後端的驗證憑證。 |
+
+**目前確認的阻擋項**：品牌驗證未完成；首頁／Privacy／Terms 真實對外可訪問性尚未透過非管理者瀏覽器核實，Google Search Console 網域所有權未證明；OAuth 同意畫面實機流程仍未驗收；OAuth 支援信箱是否刻意與網站備援信箱分離仍待產品負責人決定。正式頁面 Privacy 文字雖已記載 drive.appdata，但此事不等於 B02 待審稿法律政策已批准。
+
+**Google 官方依據**：[Manage OAuth App Branding](https://support.google.com/cloud/answer/15549049?hl=en) 區分 Branding verification 與 Data Access verification；品牌核准後如需要公開顯示經驗證的品牌，仍須執行 Publish branding。單獨看到 Audience In production 不等於品牌已驗證。
+
+**安全規則**：不公開私人 Google 帳戶、完整 Console URL、Client secret、token、原始管理畫面；不替使用者切回 Testing、修改 scopes／client origins、送出品牌驗證或變更正式網站政策。全部先以 Draft PR 文書追蹤，LEG-020 仍未通過。
