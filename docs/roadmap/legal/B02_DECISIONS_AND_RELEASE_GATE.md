@@ -199,3 +199,8 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-14｜D-07 Google Auth Platform 稽核啟動
 
 **Google Forms 題目與提交設定階段依負責人最終確認暫告完成，現在切換至 D-07（LEG-008／009）**。已由程式碼確認 GIS token client、`drive.appdata`、`appDataFolder` 與 Google 帳號資訊欄位；依 Google 官方資料，`drive.appdata` 為**non-sensitive scope**，但**尚未核對 Google Cloud Console 的 Branding、Audience、Clients、Data Access、Verification Center、正式首頁／Privacy URL、公開與測試狀態及實機 OAuth 同意畫面**。正式法律發布仍須 D-01／08／09／10 等審查及負責人授權。操作清單詳見 [D-07 OAuth Console 稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。本批不變更 Google Console、真實表單、正式政策及 `main`。
+
+
+## 2026-10-14｜D-07 八張 Console 實際截圖核對結果
+
+產品負責人提供 Google Auth Platform Branding、Audience、Web OAuth Client、Data Access、Verification Center 與 Settings 的八張截圖。**現行 Client ID 對應網站程式碼**，授權 JavaScript 來源包含 GitHub Pages HTTPS 及 localhost:4173；**Audience 是 External／In production**；**唯一 API scope 是非敏感 drive.appdata**，沒有敏感或受限制權限。Google 驗證中心表明**Data Access 驗證目前不需要，但 Branding 尚未驗證**，不能混為一談。品牌名稱、首頁、Privacy／Terms URL 已填入同網域，但實際公開可訪問、Search Console 網域所有權、實機 OAuth 同意畫面與品牌正式驗證／發布尚未通過。**OAuth 使用者支援信箱不同於使用者已同意公開的網站備援信箱**，需確認是否刻意分流。Google Console masked secret 不代表已外洩，但不可向前端或 GitHub 公開。D-07 仍 PARTIAL，LEG-020 未解除。詳見 [Google Auth Platform 截圖稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。未擅自更改 Console、正式法律頁或 main。
