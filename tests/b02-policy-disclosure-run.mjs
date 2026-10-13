@@ -167,6 +167,15 @@ assert.match(intakeSpec, /不代表 Google Forms 不保存回覆/);
 assert.match(draftPrivacy, /沒有將 Google Forms 回覆連結 Google Sheets 試算表/);
 assert.match(releaseGate, /未連結 Google Sheets/);
 
+// D-02 (2026-10-13): owner-provided Forms UI screenshots show results summary OFF; this is not an independent backend audit.
+assert.match(intakeSpec, /查看結果摘要：關閉/);
+assert.match(intakeSpec, /截圖已確認/);
+assert.match(intakeSpec, /表單編輯者/);
+assert.match(releaseGate, /設定 → 簡報/);
+assert.match(draftPrivacy, /查看結果摘要：關閉/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /查看結果摘要關閉/);
+assert.match(draftPrivacy, /共同編輯者清單/);
+
 assert.match(draftPrivacy, /案件處理完成日起保留 1 年/);
 assert.match(intakeSpec, /案件處理完成後保留 1 年/);
 assert.match(releaseGate, /一般 Google Forms 回覆結案後保留 1 年/);
