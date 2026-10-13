@@ -192,7 +192,6 @@ assert.match(intakeSpec, /① 不需登入 Google；② 電子郵件留空仍成
 assert.match(releaseGate, /手機端無痕匿名填答 PASS（負責人實測）/);
 assert.match(draftPrivacy, /手機端手動測試回報，三項 PASS/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /手機端無痕匿名填答 PASS/);
-assert.match(formsSop, /手機端無痕匿名填答三項已由負責人確認 PASS/);
 assert.match(intakeSpec, /桌面匿名提交子項 PASS，但 LEG-012 與 LEG-020 整體仍未通過/);
 assert.match(releaseGate, /修正後桌面無痕匿名提交複驗/);
 assert.match(draftPrivacy, /桌面匿名填答三項/);
@@ -235,6 +234,7 @@ assert.match(releaseGate, /一般 Google Forms 回覆結案後保留 1 年/);
 const gmailSop = read('docs/roadmap/legal/B02_GMAIL_RETENTION_SOP.md');
 // D-02 (2026-10-13): quarterly owner-approved Forms reviews are distinct from one-year expiry and actual deletion execution.
 const formsSop = read('docs/roadmap/legal/B02_GOOGLE_FORMS_RETENTION_SOP.md');
+assert.match(formsSop, /手機端無痕匿名填答三項已由負責人確認 PASS/);
 assert.match(formsSop, /每 3 個月人工檢查/);
 assert.match(formsSop, /結案後保留 1 年/);
 assert.match(formsSop, /不是將結案後一年的保存期限自動延長三個月/);
