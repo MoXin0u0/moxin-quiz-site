@@ -174,3 +174,19 @@
 **本次只讀公開 URL 複核結果**：以外部網頁讀取工具嘗試直接訪問網站首頁、`privacy.html`、`terms.html`，工具對三個 GitHub Pages 網址都回報**無法存取**，無 HTTP 成功或失敗狀態碼可確認；這是工具限制，**不能據此判定網站對一般訪客壞掉、DNS 出錯或政策頁不存在**。此前已從 `main` 原始碼確認首頁有 Privacy／Terms 連結，現行 `privacy.html` 包含 `drive.appdata` 與 Google 帳號資料利用描述。剩餘必要證據應由負責人透過無痕瀏覽器測試三個公開網址（不登入 GitHub／Google），確認可載入以及網站連結是否正確。
 
 **D-07 最新狀態**：總覽「專案檢查」已由負責人截圖核對；帳單警告**獨立列為資訊提示**，不設為 OAuth 品牌驗證已確認的 blocker；**Domain ownership、Branding verification、Publish branding、實機 consent／拒絕測試、B02 法律 Gate 仍未完成**。沒有授權修改 Google Console、登入帳單／付款設定、修改 `main` 或送出「驗證品牌」。
+
+
+## N. 2026-10-20｜公開首頁／Privacy／Terms 三頁無痕實測通過
+
+**負責人完成先前指示的「無痕視窗、未登入 Google 或 GitHub、開啟三個公開網址並檢查首頁政策連結」後回報「三頁全部正常」。** 這是負責人親自測試回報，不是本工具直接 HTTP 監測；先前外部工具無法抓取 GitHub Pages 的錯誤不應誤寫成網站故障。
+
+| 驗收編號 | 實測對象 | 2026-10-20 結果 |
+| --- | --- | --- |
+| D07-06-A | `https://moxin0u0.github.io/moxin-quiz-site/` 首頁未登入訪問 | **PASS（負責人無痕實測）** |
+| D07-06-B | `https://moxin0u0.github.io/moxin-quiz-site/privacy.html` 隱私頁未登入訪問 | **PASS（負責人無痕實測）** |
+| D07-06-C | `https://moxin0u0.github.io/moxin-quiz-site/terms.html` 條款頁未登入訪問 | **PASS（負責人無痕實測）** |
+| D07-06-D | 從首頁點開隱私政策與服務條款連結 | **PASS（負責人對前次整組測試的確認）** |
+
+**D07-06 的「公眾網址與首頁連結功能」子項已 PASS**，不需再重複收集同三頁截圖。這**不是** B02 新版隱私權政策／服務條款已對外發布；正式站仍沿用既有 `privacy.html`／`terms.html`。Google 品牌驗證官方另要求公開政策內容正確告知 Google 使用者資料的存取、用途、儲存與分享，[Google 品牌驗證](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification)明確區分 URL 可訪問與政策內容。因此 **Google user data disclosure 的逐條內容審查仍是獨立 PENDING**；D-01 法律身分、D-02 保存／刪除、D-10 簽核不因此解除。
+
+**D-07 後續優先事項**：① 不更動 Google Console 的前提下，對照實際 `main` 發布的隱私政策文字與 `drive.appdata`、`appDataFolder`、可取得的 Google 帳號欄位及撤銷／刪除行為；② 檢查 Google Auth Platform 對 `moxin0u0.github.io` 已授權網域的所有權要求與 Cloud Project Owner、Search Console Owner 身分；③ 準備「是否申請品牌驗證」的具體方案，由負責人另行批准才執行 Verify Branding。**Search Console 專案 URL-prefix 已 PASS，但不能擴大為 OAuth Domain property 或 Branding PASS。** 不購買域名、不開帳單、不提交品牌驗證、不修改 main／正式法律頁；PR #13 保持 Draft。

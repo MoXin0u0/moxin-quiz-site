@@ -179,6 +179,14 @@ assert.match(d07Audit, /已驗證擁有權/);
 assert.match(d07Audit, /D07-08 URL-prefix OWNERSHIP PASS/);
 assert.match(d07Audit, /URL-prefix 成功後 OAuth 品牌狀態重新核對/);
 assert.match(d07Audit, /OAuth 總覽、帳單提示與授權使用量截圖核對/);
+assert.match(d07Audit, /公開首頁／Privacy／Terms 三頁無痕實測通過/);
+assert.match(d07Audit, /負責人無痕實測/);
+assert.match(d07Audit, /公眾網址與首頁連結功能/);
+assert.match(d07Audit, /Google user data disclosure 的逐條內容審查仍是獨立 PENDING/);
+assert.match(releaseGate, /D-07 公開首頁、Privacy、Terms 訪客端驗收 PASS/);
+assert.match(releaseGate, /D07-06 網址可訪問及首頁政策連結 PASS/);
+assert.match(draftPrivacy, /D07-06 公開網址功能 PASS/);
+
 assert.match(d07Audit, /10,000 次／日是授權核發頻率指標，不是 10,000 位使用者上限/);
 assert.match(d07Audit, /沒有可見的 Domain verification rejected/);
 assert.match(d07Audit, /不新增帳單或付款資料/);

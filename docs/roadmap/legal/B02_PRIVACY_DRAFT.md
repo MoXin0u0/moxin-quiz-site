@@ -163,3 +163,6 @@ Google OAuth access token 由目前頁面記憶體管理；一般資料交換使
 
 
 **D-07 聯絡管道決策（2026-10-14）**：產品負責人確認 Google OAuth 使用者支援信箱**維持 Google Console 目前的獨立信箱**，不要求與網站公開備用 Gmail 統一；原先的信箱不一致屬刻意分工，不再是未決衝突。網站一般聯絡仍使用 Google Forms 與已核准公開的 `moxin82771@gmail.com`。OAuth 私人支援地址不寫入公開政策或 repo，尚未獨立實測收信能力；品牌驗證及正式隱私政策發布仍待處理。參見 [D-07 稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
+
+
+**2026-10-20 D-07 公開連結驗收**：負責人已使用未登入／無痕瀏覽器確認正式 GitHub Pages 網站首頁、`privacy.html`、`terms.html` 與首頁政策連結正常，故 **D07-06 公開網址功能 PASS（負責人實測）**。但正式站目前的政策仍是既有版本，**不視為本 B02 Privacy Draft 已經發布，也不視為 Google User Data Policy 內容或臺灣個資告知法律審核 PASS**。OAuth authorized domain／品牌驗證尚未完成，見 [D-07 稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。

@@ -242,3 +242,8 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-20｜D-07 Google Auth Platform 總覽截圖：未見網域退件
 
 負責人提供兩張 OAuth「總覽」截圖，專案健康檢查顯示：**帳單帳戶驗證**警告（未連結 Cloud Billing）、**更新後的聯絡資訊** PASS、**專案聯絡人** PASS、**維持 OAuth 用戶端運作** PASS。兩張畫面**未見授權網域所有權被退件或網域驗證失敗的特定訊息**；這並非 Domain-property／Branding 驗證已通過的證明。Google OAuth 品牌驗證[官方前置要求](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification)沒有將新增**付費帳單帳戶**列為一般標準必要步驟；不因畫面警告就開通帳單、承擔費用或變更 Google Cloud。使用量圖顯示**1 位有效 OAuth 使用者**，**每日 10,000 次 Grant Limit 是授權核發頻率指標，不是 10,000 名使用者上限**。本次以外部工具開啟正式首頁／Privacy／Terms 均未取得可判定的 HTTP 回應（工具無法存取），不能誤判公開網站有故障。下一步請負責人使用無痕瀏覽器確認三個公開頁面可訪問，並回報結果。OAuth 已授權網域及 Branding 審查仍待完成，不按「驗證品牌」，不合併 B02、不修改 main。詳見 [D-07 總覽截圖驗收](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
+
+
+## 2026-10-20｜D-07 公開首頁、Privacy、Terms 訪客端驗收 PASS
+
+負責人依前次要求使用未登入／無痕瀏覽器檢查 `https://moxin0u0.github.io/moxin-quiz-site/`、`privacy.html`、`terms.html` 以及首頁連到政策頁的連結，明確回覆**「三頁全部正常」**。因此 **D07-06 網址可訪問及首頁政策連結 PASS（負責人實測回報）**；先前外部工具無法讀取網站並不能判定站點故障，不再重複要求同樣的可訪問性截圖。**此為公開網址功能驗收，不是政策內容／個資揭露的法律審核 PASS，也不是 Google OAuth 品牌驗證通過**。現行正式政策頁未改動，B02 新政策草案仍待獨立核可。Google Search Console 專案 path URL-prefix ownership PASS 已記錄，OAuth top private domain 所有權與 Branding verification／Publish branding 尚未完成。下一步做**正式隱私政策與 Google 使用者資料存取行為的一致性比對**；未經負責人授權不修改 main、不合併 B02、不按 Verify Branding。詳見 [D-07](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
