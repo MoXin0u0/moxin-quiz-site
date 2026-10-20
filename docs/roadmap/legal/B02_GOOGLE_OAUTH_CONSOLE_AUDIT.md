@@ -101,3 +101,14 @@
 **部署／驗證門檻**：本次只完成驗證方法盤點。原驗證 HTML 檔案需由負責人從 Google 下載，不可憑截圖推測其完整檔案內容；**未取得負責人明確同意前，不新增驗證檔案到正式 GitHub Pages、不改 `main`／正式首頁、不點 Search Console「驗證」、不提交 Google OAuth 品牌驗證或發布**。若日後允許部署，應先核對 Pages 的部署來源與原檔完整性，發布後以未登入視窗直接開啟 Google 指定 URL，確認不被重新導向或回應 404，才使用相同 Google 帳號執行 Search Console 驗證；通過後持續保留驗證材料。Google 官方：[網站所有權驗證](https://support.google.com/webmasters/answer/9008080?hl=zh-Hant)。
 
 **階段結果**：D07-08 驗證方法／資源路徑已有負責人截圖證據（PASS）；驗證材料部署、Search Console 所有權、OAuth 主網域是否滿足品牌規則均 PENDING；D-07、LEG-020 未完成。
+
+
+## I. 2026-10-20｜Google HTML 驗證原檔已收到並完成本機格式檢查
+
+**負責人已於對話上傳從 Search Console 取得的原始 HTML 驗證檔**。檢查結果：53 bytes、UTF-8 純文字、無 BOM、內容僅一行 `google-site-verification:` 指令，**檔名與內容引用檔名完全一致**，沒有額外空白、HTML 包裝或換行。格式驗收 **PASS（已檢查原始 bytes）**；檔案**尚未部署、也沒有在公開 GitHub branch 提交原檔／驗證 token／具體檔名**。目前 Search Console 所有權驗證仍 **PENDING**。
+
+**GitHub Pages 路徑依據**：本 repo `README.md` 部署章節記載 **Branch: main；Folder: / (root)**，而實際 `main` 根目錄已有 `index.html`、`app.html`、`privacy.html`、`terms.html`，沒有同名 Google 驗證檔。若 Pages 設定仍與 README 相同，驗證檔只需在 `main` 根目錄新增原始 `.html`，發布後將位於 `https://moxin0u0.github.io/moxin-quiz-site/` 下 Google 指定的單一檔案 URL；原網站現有頁面及 JS 無須修改。**但本次 GitHub Pages 後台 Settings → Pages 的實際 Source 選項未透過 API 讀取，部署前仍須核對。**
+
+**最小變更／正式部署檢查表（尚未授權實施）**：① 取得負責人**明確正式發布同意**；② 確認 GitHub Pages Source 指向 main 根目錄；③ 新增**原 Google 檔案、不修改內容與檔名**，且不混入 B02 其他法律草案；④ 僅驗證檔案單一變更經版本管理與原網站基本 smoke test 後部署；⑤ 於全新未登入／私密視窗直接開啟 Google 指定檔案網址，核對 HTTP 200、內容與檔名；⑥ 在負責人登入的 Search Console 按**驗證**並保留驗證檔；⑦ 回到 Google Auth Platform 檢查是否滿足 OAuth authorized domain 的驗證要求，不能用 project URL-prefix PASS 自動解鎖品牌 Gate。未得到明確同意之前，**不更動 main、Pages 設定、Google Console、不按驗證**。
+
+**安全註記**：HTML 驗證檔本來就必須公開部署才能供 Google 檢查；但是否可公開是使用者的發布決策，不應因對話上傳自動等同允許將 Google 擁有權驗證材料推送到公開 GitHub。檔案原件保留在本次對話附件中，不在 Draft PR 附加實際驗證 token。Google 官方：[Verify your site ownership](https://support.google.com/webmasters/answer/9008080?hl=en)、[GitHub Pages publishing source](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
