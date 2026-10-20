@@ -18,7 +18,7 @@
 | --- | --- | --- |
 | **B00** | 固定 V5 基準、追蹤索引、PR 模板、修正過時文件定位；AUD-025、AUD-026 | **已合併**：PR #9；2026-10-09 |
 | **B01** | ZIP／資料夾／JSON 防護、完整 CI、lockfile、分支保護；AUD-001/002/003/024/029/031 | **已合併**：PR #11；2 項 required checks 已啟用；AUD-029 深度 CSP/XSS 待後續專項 |
-| **B02** | 使用者協議與隱私、Google 資料流、權利操作、版本告知；LEG-001～020 | **草案／開發中**：[資料流與草稿／發布 Gate](./legal/B02_DECISIONS_AND_RELEASE_GATE.md)；正式政策尚未審稿，不可自稱合法合規 |
+| **B02** | 使用者協議與隱私、Google 資料流、權利操作、版本告知；LEG-001～020 | **正式候選版已實作、工程 CI PASS；尚未發布**：[發布就緒與阻擋清單](./legal/B02_RELEASE_READINESS_20261020.md)／[LEG-001～020 發布 Gate](./legal/B02_DECISIONS_AND_RELEASE_GATE.md)；法律與營運待辦未結案，不可自稱整體合規 |
 | B03 | 核心流程、路由、手機工作室、同步文案 | 未開始 |
 | B04 | Token、深色對比、Dialog、鍵盤與減少動畫 | 未開始 |
 | B05 | Academy/Epic 分化、Full 強度與高 DPI 清晰度 | 未開始 |
