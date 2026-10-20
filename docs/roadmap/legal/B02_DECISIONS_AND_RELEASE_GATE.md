@@ -212,3 +212,10 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-14｜D-07 Search Console 尚無可確認資源
 
 負責人 Search Console 畫面左側顯示「找不到相符資源」、可「新增資源」，**此帳號目前沒有可供核實的網站所有權資源**；D07-08 未通過。下一步先以 Google Search Console **網址前置字元**候選資源 `https://moxin0u0.github.io/moxin-quiz-site/` 觀察驗證方式，不使用 GitHub 共享 `github.io` 的 DNS 驗證。即使專案路徑的 URL-prefix 完成驗證，也不可自動斷言 OAuth 已授權網域 `moxin0u0.github.io` 之 Google 品牌驗證要求全部滿足，須核對 OAuth 接受範圍及 top-private-domain 規則。若需上線 HTML meta tag／驗證檔，仍要另外得到負責人修改正式網站的明確批准。B02 Draft PR、LEG-020 Gate 仍保留；見 [D-07 OAuth 稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
+
+
+## 2026-10-20｜D-07 Search Console 驗證方式盤點
+
+產品負責人提供五張 Search Console 網址前置字元 `https://moxin0u0.github.io/moxin-quiz-site/` 的所有權驗證方式畫面，Google 提供**HTML 檔案、HTML meta 標記、Google Analytics、Google Tag Manager 與 DNS TXT**。首選部署 **Google 提供的原始 HTML 驗證檔**，僅作為規劃，不將 token 或原始檔名貼到 GitHub；此方式不需改站點首頁，但**仍必須經批准部署到 GitHub Pages 公開站點**，單靠 Draft 分支無法完成驗證。第二選項是修改公開首頁 `<head>` 加入 tag，也需要另行批准。
+
+**本輪只確認 Google 提供驗證方法，未驗證所有權。** `/moxin-quiz-site/` 專案路徑的 Search Console 所有權，不能自動等同 OAuth 授權網域 `moxin0u0.github.io` top-private-domain 驗證完成；後續要依 Google 品牌驗證接受結果決定是否需根主機或其他合法方式。先保留 D07-08／Branding 為 PENDING，`main`、正式頁面、DNS、Google Cloud 與驗證狀態均未更動。詳見 [D-07 驗證方案](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。

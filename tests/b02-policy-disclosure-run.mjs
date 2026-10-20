@@ -170,6 +170,12 @@ assert.match(d07Audit, /支援信箱與已核准公開的網站備援 Gmail 不�
 assert.match(d07Audit, /維持目前獨立的信箱/);
 assert.match(d07Audit, /支援信箱配置決策 PASS/);
 assert.match(d07Audit, /Google Search Console 資源清單截圖（尚無資源）/);
+assert.match(d07Audit, /Search Console 所有權驗證方法已顯示/);
+assert.match(d07Audit, /D07-08 METHOD CONFIRMED／OWNERSHIP PENDING/);
+assert.match(d07Audit, /僅存 Draft PR 不足/);
+assert.match(d07Audit, /不能逕行宣稱品牌 Gate 已通過/);
+assert.match(d07Audit, /未取得負責人明確同意前/);
+assert.match(releaseGate, /Search Console 驗證方式盤點/);
 assert.match(d07Audit, /D07-08：網域所有權確認 PENDING/);
 assert.match(d07Audit, /不能直接宣稱整個/);
 assert.match(releaseGate, /D-07 Search Console 尚無可確認資源/);

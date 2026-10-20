@@ -83,3 +83,21 @@
 **發布邊界**：此階段只完成資源類型選擇及查看驗證方式。若 Google 給 HTML meta tag 或檔案，正式驗證需要修改／部署網站頁面；**本次未取得使用者同意修改 main 或發布網站，因此不得擅自改動正式 `index.html`、部署 HTML 驗證檔、變更 DNS 或按品牌驗證**。可先在 B02 Draft PR 做具體部署計畫，等使用者另行授權。若 Search Console 要求驗證檔／標記，勿把帳號與私人主控台畫面貼到公開 Issue。
 
 **尚待**：D07-08 Search Console 實際驗證、D07-06 對外 URL 可訪問性、D07-07 實機 OAuth 與品牌驗證／發布、D-01／D-10 法律發布審核。
+
+## H. 2026-10-20｜Search Console 所有權驗證方法已顯示（未按驗證）
+
+**證據來源**：產品負責人提供五張 Google Search Console 所有權驗證對話框截圖；資源 URL-prefix 是 `https://moxin0u0.github.io/moxin-quiz-site/`，Google 已提供多種驗證方法，但**尚無成功驗證畫面，也沒有上傳檔案或部署 HTML 標記的證據**。本項標記 **D07-08 METHOD CONFIRMED／OWNERSHIP PENDING**，不視為網域或 OAuth 品牌驗證完成。
+
+| 畫面方式 | 截圖所見 | 規劃判斷 |
+| --- | --- | --- |
+| HTML 檔案 | Google 已產生帳號綁定、需下載並置於本 URL-prefix 資源目錄的 HTML 驗證檔 | **首選，低入侵**：下載原檔、不改內容，日後經批准部署在專案網站根目錄，使 Google 要求的檔案路徑由非登入訪客直接 200 讀取。不碰現有首頁／法律頁。要驗證前須實際部署，僅存 Draft PR 不足。此文件**不保存實際驗證檔名或 token／檔案內容**。 |
+| HTML 標記 | Google 提供特定 `google-site-verification` meta tag，要求置於公開首頁 `<head>` | **備選**：需改 `index.html` 且公開部署，才可按驗證；不是只修改 Draft 就能通過。**不記錄 tag content／驗證 token**。 |
+| Google Analytics | 須網頁已有關聯追蹤程式碼、且驗證帳號具合適 Analytics 權限 | 現階段不因 Search Console 新增額外網站追蹤，不把目前截圖誤認為已安裝 Analytics。 |
+| Google Tag Manager | 須既有 GTM 容器程式碼及適當權限 | 無必要為網站所有權另引入追蹤／標籤管理服務。 |
+| 網域名稱供應商 | 要求在網域 DNS 加 TXT 記錄 | 不可對 GitHub 的 `github.io` 共用網域假設有 DNS 修改權；本階段不做 DNS 操作。 |
+
+**必須保留的 OAuth 授權網域區別**：Search Console 此 URL-prefix 只涵蓋 `/moxin-quiz-site/` 底下的網址。Google OAuth [品牌驗證文件](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification) 要求所有**已授權網域 top private domain** 所有權可驗證。即使此子路徑完成 Search Console 驗證，仍須確認 Google 是否接受作為 OAuth 已授權的 `moxin0u0.github.io` 主機之所有權，**不能逕行宣稱品牌 Gate 已通過**。若主機層級驗證另有要求，下一步應評估能否利用 GitHub Pages 使用者網站根目錄及 Search Console root URL-prefix 方式（是否可用、與現有站相容尚未核實）；如不可行再討論可控自訂網域或向 Google 支援求證，先不承諾一定免費完成。
+
+**部署／驗證門檻**：本次只完成驗證方法盤點。原驗證 HTML 檔案需由負責人從 Google 下載，不可憑截圖推測其完整檔案內容；**未取得負責人明確同意前，不新增驗證檔案到正式 GitHub Pages、不改 `main`／正式首頁、不點 Search Console「驗證」、不提交 Google OAuth 品牌驗證或發布**。若日後允許部署，應先核對 Pages 的部署來源與原檔完整性，發布後以未登入視窗直接開啟 Google 指定 URL，確認不被重新導向或回應 404，才使用相同 Google 帳號執行 Search Console 驗證；通過後持續保留驗證材料。Google 官方：[網站所有權驗證](https://support.google.com/webmasters/answer/9008080?hl=zh-Hant)。
+
+**階段結果**：D07-08 驗證方法／資源路徑已有負責人截圖證據（PASS）；驗證材料部署、Search Console 所有權、OAuth 主網域是否滿足品牌規則均 PENDING；D-07、LEG-020 未完成。
