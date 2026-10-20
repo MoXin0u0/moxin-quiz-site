@@ -425,5 +425,13 @@ assert.match(noRegisterPlan, /不應自動選擇個人行事曆或建立真實�
 assert.match(effectiveNoticePlan, /不能因此宣稱 2026-10-20 已對外公告/);
 assert.match(effectiveNoticePlan, /重大變更/);
 assert.match(read('docs/roadmap/README.md'), /B02 發布前專項工作入口/);
+const d09Decision = read('docs/roadmap/legal/B02_D09_CONSENT_MODE_OPTIONS.md');
+assert.match(d09Decision, /狀態：候選設計，負責人尚未選定 D-09 方案/);
+assert.match(d09Decision, /D09-A（建議）/);
+assert.match(d09Decision, /Google OAuth.*不等於使用者接受本網站全部服務條款/);
+assert.match(d09Decision, /本機學習可以直接進入/);
+assert.match(d09Decision, /不可將 D-09 標為 PASS/);
+assert.match(effectiveNoticePlan, /可執行的版本公告與 D-09 接受模式分流/);
+assert.match(effectiveNoticePlan, /沒有新增站內公告、沒有改變條款接受行為/);
 
 console.log('B02 policy links, user control guidance, draft boundary and Local-first contracts PASS.');
