@@ -21,6 +21,13 @@
 - [D-08／09 政策生效及重大變更通知方案](./B02_D08_POLICY_EFFECTIVE_NOTICE_PLAN.md)：舊政策版本保留已實作；實際公告／生效日、重大用途變更通知方式、是否需要獨立條款同意及法律審稿尚未定案，不能用 `2026-10-20` 候選最後修改日冒充生效日。
 - 法規參考： [《個人資料保護法》](https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=I0050021)及[施行細則](https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=I0050022)。注意部分修法施行日期另定，正式核准須再確認當時有效條文。
 
+## 2026-10-21 D-02 確認：提醒方案已由負責人核准
+
+- 負責人明確表示「同意」前述 **Forms 結案後 1 年、Gmail 結案後 2 年，各建立單筆私人到期提醒，且不製作 Excel／Google Sheets 清冊** 的管理方案。
+- [D-02 已批准的執行規格與虛構案例驗證](./B02_D02_NO_REGISTER_OPERATIONS.md)、[Forms SOP](./B02_GOOGLE_FORMS_RETENTION_SOP.md) 與 [Gmail SOP](./B02_GMAIL_RETENTION_SOP.md) 已更新。新增 `tests/b02-retention-calendar-run.mjs`，接入 `npm test`。
+- **已解除的只有「要選哪一種管理方式」這項決策阻擋；真實私人提醒、身份唯一辨識、人工刪除、季度執行證據與依法處理特殊案件仍未驗收。** LEG-012／018／020 及正式發布 Gate 繼續 PENDING。任何尚未執行的流程不可寫成實際運作中的自動清理功能。
+- 跨年度採日曆年加法，閏日無同日採較早月底進行*虛構複核演練*；實際法定期限及到期處理方式仍待適用性審查。季度稽核不延長個案到期日。
+
 ## 2. 範圍已完成：技術與政策候選稿
 
 | 子項 | 狀態 | 判斷依據／限制 |
