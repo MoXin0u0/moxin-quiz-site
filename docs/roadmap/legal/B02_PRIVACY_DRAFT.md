@@ -166,3 +166,10 @@ Google OAuth access token 由目前頁面記憶體管理；一般資料交換使
 
 
 **2026-10-20 D-07 公開連結驗收**：負責人已使用未登入／無痕瀏覽器確認正式 GitHub Pages 網站首頁、`privacy.html`、`terms.html` 與首頁政策連結正常，故 **D07-06 公開網址功能 PASS（負責人實測）**。但正式站目前的政策仍是既有版本，**不視為本 B02 Privacy Draft 已經發布，也不視為 Google User Data Policy 內容或臺灣個資告知法律審核 PASS**。OAuth authorized domain／品牌驗證尚未完成，見 [D-07 稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
+
+
+## 2026-10-20｜D-07 Google User Data Disclosure 正式／草案差異稽核
+
+已完成**公開隱私／條款 HTML 與 Google OAuth／Drive 原始碼、B02 草案及 Google 官方公開政策的第一輪靜態一致性比對**，新增 [GD-01～GD-12 差異與依賴清單](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)。**CODE 一致**：選用 OAuth／本機優先、單一 `drive.appdata`、Google `about.user(permissionId,displayName,emailAddress,photoLink)`、記憶體 access token、appDataFolder 的 API 行為，以及解除裝置連結不等於雲端刪除。**P1 主要差異**：`main/privacy.html`／`terms.html` 的聯絡段落仍只引導使用者到**公開 GitHub Issues**，沒有 B02 已決策的**Google Forms 私下回報＋公開備援 Gmail**；保留／刪除期限、權利請求回應和法定身分告知尚未具備發布核准。**文件出版差異**：B02 隱私草案含內部測試歷史，不得直接全篇當作對外政策。
+
+目前 **D07-06 公開連結訪客實測 PASS**、Search Console project URL-prefix ownership PASS；**Google User Data disclosure 的完整法律與實機稽核 PARTIAL／PENDING、OAuth authorized-domain／Branding verification 仍 PENDING**。下一步按稽核清單：同步資料逐類及資源載入核對 → 非公開請求及保存流程 → 乾淨對外版本草案／法律審核 → 負責人另行授權正式發布和品牌送審。**本輪只建立 Draft 文件，不修改 main／Google Console 或正式隱私條款**。

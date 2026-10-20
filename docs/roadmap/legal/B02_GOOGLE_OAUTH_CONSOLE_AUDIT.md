@@ -190,3 +190,10 @@
 **D07-06 的「公眾網址與首頁連結功能」子項已 PASS**，不需再重複收集同三頁截圖。這**不是** B02 新版隱私權政策／服務條款已對外發布；正式站仍沿用既有 `privacy.html`／`terms.html`。Google 品牌驗證官方另要求公開政策內容正確告知 Google 使用者資料的存取、用途、儲存與分享，[Google 品牌驗證](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification)明確區分 URL 可訪問與政策內容。因此 **Google user data disclosure 的逐條內容審查仍是獨立 PENDING**；D-01 法律身分、D-02 保存／刪除、D-10 簽核不因此解除。
 
 **D-07 後續優先事項**：① 不更動 Google Console 的前提下，對照實際 `main` 發布的隱私政策文字與 `drive.appdata`、`appDataFolder`、可取得的 Google 帳號欄位及撤銷／刪除行為；② 檢查 Google Auth Platform 對 `moxin0u0.github.io` 已授權網域的所有權要求與 Cloud Project Owner、Search Console Owner 身分；③ 準備「是否申請品牌驗證」的具體方案，由負責人另行批准才執行 Verify Branding。**Search Console 專案 URL-prefix 已 PASS，但不能擴大為 OAuth Domain property 或 Branding PASS。** 不購買域名、不開帳單、不提交品牌驗證、不修改 main／正式法律頁；PR #13 保持 Draft。
+
+
+## 2026-10-20｜D-07 Google User Data Disclosure 正式／草案差異稽核
+
+已完成**公開隱私／條款 HTML 與 Google OAuth／Drive 原始碼、B02 草案及 Google 官方公開政策的第一輪靜態一致性比對**，新增 [GD-01～GD-12 差異與依賴清單](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)。**CODE 一致**：選用 OAuth／本機優先、單一 `drive.appdata`、Google `about.user(permissionId,displayName,emailAddress,photoLink)`、記憶體 access token、appDataFolder 的 API 行為，以及解除裝置連結不等於雲端刪除。**P1 主要差異**：`main/privacy.html`／`terms.html` 的聯絡段落仍只引導使用者到**公開 GitHub Issues**，沒有 B02 已決策的**Google Forms 私下回報＋公開備援 Gmail**；保留／刪除期限、權利請求回應和法定身分告知尚未具備發布核准。**文件出版差異**：B02 隱私草案含內部測試歷史，不得直接全篇當作對外政策。
+
+目前 **D07-06 公開連結訪客實測 PASS**、Search Console project URL-prefix ownership PASS；**Google User Data disclosure 的完整法律與實機稽核 PARTIAL／PENDING、OAuth authorized-domain／Branding verification 仍 PENDING**。下一步按稽核清單：同步資料逐類及資源載入核對 → 非公開請求及保存流程 → 乾淨對外版本草案／法律審核 → 負責人另行授權正式發布和品牌送審。**本輪只建立 Draft 文件，不修改 main／Google Console 或正式隱私條款**。

@@ -226,6 +226,20 @@ assert.match(releaseGate, /D-07 八張 Console 實際截圖核對結果/);
 assert.match(releaseGate, /D-07 Google Auth Platform 稽核啟動/);
 
 const draftPrivacy = read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md');
+const userDataAudit = read('docs/roadmap/legal/B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md');
+assert.match(userDataAudit, /SOURCE REVIEW COMPLETE／POLICY RELEASE BLOCKED/);
+assert.match(userDataAudit, /GD-07｜私人回報與個資權利受理/);
+assert.match(userDataAudit, /GD-08｜保存期限/);
+assert.match(userDataAudit, /GD-11｜新版草案可發布性/);
+assert.match(userDataAudit, /只導向公開 GitHub Issues/);
+assert.match(userDataAudit, /不能把單檔 API delete 說成已有/);
+assert.match(userDataAudit, /Search Console 專案路徑 URL-prefix ownership PASS/);
+assert.match(userDataAudit, /不可直接複製整份內部草案/);
+assert.match(releaseGate, /D-07 Google User Data Disclosure 正式／草案差異稽核/);
+assert.match(d07Audit, /GD-01～GD-12 差異與依賴清單/);
+assert.match(draftPrivacy, /GD-01～GD-12 差異與依賴清單/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /GD-01～GD-12 差異與依賴清單/);
+
 assert.match(draftPrivacy, /D07-06 公開網址功能 PASS/);
 assert.match(draftPrivacy, /原先的信箱不一致屬刻意分工/);
 assert.match(intakeSpec, /只有個人開發者本人查看、管理/);

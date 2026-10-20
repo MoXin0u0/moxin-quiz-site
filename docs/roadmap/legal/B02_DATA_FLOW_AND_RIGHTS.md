@@ -81,3 +81,10 @@
 ## 2026-10-13 補充：手機端無痕匿名填答 PASS（負責人實測）
 
 負責人已於完成手機私密／無痕瀏覽器、未登入 Google、不填電子郵件、使用不含個人資料測試內容的操作後，明確回覆**「全部通過」**，對應前次三項驗收：**① 不需登入 Google；② 電子郵件留空仍成功提交；③ 無法查看其他填答者的回覆**。此為**產品負責人的手機端手動測試回報，三項 PASS**，不是我們自行操作手機或獨立登入 Google 後台。**不以三項通過推定所有手機品牌、瀏覽器與字體縮放均已完成 UI 視覺測試；文字截斷、橫向溢出與特定互動細節尚無逐項結果**。此前文件的「手機端待驗證」屬本次確認前的歷史狀態，已由此項更新。Google Forms 資料流／Sheets、分類變更儲存狀態及人工結案／刪除管理仍有未完成的 Gate；負責人明確要求案件清冊暫緩，LEG-012／020 整體**仍為 BLOCKED**，Draft PR #13 不合併 main。
+
+
+## 2026-10-20｜D-07 Google User Data Disclosure 正式／草案差異稽核
+
+已完成**公開隱私／條款 HTML 與 Google OAuth／Drive 原始碼、B02 草案及 Google 官方公開政策的第一輪靜態一致性比對**，新增 [GD-01～GD-12 差異與依賴清單](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)。**CODE 一致**：選用 OAuth／本機優先、單一 `drive.appdata`、Google `about.user(permissionId,displayName,emailAddress,photoLink)`、記憶體 access token、appDataFolder 的 API 行為，以及解除裝置連結不等於雲端刪除。**P1 主要差異**：`main/privacy.html`／`terms.html` 的聯絡段落仍只引導使用者到**公開 GitHub Issues**，沒有 B02 已決策的**Google Forms 私下回報＋公開備援 Gmail**；保留／刪除期限、權利請求回應和法定身分告知尚未具備發布核准。**文件出版差異**：B02 隱私草案含內部測試歷史，不得直接全篇當作對外政策。
+
+目前 **D07-06 公開連結訪客實測 PASS**、Search Console project URL-prefix ownership PASS；**Google User Data disclosure 的完整法律與實機稽核 PARTIAL／PENDING、OAuth authorized-domain／Branding verification 仍 PENDING**。下一步按稽核清單：同步資料逐類及資源載入核對 → 非公開請求及保存流程 → 乾淨對外版本草案／法律審核 → 負責人另行授權正式發布和品牌送審。**本輪只建立 Draft 文件，不修改 main／Google Console 或正式隱私條款**。

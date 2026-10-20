@@ -247,3 +247,10 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-20｜D-07 公開首頁、Privacy、Terms 訪客端驗收 PASS
 
 負責人依前次要求使用未登入／無痕瀏覽器檢查 `https://moxin0u0.github.io/moxin-quiz-site/`、`privacy.html`、`terms.html` 以及首頁連到政策頁的連結，明確回覆**「三頁全部正常」**。因此 **D07-06 網址可訪問及首頁政策連結 PASS（負責人實測回報）**；先前外部工具無法讀取網站並不能判定站點故障，不再重複要求同樣的可訪問性截圖。**此為公開網址功能驗收，不是政策內容／個資揭露的法律審核 PASS，也不是 Google OAuth 品牌驗證通過**。現行正式政策頁未改動，B02 新政策草案仍待獨立核可。Google Search Console 專案 path URL-prefix ownership PASS 已記錄，OAuth top private domain 所有權與 Branding verification／Publish branding 尚未完成。下一步做**正式隱私政策與 Google 使用者資料存取行為的一致性比對**；未經負責人授權不修改 main、不合併 B02、不按 Verify Branding。詳見 [D-07](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
+
+
+## 2026-10-20｜D-07 Google User Data Disclosure 正式／草案差異稽核
+
+已完成**公開隱私／條款 HTML 與 Google OAuth／Drive 原始碼、B02 草案及 Google 官方公開政策的第一輪靜態一致性比對**，新增 [GD-01～GD-12 差異與依賴清單](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)。**CODE 一致**：選用 OAuth／本機優先、單一 `drive.appdata`、Google `about.user(permissionId,displayName,emailAddress,photoLink)`、記憶體 access token、appDataFolder 的 API 行為，以及解除裝置連結不等於雲端刪除。**P1 主要差異**：`main/privacy.html`／`terms.html` 的聯絡段落仍只引導使用者到**公開 GitHub Issues**，沒有 B02 已決策的**Google Forms 私下回報＋公開備援 Gmail**；保留／刪除期限、權利請求回應和法定身分告知尚未具備發布核准。**文件出版差異**：B02 隱私草案含內部測試歷史，不得直接全篇當作對外政策。
+
+目前 **D07-06 公開連結訪客實測 PASS**、Search Console project URL-prefix ownership PASS；**Google User Data disclosure 的完整法律與實機稽核 PARTIAL／PENDING、OAuth authorized-domain／Branding verification 仍 PENDING**。下一步按稽核清單：同步資料逐類及資源載入核對 → 非公開請求及保存流程 → 乾淨對外版本草案／法律審核 → 負責人另行授權正式發布和品牌送審。**本輪只建立 Draft 文件，不修改 main／Google Console 或正式隱私條款**。
