@@ -155,3 +155,22 @@
 - [ ] 實機 OAuth 同意／拒絕畫面，正式首頁 Privacy／Terms 連結可用性與 B02 法律審核。
 
 **下一步只讀查核**：確認網站首頁及 Privacy／Terms URL 可由訪客開啟且內容已滿足 Google 用戶資料使用告知要求；核對 OAuth 專案的 Owner 與 Search Console 所有權帳號，整理必要的網站／品牌準備。暫不變更 Google Console、Search Console、DNS、正式網站或 main；B02 Draft PR #13 及 LEG-020 仍待審。
+
+## M. 2026-10-20｜OAuth 總覽、帳單提示與授權使用量截圖核對
+
+**證據範圍**：負責人提供兩張 Google Auth Platform「總覽」截圖，同一「MoXin Quiz V5」專案，一張呈現「專案檢查」、另一張顯示使用量／授權核發頻率圖表。此紀錄是 UI 截圖觀察，**並非 Google Cloud 全體設定的直接查核**。
+
+| 檢查項目 | 截圖可確認的結果 | D-07 判定 |
+| --- | --- | --- |
+| 開發人員身分／帳單帳戶驗證 | 警告「帳單帳戶驗證」；提示應用程式沒有相關聯的 Cloud 帳單帳戶，提供「新增帳單帳戶」 | **資訊性待評估**，不等於已證實 OAuth 網域驗證失敗，也不能從此畫面推導品牌驗證必須先付費；本輪**不新增帳單或付款資料**。 |
+| 更新後的聯絡資訊 | 綠色通過，聯絡資訊符合現況 | **PASS（畫面狀態）** |
+| 專案聯絡人 | 綠色通過，專案擁有者／編輯者已正確設定 | **PASS（畫面狀態）**；不表示已取得對應 Search Console **Domain property** 所有權。 |
+| 用戶端使用情形 | 綠色通過，所有 OAuth 用戶端都在使用中 | **PASS（畫面狀態）**；不是實機 OAuth consent／同步端到端驗收。 |
+| 使用量／授權頻率 | 使用者圖表顯示 **1 位有效 OAuth 使用者**；OAuth 授權核發頻率的圖示有 **10,000 次／日 Grant Limit**；錯誤圖表顯示該期間無數據 | 僅報告**不同的圖表指標**：**10,000 次／日是授權核發頻率指標，不是 10,000 位使用者上限**；使用者 1 位也不是驗證成功與否的充分證明。 |
+| 網域驗證警示 | 這兩張總覽圖中**沒有可見的 Domain verification rejected／授權網域驗證失敗訊息** | **未見特定警示，不等於已核准**。先前 Branding 尚未驗證與 Search Console URL-prefix PASS 的獨立結果皆不變。 |
+
+**官方規範交叉核對**：[Google｜Submit for brand verification](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification) 列出 External／Published／品牌名稱或圖示，以及公開首頁、政策、支援聯絡、authorized-domain 所有權等準備要求；**所列一般品牌驗證必要步驟未將連結付費帳單列為標準必要條件**。這**不是**對全部 Google Cloud 產品承諾不需要帳單；若未來新增需要計費的 API／服務，仍須由負責人評估。本輪**不為了消除帳單警告自行啟用付費**。
+
+**本次只讀公開 URL 複核結果**：以外部網頁讀取工具嘗試直接訪問網站首頁、`privacy.html`、`terms.html`，工具對三個 GitHub Pages 網址都回報**無法存取**，無 HTTP 成功或失敗狀態碼可確認；這是工具限制，**不能據此判定網站對一般訪客壞掉、DNS 出錯或政策頁不存在**。此前已從 `main` 原始碼確認首頁有 Privacy／Terms 連結，現行 `privacy.html` 包含 `drive.appdata` 與 Google 帳號資料利用描述。剩餘必要證據應由負責人透過無痕瀏覽器測試三個公開網址（不登入 GitHub／Google），確認可載入以及網站連結是否正確。
+
+**D-07 最新狀態**：總覽「專案檢查」已由負責人截圖核對；帳單警告**獨立列為資訊提示**，不設為 OAuth 品牌驗證已確認的 blocker；**Domain ownership、Branding verification、Publish branding、實機 consent／拒絕測試、B02 法律 Gate 仍未完成**。沒有授權修改 Google Console、登入帳單／付款設定、修改 `main` 或送出「驗證品牌」。

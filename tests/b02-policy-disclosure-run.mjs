@@ -178,6 +178,14 @@ assert.match(d07Audit, /Google Search Console 網址前置字元所有權驗證�
 assert.match(d07Audit, /已驗證擁有權/);
 assert.match(d07Audit, /D07-08 URL-prefix OWNERSHIP PASS/);
 assert.match(d07Audit, /URL-prefix 成功後 OAuth 品牌狀態重新核對/);
+assert.match(d07Audit, /OAuth 總覽、帳單提示與授權使用量截圖核對/);
+assert.match(d07Audit, /10,000 次／日是授權核發頻率指標，不是 10,000 位使用者上限/);
+assert.match(d07Audit, /沒有可見的 Domain verification rejected/);
+assert.match(d07Audit, /不新增帳單或付款資料/);
+assert.match(d07Audit, /工具對三個 GitHub Pages 網址都回報/);
+assert.match(releaseGate, /Google Auth Platform 總覽截圖：未見網域退件/);
+assert.match(releaseGate, /不是 10,000 名使用者上限/);
+
 assert.match(d07Audit, /Branding status 仍為尚未驗證/);
 assert.match(d07Audit, /Domain property（DNS-level）/);
 assert.match(d07Audit, /按 Verify Branding 會啟動自動或人工評估/);
