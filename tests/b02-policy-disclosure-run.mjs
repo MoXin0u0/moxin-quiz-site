@@ -124,7 +124,7 @@ assert.match(liveTerms, /目前收費與服務調整/);
 assert.match(liveTerms, /第三方服務/);
 assert.match(liveTerms, /未成年使用者與權利保障/);
 assert.match(liveTerms, /https:\/\/forms\.gle\/3Vhia7MFyvzyV6s2A/);
-assert.match(serviceWorker, /moxin-quiz-v5-5\.0\.0-prod-b02-policy-1/);
+assert.match(serviceWorker, /moxin-quiz-v5-5\.0\.0-prod-2/);
 
 const releaseGate = read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md');
 assert.match(draftTerms, /目前墨忻刷題網完全免費/);
