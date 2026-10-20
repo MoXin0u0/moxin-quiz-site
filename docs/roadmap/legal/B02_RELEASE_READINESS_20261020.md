@@ -13,6 +13,14 @@
 - 已於 B02 分支建立根目錄 `privacy-2026-10-08.html`、`terms-2026-10-08.html`：讀回的 Git blob SHA 分別與 `main` 原始 `privacy.html`、`terms.html` 完全相同；新版候選頁提供歷史連結，B02 靜態測試加入保存與連結斷言。**目前兩個歷史網址仍只在未合併分支，不能稱為正式站已可訪問。**
 - 2026-10-20 前後 Google Search Console URL-prefix 的成功結果來自**產品負責人的 Google Console 畫面**；與 Google OAuth 品牌驗證／其授權頂層網域所有權審查**不等同**。
 
+## 2026-10-21 補充：最新 CI 與 D-01／02／08 分工
+
+- 前一個 PR Head `89d4ad490e0857e9a9e3432657cc119c6ae8cb00` 的 [V5 Regression #39433550086](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/39433550086) **兩項必要 CI 均 SUCCESS**；本補充之後如有任何提交須重跑最新 Head CI，不可以舊成功覆蓋新狀態。
+- [D-01 臺灣蒐集者告知／身分查核](./B02_D01_CONTROLLER_NOTICE_REVIEW.md)：已確認第 8 條六項告知、非營利且顯無不利影響時的**可能**例外、第 11／13／51 條與施行細則告知方式；**免費≠自動免告知，別名是否足夠仍待適用性法律審核**。
+- [D-02 不建立案件清冊的低維護方案](./B02_D02_NO_REGISTER_OPERATIONS.md)：尊重負責人「清冊先跳過」，目前僅規劃每筆結案用一個受保護、非敏感到期提醒的**待核准替代方案**；未建立提醒、沒有單筆刪除實測，D-02 Gate 繼續待驗證。
+- [D-08／09 政策生效及重大變更通知方案](./B02_D08_POLICY_EFFECTIVE_NOTICE_PLAN.md)：舊政策版本保留已實作；實際公告／生效日、重大用途變更通知方式、是否需要獨立條款同意及法律審稿尚未定案，不能用 `2026-10-20` 候選最後修改日冒充生效日。
+- 法規參考： [《個人資料保護法》](https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=I0050021)及[施行細則](https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=I0050022)。注意部分修法施行日期另定，正式核准須再確認當時有效條文。
+
 ## 2. 範圍已完成：技術與政策候選稿
 
 | 子項 | 狀態 | 判斷依據／限制 |
