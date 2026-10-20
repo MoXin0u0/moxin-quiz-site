@@ -4,6 +4,12 @@
 > 來源：《V5_AFTERCARE_MASTER_PLAN.md》之 LEG-001～020。  
 > 基準：`main @ 6b20284cb0c86304368d3bd694b461dda067a426`。
 
+## 最新狀態索引（2026-10-20，後文保留歷史決策）
+
+**B02 PR #13 已有實際修改的正式 `privacy.html`、`terms.html` 候選頁及 Service Worker 快取版變更；兩項工程 CI 曾在提交 `6e6a9662` 全數 PASS，但 `main` 尚未合併這些政策內容。** 本文早期章節提及「僅內部草案、不修改正式法律 HTML／Service Worker」等敘述是當時的歷史階段，不能用來描述目前 PR 檔案範圍。
+
+目前以 [**B02 正式發布前就緒與阻擋清單**](./B02_RELEASE_READINESS_20261020.md) 為最新狀態入口；法定蒐集者識別、Forms／Gmail 到期清理實施、CERPS 題庫對外權利，以及正式生效／通知與法律審稿仍屬未結案的 Gate。產品負責人已批准推進工作，不等於客觀證據或法律審核自動完成。任何新增提交都要重新核對最新 Head CI。Google Search Console URL-prefix 驗證結果與 OAuth Branding 應分開認定。
+
 ## A. 本批技術上可以立即完成（不牽涉擅自決定法律身份）
 
 - 以程式碼支持的資料清冊：[B02_DATA_FLOW_AND_RIGHTS.md](./B02_DATA_FLOW_AND_RIGHTS.md)。
