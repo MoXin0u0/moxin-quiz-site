@@ -419,7 +419,7 @@ const effectiveNoticePlan = read('docs/roadmap/legal/B02_D08_POLICY_EFFECTIVE_NO
 assert.match(currentReadiness, /D-01 臺灣蒐集者告知/);
 assert.match(noticeReview, /非營利且顯無不利影響|非基於營利之目的/);
 assert.match(noticeReview, /法定蒐集者識別/);
-assert.match(noRegisterPlan, /案件清冊這先跳過/);
+assert.match(noRegisterPlan, /案件清冊[\s\S]*?暫緩，不建立|清冊.*暫緩/);
 assert.match(noRegisterPlan, /未授權創建提醒|待核准的替代作法/);
 assert.match(effectiveNoticePlan, /不能因此宣稱 2026-10-20 已對外公告/);
 assert.match(effectiveNoticePlan, /重大變更/);
