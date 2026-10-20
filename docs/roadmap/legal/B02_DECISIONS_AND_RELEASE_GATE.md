@@ -254,3 +254,8 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 已完成**公開隱私／條款 HTML 與 Google OAuth／Drive 原始碼、B02 草案及 Google 官方公開政策的第一輪靜態一致性比對**，新增 [GD-01～GD-12 差異與依賴清單](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)。**CODE 一致**：選用 OAuth／本機優先、單一 `drive.appdata`、Google `about.user(permissionId,displayName,emailAddress,photoLink)`、記憶體 access token、appDataFolder 的 API 行為，以及解除裝置連結不等於雲端刪除。**P1 主要差異**：`main/privacy.html`／`terms.html` 的聯絡段落仍只引導使用者到**公開 GitHub Issues**，沒有 B02 已決策的**Google Forms 私下回報＋公開備援 Gmail**；保留／刪除期限、權利請求回應和法定身分告知尚未具備發布核准。**文件出版差異**：B02 隱私草案含內部測試歷史，不得直接全篇當作對外政策。
 
 目前 **D07-06 公開連結訪客實測 PASS**、Search Console project URL-prefix ownership PASS；**Google User Data disclosure 的完整法律與實機稽核 PARTIAL／PENDING、OAuth authorized-domain／Branding verification 仍 PENDING**。下一步按稽核清單：同步資料逐類及資源載入核對 → 非公開請求及保存流程 → 乾淨對外版本草案／法律審核 → 負責人另行授權正式發布和品牌送審。**本輪只建立 Draft 文件，不修改 main／Google Console 或正式隱私條款**。
+
+
+## 2026-10-20｜D-07 P0 同步資料種類原始碼清單完成
+
+已進一步讀取 `main/src/sync/`：**13 種可同步 entity types**，包含作答事件、練習／考試與答案、收藏／不熟、筆記、目標、設定、作者題庫資訊、裝置、題庫工作室草稿與使用者題庫；雲端物件有**profile、commit、checkpoint、asset、draft、user-bank、session**，且題庫／草稿可連同 Blob 素材、題目與修訂索引進入 Google appDataFolder。**checkpoint 每 100 commits／最多 7 天參數是檢查點產生條件，不是遠端資料自動保留七天的期限**。目前代碼 hash 驗證完整性並不等於端到端加密。**GD-04 P0 code data-map 子項完成，實機資料完整性／歷史雲端物件清理及對外政策文字／法律簽核仍 PENDING**。細節見 [Google 使用者資料差異稽核 §5](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)；未更改任何 `main`、同步功能或公開政策。

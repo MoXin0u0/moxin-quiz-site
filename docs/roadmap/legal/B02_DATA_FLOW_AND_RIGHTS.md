@@ -88,3 +88,8 @@
 已完成**公開隱私／條款 HTML 與 Google OAuth／Drive 原始碼、B02 草案及 Google 官方公開政策的第一輪靜態一致性比對**，新增 [GD-01～GD-12 差異與依賴清單](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)。**CODE 一致**：選用 OAuth／本機優先、單一 `drive.appdata`、Google `about.user(permissionId,displayName,emailAddress,photoLink)`、記憶體 access token、appDataFolder 的 API 行為，以及解除裝置連結不等於雲端刪除。**P1 主要差異**：`main/privacy.html`／`terms.html` 的聯絡段落仍只引導使用者到**公開 GitHub Issues**，沒有 B02 已決策的**Google Forms 私下回報＋公開備援 Gmail**；保留／刪除期限、權利請求回應和法定身分告知尚未具備發布核准。**文件出版差異**：B02 隱私草案含內部測試歷史，不得直接全篇當作對外政策。
 
 目前 **D07-06 公開連結訪客實測 PASS**、Search Console project URL-prefix ownership PASS；**Google User Data disclosure 的完整法律與實機稽核 PARTIAL／PENDING、OAuth authorized-domain／Branding verification 仍 PENDING**。下一步按稽核清單：同步資料逐類及資源載入核對 → 非公開請求及保存流程 → 乾淨對外版本草案／法律審核 → 負責人另行授權正式發布和品牌送審。**本輪只建立 Draft 文件，不修改 main／Google Console 或正式隱私條款**。
+
+
+## 2026-10-20｜雲端 entity 與歷史保留風險程式碼核對
+
+已核實 `src/sync/entity-types.js` 列有 **13 種**可同步 entity，`initial-seed.js` 讀取作答、收藏、精熟、筆記、目標、帳號設定、作者題庫資訊、裝置、Session、工作室草稿、題庫、題目、素材及墓碑資訊；`cloud-object-transport.js` 可上傳 Blob 圖片／素材及 JSON 文件；`checkpoint.js` 含資料修訂、刪除 tombstone 與裝置索引。**checkpoint 7 天／100 commits 的設定不是資料保存期限，也不能推定清除所有舊資料。** GD-04 P0 原始碼清單 PASS，但真實 Google Drive 寫入／刪除／歷史殘留仍 PENDING。見 [GD-04A／04B 稽核](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)。

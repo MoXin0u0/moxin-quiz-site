@@ -44,3 +44,35 @@
 - **本次已完成**：已檢視上述正式 HTML、OAuth／Drive 原始碼、B02 法律草案與 Google 公開政策；得到可追蹤的差異與編修順序，沒有假設 Forms／Gmail 已被正式網站啟用。
 - **本次未完成**：逐一捕捉網路封包、跨裝置同步資料全量稽核、實機權利請求／刪除、法律核定、Google 品牌審查，及對正式網站部署新政策。
 - **不得動作**：不合併 B02 PR #13、不改 `main`、不公開本人未核准個資、不更動 Google Console／帳單／DNS、不送出品牌驗證。
+
+
+## 5. P0｜同步內容資料流深入檢查（原始碼補充，2026-10-20）
+
+來源：`main/src/sync/entity-types.js`、`initial-seed.js`、`cloud-contract.js`、`cloud-object-transport.js`、`object-mutation-transport.js`、`checkpoint.js`。**本節是程式碼可達行為，不是使用者帳號實際雲端檔案的後台稽核。**
+
+### GD-04A：13 種可同步資料實體
+
+`SYNC_ENTITY_TYPES` 明列 **13 種**：`attempt`、`favorite`、`unfamiliar`、`note`、`learning-goal`、`account-settings`、`author-library`、`device`、`practice-session`、`exam-session`、`exam-answer`、`studio-draft`、`user-bank`。依 `initial-seed.js` 初始同步資料來源，可分類如下：
+
+| 對使用者的說明分類 | 程式碼例子 | 隱私政策應揭露的資訊 |
+| --- | --- | --- |
+| 作答／歷史紀錄 | `attempt`（答題時間與記錄）、`practice-session`、`exam-session`、`exam-answer` | 作答事件、測驗／練習過程及答案可能隨同步進入 Google Drive；並非只有成績摘要。 |
+| 收藏／精熟度／筆記／目標 | `favorite`、`unfamiliar`、`note`、`learning-goal` | 包含使用者輸入的**筆記文字及偏好／學習歷史**，不能僅籠統寫為不含私人內容的「設定」。 |
+| 帳號及裝置／作者資料 | `account-settings`、`author-library`、`device` | 可能包含裝置識別、標籤及帳號／題庫來源相關設定，應與 Google 帳號基本識別區分。 |
+| 題庫工作室及使用者題庫 | `studio-draft`、`user-bank` | **題目、題幹、使用者自訂內容及圖片／附件素材**可能隨同步送入 appDataFolder；這不是網站對公眾分享。 |
+
+`initial-seed.js` 先從 IndexedDB 的 `attempts`、`favorites`、`mastery`、`notes`、`learningGoals`、`accountSettings`、`authorLibrary`、`devices`、`sessions`、`studioDrafts`、`banks`、`questions`、`assets` 等讀取初始內容，並將合適記錄寫入同步 outbox。**這是具條件、依特定 entity 與版本／revision 處理的同步，不等於完整本機備份全部欄位都自動上傳**。程式中 `exam-answer` 屬可同步實體，但初始 seed 的特定資料來源不能代替它在所有執行路徑下的生命週期驗收。
+
+### GD-04B：雲端保存的技術物件種類
+
+- `cloud-contract.js` 定義的物件有 **profile、commit、checkpoint、asset、draft、user-bank、session**。同步 commit 會帶 `deviceId`、`profileId`、`mutations` 及時間／revision 資訊；**不是僅存匿名計數**。
+- `cloud-object-transport.js` 可上傳 **Blob 二進位素材**、題庫與草稿的 JSON 文件；`object-mutation-transport.js` 會把草稿／題庫關聯素材與資料檔引用一起建立。原本 `privacy.html` 已提題庫、題目與圖片保存在本機，但**正式 Google 雲端同步段落應明確補上這些種類也可能進入 appDataFolder**。
+- `checkpoint.js` 會記錄修訂索引、已刪除資料的 **tombstone head index**、裝置識別／標籤／最近同步資訊。**操作資料刪除與同步版本追蹤是兩回事**，不能因畫面刪掉一題就承諾相應歷史 commit、資產或所有遠端快照立即消失。
+- `APP_CONFIG.syncLimits.checkpointEveryCommits=100`、`checkpointMaxAgeMs=7 日` 是**建立 checkpoint 的頻率／最大間隔參數，並非 Google 雲端資料保存 7 天或 100 次即自動刪除**。所讀取的 `checkpoint.js`、`commit-transport.js`、`cloud-profile.js`、`object-mutation-transport.js` 沒有足夠證據證明 Google 所有舊歷史物件會定期被遠端完全清除。
+- 目前使用 **Google Drive API over HTTPS**，`ensureCloudAsset` 與 `ensureJsonDocumentObject` 使用內容 hash 檢查完整性；**內容 hash 不是端到端加密**。不能宣稱 Google 無法讀到 appDataFolder 內容、或應用已實作端到端加密，除非另外拿到具體程式碼／封包證據。
+
+### 已收斂的 P0 與尚未驗收項目
+
+**P0 source-level 類別清單已完成**；目前可基於 13 種可同步實體、雲端物件類型，對外準確描述「可能同步的資料」。正式政策仍需避免過度承諾同步永不遺失、所有舊修訂會於固定期間自動刪除或雲端內容完全沒有任何服務供應商能處理。
+
+**實機 PENDING**：逐種實體建立／修改／刪除後在 Google appDataFolder 的寫入實況、可能的殘留歷史物件、跨裝置重建行為、使用者資料請求時可處理範圍；另應檢查 `account-settings` payload 不會被錯誤寫入 OAuth token 等敏感值（目前未看到 TokenManager 將 token 塞入該 payload，但尚未逐個呼叫端做全域封包驗證）。**這些差距不授權本輪修改網站功能。**

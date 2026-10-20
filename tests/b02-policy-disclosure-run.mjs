@@ -235,6 +235,16 @@ assert.match(userDataAudit, /只導向公開 GitHub Issues/);
 assert.match(userDataAudit, /不能把單檔 API delete 說成已有/);
 assert.match(userDataAudit, /Search Console 專案路徑 URL-prefix ownership PASS/);
 assert.match(userDataAudit, /不可直接複製整份內部草案/);
+assert.match(userDataAudit, /13 種可同步資料實體/);
+assert.match(userDataAudit, /practice-session/);
+assert.match(userDataAudit, /exam-answer/);
+assert.match(userDataAudit, /題目、題幹、使用者自訂內容及圖片／附件素材/);
+assert.match(userDataAudit, /內容 hash 不是端到端加密/);
+assert.match(userDataAudit, /並非 Google 雲端資料保存 7 天/);
+assert.match(userDataAudit, /P0 source-level 類別清單已完成/);
+assert.match(releaseGate, /D-07 P0 同步資料種類原始碼清單完成/);
+assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /13 種/);
+
 assert.match(releaseGate, /D-07 Google User Data Disclosure 正式／草案差異稽核/);
 assert.match(d07Audit, /GD-01～GD-12 差異與依賴清單/);
 assert.match(draftPrivacy, /GD-01～GD-12 差異與依賴清單/);
