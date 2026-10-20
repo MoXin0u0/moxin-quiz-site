@@ -433,7 +433,7 @@ assert.match(d09Decision, /本機學習可以直接進入/);
 assert.match(d09Decision, /僅「D-09 模式選擇」標記 PASS/);
 assert.match(effectiveNoticePlan, /可執行的版本公告與 D-09 接受模式分流/);
 assert.match(effectiveNoticePlan, /沒有新增站內公告、沒有改變條款接受行為/);
-assert.match(effectiveNoticePlan, /D09-A 獲核准/);
+assert.match(effectiveNoticePlan, /確認採用 D09-A|D09-A 已選定/);
 const d10Review = read('docs/roadmap/legal/B02_D10_FINAL_REVIEW_AND_RELEASE_MATRIX.md');
 assert.match(d10Review, /D-10 與 LEG-020 正式發布 Gate = BLOCKED/);
 assert.match(d10Review, /D09-A 已於 2026-10-21 獲負責人確認/);
