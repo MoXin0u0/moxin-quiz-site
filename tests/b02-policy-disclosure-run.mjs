@@ -185,7 +185,6 @@ assert.match(d07Audit, /公眾網址與首頁連結功能/);
 assert.match(d07Audit, /Google user data disclosure 的逐條內容審查仍是獨立 PENDING/);
 assert.match(releaseGate, /D-07 公開首頁、Privacy、Terms 訪客端驗收 PASS/);
 assert.match(releaseGate, /D07-06 網址可訪問及首頁政策連結 PASS/);
-assert.match(draftPrivacy, /D07-06 公開網址功能 PASS/);
 
 assert.match(d07Audit, /10,000 次／日是授權核發頻率指標，不是 10,000 位使用者上限/);
 assert.match(d07Audit, /沒有可見的 Domain verification rejected/);
@@ -227,6 +226,7 @@ assert.match(releaseGate, /D-07 八張 Console 實際截圖核對結果/);
 assert.match(releaseGate, /D-07 Google Auth Platform 稽核啟動/);
 
 const draftPrivacy = read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md');
+assert.match(draftPrivacy, /D07-06 公開網址功能 PASS/);
 assert.match(draftPrivacy, /原先的信箱不一致屬刻意分工/);
 assert.match(intakeSpec, /只有個人開發者本人查看、管理/);
 assert.match(intakeSpec, /尚未經我們直接檢查 Google Forms 後台/);
