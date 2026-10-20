@@ -393,7 +393,7 @@ assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
 assert.match(read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md'), /LEG-020/);
 for (const file of ['terms.html','privacy.html']) {
-  assert.match(read(file), /最後更新：2026-10-08/);
+  assert.match(read(file), /最後更新：2026-10-20/);
   assert.doesNotMatch(read(file), /【待確認】|B02.*待審稿草案/);
 }
 
