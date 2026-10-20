@@ -35,6 +35,7 @@
 - [D-01 個資蒐集者身分與法定告知查核](./legal/B02_D01_CONTROLLER_NOTICE_REVIEW.md)：公開署名維持墨忻，法定適用性仍待確認。
 - [D-02 不建立案件清冊的替代管理方案](./legal/B02_D02_NO_REGISTER_OPERATIONS.md)：目前只是候選，未啟用提醒或真實刪除。
 - [D-08／09 政策實際生效與重大變更通知](./legal/B02_D08_POLICY_EFFECTIVE_NOTICE_PLAN.md)：歷史政策頁候選已保留，正式公告日及通知尚待決定。
+- [D-09 條款接受模式比較與選擇](./legal/B02_D09_CONSENT_MODE_OPTIONS.md)：建議不阻斷本機使用、在 Google 同步情境清楚告知；涉及新用途依法另外取得必要同意。**尚未由負責人核定**。
 
 ## 追蹤結構
 
