@@ -229,3 +229,8 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-20｜Search Console HTML 驗證檔已依授權單獨合併 main
 
 負責人只批准單一 Google HTML 驗證檔部署；因 `main` 分支保護必須透過 PR，建立並完成 [獨立 PR #14](https://github.com/MoXin0u0/moxin-quiz-site/pull/14)，必要兩項 CI 全綠（[Actions #39379057309](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/39379057309)），**squash merge 到 main commit `a1eed741cb0ac43f03ba828da7da830a83d7378b`**；diff 唯一新增 Google 原件 HTML 檔，已在 main 原始碼讀回核對 53 bytes／內容完全一致。**尚無 GitHub Pages 公開網址的 HTTP 檢測成功證據，也未取得 Search Console 所有權驗證成功畫面**；網站端需由負責人未登入瀏覽器確認後，再按 Google「驗證」。D-07 OAuth authorized domain 高層級驗證、Branding、LEG-020 仍未通過。B02 Draft PR #13 沒有合併；不額外變更 main、正式政策或 Google Console。詳見 [D-07](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
+
+
+## 2026-10-20｜D-07 Search Console 專案網址所有權 PASS
+
+負責人提供 Google Search Console 綠色成功彈窗**「已驗證擁有權」**，驗證方法為**HTML 檔案**；與先前 URL-prefix 資源 `https://moxin0u0.github.io/moxin-quiz-site/` 及已獨立合併 main 的 Google 原始驗證檔吻合。最新驗收 **D07-08 URL-prefix OWNERSHIP PASS（負責人提供 Google 成功畫面）**，取代先前歷史階段的「尚未驗證」狀態。**不可移除網站上的 HTML 驗證檔**，以免喪失所有權驗證；未直接量測 GitHub Pages HTTP 狀態碼，不另宣稱網路層量測結果。**OAuth 的已授權 `moxin0u0.github.io` 網域及 Google Branding 驗證仍 PENDING**：專案子路徑 URL-prefix 通過不等於 top-private-domain 的 Google OAuth 驗證已通過。下一項應返回 Google Auth Platform 的 Branding／Verification Center 核對最新狀態；未經負責人進一步授權，不送出品牌驗證、不新增網域、更動 DNS、首頁或正式政策。B02 Draft PR #13 與 LEG-020 仍未結案。詳見 [D-07](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。

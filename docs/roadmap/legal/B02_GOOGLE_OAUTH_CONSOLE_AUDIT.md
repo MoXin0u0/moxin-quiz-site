@@ -123,3 +123,14 @@
 **仍待網站端確認**：本次環境不能直接對 GitHub Pages 已部署網址執行可靠的 HTTP GET，因此**不能宣稱 GitHub Pages 已完成對外發布或 Search Console 所有權驗證成功**。需負責人透過全新未登入視窗開啟 Google 所指定的公開驗證檔 URL，確認頁面只顯示原始 `google-site-verification` 一行（不是 404／首頁／快取），等 Pages 發布完成後，再回 Search Console 的 URL-prefix 資源使用 Google 同帳號按「驗證」，回報 Google 結果。驗證檔應保留在網站上。若 Google 要求 OAuth authorized domain 更高層級所有權，需另外確認；**專案路徑的驗證 PASS 不等於 Branding Verification PASS**。
 
 **Gate**：Repo 單檔合併及原件一致性 PASS；GitHub Pages HTTP 可讀性、Search Console ownership、OAuth authorized domain 適用性、Google Branding 驗證、正式法律審查 **PENDING**。不進一步修改 Console／main／B02 法律正式頁。
+
+
+## K. 2026-10-20｜Google Search Console 網址前置字元所有權驗證成功
+
+**最新證據（取代前述「Search Console 未驗證」的歷史階段狀態）**：負責人提供新的 Google Search Console 成功彈窗截圖，綠色標題明示**「已驗證擁有權」**，驗證方法為**「HTML 檔案」**。依前次同一流程所建立的 URL-prefix 資源 `https://moxin0u0.github.io/moxin-quiz-site/`，本次驗收可標記為 **D07-08 URL-prefix OWNERSHIP PASS（Google 官方成功畫面／負責人提供）**。此前已獨立以 PR #14 將原驗證檔合併至 main，Google 此次的成功判定亦佐證其當下能檢查所需驗證資料；我們未直接進行獨立 HTTP GET，故不記錄額外 HTTP 狀態碼、Pages CDN 細節或 Google 網域品牌驗證成功。
+
+**驗證維持**：Search Console 成功彈窗明確要求不要移除 HTML 驗證檔，以免失去驗證狀態；**必須繼續保留 main 網站根目錄中的原始 Google HTML 驗證檔**，不要將它列入網站清理、檔案重整或自動化刪除。若日後換域名、換部署來源或移除驗證檔，應重新檢查所有權有效性。
+
+**不能混淆的剩餘 Gate**：本次成功的是 `/moxin-quiz-site/` 路徑開頭的 Search Console **URL-prefix 資源**。Google OAuth 品牌驗證仍要求確認**已授權網域 top private domain** 的所有權；[Google 官方品牌驗證文件](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification) 指出驗證與 Google Search Console 網域權限須匹配，[Google 官方所有權說明](https://support.google.com/cloud/answer/13804266?hl=en) 特別提及 Domain Property 的網域層級驗證要求。**不可單憑本次 path-prefix PASS 推定 `moxin0u0.github.io` 的 OAuth 品牌驗證已解除或已成功**。在 Google Auth Platform / Branding / Verification Center 查核目前品牌狀態與是否提出網域所有權不符，再決定後續方案；目前不修改 Google Cloud、DNS、驗證資源或公開網站功能。
+
+**最新分項狀態**：Search Console 專案 URL-prefix 所有權：**PASS**；Google OAuth 已授權主網域是否滿足品牌驗證：**PENDING**；Google Branding verification／Publish branding：**PENDING**；實機 OAuth 同意畫面與法務 Gate：**PENDING**。PR #14 已依範圍合併，但 B02 Draft PR #13 仍未合併，LEG-020 仍未解除。
