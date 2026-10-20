@@ -224,3 +224,8 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-20｜D-07 驗證檔原件已收到，正式部署仍待批准
 
 已本機讀取 Google Search Console 的 HTML 驗證原件，格式與 Google 指定檔名相符、53 bytes 單行純文字，**檔案內容檢查 PASS**。repo README 記載 GitHub Pages 使用 **main／root**，原件預計只需新增為網站根目錄的一個 HTML 檔案，無須修改 `index.html` 或 OAuth JS；實際 Pages Source 設定仍待最終核對。**不將原始驗證檔、token 或具體檔名貼入公開 Draft PR／Issue；本輪未部署、不合併 main，也未執行 Search Console Verify。** 若負責人明確批准正式單檔部署，再進行最小變更、發布後未登入網址檢查與 Search Console 驗證。已驗證專案路徑也**不直接代表 OAuth 授權主機所有權已驗證**。D07-08、Branding 與 LEG-020 Gate 繼續 PENDING；詳見 [D-07 稽核](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。
+
+
+## 2026-10-20｜Search Console HTML 驗證檔已依授權單獨合併 main
+
+負責人只批准單一 Google HTML 驗證檔部署；因 `main` 分支保護必須透過 PR，建立並完成 [獨立 PR #14](https://github.com/MoXin0u0/moxin-quiz-site/pull/14)，必要兩項 CI 全綠（[Actions #39379057309](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/39379057309)），**squash merge 到 main commit `a1eed741cb0ac43f03ba828da7da830a83d7378b`**；diff 唯一新增 Google 原件 HTML 檔，已在 main 原始碼讀回核對 53 bytes／內容完全一致。**尚無 GitHub Pages 公開網址的 HTTP 檢測成功證據，也未取得 Search Console 所有權驗證成功畫面**；網站端需由負責人未登入瀏覽器確認後，再按 Google「驗證」。D-07 OAuth authorized domain 高層級驗證、Branding、LEG-020 仍未通過。B02 Draft PR #13 沒有合併；不額外變更 main、正式政策或 Google Console。詳見 [D-07](./B02_GOOGLE_OAUTH_CONSOLE_AUDIT.md)。

@@ -173,6 +173,11 @@ assert.match(d07Audit, /Google Search Console 資源清單截圖（尚無資源�
 assert.match(d07Audit, /Search Console 所有權驗證方法已顯示/);
 assert.match(d07Audit, /D07-08 METHOD CONFIRMED／OWNERSHIP PENDING/);
 assert.match(d07Audit, /Google HTML 驗證原檔已收到並完成本機格式檢查/);
+assert.match(d07Audit, /獨立 PR #14/);
+assert.match(d07Audit, /兩項必要 CI/);
+assert.match(d07Audit, /GitHub Pages 已完成對外發布或 Search Console 所有權驗證成功/);
+assert.match(d07Audit, /專案路徑的驗證 PASS 不等於 Branding Verification PASS/);
+assert.match(releaseGate, /Search Console HTML 驗證檔已依授權單獨合併 main/);
 assert.match(d07Audit, /53 bytes、UTF-8 純文字/);
 assert.match(d07Audit, /未得到明確同意之前/);
 assert.match(d07Audit, /Branch: main；Folder: \/ \(root\)/);

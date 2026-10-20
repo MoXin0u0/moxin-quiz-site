@@ -112,3 +112,14 @@
 **最小變更／正式部署檢查表（尚未授權實施）**：① 取得負責人**明確正式發布同意**；② 確認 GitHub Pages Source 指向 main 根目錄；③ 新增**原 Google 檔案、不修改內容與檔名**，且不混入 B02 其他法律草案；④ 僅驗證檔案單一變更經版本管理與原網站基本 smoke test 後部署；⑤ 於全新未登入／私密視窗直接開啟 Google 指定檔案網址，核對 HTTP 200、內容與檔名；⑥ 在負責人登入的 Search Console 按**驗證**並保留驗證檔；⑦ 回到 Google Auth Platform 檢查是否滿足 OAuth authorized domain 的驗證要求，不能用 project URL-prefix PASS 自動解鎖品牌 Gate。未得到明確同意之前，**不更動 main、Pages 設定、Google Console、不按驗證**。
 
 **安全註記**：HTML 驗證檔本來就必須公開部署才能供 Google 檢查；但是否可公開是使用者的發布決策，不應因對話上傳自動等同允許將 Google 擁有權驗證材料推送到公開 GitHub。檔案原件保留在本次對話附件中，不在 Draft PR 附加實際驗證 token。Google 官方：[Verify your site ownership](https://support.google.com/webmasters/answer/9008080?hl=en)、[GitHub Pages publishing source](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
+
+
+## J. 2026-10-20｜驗證檔已獲批准並獨立合併 main（網站端待確認）
+
+負責人**明確批准僅公開 Google Search Console HTML 所有權驗證檔**，不含 B02 政策／功能或 OAuth 品牌送審。GitHub 的 `main` 分支保護拒絕直接新增，因必須經 PR 與兩項必要 CI；因此另建 [獨立 PR #14](https://github.com/MoXin0u0/moxin-quiz-site/pull/14)，**diff 僅新增一個 Google HTML 檔（53 bytes）**。PR #14 的 `Unit + release preflight` 和 `V5 browser + accessibility baseline` 均 **PASS**（[Actions #39379057309](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/39379057309)），後已**使用 squash merge 成功合併至 main**，main commit `a1eed741cb0ac43f03ba828da7da830a83d7378b`。
+
+**合併後查核**：透過 GitHub API 及原始碼讀取已核對 `main` 新增檔案內容**與 Google 原件完全相符、53 bytes**。B02 Draft PR #13 維持 Draft／未合併，法律與 OAuth 程式沒有修改。原始驗證檔現在已依批准公開於 GitHub 原始碼，但文件不另轉錄驗證 token。
+
+**仍待網站端確認**：本次環境不能直接對 GitHub Pages 已部署網址執行可靠的 HTTP GET，因此**不能宣稱 GitHub Pages 已完成對外發布或 Search Console 所有權驗證成功**。需負責人透過全新未登入視窗開啟 Google 所指定的公開驗證檔 URL，確認頁面只顯示原始 `google-site-verification` 一行（不是 404／首頁／快取），等 Pages 發布完成後，再回 Search Console 的 URL-prefix 資源使用 Google 同帳號按「驗證」，回報 Google 結果。驗證檔應保留在網站上。若 Google 要求 OAuth authorized domain 更高層級所有權，需另外確認；**專案路徑的驗證 PASS 不等於 Branding Verification PASS**。
+
+**Gate**：Repo 單檔合併及原件一致性 PASS；GitHub Pages HTTP 可讀性、Search Console ownership、OAuth authorized domain 適用性、Google Branding 驗證、正式法律審查 **PENDING**。不進一步修改 Console／main／B02 法律正式頁。
