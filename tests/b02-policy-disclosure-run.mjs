@@ -111,6 +111,15 @@ const liveTerms = read('terms.html');
 const serviceWorker = read('service-worker.js');
 assert.match(livePrivacy, /版本：B02-1\.0/);
 assert.match(liveTerms, /版本：B02-1\.0/);
+// Preserve publicly readable previous policies without rewriting historical content.
+const archivedPrivacy = read('privacy-2026-10-08.html');
+const archivedTerms = read('terms-2026-10-08.html');
+assert.match(archivedPrivacy, /最後更新：2026-10-08/);
+assert.match(archivedTerms, /最後更新：2026-10-08/);
+assert.match(archivedPrivacy, /若對本政策、資料處理或雲端同步有疑問/);
+assert.match(archivedTerms, /本條款可能因功能、平台政策或服務方式調整而更新/);
+assert.match(livePrivacy, /href="\.\/privacy-2026-10-08\.html"/);
+assert.match(liveTerms, /href="\.\/terms-2026-10-08\.html"/);
 assert.match(livePrivacy, /13 種|題庫工作室草稿、使用者題庫/);
 assert.match(livePrivacy, /檢查點/);
 assert.match(livePrivacy, /Google API Services User Data Policy/);
