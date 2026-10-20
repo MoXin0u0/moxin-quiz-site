@@ -259,3 +259,12 @@ Google OAuth Console / User Data Policy 是否需要重新審核：
 ## 2026-10-20｜D-07 P0 同步資料種類原始碼清單完成
 
 已進一步讀取 `main/src/sync/`：**13 種可同步 entity types**，包含作答事件、練習／考試與答案、收藏／不熟、筆記、目標、設定、作者題庫資訊、裝置、題庫工作室草稿與使用者題庫；雲端物件有**profile、commit、checkpoint、asset、draft、user-bank、session**，且題庫／草稿可連同 Blob 素材、題目與修訂索引進入 Google appDataFolder。**checkpoint 每 100 commits／最多 7 天參數是檢查點產生條件，不是遠端資料自動保留七天的期限**。目前代碼 hash 驗證完整性並不等於端到端加密。**GD-04 P0 code data-map 子項完成，實機資料完整性／歷史雲端物件清理及對外政策文字／法律簽核仍 PENDING**。細節見 [Google 使用者資料差異稽核 §5](./B02_GOOGLE_USER_DATA_DISCLOSURE_GAP_AUDIT.md)；未更改任何 `main`、同步功能或公開政策。
+
+
+## 2026-10-20｜負責人核准推進、正式政策候選頁已寫入 B02 Draft（非已發布）
+
+產品負責人回覆「繼續吧，我都核准」，理解為**授權推進政策製作、最終審核後公開發布、B02 合併與 Google 品牌送審流程**；不將此概括核准誤認為「所有尚未驗證的法律、資料處理或第三方著作權已被證明合法」。保留未經另外同意不得公開法定本名的既有 D-01 界線。
+
+已在 B02 PR #13 **新增正式候選** `privacy.html`、`terms.html`：公開可讀的告知涵蓋選用 Google `drive.appdata`、多種類別同步、雲端 profile／commit／checkpoint 與可能的歷史資料、Google Forms 私密回報和備用 Gmail、保存判準、權利請求、兒童／跨境、第三方和著作權規範；移除「使用即表示同意」的過度概括文字。**兩份公開候選頁沒有包含內部驗收歷史或佔位符**。同步變更 `service-worker.js` 快取版本，防止已快取舊政策頁而未更新；擴充 B02 靜態／Playwright 測試。
+
+**待 release gate 最終驗證**：① Google Forms 一般案件結案後 1 年、Gmail 結案後 2 年與每季人工檢查，原先保存紀錄／案例清冊跳過，是否可確實履行這些對外承諾仍需操作／法律評估；② 開發者署名與臺灣個資蒐集者識別合法性及兒童／跨境；③ 既有 ERP 題庫公開內容的第三方權利仍未取得授權；④ Google OAuth authorized domain DNS-level ownership／Branding 尚未驗證；⑤ 上線後政策公布／生效日、歷史版本和通知方式的清楚方案；⑥ 上線前完整 CI、頁面可用性與政策內容最終核對。**在未滿足必要真實性條件前，不可以本次概括批准取代證據或聲稱 Google 已審核通過。** `main` 尚無變更，PR 保持 Draft。

@@ -74,6 +74,9 @@ try {
     assert.match(await page.locator('#settingsView [data-feedback-backup]').innerText(), /Google 表單無法使用/);
     for (const doc of ['privacy.html', 'terms.html']) {
       const policy = await page.goto(new URL(doc, ROOT).href, { waitUntil: 'domcontentloaded' });
+      assert.match(await page.locator('main').innerText(), /墨忻刷題網|個人開發者/);
+      assert.equal(await page.locator('main a[href="mailto:moxin82771@gmail.com"]').count() > 0, true);
+      assert.equal(await page.locator('main a[href="https://forms.gle/3Vhia7MFyvzyV6s2A"]').count() > 0, true);
       assert.equal(policy.status(), 200);
       assert.equal(await page.locator('main h1').count(), 1);
       assert.equal(await page.locator('a[href="./app.html"]').count() > 0, true);

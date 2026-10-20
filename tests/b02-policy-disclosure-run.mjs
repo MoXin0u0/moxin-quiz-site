@@ -106,6 +106,26 @@ assert.match(read('index.html'), /href="\.\/terms\.html"/);
 
 // Fee language must describe the current free offering without promising perpetual free access.
 const draftTerms = read('docs/roadmap/legal/B02_TERMS_DRAFT.md');
+const livePrivacy = read('privacy.html');
+const liveTerms = read('terms.html');
+const serviceWorker = read('service-worker.js');
+assert.match(livePrivacy, /版本：B02-1\.0/);
+assert.match(liveTerms, /版本：B02-1\.0/);
+assert.match(livePrivacy, /13 種|題庫工作室草稿、使用者題庫/);
+assert.match(livePrivacy, /檢查點/);
+assert.match(livePrivacy, /Google API Services User Data Policy/);
+assert.match(livePrivacy, /個人資料權利/);
+assert.match(livePrivacy, /結案日起保留 1 年/);
+assert.match(livePrivacy, /結案日起保留 2 年/);
+assert.match(livePrivacy, /沒有已驗證的一鍵完整遠端資料刪除功能/);
+assert.match(livePrivacy, /https:\/\/forms\.gle\/3Vhia7MFyvzyV6s2A/);
+assert.match(livePrivacy, /mailto:moxin82771@gmail\.com/);
+assert.match(liveTerms, /目前收費與服務調整/);
+assert.match(liveTerms, /第三方服務/);
+assert.match(liveTerms, /未成年使用者與權利保障/);
+assert.match(liveTerms, /https:\/\/forms\.gle\/3Vhia7MFyvzyV6s2A/);
+assert.match(serviceWorker, /moxin-quiz-v5-5\.0\.0-prod-b02-policy-1/);
+
 const releaseGate = read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md');
 assert.match(draftTerms, /目前墨忻刷題網完全免費/);
 assert.match(draftTerms, /不代表承諾永久免費/);
@@ -242,6 +262,8 @@ assert.match(userDataAudit, /題目、題幹、使用者自訂內容及圖片／
 assert.match(userDataAudit, /內容 hash 不是端到端加密/);
 assert.match(userDataAudit, /並非 Google 雲端資料保存 7 天/);
 assert.match(userDataAudit, /P0 source-level 類別清單已完成/);
+assert.match(releaseGate, /正式政策候選頁已寫入 B02 Draft/);
+assert.match(userDataAudit, /正式政策候選頁已寫入 B02 Draft/);
 assert.match(releaseGate, /D-07 P0 同步資料種類原始碼清單完成/);
 assert.match(read('docs/roadmap/legal/B02_DATA_FLOW_AND_RIGHTS.md'), /13 種/);
 
