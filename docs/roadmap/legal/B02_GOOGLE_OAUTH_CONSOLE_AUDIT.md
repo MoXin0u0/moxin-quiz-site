@@ -134,3 +134,24 @@
 **不能混淆的剩餘 Gate**：本次成功的是 `/moxin-quiz-site/` 路徑開頭的 Search Console **URL-prefix 資源**。Google OAuth 品牌驗證仍要求確認**已授權網域 top private domain** 的所有權；[Google 官方品牌驗證文件](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification) 指出驗證與 Google Search Console 網域權限須匹配，[Google 官方所有權說明](https://support.google.com/cloud/answer/13804266?hl=en) 特別提及 Domain Property 的網域層級驗證要求。**不可單憑本次 path-prefix PASS 推定 `moxin0u0.github.io` 的 OAuth 品牌驗證已解除或已成功**。在 Google Auth Platform / Branding / Verification Center 查核目前品牌狀態與是否提出網域所有權不符，再決定後續方案；目前不修改 Google Cloud、DNS、驗證資源或公開網站功能。
 
 **最新分項狀態**：Search Console 專案 URL-prefix 所有權：**PASS**；Google OAuth 已授權主網域是否滿足品牌驗證：**PENDING**；Google Branding verification／Publish branding：**PENDING**；實機 OAuth 同意畫面與法務 Gate：**PENDING**。PR #14 已依範圍合併，但 B02 Draft PR #13 仍未合併，LEG-020 仍未解除。
+
+## L. 2026-10-20｜URL-prefix 成功後 OAuth 品牌狀態重新核對
+
+**負責人新提供三張 Google Auth Platform 截圖**：Verification Center、Branding、Data Access（MoXin Quiz V5 專案）。當前 **Branding status 仍為尚未驗證、品牌尚未向使用者顯示**；Data access status 仍明示**沒有敏感或受限制的權限因此不需要驗證**。Branding 顯示應用名稱「墨忻刷題網」、原有獨立使用者支援信箱及首頁／Privacy／Terms URLs；Data Access 仍只有**非敏感 drive.appdata**，無敏感與受限制清單。**這三張截圖沒有顯示 Google 已將 Search Console 專案路徑 URL-prefix 驗證結果接受為完整 OAuth 品牌驗證**。
+
+### 官方文件限制（2026-10-20 查核）
+
+- [Google developers｜Submit for brand verification](https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification)：External＋In production 若要在 OAuth 同意畫面顯示應用名稱／標誌，須完成 Branding verification；**按 Verify Branding 會啟動自動或人工評估，不是純檢視頁面**，成功後仍需另按 Publish branding；要核對應用配置使用的 authorized domains 之 **top private domain**。
+- [Google Cloud Help｜Domain Verification](https://support.google.com/cloud/answer/13804266?hl=en)：在 OAuth 驗證遇到「project owner has not yet verified one or more authorized domains」問題時，官方指定同一 Cloud Owner／Editor 以 Search Console 的 **Domain property（DNS-level）** 驗證，而不只是 URL-prefix（URL prefix 不能取代 DNS-level Domain property）；目前**未收到該類 Google 退件或錯誤畫面**，不得先宣稱必定無法申請。
+- **已通過的專案資源驗證保留有效**：Search Console **https://moxin0u0.github.io/moxin-quiz-site/** 的 URL-prefix OWNERSHIP PASS 仍成立，但沒有證據表明 **moxin0u0.github.io** 的 DNS Domain property 已驗證。GitHub 共用的 **github.io** DNS 不應嘗試自行修改；若 Google 後續正式要求 DNS-level Domain property，需評估可控的自訂網域、其他經 Google 支援的例外／替代驗證路徑及成本，**不擅自購買網域或更動站點**。
+
+### 最新 D-07 Gate
+
+- [x] D07-08：Google Search Console 專案路徑 URL-prefix 所有權驗證 **PASS**（先前成功畫面）。
+- [x] D07-09：OAuth 品牌狀態重新查核 **PASS（確認品牌仍未驗證）**；現況不是 Branding PASS。
+- [x] Data Access 仍只有非敏感 drive.appdata、無敏感或受限制範圍，不需該類範圍驗證。
+- [ ] OAuth authorized-domain top private domain 是否滿足 Google 要求、Domain property 權限與實際要求。
+- [ ] OAuth 品牌驗證提交及 Publish branding（**尚無負責人授權，不按「驗證品牌」**）。
+- [ ] 實機 OAuth 同意／拒絕畫面，正式首頁 Privacy／Terms 連結可用性與 B02 法律審核。
+
+**下一步只讀查核**：確認網站首頁及 Privacy／Terms URL 可由訪客開啟且內容已滿足 Google 用戶資料使用告知要求；核對 OAuth 專案的 Owner 與 Search Console 所有權帳號，整理必要的網站／品牌準備。暫不變更 Google Console、Search Console、DNS、正式網站或 main；B02 Draft PR #13 及 LEG-020 仍待審。

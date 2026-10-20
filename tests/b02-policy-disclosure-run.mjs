@@ -177,6 +177,14 @@ assert.match(d07Audit, /獨立 PR #14/);
 assert.match(d07Audit, /Google Search Console 網址前置字元所有權驗證成功/);
 assert.match(d07Audit, /已驗證擁有權/);
 assert.match(d07Audit, /D07-08 URL-prefix OWNERSHIP PASS/);
+assert.match(d07Audit, /URL-prefix 成功後 OAuth 品牌狀態重新核對/);
+assert.match(d07Audit, /Branding status 仍為尚未驗證/);
+assert.match(d07Audit, /Domain property（DNS-level）/);
+assert.match(d07Audit, /按 Verify Branding 會啟動自動或人工評估/);
+assert.match(d07Audit, /URL prefix 不能取代 DNS-level Domain property/);
+assert.match(releaseGate, /Google 品牌仍未驗證，URL-prefix 不等於 Domain property/);
+assert.match(releaseGate, /Verify Branding 會開始審查/);
+
 assert.match(d07Audit, /必須繼續保留 main 網站根目錄中的原始 Google HTML 驗證檔/);
 assert.match(d07Audit, /不可單憑本次 path-prefix PASS/);
 assert.match(releaseGate, /Search Console 專案網址所有權 PASS/);
