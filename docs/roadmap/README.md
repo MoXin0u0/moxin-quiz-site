@@ -38,6 +38,8 @@
 - [D-09 **已核准**情境化告知與必要時另外取得同意](./legal/B02_D09_CONSENT_MODE_OPTIONS.md)：2026-10-21 負責人確認 D09-A；不阻斷 Local-first，不把 OAuth 視為整站協議接受。模式決策 PASS，法律及操作驗收仍待處理。
 
 - [D-10 法律／營運／平台與發布總審查矩陣](./legal/B02_D10_FINAL_REVIEW_AND_RELEASE_MATRIX.md)：列出實際證據、發布阻擋與可獨立驗收的項目；目前 D-10／LEG-020 未通過。
+- [D-10 個資權利請求快速分流與法定准駁期限](./legal/B02_D10_RIGHTS_REQUEST_TRIAGE_SOP.md)：區分收到請求時的 15／30 日准駁程序與結案後 Forms／Gmail 的 1／2 年保存管理；待實際個案流程驗收。
+- [D-05 CERPS 題庫權利依據與非破壞處置選項](./legal/B02_CONTENT_RIGHTS_AND_SHARING.md)：公開來源已查核，第三方公開再利用授權仍未證實；不擅自寄信、下架或刪除作答紀錄。
 
 ## 追蹤結構
 
