@@ -78,6 +78,9 @@ jobs:
       - name: Verify known conflict UI contrast first
         run: npm run audit:v5-conflict-resolution
 
+      - name: B02 policy entry points and accessibility
+        run: npm run audit:b02-policy
+
       - name: Run app browser audit
         run: npm run audit:browser
 

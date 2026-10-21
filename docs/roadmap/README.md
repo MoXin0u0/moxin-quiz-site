@@ -16,9 +16,9 @@
 
 | 批次 | 工作範圍 | 狀態／完成條件 |
 | --- | --- | --- |
-| **B00** | 固定 V5 基準、追蹤索引、PR 模板、修正過時文件定位；AUD-025、AUD-026 | **PR 待審核**：文件可追溯、回滾清楚、CI 有證據 |
-| B01 | ZIP 安全、CI、branch protection、Lockfile、輸入與 CSP 檢視；AUD-001/002/003/024/029/031 | 未開始 |
-| B02 | 使用者協議與隱私權、Google 資料流、版本告知；LEG-001～020 | 未開始；法務審稿前不得自稱合規 |
+| **B00** | 固定 V5 基準、追蹤索引、PR 模板、修正過時文件定位；AUD-025、AUD-026 | **已合併**：PR #9；2026-10-09 |
+| **B01** | ZIP／資料夾／JSON 防護、完整 CI、lockfile、分支保護；AUD-001/002/003/024/029/031 | **已合併**：PR #11；2 項 required checks 已啟用；AUD-029 深度 CSP/XSS 待後續專項 |
+| **B02** | 使用者協議與隱私、Google 資料流、權利操作、版本告知；LEG-001～020 | **正式候選版已實作、工程 CI PASS；尚未發布**：[發布就緒與阻擋清單](./legal/B02_RELEASE_READINESS_20261020.md)／[LEG-001～020 發布 Gate](./legal/B02_DECISIONS_AND_RELEASE_GATE.md)；法律與營運待辦未結案，不可自稱整體合規 |
 | B03 | 核心流程、路由、手機工作室、同步文案 | 未開始 |
 | B04 | Token、深色對比、Dialog、鍵盤與減少動畫 | 未開始 |
 | B05 | Academy/Epic 分化、Full 強度與高 DPI 清晰度 | 未開始 |
@@ -28,6 +28,18 @@
 | B09 | 異機與跨瀏覽器、PWA、回饋、正式 Gate | 未開始 |
 
 > **每次只做一批**。每批一支分支／PR，驗收後停止等待確認；未經明示同意，不自動開始下一批、不合併正式站。
+
+## B02 發布前專項工作入口（2026-10-21）
+
+- [正式發布就緒與風險分級](./legal/B02_RELEASE_READINESS_20261020.md)。
+- [D-01 個資蒐集者身分與法定告知查核](./legal/B02_D01_CONTROLLER_NOTICE_REVIEW.md)：公開署名維持墨忻，法定適用性仍待確認。
+- [D-02 不建立案件清冊的替代管理方案](./legal/B02_D02_NO_REGISTER_OPERATIONS.md)：目前只是候選，未啟用提醒或真實刪除。
+- [D-08／09 政策實際生效與重大變更通知](./legal/B02_D08_POLICY_EFFECTIVE_NOTICE_PLAN.md)：歷史政策頁候選已保留，正式公告日及通知尚待決定。
+- [D-09 **已核准**情境化告知與必要時另外取得同意](./legal/B02_D09_CONSENT_MODE_OPTIONS.md)：2026-10-21 負責人確認 D09-A；不阻斷 Local-first，不把 OAuth 視為整站協議接受。模式決策 PASS，法律及操作驗收仍待處理。
+
+- [D-10 法律／營運／平台與發布總審查矩陣](./legal/B02_D10_FINAL_REVIEW_AND_RELEASE_MATRIX.md)：列出實際證據、發布阻擋與可獨立驗收的項目；目前 D-10／LEG-020 未通過。
+- [D-10 個資權利請求快速分流與法定准駁期限](./legal/B02_D10_RIGHTS_REQUEST_TRIAGE_SOP.md)：區分收到請求時的 15／30 日准駁程序與結案後 Forms／Gmail 的 1／2 年保存管理；待實際個案流程驗收。
+- [D-05 CERPS 題庫權利依據與非破壞處置選項](./legal/B02_CONTENT_RIGHTS_AND_SHARING.md)：公開來源已查核，第三方公開再利用授權仍未證實；不擅自寄信、下架或刪除作答紀錄。
 
 ## 追蹤結構
 

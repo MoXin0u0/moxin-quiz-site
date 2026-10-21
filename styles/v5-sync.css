@@ -695,3 +695,68 @@
     display: none;
   }
 }
+
+/* B02: Plain-language privacy and data-control guidance is readable in both themes. */
+[data-feedback-backup] {
+  overflow-wrap: anywhere;
+  margin-top: .75rem;
+  line-height: 1.65;
+}
+
+[data-feedback-backup] a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: .16em;
+}
+
+.settings-data-control {
+  margin-top: .9rem;
+  padding: .8rem .9rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.settings-data-control summary {
+  cursor: pointer;
+  font-weight: 750;
+  color: var(--text);
+}
+
+.settings-data-control summary:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.settings-data-control ol {
+  margin: .7rem 0;
+  padding-inline-start: 1.45rem;
+}
+
+.settings-data-control li + li {
+  margin-top: .5rem;
+}
+
+.settings-data-control p {
+  margin: .6rem 0 0;
+  color: var(--text);
+}
+
+.settings-data-control a,
+[data-sync-privacy-notice] a,
+[data-cloud-link-disclosure] a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: .16em;
+}
+
+[data-sync-privacy-notice],
+[data-cloud-link-disclosure] {
+  margin-top: .75rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+

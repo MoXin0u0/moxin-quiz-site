@@ -34,6 +34,8 @@
       <a href="#local">本機資料</a>
       <a href="#google">Google 同步</a>
       <a href="#control">使用者控制</a>
+      <a href="#feedback">回報與保存</a>
+      <a href="#rights">權益及聯絡</a>
     </nav>
     <a class="landing-header-cta" href="./app.html">進入學習大廳</a>
   </header>
@@ -43,7 +45,7 @@
       <div class="landing-section-heading">
         <span>Privacy Policy</span>
         <h1>隱私權政策</h1>
-        <p>最後更新：2026-10-08</p>
+        <p>版本：B02-1.0｜最後更新：2026-10-20</p>
       </div>
 
       <div class="landing-data-card">
@@ -103,6 +105,12 @@
             Google OAuth access token 僅保存在目前頁面的記憶體中，不會寫入完整備份；
             備份還原也不會復原舊 OAuth 授權或舊裝置的雲端操作狀態。
           </p>
+          <p>
+            同步可能涵蓋答題事件、練習與考試 Session、考試答案、收藏、不熟題、筆記、學習目標、
+            帳號設定、裝置資訊、作者題庫資訊、題庫工作室草稿、使用者題庫及其中的題目與圖片／素材。
+            為支援多裝置同步及衝突處理，Google Drive 中也可能存有雲端 profile、提交紀錄、檢查點、
+            修訂索引、刪除標記及歷史版本。並非所有本機備份內容都會自動上傳。
+          </p>
         </div>
       </div>
     </section>
@@ -125,7 +133,12 @@
           </p>
           <p>
             墨忻刷題網對從 Google API 取得資訊的使用與傳輸，遵守 Google API Services User Data Policy，
-            包括 Limited Use requirements。
+            包括 Limited Use requirements；不會將 Google API 資料出售，或用於廣告個人化。
+            資料使用限於使用者選擇的帳號識別、同步、衝突處理、裝置管理及資料復原。
+          </p>
+          <p>
+            雲端資料透過 HTTPS 與 Google 服務交換，程式以內容雜湊值核對部分同步物件的完整性；
+            這不等於本服務承諾具備端到端加密，也不代表 Google 等服務供應商完全無法處理服務所需資料。
           </p>
         </div>
       </div>
@@ -154,7 +167,53 @@
       </div>
     </section>
 
-    <section class="landing-section">
+    <section class="landing-section" id="feedback">
+      <div class="landing-section-heading">
+        <span>Feedback & Retention</span>
+        <h2>意見回報、資料保存及第三方處理</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            由個人開發者「墨忻（MoXin）」提供服務。非公開問題、個人資料權益請求、著作權或安全事件，請使用 <a href="https://forms.gle/3Vhia7MFyvzyV6s2A" target="_blank" rel="noopener noreferrer">Google 意見與問題回報表單</a>；若表單無法使用，可寄至 <a href="mailto:moxin82771@gmail.com">moxin82771@gmail.com</a>。Google OAuth 同意畫面的使用者支援信箱可能為不同的管理信箱，不影響上述一般回報方式。
+          </p>
+          <p>
+            表單由 Google Forms 提供；提交的問題類型、主旨、詳細說明、選填的發生頁面、裝置及電子郵件，會由 Google 平台處理並交由本服務提供者查看。電子郵件為選填，依目前表單設定可不登入 Google 提交；未填電子郵件者可能無法收到個別回覆。備用 Gmail 信件包含寄件地址、主旨、內容及自願提供的附件，由 Gmail 平台處理。請勿傳送密碼、OAuth token、身分證件或整份私人備份。
+          </p>
+          <p>
+            本機資料一般保留在所用瀏覽器中，直到使用者自行清除、瀏覽器依自身機制移除或儲存空間發生變化。Google Drive appDataFolder 的同步資料依使用者的同步、Google 帳戶及平台機制保存；歷史提交、修訂及附件不一定因刪除本機內容或解除連結而立即從雲端清除。本站沒有已驗證的一鍵完整遠端資料刪除功能，也不以檢查點的產生週期作為保存期限。
+          </p>
+          <p>
+            一般表單案件以結案日起保留 1 年、一般備援電子郵件案件以結案日起保留 2 年為管理基準，未結案案件不從提交日起算；預定每 3 個月人工檢查及清理，不具自動到期刪除功能。資料權利、安全、著作權或法律爭議案件，可能依適用法律與必要性另外處理；收到合法提前刪除請求時亦須個別評估。這項人工機制不表示所有第三方備份、垃圾桶或平台技術紀錄都能在同一時間立即清除。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="rights">
+      <div class="landing-section-heading">
+        <span>Data Rights & Changes</span>
+        <h2>個人資料權利、未成年使用者與政策更新</h2>
+      </div>
+      <div class="landing-data-card">
+        <div>
+          <p>
+            使用者可以透過上述非公開聯絡管道提出查詢、閱覽、更正、補充、停止使用或刪除等依法適用的請求。提出請求時，只需先說明希望處理的資料類型與問題，不要在公開 GitHub Issues 張貼私人內容或完整帳號憑證；如確有必要確認請求者身分，將以個案最少必要資料協調處理。
+          </p>
+          <p>
+            本網站沒有集中儲存所有使用者私人題庫的管理伺服器。開發者未必能存取使用者裝置的本機資料或其私人 Google appDataFolder，也不保證可以代替使用者立即完全刪除遠端資料；遇到技術限制會說明可操作的方法及可能的殘留影響。撤銷 Google 授權、解除裝置連結及清除瀏覽器資料是不同的操作，請先確認備份與其他裝置同步狀態。
+          </p>
+          <p>
+            墨忻刷題網主要面向使用繁體中文的臺灣學習者，基本本機功能不以年齡或 Google 登入為條件，也不因年齡辨識主動要求身分證件。未成年使用者若要提交聯絡資料或啟用 Google 雲端同步，請依適用規定請家長或監護人協助；受監護 Google 帳號是否可授權須依 Google 的限制。由於使用 GitHub Pages、Google 等第三方服務，部分資料可能涉及跨境處理。
+          </p>
+          <p>
+            本政策會依功能、第三方服務及法規變化修訂，更新時於本頁標示日期；涉及重大用途或權益變更時，將依實際通知能力及適用規範提供必要告知與取得必要的同意。Google OAuth 授權不等同於對未來所有網站條款或資料用途的概括同意。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="contact">
       <div class="landing-section-heading">
         <span>Contact</span>
         <h2>聯絡與政策更新</h2>
@@ -162,17 +221,18 @@
       <div class="landing-data-card">
         <div>
           <p>
-            若對本政策、資料處理或雲端同步有疑問，可透過墨忻刷題網 GitHub Repository 的 Issues 提出。
+            本網站由個人開發者「墨忻（MoXin）」提供。需要私下聯絡、處理個資權益、著作權或安全問題，請使用 <a href="https://forms.gle/3Vhia7MFyvzyV6s2A" target="_blank" rel="noopener noreferrer">意見與問題回報表單</a>，或以 <a href="mailto:moxin82771@gmail.com">moxin82771@gmail.com</a> 備援聯絡。
           </p>
           <p>
-            本政策可能隨功能、Google API 使用方式或法規要求更新；更新時會修改本頁的最後更新日期。
+            一般不含個資的功能建議亦可透過 <a href="https://github.com/MoXin0u0/moxin-quiz-site/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> 討論；請勿公開私人題庫、聯絡資訊、存取憑證或身分證明。本頁的政策內容與聯絡方式如有重大調整，將更新上述修訂日期。
           </p>
           <p>
-            <a href="https://github.com/MoXin0u0/moxin-quiz-site/issues" target="_blank" rel="noopener">前往 GitHub Issues</a>
+            歷史版本：<a href="./privacy-2026-10-08.html">2026-10-08 版隱私權政策</a>（保留原始內容供查閱比對）。
           </p>
         </div>
       </div>
     </section>
+
   </main>
 
   <footer class="landing-footer">

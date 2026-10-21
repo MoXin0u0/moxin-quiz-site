@@ -34,8 +34,49 @@ export function renderSettings(container, { settings, storage, checks, pwa, sync
         </p>
 
         <div class="settings-actions">
-          <a class="button secondary" href="./privacy.html" target="_blank" rel="noopener">查看隱私權政策</a>
+          <a class="button secondary" href="./privacy.html" target="_blank" rel="noopener noreferrer">查看隱私權政策</a>
+          <a class="button secondary" href="./terms.html" target="_blank" rel="noopener noreferrer">查看服務條款</a>
         </div>
+
+        <details class="settings-data-control" data-legal-data-controls>
+          <summary>了解四種資料管理操作的差別</summary>
+          <ol>
+            <li><strong>解除此裝置連結：</strong>保留本機學習資料，但不會刪除既有 Google 雲端資料。</li>
+            <li><strong>撤銷 Google 存取權：</strong>到 Google 帳戶的第三方連結管理頁操作，不等於刪除已儲存的 Drive 資料。</li>
+            <li><strong>清除瀏覽器網站資料：</strong>只影響目前瀏覽器與網站，不會自動清除其他裝置或雲端。</li>
+            <li><strong>清除 Google 雲端同步資料：</strong>目前沒有經驗證的一鍵完整刪除功能；請勿誤認為解除連結就能刪除。</li>
+          </ol>
+          <p>在清除資料前，請先下載完整備份並確認其他裝置的同步狀態。</p>
+          <p><a href="https://support.google.com/accounts/answer/13533235?hl=zh-Hant" target="_blank" rel="noopener noreferrer">查看 Google 官方第三方授權管理說明</a></p>
+        </details>
+      </article>
+
+      <article class="panel settings-card" data-feedback-card>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Contact & Feedback</p>
+            <h2>聯絡與意見回饋</h2>
+          </div>
+        </div>
+        <p class="settings-copy">
+          有功能建議、錯誤回報、題庫勘誤或資料權益問題，可以透過 Google 表單聯絡個人開發者墨忻（MoXin）。
+        </p>
+        <p class="settings-note" data-feedback-privacy-notice>
+          開啟表單後，你自願提交的內容與聯絡方式會透過 Google Forms 處理。
+          請勿提供密碼、Google 授權憑證、身分證件或私人完整備份；
+          本機練習與 Google Drive 同步都不需要填寫這份表單。
+          未成年使用者如需提供聯絡資訊，建議請家長或監護人協助。
+        </p>
+        <div class="settings-actions">
+          <a class="button secondary" href="https://forms.gle/3Vhia7MFyvzyV6s2A"
+             target="_blank" rel="noopener noreferrer"
+             data-open-feedback-form aria-label="開啟 Google 意見回饋表單（新分頁）">填寫意見回饋表單</a>
+        </div>
+        <p class="settings-note" data-feedback-backup>
+          若 Google 表單無法使用，或需要另行聯繫，
+          可使用備用電子郵件 <a href="mailto:moxin82771@gmail.com" data-feedback-email>moxin82771@gmail.com</a>。
+          郵件內容將由個人開發者用於處理你主動提出的事項。
+        </p>
       </article>
 
       <article class="panel settings-card">
