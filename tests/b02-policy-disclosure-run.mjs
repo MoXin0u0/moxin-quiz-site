@@ -440,6 +440,26 @@ assert.match(d10Review, /D09-A 已於 2026-10-21 獲負責人確認/);
 assert.match(d10Review, /CERPS/);
 assert.match(d10Review, /法定蒐集者告知/);
 assert.match(d10Review, /不自動刪除|沒有自動刪除/);
+// D-10 hard gates are evidence based; never conflate rights-request SLA with post-closure data retention.
+const rightsTriage = read('docs/roadmap/legal/B02_D10_RIGHTS_REQUEST_TRIAGE_SOP.md');
+assert.match(rightsTriage, /15 日內為准駁決定/);
+assert.match(rightsTriage, /30 日內為准駁決定/);
+assert.match(rightsTriage, /不能用結案後保存期限取代請求受理／准駁期限/);
+assert.match(rightsTriage, /本輪不建立任何真實提醒/);
+assert.match(noRegisterPlan, /個資權利請求不能等到結案後才設提醒/);
+const rightsSourceAudit = read('docs/roadmap/legal/B02_D01_CONTROLLER_NOTICE_REVIEW.md');
+assert.match(rightsSourceAudit, /依 B02-1\.0 候選/);
+assert.match(rightsSourceAudit, /六項主題在政策候選稿/);
+assert.match(rightsSourceAudit, /別名可否滿足本案法定蒐集者識別/);
+const sourceRights = read('docs/roadmap/legal/B02_CONTENT_RIGHTS_AND_SHARING.md');
+assert.match(sourceRights, /2026-10-22 D-10 補查/);
+assert.match(sourceRights, /1140311b/);
+assert.match(sourceRights, /1150116c/);
+assert.match(sourceRights, /未證實/);
+assert.match(sourceRights, /本輪不更動題庫或 SW/);
+assert.match(d10Review, /D10-01 蒐集者告知/);
+assert.match(d10Review, /D10-04 著作權/);
+assert.match(d10Review, /LEG-020 PASS/);
 assert.match(read('docs/roadmap/README.md'), /D-10 法律／營運／平台與發布總審查矩陣/);
 assert.match(read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md'), /D-09 方案選擇 Gate PASS/);
 
