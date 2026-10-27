@@ -53,7 +53,8 @@ jobs:
   v5-browser-audit:
     name: V5 browser + accessibility baseline
     needs: regression
-    runs-on: ubuntu-latest
+    # Pinned Playwright 1.55.1 Chromium dependencies do not support Ubuntu 26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
 
     steps:
