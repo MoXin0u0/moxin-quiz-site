@@ -72,7 +72,7 @@ assert.doesNotMatch(
   /\.authorize\(/,
 );
 
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5.0.0-prod-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-\d+'/);
 assert.match(sw, /src\/sync\/sync-scheduler\.js/);
 
 console.log('V5 B13C4 automatic sync scheduler contracts passed.');

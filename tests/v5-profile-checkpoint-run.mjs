@@ -78,7 +78,7 @@ await assert.rejects(
 const source = fs.readFileSync('src/sync/sync-engine.js', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 assert.match(source, /publishCheckpointIfDue/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5.0.0-prod-1'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-\d+'/);
 assert.match(sw, /src\/sync\/cloud-profile\.js/);
 assert.match(sw, /src\/sync\/checkpoint\.js/);
 
