@@ -402,7 +402,7 @@ assert.match(read('docs/roadmap/legal/B02_TERMS_DRAFT.md'), /尚未生效/);
 assert.match(read('docs/roadmap/legal/B02_PRIVACY_DRAFT.md'), /未生效/);
 assert.match(read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md'), /LEG-020/);
 for (const file of ['terms.html','privacy.html']) {
-  assert.match(read(file), /最後更新：2026-10-20/);
+  assert.match(read(file), /最後更新：2026-10-28/);
   assert.doesNotMatch(read(file), /【待確認】|B02.*待審稿草案/);
 }
 
@@ -462,5 +462,25 @@ assert.match(d10Review, /D10-04 著作權/);
 assert.match(d10Review, /LEG-020 PASS/);
 assert.match(read('docs/roadmap/README.md'), /D-10 法律／營運／平台與發布總審查矩陣/);
 assert.match(read('docs/roadmap/legal/B02_DECISIONS_AND_RELEASE_GATE.md'), /D-09 方案選擇 Gate PASS/);
+
+// B02-Lite is the active workflow; legacy reviews remain available but not mandatory paperwork.
+const litePlan = read('docs/roadmap/legal/B02_LITE_EXECUTION.md');
+assert.match(litePlan, /B02 唯一日常決策與執行清單/);
+assert.match(litePlan, /L1：公開文字最小核對/);
+assert.match(litePlan, /L2：不用新系統的私密處理能力/);
+assert.match(litePlan, /L3：一次性發布檢查/);
+assert.match(litePlan, /L4：獨立的現有高風險內容/);
+assert.match(litePlan, /不因免費或免責而視為合法|不因文件變短而假裝已合法/);
+assert.match(read('docs/roadmap/README.md'), /日常工作唯一入口/);
+for (const path of ['privacy.html', 'terms.html']) {
+  assert.match(read(path), /id="quick-summary"/);
+  assert.match(read(path), /aria-labelledby=/);
+}
+assert.match(read('privacy.html'), /一分鐘看懂隱私重點/);
+assert.match(read('privacy.html'), /並非自動刪除/);
+assert.match(read('terms.html'), /先看這四件事/);
+assert.match(read('terms.html'), /本摘要不排除任何依法享有的權利/);
+assert.match(read('terms.html'), /本站不是考試主辦機構的官方網站/);
+assert.doesNotMatch(read('terms.html'), /本站不負任何法律責任/);
 
 console.log('B02 policy links, user control guidance, draft boundary and Local-first contracts PASS.');
