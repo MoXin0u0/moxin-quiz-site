@@ -13,6 +13,8 @@ assert.match(studio, /target\?\.scrollIntoView/);
 assert.match(studio, /window\.matchMedia\('\(max-width: 820px\)'\)/);
 assert.match(studio, /mount\.querySelector\('\.studio-r1-canvas'\)\?\.scrollIntoView/);
 assert.match(studio, /aria-current="true"/);
+assert.match(studio, /Array\.from\(addImagesInput\.files \|\| \[\]\)/);
+assert.match(studio, /rail\.scrollLeft \+=/);
 
 for (const section of ['studioQuestionRail', 'studioQuestionCanvas', 'studioQuestionInspector', 'studioExportPanel']) {
   assert.equal(studio.split('id="' + section + '"').length - 1, 1, section + ' should exist exactly once');
