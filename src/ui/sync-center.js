@@ -45,8 +45,8 @@ export function renderSyncCenter(container, snapshot) {
         : '目前使用本機模式';
 
   const cloudNote = !snapshot?.cloudConfigured
-    ? '<div class="sync-inline-note"><strong>Google OAuth 尚未設定</strong>' +
-      '<p>目前 V5 開發分支不會要求登入，也不會在背景自動連線。設定 OAuth Client ID 後才會開放連結與即時同步。</p></div>'
+    ? '<div class="sync-inline-note"><strong>Google 雲端同步目前無法連結</strong>' +
+      '<p>你仍可直接使用本機練習和完整備份。網站完成 Google 連結設定後，才可自行選擇啟用雲端同步。</p></div>'
     : '';
 
   const cloudAction = !snapshot?.connected
@@ -162,9 +162,9 @@ export function renderCloudSettingsCard(snapshot) {
     '尚未連結 Google';
 
   const helper = !snapshot?.cloudConfigured
-    ? '目前開發環境尚未設定 Google OAuth Client ID，因此不會要求登入。'
+    ? '目前無法使用 Google 雲端連結；本機練習與完整備份不受影響。'
     : !snapshot?.cloudRuntimeEnabled
-      ? '雲端執行開關目前仍關閉；可先檢查介面與本機狀態。'
+      ? '雲端同步目前暫不可用；你可以繼續使用本機資料與完整備份。'
       : snapshot?.connected
         ? '同步採本機優先；雲端失敗不會阻止你作答。'
         : '你可以繼續只使用本機資料，也可以選擇連結 Google。';
