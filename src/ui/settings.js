@@ -192,7 +192,7 @@ export function renderSettings(container, { settings, storage, checks, pwa, sync
         </div>
 
         <p class="settings-warning">
-          還原採「完整取代」：目前瀏覽器中的 v3 本機資料會被備份內容取代。執行前建議先下載一份目前備份。
+          還原採「完整取代」：會用備份內容取代目前瀏覽器中的題庫與學習資料。為避免遺失最新變更，請先下載目前資料的完整備份。
         </p>
       </article>
 

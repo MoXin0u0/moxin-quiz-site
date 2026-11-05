@@ -15,7 +15,7 @@ export function renderHomeDashboard(container, model = {}) {
         <div>
           <span class="learning-kicker">今日概況</span>
           <h2 id="homeDashboardTitle">先決定今天最值得做的下一步</h2>
-          <p>這裡只放學習摘要與快捷入口；題庫收藏仍維持在下方，不把首頁變成另一張超長設定頁。</p>
+          <p>題庫選擇已放在上方；這裡整理你的學習摘要與快捷入口，方便安排下一步。</p>
         </div>
       </div>
 

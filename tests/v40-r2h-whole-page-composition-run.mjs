@@ -26,8 +26,8 @@ for (const [source, scene] of [
   assert.match(source, new RegExp(`data-scene-art="${scene}"`));
 }
 
-assert.match(index, /選擇題庫開始練習/);
-assert.match(index, /href="#librarySourceTitle"/);
+assert.match(index, /選擇今天要學的內容/);
+assert.match(index, /href="#homeDashboardArea"/);
 assert.match(review, /pickReviewRecommendation/);
 assert.match(review, /learning-hero-primary-cta/);
 assert.match(exam, /href="#examBankList"/);

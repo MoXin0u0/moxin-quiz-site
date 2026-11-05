@@ -53,7 +53,8 @@ jobs:
   v5-browser-audit:
     name: V5 browser + accessibility baseline
     needs: regression
-    runs-on: ubuntu-latest
+    # Keep Playwright 1.55.1 on a supported Chromium runner.
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
 
     steps:
@@ -77,6 +78,15 @@ jobs:
 
       - name: Verify known conflict UI contrast first
         run: npm run audit:v5-conflict-resolution
+
+      - name: B03 task-first library browser and a11y audit
+        run: npm run audit:b03-library
+
+      - name: B03 mobile studio navigation and accessibility audit
+        run: npm run audit:b03-studio
+
+      - name: B03 long-bank, image upload and simulated keyboard audit
+        run: npm run audit:b03-studio-stress
 
       - name: Run app browser audit
         run: npm run audit:browser
