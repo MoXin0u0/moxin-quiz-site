@@ -100,12 +100,12 @@
         </div>
 
         <div class="library-source-tabs learning-source-tabs" role="tablist" aria-label="題庫來源">
-          <button class="source-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="authorLibraryPanel" data-library-source-tab="author">作者題庫</button>
-          <button class="source-tab" type="button" role="tab" aria-selected="false" aria-controls="userLibraryPanel" data-library-source-tab="user">自行新增</button>
+          <button id="authorLibraryTab" class="source-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="authorLibraryPanel" data-library-source-tab="author">作者題庫</button>
+          <button id="userLibraryTab" class="source-tab" type="button" role="tab" aria-selected="false" aria-controls="userLibraryPanel" data-library-source-tab="user">自行新增</button>
         </div>
       </section>
 
-      <div id="authorLibraryPanel" data-library-source-panel="author">
+      <div id="authorLibraryPanel" data-library-source-panel="author" role="tabpanel" aria-labelledby="authorLibraryTab">
         <section class="learning-content-card learning-bank-section" aria-labelledby="authorLibraryTitle">
           <div class="section-heading learning-card-heading">
             <div>
@@ -119,7 +119,7 @@
         </section>
       </div>
 
-      <div id="userLibraryPanel" data-library-source-panel="user" hidden>
+      <div id="userLibraryPanel" data-library-source-panel="user" role="tabpanel" aria-labelledby="userLibraryTab" hidden>
         <section class="panel import-panel" aria-labelledby="importTitle">
           <div class="section-heading">
             <div>
