@@ -4,7 +4,7 @@ const home = readFileSync('styles/v4-home.css', 'utf8');
 const styles = readFileSync('styles/v4-learning-styles.css', 'utf8');
 const sw = readFileSync('service-worker.js', 'utf8');
 
-assert.match(home, /\.home-action-card\.warning > span,[\s\S]*?color: color-mix\(in srgb, var\(--learn-gold\) 60%, var\(--learn-text\)\)/);
+assert.match(home, /\.home-action-card\.warning > span,[\s\S]*?color: color-mix\(in srgb, var\(--learn-gold\) 45%, var\(--learn-text\)\)/);
 for (const page of ['libraryView', 'reviewView', 'examCenterView', 'statsView']) {
   assert.match(styles, new RegExp('html\\[data-theme="dark"\\]\\[data-learning-style="academy"\\] #' + page));
 }

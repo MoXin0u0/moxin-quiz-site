@@ -176,7 +176,7 @@
 .home-action-card.warning > strong {
   /* Gold alone is too pale on all three light themes. Keep its warm hue,
      but blend with the theme's readable foreground for warning text. */
-  color: color-mix(in srgb, var(--learn-gold) 60%, var(--learn-text));
+  color: color-mix(in srgb, var(--learn-gold) 45%, var(--learn-text));
 }
 
 @media (max-width: 980px) {
