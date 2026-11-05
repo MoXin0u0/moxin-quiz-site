@@ -204,7 +204,10 @@ export function renderCloudSettingsCard(snapshot) {
     '<div class="settings-actions">',
     '<button class="button primary" type="button" data-open-sync-center>',
     '開啟資料與同步中心</button>', action,
-    '</div></article>',
+    '</div><p class="settings-note" data-cloud-link-disclosure>',
+    '雲端功能為選用；連結 Google 會請求 Drive appDataFolder 權限。',
+    '請先閱讀 <a href="./privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a>。',
+    '</p></article>',
   ].join('');
 }
 
@@ -240,10 +243,7 @@ function renderDevices(devices) {
       '</small></div><div class="sync-device-actions">',
       '<button class="button secondary" type="button" data-rename-device="',
       escapeAttr(device.deviceId), '">重新命名</button>',
-      revoke, '</div><p class="settings-note" data-cloud-link-disclosure>',
-    '雲端功能為選用；連結 Google 會請求 Drive appDataFolder 權限。',
-    '請先閱讀 <a href="./privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a>。',
-    '</p></article>',
+      revoke, '</div></article>',
     ].join('');
   }).join('');
 }
