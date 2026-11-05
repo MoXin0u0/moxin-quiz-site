@@ -412,10 +412,12 @@ function bindWorkspace(mount) {
 
     const addImagesInput = event.target.closest('[data-studio-image-input]');
     if (addImagesInput) {
-      const files = addImagesInput.files;
+      // FileList may be live: clearing the input can erase the list.
+      // Snapshot File objects before resetting the input for repeat uploads.
+      const files = Array.from(addImagesInput.files || []);
       const field = addImagesInput.dataset.studioImageInput;
       addImagesInput.value = '';
-      if (files?.length) await addImagesToActiveQuestion(field, files);
+      if (files.length) await addImagesToActiveQuestion(field, files);
       return;
     }
 
@@ -853,6 +855,18 @@ function renderEditor() {
   `;
 
   renderUndoNotice();
+  // When the rail re-renders after selection or save, retain the active
+  // question in view even for long horizontally scrolling mobile banks.
+  if (window.matchMedia('(max-width: 820px)').matches) {
+    const rail = mount.querySelector('.studio-r1-question-list');
+    const active = rail?.querySelector('[data-studio-select-question][aria-current="true"]');
+    if (rail && active && rail.scrollWidth > rail.clientWidth) {
+      const railRect = rail.getBoundingClientRect();
+      const activeRect = active.getBoundingClientRect();
+      rail.scrollLeft += (activeRect.left + activeRect.width / 2)
+        - (railRect.left + railRect.width / 2);
+    }
+  }
 }
 
 function renderBankSettings(draft) {
