@@ -82,6 +82,9 @@ jobs:
       - name: B03 mobile studio navigation and accessibility audit
         run: npm run audit:b03-studio
 
+      - name: B03 long-bank, image upload and simulated keyboard audit
+        run: npm run audit:b03-studio-stress
+
       - name: Run app browser audit
         run: npm run audit:browser
 
