@@ -94,6 +94,9 @@ jobs:
       - name: B04 dialog, mobile keyboard and motion smoke test
         run: npm run audit:b04-dialog
 
+      - name: B04 light/dark learning text readability
+        run: npm run audit:b04-theme
+
       - name: Run app browser audit
         run: npm run audit:browser
 
