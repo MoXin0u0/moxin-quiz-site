@@ -295,3 +295,9 @@
     margin-top: .45rem;
   }
 }
+
+/* The Academy dark palette has a muted copper accent; its default kicker
+   was only 2.4:1 against the priority card. Use readable theme text here. */
+html[data-theme="dark"] #libraryView > .library-priority-head .learning-kicker {
+  color: var(--learn-text);
+}
