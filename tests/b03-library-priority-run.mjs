@@ -41,7 +41,7 @@ assert.match(css, /#libraryView > \.library-priority-head/);
 assert.match(css, /\.source-tab\s*\{[^}]*min-height:\s*44px/s);
 assert.match(css, /@media \(max-width:\s*760px\)/);
 assert.match(css, /min-height:\s*48px/);
-assert.match(sw, /moxin-quiz-v5-5\.0\.0-prod-3/);
+assert.match(sw, /moxin-quiz-v5-5\.0\.0-prod-4/);
 assert.match(sw, /'\.\/app\.html'/);
 assert.match(sw, /'\.\/v3\.html'/);
 assert.match(sw, /'\.\/styles\/v4-home\.css'/);
