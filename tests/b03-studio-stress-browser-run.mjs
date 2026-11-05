@@ -55,7 +55,9 @@ try {
       await page.waitForFunction(() =>
         (document.querySelector('#storageStatus')?.textContent || '').includes('IndexedDB 已就緒'),
       null, { timeout: 20000 });
-      await page.locator('[data-nav-tools]').click();
+      // Mobile sidebar nav is intentionally hidden; use the existing delegated route action.
+      await page.evaluate(() => document.querySelector('[data-nav-tools]')?.click());
+      await page.locator('#studioWorkspaceMount .studio-r1-home').waitFor();
       await page.locator('#studioWorkspaceMount [data-studio-new]').click();
       const mount = page.locator('#studioWorkspaceMount');
       await mount.locator('.studio-r1-editor-shell').waitFor();
