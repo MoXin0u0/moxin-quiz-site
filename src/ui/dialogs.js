@@ -168,11 +168,25 @@ export function showDialog({
 
   return new Promise(resolve => {
     let settled = false;
+    const visualViewport = window.visualViewport;
+    const syncViewport = () => {
+      if (!visualViewport || !overlay.isConnected) return;
+      // The mobile on-screen keyboard reduces the visible viewport, not
+      // necessarily the CSS viewport used by vh/dvh.
+      overlay.style.top = `${visualViewport.offsetTop}px`;
+      overlay.style.height = `${visualViewport.height}px`;
+      overlay.style.bottom = 'auto';
+    };
+    visualViewport?.addEventListener('resize', syncViewport);
+    visualViewport?.addEventListener('scroll', syncViewport);
+    syncViewport();
 
     const finish = value => {
       if (settled) return;
       settled = true;
       document.removeEventListener('keydown', onKeyDown, true);
+      visualViewport?.removeEventListener('resize', syncViewport);
+      visualViewport?.removeEventListener('scroll', syncViewport);
       overlay.remove();
       activeDialog = null;
       if (
@@ -185,6 +199,18 @@ export function showDialog({
     };
 
     const onKeyDown = event => {
+      // Enter confirms single-line names; Ctrl/Meta+Enter confirms notes.
+      // Do not interrupt an active Chinese/Japanese IME composition.
+      if (event.isComposing || event.keyCode === 229) return;
+      if (
+        inputElement && event.target === inputElement &&
+        event.key === 'Enter' &&
+        (!input?.multiline || event.ctrlKey || event.metaKey)
+      ) {
+        event.preventDefault();
+        finish(inputElement.value.trim());
+        return;
+      }
       if (event.key === 'Escape') {
         event.preventDefault();
         finish(dismissValue);
@@ -236,6 +262,7 @@ export function showDialog({
     activeDialog = { finish };
 
     queueMicrotask(() => {
+      if (settled) return;
       if (inputElement) {
         inputElement.focus();
         inputElement.select();

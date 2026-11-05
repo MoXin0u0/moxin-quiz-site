@@ -1463,7 +1463,11 @@ html[data-scene-intensity="full"] .learning-hero-art {
   transition: opacity .22s ease;
 }
 
-html[data-reduce-motion="true"] .learning-hero-art,
+/* The app setting and OS setting are independent, valid selectors. */
+html[data-reduce-motion="true"] .learning-hero-art {
+  transition: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .learning-hero-art {
     transition: none !important;

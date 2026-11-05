@@ -3,17 +3,21 @@
   position: fixed;
   z-index: 220;
   inset: 0;
+  height: 100dvh;
   display: grid;
   place-items: center;
   padding: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: color-mix(in srgb, #000 42%, transparent);
   backdrop-filter: blur(3px);
 }
 
 .app-dialog {
   width: min(100%, 470px);
-  max-height: min(88vh, 680px);
+  max-height: min(calc(100% - 1rem), 680px);
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 1.05rem;
   border: 1px solid var(--line);
   border-radius: 17px;
@@ -82,7 +86,7 @@
 @media (max-width: 480px) {
   .app-dialog-overlay {
     align-items: end;
-    padding: .55rem;
+    padding: .55rem .55rem calc(.55rem + env(safe-area-inset-bottom, 0px));
   }
 
   .app-dialog {

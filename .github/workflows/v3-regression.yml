@@ -91,6 +91,9 @@ jobs:
       - name: B02 policy entry points and accessibility
         run: npm run audit:b02-policy
 
+      - name: B04 dialog, mobile keyboard and motion smoke test
+        run: npm run audit:b04-dialog
+
       - name: Run app browser audit
         run: npm run audit:browser
 
