@@ -79,7 +79,17 @@ try {
 
       const result = await new AxeBuilder({ page }).include('#libraryView').analyze();
       const severe = result.violations.filter(v => ['critical', 'serious'].includes(v.impact));
-      assert.deepEqual(severe.map(v => v.id), [], viewport.name + ': serious accessibility issues in library');
+      const details = severe.map(v => ({
+        rule: v.id,
+        impact: v.impact,
+        nodes: v.nodes.slice(0, 12).map(n => ({
+          target: n.target,
+          html: n.html,
+          summary: n.failureSummary,
+          contrast: n.any.map(x => x.data).filter(Boolean),
+        })),
+      }));
+      assert.deepEqual(details, [], viewport.name + ': serious accessibility issues in library');
 
       console.log('B03 library viewport PASS:', viewport.name, JSON.stringify(layout));
     } finally {
