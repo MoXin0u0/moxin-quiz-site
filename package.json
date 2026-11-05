@@ -35,7 +35,8 @@
     "audit:v5-conflict-convergence": "node tests/v5-conflict-convergence-browser-run.mjs",
     "audit:v5-sync-runtime-refresh": "node tests/v5-sync-runtime-refresh-browser-run.mjs",
     "audit:security": "node scripts/b01-security-audit.mjs",
-    "audit:b03-studio": "node tests/b03-studio-mobile-browser-run.mjs"
+    "audit:b03-studio": "node tests/b03-studio-mobile-browser-run.mjs",
+    "audit:b03-studio-stress": "node tests/b03-studio-stress-browser-run.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
