@@ -214,3 +214,90 @@
     min-height: 0;
   }
 }
+
+
+/* B03-02: Put the actual source selector and bank actions ahead of the
+   decorative learning scene. Explicit DOM order matches keyboard/screen readers. */
+#libraryView > .library-priority-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 .8rem;
+  padding: clamp(.85rem, 2vw, 1.15rem);
+  border: 1px solid var(--learn-line);
+  border-radius: 18px;
+  background: var(--learn-surface-strong);
+  box-shadow: var(--learn-shadow-soft);
+}
+
+#libraryView > .library-priority-head > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+#libraryView > .library-priority-head h2 {
+  margin: .15rem 0 .22rem;
+}
+
+#libraryView > .library-priority-head .learning-source-tabs {
+  display: flex;
+  flex: 0 0 auto;
+}
+
+#libraryView > .library-priority-head .source-tab {
+  min-height: 44px;
+  padding-inline: clamp(.65rem, 1.5vw, 1rem);
+  font-size: .9rem;
+}
+
+#libraryView > .library-priority-head .library-storage-inline {
+  position: static;
+  width: auto;
+  margin: .55rem 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#libraryView > .learning-hero-library {
+  margin-top: 1rem;
+}
+
+#libraryView > #authorLibraryPanel,
+#libraryView > #userLibraryPanel,
+#libraryView > #homeDashboardArea {
+  scroll-margin-top: 5rem;
+}
+
+@media (max-width: 760px) {
+  #libraryView > .library-priority-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: .7rem;
+    margin-bottom: .7rem;
+    padding: .85rem;
+  }
+
+  #libraryView > .library-priority-head .learning-source-tabs {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #libraryView > .library-priority-head .source-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 48px;
+    font-size: .9rem;
+  }
+
+  #libraryView > .library-priority-head .library-storage-inline {
+    margin-top: .45rem;
+  }
+}
+
+/* The Academy dark palette has a muted copper accent; its default kicker
+   was only 2.4:1 against the priority card. Use readable theme text here. */
+html[data-theme="dark"] #libraryView > .library-priority-head .learning-kicker {
+  color: var(--learn-text);
+}
