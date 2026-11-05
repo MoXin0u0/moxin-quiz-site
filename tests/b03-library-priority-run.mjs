@@ -5,6 +5,9 @@ const app = readFileSync('app.html', 'utf8');
 const legacy = readFileSync('v3.html', 'utf8');
 const css = readFileSync('styles/v4-home.css', 'utf8');
 const sw = readFileSync('service-worker.js', 'utf8');
+const dashboard = readFileSync('src/ui/home-dashboard.js', 'utf8');
+assert.match(dashboard, /題庫選擇已放在上方/);
+assert.doesNotMatch(dashboard, /題庫收藏仍維持在下方/);
 
 assert.equal(app, legacy, 'Main and compatibility entry must stay byte-identical.');
 
