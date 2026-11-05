@@ -13,7 +13,7 @@ const fail = message => errors.push(message);
 const warn = message => warnings.push(message);
 
 function normalizeLocalPath(value) {
-  if (!value || /^(?:https?:|data:|blob:|#)/i.test(value)) return null;
+  if (!value || /^(?:https?:|data:|blob:|mailto:|tel:|#)/i.test(value)) return null;
   const clean = value.split(/[?#]/, 1)[0].replace(/^\.\//, '');
   return clean || null;
 }
