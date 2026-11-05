@@ -212,10 +212,26 @@ function bindWorkspace(mount) {
       return;
     }
 
+    const jumpButton = event.target.closest('[data-studio-jump]');
+    if (jumpButton) {
+      const targetByStep = {
+        questions: '.studio-r1-question-rail',
+        edit: '.studio-r1-canvas',
+        inspect: '.studio-r1-inspector',
+        export: '.studio-r1-export-bar',
+      };
+      const target = mount.querySelector(targetByStep[jumpButton.dataset.studioJump] || ':not(*)');
+      target?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      return;
+    }
+
     const selectQuestion = event.target.closest('[data-studio-select-question]');
     if (selectQuestion) {
       state.activeQuestionId = selectQuestion.dataset.studioSelectQuestion;
       renderEditor();
+      if (window.matchMedia('(max-width: 820px)').matches) {
+        mount.querySelector('.studio-r1-canvas')?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
       return;
     }
 
@@ -781,13 +797,25 @@ function renderEditor() {
         </div>
       </header>
 
+      <div class="studio-r1-workflow-note" role="note">
+        <strong>編輯內容會自動儲存為本機草稿。</strong>
+        <span>「儲存到我的題庫」才能在本站練習；「匯出」是下載檔案，不會自動上傳或公開。</span>
+      </div>
+
       <div class="studio-r1-undo-host" data-studio-undo-host></div>
 
       ${suspects.length ? renderLegacyAuditBanner(suspects) : ''}
       ${renderBankSettings(state.draft)}
 
+      <nav class="studio-r1-mobile-nav" aria-label="工作室快速導覽">
+        <button type="button" data-studio-jump="questions">題目列表</button>
+        <button type="button" data-studio-jump="edit">編輯題目</button>
+        <button type="button" data-studio-jump="inspect">預覽與檢查</button>
+        <button type="button" data-studio-jump="export">下載檔案</button>
+      </nav>
+
       <div class="studio-r1-layout">
-        <aside class="studio-r1-question-rail">
+        <aside class="studio-r1-question-rail" id="studioQuestionRail" aria-label="題目列表">
           <div class="studio-r1-rail-head">
             <div><span>題目</span><strong>${state.draft.questions.length}</strong></div>
             <button class="studio-r1-icon-action" type="button" data-studio-add-question aria-label="新增題目">＋</button>
@@ -798,11 +826,11 @@ function renderEditor() {
           </div>
         </aside>
 
-        <main class="studio-r1-canvas">
+        <main class="studio-r1-canvas" id="studioQuestionCanvas">
           ${question ? renderQuestionEditor(question) : renderEmptyState('沒有題目', '請先新增一題。')}
         </main>
 
-        <aside class="studio-r1-inspector">
+        <aside class="studio-r1-inspector" id="studioQuestionInspector" aria-label="預覽與檢查">
           <div data-studio-preview-panel>${question ? renderPreviewPanel(question) : ''}</div>
           <div data-studio-validation-panel>${renderValidationPanel(report, question)}</div>
         </aside>
@@ -810,10 +838,10 @@ function renderEditor() {
 
       ${renderAssetSummary()}
 
-      <footer class="studio-r1-export-bar">
+      <footer class="studio-r1-export-bar" id="studioExportPanel">
         <div>
-          <strong>分享與匯出</strong>
-          <span>只有通過檢查的題庫才能匯出正式檔案。</span>
+          <strong>下載題庫與另存草稿</strong>
+          <span>「另存新題庫」會建立新草稿；ZIP／JSON 才會下載檔案。需先通過檢查，且不會自動上傳或公開。</span>
         </div>
         <div class="studio-r1-export-actions">
           <button class="button secondary compact" type="button" data-studio-save-copy>另存新題庫</button>
@@ -866,7 +894,7 @@ function renderQuestionNavItem(question, index) {
   return `
     <button type="button"
       class="studio-r1-question-nav-item ${question.id === state.activeQuestionId ? 'is-active' : ''}"
-      data-studio-select-question="${escapeAttr(question.id)}">
+      data-studio-select-question="${escapeAttr(question.id)}" ${question.id === state.activeQuestionId ? 'aria-current="true"' : ''}>
       <span class="studio-r1-question-number">${index + 1}</span>
       <span class="studio-r1-question-nav-copy">
         <strong>${escapeHtml(question.id)}</strong>
