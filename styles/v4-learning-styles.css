@@ -897,6 +897,26 @@ html[data-learning-style="academy"] #examCenterView,
 html[data-learning-style="academy"] #examView { --learn-page-accent: #844f43; --learn-page-accent-2: #b6874a; }
 html[data-learning-style="academy"] #statsView { --learn-page-accent: #4e7774; --learn-page-accent-2: #a27a48; }
 
+/* The page-specific Academy accents above are chosen for parchment surfaces.
+   On dark walnut surfaces they make headings and step markers too dim. */
+html[data-theme="dark"][data-learning-style="academy"] #libraryView {
+  --learn-page-accent: #ddb982;
+  --learn-page-accent-2: #e4c392;
+}
+html[data-theme="dark"][data-learning-style="academy"] #reviewView {
+  --learn-page-accent: #b7c69a;
+  --learn-page-accent-2: #d5c39d;
+}
+html[data-theme="dark"][data-learning-style="academy"] #examCenterView,
+html[data-theme="dark"][data-learning-style="academy"] #examView {
+  --learn-page-accent: #e0a89a;
+  --learn-page-accent-2: #e6c38c;
+}
+html[data-theme="dark"][data-learning-style="academy"] #statsView {
+  --learn-page-accent: #9fccc5;
+  --learn-page-accent-2: #d5ba8a;
+}
+
 html[data-learning-style="academy"] .learning-hero-whole {
   border-radius: 18px;
   border-color: color-mix(in srgb, var(--academy-brass) 42%, var(--learn-line));
@@ -1472,4 +1492,23 @@ html[data-reduce-motion="true"] .learning-hero-art {
   .learning-hero-art {
     transition: none !important;
   }
+}
+
+/* B04-02: text accents on very light lesson cards need darker ink.
+   Background art, page identity and primary CTA gradients are unchanged. */
+html[data-theme="light"] :is(
+  #libraryView,
+  #reviewView,
+  #examCenterView,
+  #statsView
+) .learning-kicker {
+  color: color-mix(in srgb, var(--learn-page-accent) 58%, var(--learn-text));
+}
+
+html[data-theme="light"] #examCenterView .learning-flow-step span {
+  color: color-mix(in srgb, var(--learn-page-accent) 55%, var(--learn-text));
+}
+
+html[data-theme="light"] .learning-bank-symbol.exam {
+  color: color-mix(in srgb, var(--learn-gold) 58%, var(--learn-text));
 }
