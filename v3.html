@@ -88,46 +88,20 @@
 
   <main class="app-main">
     <section id="libraryView" data-view="library">
-      <section class="learning-hero learning-hero-library learning-hero-whole" data-learning-scene="library">
-        <div class="learning-hero-art learning-hero-art-library" data-scene-art="library" aria-hidden="true"></div>
-        <div class="learning-hero-content">
-          <span class="learning-kicker">我的學習空間</span>
-          <h2>從一個題庫開始，建立今天的學習節奏</h2>
-          <p>挑選想練習的內容，完成題目後再回到複習與統計，讓每一次作答都留下進步的軌跡。</p>
-
-          <div class="learning-hero-cta-row">
-            <a class="button primary learning-hero-primary-cta" href="#librarySourceTitle">選擇題庫開始練習</a>
-            <button class="button secondary learning-hero-secondary-cta" type="button" data-nav-review>今日學習</button>
-          </div>
-
-          <div class="learning-hero-quick-links" aria-label="其他學習入口">
-            <button type="button" data-nav-exam><span aria-hidden="true">▣</span> 模擬考</button>
-            <button type="button" data-nav-stats><span aria-hidden="true">▥</span> 學習統計</button>
-          </div>
-
-          <div class="learning-storage-row">
+      <section class="learning-section-head library-priority-head" aria-labelledby="librarySourceTitle">
+        <div>
+          <span class="learning-kicker">題庫收藏</span>
+          <h2 id="librarySourceTitle">選擇今天要學的內容</h2>
+          <p>作者提供的題庫可以直接加入；自己整理的題庫則保存在「自行新增」。</p>
+          <div class="learning-storage-row library-storage-inline">
             <span class="learning-storage-dot" aria-hidden="true"></span>
             <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
           </div>
         </div>
 
-        <div class="learning-hero-journey" aria-hidden="true">
-          <span>選題庫</span><i></i><span>練習</span><i></i><span>複習</span>
-        </div>
-      </section>
-
-      <div id="homeDashboardArea" aria-live="polite"></div>
-
-      <section class="learning-section-head" aria-labelledby="librarySourceTitle">
-        <div>
-          <span class="learning-kicker">題庫收藏</span>
-          <h2 id="librarySourceTitle">選擇今天要學的內容</h2>
-          <p>作者提供的題庫可以直接加入；自己整理的題庫則保存在「自行新增」。</p>
-        </div>
-
         <div class="library-source-tabs learning-source-tabs" role="tablist" aria-label="題庫來源">
-          <button class="source-tab is-active" type="button" role="tab" aria-selected="true" data-library-source-tab="author">作者題庫</button>
-          <button class="source-tab" type="button" role="tab" aria-selected="false" data-library-source-tab="user">自行新增</button>
+          <button class="source-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="authorLibraryPanel" data-library-source-tab="author">作者題庫</button>
+          <button class="source-tab" type="button" role="tab" aria-selected="false" aria-controls="userLibraryPanel" data-library-source-tab="user">自行新增</button>
         </div>
       </section>
 
@@ -184,6 +158,31 @@
           <div id="bankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
         </section>
       </div>
+
+      <section class="learning-hero learning-hero-library learning-hero-whole" data-learning-scene="library">
+        <div class="learning-hero-art learning-hero-art-library" data-scene-art="library" aria-hidden="true"></div>
+        <div class="learning-hero-content">
+          <span class="learning-kicker">完成練習後</span>
+          <h2>練習之後，繼續累積學習進度</h2>
+          <p>上方可以直接選擇題庫開始作答；完成後再回顧今日複習、學習目標與進度。</p>
+
+          <div class="learning-hero-cta-row">
+            <a class="button primary learning-hero-primary-cta" href="#homeDashboardArea">查看學習進度</a>
+            <button class="button secondary learning-hero-secondary-cta" type="button" data-nav-review>今日學習</button>
+          </div>
+
+          <div class="learning-hero-quick-links" aria-label="其他學習入口">
+            <button type="button" data-nav-exam><span aria-hidden="true">▣</span> 模擬考</button>
+            <button type="button" data-nav-stats><span aria-hidden="true">▥</span> 學習統計</button>
+          </div>
+        </div>
+
+        <div class="learning-hero-journey" aria-hidden="true">
+          <span>選題庫</span><i></i><span>練習</span><i></i><span>複習</span>
+        </div>
+      </section>
+
+      <div id="homeDashboardArea" aria-live="polite"></div>
     </section>
 
     <section id="reviewView" data-view="review" hidden>
