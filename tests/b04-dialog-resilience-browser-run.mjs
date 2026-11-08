@@ -89,26 +89,32 @@ try {
       await batch.locator('[data-studio-batch-close]').last().click();
       assert.equal(await batch.count(), 0, profile.name + ': batch cancel');
 
-      // Reuse the actual native Studio dialog class and viewport watcher
-      // for the compact type-switch shell. This is not a real OS keyboard test.
-      await page.evaluate(async () => {
-        const { watchNativeDialogViewport } = await import(new URL('./src/ui/dialogs.js', document.baseURI).href);
-        const native = document.createElement('dialog');
-        native.className = 'studio-r1-dialog';
-        native.innerHTML = '<div class="studio-r1-dialog-card"><p>題型切換</p><button type="button">取消</button></div>';
-        document.body.appendChild(native);
-        window.__b0403Release = watchNativeDialogViewport(native);
-        native.showModal();
-      });
+      // Real Studio type-change confirmation: a choice question has options,
+      // so switching to fill-in must ask before destructive conversion.
+      const workspace = page.locator('#studioWorkspaceMount');
+      await workspace.locator('[data-question-type-choice="fill-in"]').click();
       const native = page.locator('dialog.studio-r1-dialog');
-      insideViewport(await bounds(native), profile.name + ': type switch');
-      await page.evaluate(() => {
-        window.__b0403Release();
-        const native = document.querySelector('dialog.studio-r1-dialog');
-        native.close();
-        native.remove();
+      await native.waitFor();
+      await page.waitForFunction(() => {
+        const dlg = document.querySelector('dialog.studio-r1-dialog');
+        return dlg && Math.abs(parseFloat(dlg.style.maxHeight) - (window.visualViewport.height - 16)) < 4;
       });
-      assert.equal(await native.count(), 0);
+      insideViewport(await bounds(native), profile.name + ': type switch');
+      assert.match(await native.innerText(), /切換題型/);
+      await native.locator('[data-studio-dialog-cancel]').click();
+      assert.equal(await native.count(), 0, profile.name + ': cancelled type change');
+      assert.equal(await workspace.locator('[data-question-type-choice="single-choice"]').getAttribute('class')
+        .then(v => v.includes('is-active')), true, 'cancel must preserve original type');
+
+      await workspace.locator('[data-question-type-choice="fill-in"]').click();
+      await native.waitFor();
+      await native.locator('[data-studio-dialog-confirm]').click();
+      await page.waitForFunction(() => {
+        const target = document.querySelector('#studioWorkspaceMount [data-question-type-choice="fill-in"]');
+        return target?.classList.contains('is-active') === true;
+      });
+      assert.equal(await native.count(), 0, profile.name + ': confirmed type change');
+
       console.log('B04-03 dialog lifecycle and compact viewport PASS', profile.name);
     } finally {
       await context.close();
