@@ -37,9 +37,18 @@ try {
       await closeDatabase();
       await new Promise((resolve, reject) => {
         const request = indexedDB.deleteDatabase(dbName);
-        request.onsuccess = resolve;
-        request.onerror = () => reject(request.error);
-        request.onblocked = () => reject(new Error('IndexedDB delete blocked.'));
+        let wasBlocked = false;
+        // IDB fires "blocked" while an earlier connection/transaction is still
+        // closing. It is not a terminal failure: onsuccess may follow shortly.
+        // Keep a finite watchdog so a truly stuck connection still fails CI.
+        const timeout = setTimeout(() => {
+          reject(new Error(wasBlocked
+            ? 'IndexedDB delete remained blocked after 10 seconds.'
+            : 'IndexedDB delete timed out after 10 seconds.'));
+        }, 10000);
+        request.onsuccess = () => { clearTimeout(timeout); resolve(); };
+        request.onerror = () => { clearTimeout(timeout); reject(request.error); };
+        request.onblocked = () => { wasBlocked = true; };
       });
       await openDatabase();
       await runV5MigrationToCompletion();
