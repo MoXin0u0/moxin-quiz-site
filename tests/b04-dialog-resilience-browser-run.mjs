@@ -50,7 +50,7 @@ try {
       await page.locator('.app-dialog-actions button').last().click();
       await page.waitForFunction(() => window.__b0403New === true);
 
-      const note = '中文筆記第一行\\n' + '長文字內容及空白。'.repeat(80);
+      const note = '中文筆記第一行\n' + '長文字內容及空白。'.repeat(80);
       await page.evaluate(async value => {
         const { showTextAreaDialog } = await import(new URL('./src/ui/dialogs.js', document.baseURI).href);
         window.__b0403Note = '__pending__';
@@ -84,7 +84,7 @@ try {
       });
       insideViewport(await bounds(batch), profile.name + ': batch import');
       await batch.locator('[data-studio-batch-source]').fill(
-        '1. 範例題目？\\nA. 正確\\nB. 錯誤\\n答案：A');
+        '1. 範例題目？\nA. 正確\nB. 錯誤\n答案：A');
       assert.match(await batch.locator('[data-studio-batch-source]').inputValue(), /正確/);
       await batch.locator('[data-studio-batch-close]').last().click();
       assert.equal(await batch.count(), 0, profile.name + ': batch cancel');
