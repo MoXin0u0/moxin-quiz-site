@@ -15,5 +15,5 @@ assert.match(dialogs, /if \(settled\) return/);
 assert.match(css, /height:\s*100dvh/);
 assert.match(css, /max-height:\s*min\(calc\(100% - 1rem\), 680px\)/);
 assert.match(css, /safe-area-inset-bottom/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-6'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-7'/);
 console.log('B04-01 dialog/motion/keyboard source contracts PASS');
