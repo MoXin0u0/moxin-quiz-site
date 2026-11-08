@@ -57,10 +57,12 @@ for (const legacyReadme of [
   assert.equal(
     fs.existsSync(legacyReadme),
     false,
-    `${legacyReadme} should be consolidated into docs/V4_0_CHANGELOG.md`,
+    `${legacyReadme} should be consolidated into CHANGELOG.md`,
   );
 }
 
-assert.equal(fs.existsSync('docs/V4_0_CHANGELOG.md'), true);
+// v4 release history is now retained in the single V3–V5 canonical changelog.
+assert.equal(fs.existsSync('docs/V4_0_CHANGELOG.md'), false);
+assert.match(fs.readFileSync('CHANGELOG.md', 'utf8'), /## v4\.0/);
 
 console.log('MoXin Quiz v4.0 P2B.1 Studio batch UI + repository hygiene tests passed.');
