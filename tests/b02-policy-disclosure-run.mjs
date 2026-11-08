@@ -424,7 +424,7 @@ assert.match(noRegisterPlan, /已核准設計；未啟用/);
 assert.match(noRegisterPlan, /不應自動選擇個人行事曆或建立真實任務/);
 assert.match(effectiveNoticePlan, /不能因此宣稱 2026-10-20 已對外公告/);
 assert.match(effectiveNoticePlan, /重大變更/);
-assert.match(read('docs/roadmap/README.md'), /B02 發布前專項工作入口/);
+assert.match(read('docs/roadmap/README.md'), /B02-Lite 歷史執行入口與獨立風險/);
 const d09Decision = read('docs/roadmap/legal/B02_D09_CONSENT_MODE_OPTIONS.md');
 assert.match(d09Decision, /D-09「方案選擇」決策 Gate PASS/);
 assert.match(d09Decision, /D09-A（已核准）/);
@@ -471,7 +471,7 @@ assert.match(litePlan, /L2：不用新系統的私密處理能力/);
 assert.match(litePlan, /L3：一次性發布檢查/);
 assert.match(litePlan, /L4：獨立的現有高風險內容/);
 assert.match(litePlan, /不因免費或免責而視為合法|不因文件變短而假裝已合法/);
-assert.match(read('docs/roadmap/README.md'), /日常工作唯一入口/);
+assert.match(read('docs/roadmap/README.md'), /原 B02 執行清單已完成發布用途/);
 for (const path of ['privacy.html', 'terms.html']) {
   assert.match(read(path), /id="quick-summary"/);
   assert.match(read(path), /aria-labelledby=/);
@@ -484,3 +484,11 @@ assert.match(read('terms.html'), /本站不是考試主辦機構的官方網站/
 assert.doesNotMatch(read('terms.html'), /本站不負任何法律責任/);
 
 console.log('B02 policy links, user control guidance, draft boundary and Local-first contracts PASS.');
+
+// From 2026-11-08 onward, release notes have one canonical file, not one file per update.
+const unifiedChangelog = read('CHANGELOG.md');
+assert.match(unifiedChangelog, /唯一持續維護的版本更新紀錄檔/);
+assert.match(unifiedChangelog, /## v5\.0\.0/);
+assert.match(unifiedChangelog, /## v4\.0/);
+assert.match(unifiedChangelog, /## v3 系列/);
+assert.equal(fs.existsSync('docs/V4_0_CHANGELOG.md'), false);
