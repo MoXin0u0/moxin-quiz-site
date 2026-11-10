@@ -9,7 +9,8 @@ on:
       - "v4.*"
       - v5-cloud-sync
       - v5-cloud-sync-live-rc
-      - "improvement/**"
+  # Improvement branches are validated on pull_request; triggering push too
+  # creates duplicate check-run names and a cancelled required-check record.
   pull_request:
   workflow_dispatch:
 
