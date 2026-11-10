@@ -1505,7 +1505,8 @@ html[data-reduce-motion="true"] .learning-hero-art {
     filter: none !important;
   }
 
-  html[data-scene-intensity="full"] .learning-hero-whole::before {
+  html[data-scene-intensity="full"] .learning-hero-whole::before,
+  html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-whole::before {
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--learn-surface-strong) 8%, transparent) 0%,
