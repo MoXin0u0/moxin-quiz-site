@@ -1,8 +1,8 @@
 # 墨忻刷題網｜版本更新紀錄（CHANGELOG）
 
 > 這是**唯一持續維護的版本更新紀錄檔**。產品版本、已正式合併的功能批次、安全性修正與重要相容性變更，都集中追加於此。
-> 最後核對：2026-11-08（臺灣時間）；資料依據為 GitHub `main`、已合併 PR 與 GitHub Actions。
-> **網站對外應用程式版本仍為 v5.0.0**；B00～B09 是「V5 上線後改善批次」，並不是 v5.1／v5.2 等正式版本號。Service Worker 的 `prod-4`～`prod-7` 是快取版本，不等於產品主版本。
+> 最後核對：2026-11-10（臺灣時間）；資料依據為 GitHub `main`、已合併 PR 與 GitHub Actions。
+> **網站對外應用程式版本仍為 v5.0.0**；B00～B09 是「V5 上線後改善批次」，並不是 v5.1／v5.2 等正式版本號。Service Worker 的 `prod-4`～`prod-8` 是快取版本，不等於產品主版本。
 
 ## 維護方式（自本次整理起適用）
 
@@ -12,16 +12,24 @@
 - 規格、資料格式、安全及法律判斷等**確實需要長期參照**的內容仍可保留獨立技術文件，但它們不是另一份版本更新日誌；既有歷史不刪除其 Git commit 與 PR 追溯。
 - 更新時**修改此檔原有章節**，不要再建立 `CHANGELOG_Bxx.md`、`UPDATE_STEP_xx.md` 或「每次操作一檔」的紀錄。公開首頁的簡短版本介紹只需摘錄此檔，不再平行維護另一套完整歷史。
 
-## 目前正式站摘要（2026-11-08）
+## 目前正式站摘要（2026-11-10）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02，以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`8d2c12fc`](https://github.com/MoXin0u0/moxin-quiz-site/commit/8d2c12fc81ca5f941bfa8bd5dc50efe2a288cff5)，PWA App Shell `prod-7`。
-- **最新主分支自動化驗證**：[GitHub Pages 部署 SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42461393408)；[V5 完整 Regression SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42461393708)。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新正式主分支基準**：[`9dbd6d73`](https://github.com/MoXin0u0/moxin-quiz-site/commit/9dbd6d73a9b82d6c8c96ba11af1e76a253c92910)，PWA App Shell `prod-8`。
+- **最新主分支自動化驗證**：[GitHub Pages（B04-03）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42756066040)；[V5 完整 Regression（B04-03）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42756066442)（以 Actions 當下結論為準）。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-10｜B04-03：手機短螢幕、工作室彈窗和取消行為
+
+- **已合併主分支** [PR #27](https://github.com/MoXin0u0/moxin-quiz-site/pull/27)，提交 `9dbd6d73`：修正新對話框取代既有輸入框時的取消值；共用輸入／通知 Dialog 跟隨 VisualViewport 的位置及尺寸。
+- 題庫工作室的「批次貼題」及「題型切換確認」原生 Dialog 加入可視區域定位，短螢幕與手機虛擬鍵盤縮小畫面時能捲動內容；關閉後移除尺寸監聽器。長筆記編輯器在窄高度使用較短的初始顯示區。
+- 新增 Chromium 直向 320px、橫向短高度 667px、深色 390px 的模擬情境，測試中文長內容保留、真正的題型切換取消／確認流程、原生批次 Dialog；並維持 B01～B04、V5 全套回歸。**自動化縮放並非 Android／iOS 實體虛擬鍵盤驗收。**
+- PWA App Shell `prod-7 → prod-8`，不修改 IndexedDB schema、Google OAuth scope、雲端協議、題庫或作答紀錄。正式 CI 與 Pages 連結見上方摘要。
+- **尚待實機**：手機鍵盤、橫向與短螢幕觸控、ZIP／JSON 下載及 PWA 離線更新；沿 [Issue #23](https://github.com/MoXin0u0/moxin-quiz-site/issues/23) 持續追蹤，不能因 CI 成功宣稱實機全部驗收。
 
 ### 2026-11-08｜B04-02：三主題配色可讀性與正式回歸修復
 
@@ -69,7 +77,7 @@
 
 ## 待處理（不是已發布更新）
 
-- B04-03：補驗其他 Dialog 類型、短螢幕、手機橫向、真實系統鍵盤與檔案下載；依實際問題決定是否修補，追蹤 [Issue #23](https://github.com/MoXin0u0/moxin-quiz-site/issues/23)。
+- B04-03 剩餘**實機**驗收：手機橫向、真實系統鍵盤與 ZIP／JSON 檔案下載；程式修補已併入 main，追蹤 [Issue #23](https://github.com/MoXin0u0/moxin-quiz-site/issues/23)。
 - B05：Academy／Epic 場景區分、Full 強度與高 DPI 畫質。
 - B06：作者題庫 443 題的來源、答案／詳解審查；CERPS 再利用權利須另案處理。
 - B07：程式架構、效能與長時間壓力測試。
