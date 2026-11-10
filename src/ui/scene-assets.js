@@ -126,15 +126,18 @@ function currentContext() {
 function pickAssetVariant(entry, context) {
   if (!entry) return null;
 
+  // Full may use optional genuinely high-detail files. Reduced deliberately
+  // reuses the regular art: dimming a 4K image is not worth its bandwidth.
+  const allow2x = context.highDpi && context.intensity === 'full';
   const candidates = context.mobile
     ? [
-        context.highDpi && entry.mobile2x,
+        allow2x && entry.mobile2x,
         entry.mobile,
-        context.highDpi && entry.desktop2x,
+        allow2x && entry.desktop2x,
         entry.desktop,
       ]
     : [
-        context.highDpi && entry.desktop2x,
+        allow2x && entry.desktop2x,
         entry.desktop,
       ];
 
@@ -144,7 +147,7 @@ function pickAssetVariant(entry, context) {
   let variant = 'desktop';
   if (context.mobile && href === entry.mobile2x) variant = 'mobile-2x';
   else if (context.mobile && href === entry.mobile) variant = 'mobile';
-  else if (context.highDpi && href === entry.desktop2x) variant = 'desktop-2x';
+  else if (allow2x && href === entry.desktop2x) variant = 'desktop-2x';
   else if (context.mobile) variant = 'mobile-fallback-desktop';
 
   return {

@@ -1543,3 +1543,16 @@ html[data-theme="light"] #examCenterView .learning-flow-step span {
 html[data-theme="light"] .learning-bank-symbol.exam {
   color: color-mix(in srgb, var(--learn-gold) 58%, var(--learn-text));
 }
+
+/* B05-03A: desktop Epic headings must not spill across the art focal zone.
+   Narrow only desktop copy; preserve the right-side image and mobile layout. */
+@media (min-width: 761px) {
+  html[data-learning-style="epic"] .learning-hero-whole .learning-hero-content h2 {
+    max-width: min(100%, clamp(20rem, 33vw, 27rem));
+    text-wrap: balance;
+  }
+
+  html[data-learning-style="epic"] .learning-hero-whole .learning-hero-content > p {
+    max-width: min(100%, clamp(22rem, 38vw, 31rem));
+  }
+}
