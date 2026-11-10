@@ -61,6 +61,11 @@ try {
               src: el.dataset.sceneSrc,
               mask: getComputedStyle(parent, '::before').backgroundImage,
               dpr: devicePixelRatio,
+              viewportWidth: innerWidth,
+              cssMobile: matchMedia('(max-width: 760px)').matches,
+              cssTiny: matchMedia('(max-width: 420px)').matches,
+              rootIntensity: document.documentElement.dataset.sceneIntensity,
+              stylesheetLoaded: [...document.styleSheets].some(s => s.href?.includes('v4-learning-styles.css')),
             };
           });
           const scope = `${viewport.name}/${style}/${theme}`;
@@ -69,7 +74,7 @@ try {
           assert.equal(full.variant, viewport.mobile ? 'mobile' : 'desktop', scope + ': source variant');
           assert.equal(full.src.includes('-mobile.webp'), viewport.mobile, scope + ': actual mobile source');
           assert.ok(Math.abs(full.opacity - viewport.expectedOpacity) < .015,
-            scope + ': Full opacity should be ' + viewport.expectedOpacity + ', got ' + full.opacity);
+            scope + ': Full opacity should be ' + viewport.expectedOpacity + ', diagnostics ' + JSON.stringify(full));
           assert.notEqual(full.image, 'none', scope + ': Full scene must render');
           if (viewport.mobile) {
             assert.equal(full.filter, 'none', scope + ': no softening filter');
