@@ -15,13 +15,21 @@
 ## 目前正式站摘要（2026-11-10）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載），以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`e26067cb`](https://github.com/MoXin0u0/moxin-quiz-site/commit/e26067cb1c6e010cfff60d6a186fe5c9bbeccc4b)，PWA App Shell `prod-9`。
-- **最新主分支自動化驗證**：[GitHub Pages（B05-01）SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42763499475)；[V5 完整 Regression（B05-01）SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42763499478)。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新正式主分支基準**：[`3bee1718`](https://github.com/MoXin0u0/moxin-quiz-site/commit/3bee1718b083453ce17b6f01de1acc97d58767de)，PWA App Shell 維持 `prod-9`（僅測試與 CI 變更）。
+- **最新主分支自動化驗證**：[GitHub Pages（B05-02）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42767974969)；[V5 完整 Regression（B05-02）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42767976410)（依各 Actions 最終結論為準）。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-10｜B05-02：場景原圖完整性、實際 DPR 畫質量測與視覺對照
+
+- **已合併** [PR #31](https://github.com/MoXin0u0/moxin-quiz-site/pull/31)，正式提交 `3bee1718`；已納入 32 張正式 WebP 的 SHA-256／像素尺寸／來源差異契約，並以 Chromium 當下 Hero 實際寬高、`background-size:cover` 與 DPR 計算畫面像素覆蓋率。
+- **量測結果（來源像素／實體顯示像素）**：390px 手機 DPR3 約 `0.94`；1366px 桌機 DPR2 約 `1.21`；1920px 桌機 DPR2 約 `0.80`；2560px 寬螢幕 DPR2 約 `0.72`。**只代表原圖解析度覆蓋率，不等於影像美感、認知清晰度或人眼評鑑分數。**
+- 新增 8 張 Academy／Epic × Light／Dark × 手機／桌機的真實瀏覽器畫面，隨 PR 的 GitHub Actions `b05-scene-visual-review` artifact 暫存 7 天（2026-11-17 到期）；完整測試報告：[PR CI #42767366407](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42767366407)。
+- 修正 `improvement/**` 分支重複觸發 Push 與 PR CI、導致相同必要檢查出現取消紀錄而擋住合併的問題；**仍強制 PR 跑完 Unit + release preflight 與 V5 browser baseline，未繞過主分支保護**。
+- 這批**沒有替換影像、修改資料庫、Google OAuth 或同步程式**；PWA 快取保持 `prod-9`。後續真實高 DPI 原圖與美術風格改進追蹤 [Issue #32](https://github.com/MoXin0u0/moxin-quiz-site/issues/32)，不得把舊圖單純放大冒稱更高原始細節。
 
 ### 2026-11-10｜B05-01：手機場景完整模式清晰度與預載效能
 
@@ -86,7 +94,7 @@
 ## 待處理（不是已發布更新）
 
 - B04-03 剩餘**實機**驗收：手機橫向、真實系統鍵盤與 ZIP／JSON 檔案下載；程式修補已併入 main，追蹤 [Issue #23](https://github.com/MoXin0u0/moxin-quiz-site/issues/23)。
-- B05-02：Academy／Epic 來源圖的視覺品質、真正高 DPI／4K 細節及必要重製評估；B05-01 Full 透明度與預載修正已正式發布。
+- B05-03：依 B05-02 真實量測選擇性改善 1920px 以上高 DPI 桌機原圖與經典／史詩風格、確保文字安全區；B05-01／B05-02 均已合併，詳 [Issue #32](https://github.com/MoXin0u0/moxin-quiz-site/issues/32)。
 - B06：作者題庫 443 題的來源、答案／詳解審查；CERPS 再利用權利須另案處理。
 - B07：程式架構、效能與長時間壓力測試。
 - B08：可能採用的「墨境」品牌／Logo／更名相容性（尚非正式更名）。
