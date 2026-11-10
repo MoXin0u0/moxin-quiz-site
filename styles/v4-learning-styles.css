@@ -1499,8 +1499,8 @@ html[data-reduce-motion="true"] .learning-hero-art {
    while shielding the text/CTA with a vertical (not global) scrim.
    Reduced and Off retain their own more restrained behavior. */
 @media (max-width: 760px) {
-  html[data-scene-intensity="full"] .learning-hero-art,
-  html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-art {
+  html[data-learning-style][data-scene-intensity="full"] .learning-hero-art,
+  html[data-theme="dark"][data-learning-style][data-scene-intensity="full"] .learning-hero-art {
     opacity: .86 !important;
     filter: none !important;
   }
@@ -1519,8 +1519,8 @@ html[data-reduce-motion="true"] .learning-hero-art {
 }
 
 @media (max-width: 420px) {
-  html[data-scene-intensity="full"] .learning-hero-art,
-  html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-art {
+  html[data-learning-style][data-scene-intensity="full"] .learning-hero-art,
+  html[data-theme="dark"][data-learning-style][data-scene-intensity="full"] .learning-hero-art {
     opacity: .82 !important;
   }
 }
