@@ -23,7 +23,7 @@ assert.ok(studio.includes('releaseViewport = watchNativeDialogViewport(dialog)')
 assert.ok(batchCss.includes('data-compact-height="true"'));
 assert.ok(studioCss.includes('overscroll-behavior: contain'));
 assert.ok(appCss.includes('data-compact-height="true"'));
-assert.ok(worker.includes('moxin-quiz-v5-5.0.0-prod-8'));
+assert.ok(worker.includes('moxin-quiz-v5-5.0.0-prod-9'));
 assert.ok(pkg.scripts.test.includes('b04-dialog-resilience-run.mjs'));
 assert.ok(pkg.scripts['audit:b04-resilience'].includes('b04-dialog-resilience-browser-run.mjs'));
 assert.ok(workflow.includes('npm run audit:b04-resilience'));

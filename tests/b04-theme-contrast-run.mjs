@@ -11,5 +11,5 @@ for (const page of ['libraryView', 'reviewView', 'examCenterView', 'statsView'])
 assert.match(styles, /html\[data-theme="light"\] :is\([\s\S]*?\) \.learning-kicker \{\s*color: color-mix\(in srgb, var\(--learn-page-accent\) 58%, var\(--learn-text\)\)/);
 assert.match(styles, /html\[data-theme="light"\] #examCenterView \.learning-flow-step span \{\s*color: color-mix\(in srgb, var\(--learn-page-accent\) 55%, var\(--learn-text\)\)/);
 assert.match(styles, /html\[data-theme="light"\] \.learning-bank-symbol\.exam \{\s*color: color-mix\(in srgb, var\(--learn-gold\) 58%, var\(--learn-text\)\)/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-8'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-9'/);
 console.log('B04-02 light/dark theme readability and PWA source contracts PASS');

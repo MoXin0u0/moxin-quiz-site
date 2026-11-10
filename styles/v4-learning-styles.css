@@ -1494,6 +1494,37 @@ html[data-reduce-motion="true"] .learning-hero-art {
   }
 }
 
+/* B05-01: 'Full' on phones previously still showed artwork at only
+   54–62% opacity. Keep the artwork crisp in its dedicated mobile crop,
+   while shielding the text/CTA with a vertical (not global) scrim.
+   Reduced and Off retain their own more restrained behavior. */
+@media (max-width: 760px) {
+  html[data-learning-style][data-scene-intensity="full"] .learning-hero-art,
+  html[data-theme="dark"][data-learning-style][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .86 !important;
+    filter: none !important;
+  }
+
+  html[data-scene-intensity="full"] .learning-hero-whole::before,
+  html[data-theme="dark"][data-scene-intensity="full"] .learning-hero-whole::before {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--learn-surface-strong) 8%, transparent) 0%,
+      color-mix(in srgb, var(--learn-surface-strong) 18%, transparent) 24%,
+      color-mix(in srgb, var(--learn-surface-strong) 84%, transparent) 44%,
+      color-mix(in srgb, var(--learn-surface-strong) 98%, transparent) 64%,
+      var(--learn-surface-strong) 100%
+    );
+  }
+}
+
+@media (max-width: 420px) {
+  html[data-learning-style][data-scene-intensity="full"] .learning-hero-art,
+  html[data-theme="dark"][data-learning-style][data-scene-intensity="full"] .learning-hero-art {
+    opacity: .82 !important;
+  }
+}
+
 /* B04-02: text accents on very light lesson cards need darker ink.
    Background art, page identity and primary CTA gradients are unchanged. */
 html[data-theme="light"] :is(
