@@ -73,7 +73,10 @@ try {
           assert.notEqual(full.image, 'none', scope + ': Full scene must render');
           if (viewport.mobile) {
             assert.equal(full.filter, 'none', scope + ': no softening filter');
-            assert.match(full.mask, /linear-gradient\(180deg/, scope + ': vertical text mask');
+            // CSSOM may serialize 180deg as the default downward direction.
+            // The 24% stop is unique to the mobile Full text-safe scrim.
+            assert.match(full.mask, /linear-gradient\(/, scope + ': text-safe gradient');
+            assert.match(full.mask, /24%/, scope + ': mobile Full scrim wins theme-specific rules');
           }
 
           await page.evaluate(() => {
