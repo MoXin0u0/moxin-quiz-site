@@ -6,7 +6,8 @@ const URL = process.env.BASE_URL || 'http://127.0.0.1:4173/app.html';
 const browser = await chromium.launch({ headless: true });
 const viewports = [
   { name: 'phone-320-2x', width: 320, height: 568, mobile: true, expectedOpacity: .82 },
-  { name: 'phone-390-2x', width: 390, height: 844, mobile: true, expectedOpacity: .86 },
+  { name: 'phone-390-2x', width: 390, height: 844, mobile: true, expectedOpacity: .82 },
+  { name: 'phone-430-2x', width: 430, height: 932, mobile: true, expectedOpacity: .86 },
   { name: 'tablet-768-2x', width: 768, height: 1024, mobile: false, expectedOpacity: 1 },
   { name: 'desktop-1366-2x', width: 1366, height: 768, mobile: false, expectedOpacity: 1 },
 ];
