@@ -2,7 +2,7 @@
 
 > 這是**唯一持續維護的版本更新紀錄檔**。產品版本、已正式合併的功能批次、安全性修正與重要相容性變更，都集中追加於此。
 > 最後核對：2026-11-10（臺灣時間）；資料依據為 GitHub `main`、已合併 PR 與 GitHub Actions。
-> **網站對外應用程式版本仍為 v5.0.0**；B00～B09 是「V5 上線後改善批次」，並不是 v5.1／v5.2 等正式版本號。Service Worker 的 `prod-4`～`prod-8` 是快取版本，不等於產品主版本。
+> **網站對外應用程式版本仍為 v5.0.0**；B00～B09 是「V5 上線後改善批次」，並不是 v5.1／v5.2 等正式版本號。Service Worker 的 `prod-4`～`prod-9` 是快取版本，不等於產品主版本。
 
 ## 維護方式（自本次整理起適用）
 
@@ -15,13 +15,21 @@
 ## 目前正式站摘要（2026-11-10）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補），以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`9dbd6d73`](https://github.com/MoXin0u0/moxin-quiz-site/commit/9dbd6d73a9b82d6c8c96ba11af1e76a253c92910)，PWA App Shell `prod-8`。
-- **最新主分支自動化驗證**：[GitHub Pages（B04-03）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42756066040)；[V5 完整 Regression（B04-03）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42756066442)（以 Actions 當下結論為準）。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新正式主分支基準**：[`e26067cb`](https://github.com/MoXin0u0/moxin-quiz-site/commit/e26067cb1c6e010cfff60d6a186fe5c9bbeccc4b)，PWA App Shell `prod-9`。
+- **最新主分支自動化驗證**：[GitHub Pages（B05-01）SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42763499475)；[V5 完整 Regression（B05-01）SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42763499478)。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-10｜B05-01：手機場景完整模式清晰度與預載效能
+
+- **已合併發布** [PR #29](https://github.com/MoXin0u0/moxin-quiz-site/pull/29)，主分支提交 `e26067cb`：修正舊 Academy／Epic 高權重 CSS 覆寫手機「完整」模式的問題，手機 Full 場景設為 420px 以下 82% 或 421～760px 86% 可見度；保留 Reduced／Off／Focus 不同視覺效果，並於手機文字區以局部垂直漸層保護可讀性。
+- 修正 `app.html` 首次預載：依 760px breakpoint 選擇已存在的手機或桌機 WebP，省流量設定時不預載場景；同步維護 `v3.html` byte-identical 相容入口，避免手機重複下載桌機場景。
+- 原始 **32 張高品質 WebP**（2 風格 × 4 頁面 × 2 明暗 × 桌機／手機）不重新生成、不修改 SHA；PWA App Shell `prod-8 → prod-9`，Scene Cache 保持 `r2k.5-5`。
+- 新增 Chromium 模擬 320／390／430／768／1366px 及 DPR2，驗證圖片來源、透明度、遮罩、Full／Reduced／Off／Focus、省流量和既有 B00～B04／V5 回歸。最終 [Pages](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42763499475) 與 [V5 Regression](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/42763499478) **均為 SUCCESS**。
+- **限制**：既有桌機素材仍是 2560×1440，沒有 4K／DPR2 專用來源；CSS 修補不增加原圖實際細節，不代表 4K 顯示器或所有實機視覺品質已達標，留待 B05-02 量化與美術驗收。
 
 ### 2026-11-10｜B04-03：手機短螢幕、工作室彈窗和取消行為
 
@@ -78,7 +86,7 @@
 ## 待處理（不是已發布更新）
 
 - B04-03 剩餘**實機**驗收：手機橫向、真實系統鍵盤與 ZIP／JSON 檔案下載；程式修補已併入 main，追蹤 [Issue #23](https://github.com/MoXin0u0/moxin-quiz-site/issues/23)。
-- B05：Academy／Epic 場景區分、Full 強度與高 DPI 畫質。
+- B05-02：Academy／Epic 來源圖的視覺品質、真正高 DPI／4K 細節及必要重製評估；B05-01 Full 透明度與預載修正已正式發布。
 - B06：作者題庫 443 題的來源、答案／詳解審查；CERPS 再利用權利須另案處理。
 - B07：程式架構、效能與長時間壓力測試。
 - B08：可能採用的「墨境」品牌／Logo／更名相容性（尚非正式更名）。
