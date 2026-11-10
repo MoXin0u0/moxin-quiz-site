@@ -34,13 +34,20 @@
         ? settings.sceneIntensity
         : 'full';
 
-      if (document.documentElement.dataset.sceneIntensity === 'full' &&
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const saveDataRequested = connection?.saveData === true ||
+        matchMedia('(prefers-reduced-data: reduce)').matches;
+      if (!saveDataRequested && document.documentElement.dataset.sceneIntensity === 'full' &&
           ['academy', 'epic'].includes(document.documentElement.dataset.learningStyle)) {
+        // Match the runtime scene variant. Preloading desktop AND mobile art
+        // wastes bandwidth and defeats the light mobile page experience.
+        const isMobile = matchMedia('(max-width: 760px)').matches;
+        const mobileSuffix = isMobile ? '-mobile' : '';
         const preload = document.createElement('link');
         preload.rel = 'preload';
         preload.as = 'image';
         preload.fetchPriority = 'high';
-        preload.href = `assets/learning/styles/${document.documentElement.dataset.learningStyle}/library-${theme}.webp`;
+        preload.href = `assets/learning/styles/${document.documentElement.dataset.learningStyle}/library-${theme}${mobileSuffix}.webp`;
         document.head.append(preload);
       }
     } catch {}

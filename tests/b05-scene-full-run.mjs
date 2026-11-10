@@ -6,6 +6,13 @@ const loader = fs.readFileSync('src/ui/scene-assets.js', 'utf8');
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const workflow = fs.readFileSync('.github/workflows/v3-regression.yml', 'utf8');
+const app = fs.readFileSync('app.html', 'utf8');
+const legacy = fs.readFileSync('v3.html', 'utf8');
+assert.equal(app, legacy, 'v3.html must remain byte-identical to app.html');
+assert.match(app, /const saveDataRequested = connection\?\.saveData === true/);
+assert.match(app, /prefers-reduced-data: reduce/);
+assert.match(app, /const isMobile = matchMedia\('\(max-width: 760px\)'\)\.matches/);
+assert.match(app, /library-\$\{theme\}\$\{mobileSuffix\}\.webp/);
 
 assert.match(css, /B05-01: 'Full' on phones/);
 assert.match(css, /opacity:\s*\.86\s*!important/);
