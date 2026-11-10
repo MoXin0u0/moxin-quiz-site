@@ -4,6 +4,8 @@ import {
   selectBatchQuestions,
 } from '../studio/batch-parser.js';
 
+import { watchNativeDialogViewport } from './dialogs.js';
+
 const STYLE_HREF = './styles/v4-studio-batch.css';
 
 export function openStudioBatchImportDialog({
@@ -66,10 +68,12 @@ B. 只處理薪資
 
     let result = null;
     let settled = false;
+    let releaseViewport = () => {};
 
     const finish = value => {
       if (settled) return;
       settled = true;
+      releaseViewport();
       if (dialog.open && typeof dialog.close === 'function') dialog.close();
       dialog.remove();
       resolve(value);
@@ -160,6 +164,7 @@ B. 只處理薪資
     });
 
     document.body.appendChild(dialog);
+    releaseViewport = watchNativeDialogViewport(dialog, { expanded: true });
 
     if (typeof dialog.showModal === 'function') {
       dialog.showModal();

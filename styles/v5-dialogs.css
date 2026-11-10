@@ -98,3 +98,10 @@
     flex: 1 1 120px;
   }
 }
+
+/* B04-03: use a shorter editor when a software keyboard leaves little room. */
+.app-dialog-overlay[data-compact-height="true"] .app-dialog-textarea {
+  min-height: 76px;
+  height: 108px;
+  max-height: 32vh;
+}

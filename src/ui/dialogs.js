@@ -103,7 +103,7 @@ export function showDialog({
   actions = [],
   dismissValue = false,
 } = {}) {
-  closeActiveDialog(dismissValue);
+  closeActiveDialog();
 
   const host = ensureDialogHost();
   const previousFocus = document.activeElement;
@@ -174,8 +174,12 @@ export function showDialog({
       // The mobile on-screen keyboard reduces the visible viewport, not
       // necessarily the CSS viewport used by vh/dvh.
       overlay.style.top = `${visualViewport.offsetTop}px`;
+      overlay.style.left = `${visualViewport.offsetLeft}px`;
+      overlay.style.width = `${visualViewport.width}px`;
       overlay.style.height = `${visualViewport.height}px`;
+      overlay.style.right = 'auto';
       overlay.style.bottom = 'auto';
+      overlay.dataset.compactHeight = String(visualViewport.height < 460);
     };
     visualViewport?.addEventListener('resize', syncViewport);
     visualViewport?.addEventListener('scroll', syncViewport);
@@ -259,7 +263,7 @@ export function showDialog({
     });
 
     document.addEventListener('keydown', onKeyDown, true);
-    activeDialog = { finish };
+    activeDialog = { finish, dismissValue };
 
     queueMicrotask(() => {
       if (settled) return;
@@ -274,8 +278,43 @@ export function showDialog({
   });
 }
 
-function closeActiveDialog(value) {
-  activeDialog?.finish?.(value);
+function closeActiveDialog() {
+  // The old dialog has its own cancellation semantics.
+  activeDialog?.finish?.(activeDialog.dismissValue);
+}
+
+/** Keep native Studio dialogs inside the visual viewport above mobile keyboards. */
+export function watchNativeDialogViewport(dialog, { expanded = false } = {}) {
+  const viewport = window.visualViewport;
+  const sync = () => {
+    if (!dialog.isConnected) return;
+    const width = viewport?.width || window.innerWidth;
+    const height = viewport?.height || window.innerHeight;
+    const centerX = (viewport?.offsetLeft || 0) + width / 2;
+    const centerY = (viewport?.offsetTop || 0) + height / 2;
+    dialog.style.position = 'fixed';
+    dialog.style.top = `${centerY}px`;
+    dialog.style.left = `${centerX}px`;
+    dialog.style.right = 'auto';
+    dialog.style.bottom = 'auto';
+    dialog.style.transform = 'translate(-50%, -50%)';
+    dialog.style.margin = '0';
+    dialog.style.maxHeight = `${Math.max(72, height - 16)}px`;
+    dialog.style.maxWidth = `${Math.max(160, width - 16)}px`;
+    dialog.dataset.compactHeight = String(height < 560);
+    if (expanded) {
+      dialog.style.height = `${Math.min(920, Math.max(88, height - 24))}px`;
+    }
+  };
+  viewport?.addEventListener('resize', sync);
+  viewport?.addEventListener('scroll', sync);
+  window.addEventListener('resize', sync);
+  sync();
+  return () => {
+    viewport?.removeEventListener('resize', sync);
+    viewport?.removeEventListener('scroll', sync);
+    window.removeEventListener('resize', sync);
+  };
 }
 
 function ensureDialogHost() {

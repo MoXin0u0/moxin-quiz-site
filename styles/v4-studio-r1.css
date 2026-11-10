@@ -973,6 +973,8 @@
 
 .studio-r1-dialog {
   width: min(520px, calc(100vw - 2rem));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   max-width: none;
   padding: 0;
   border: 0;

@@ -51,6 +51,7 @@ import {
 import {
   openStudioBatchImportDialog,
 } from './studio-batch-import.js';
+import { watchNativeDialogViewport } from './dialogs.js';
 
 const TYPE_LABELS = Object.freeze({
   'single-choice': '單選題',
@@ -663,7 +664,12 @@ function requestTypeChangeConfirmation(targetType, plan) {
       </form>
     `;
 
+    let settled = false;
+    let releaseViewport = () => {};
     const finish = result => {
+      if (settled) return;
+      settled = true;
+      releaseViewport();
       if (dialog.open && typeof dialog.close === 'function') dialog.close();
       dialog.remove();
       resolve(result);
@@ -693,6 +699,7 @@ function requestTypeChangeConfirmation(targetType, plan) {
     });
 
     document.body.appendChild(dialog);
+    releaseViewport = watchNativeDialogViewport(dialog);
 
     if (typeof dialog.showModal === 'function') {
       dialog.showModal();

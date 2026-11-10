@@ -35,7 +35,7 @@ assert.match(css, /\.studio-r1-mobile-nav > button\s*\{[^}]*min-height:\s*44px/s
 assert.match(css, /\.studio-r1-editor-topbar\s*\{\s*position:\s*static/);
 assert.match(css, /scroll-margin-top:\s*5\.5rem/);
 assert.match(css, /@media \(max-width:\s*560px\)/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-7'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-8'/);
 assert.match(sw, /'\.\/src\/ui\/studio-r1\.js'/);
 assert.match(sw, /'\.\/styles\/v4-studio-r1\.css'/);
 

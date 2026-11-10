@@ -384,3 +384,14 @@
     max-height: 24dvh;
   }
 }
+
+/* B04-03: short landscape screens and soft keyboards need a scrollable card. */
+.studio-r1-batch-dialog[data-compact-height="true"] .studio-r1-batch-card {
+  grid-template-rows: auto auto minmax(110px, 1fr) auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.studio-r1-batch-dialog[data-compact-height="true"] .studio-r1-batch-source textarea {
+  min-height: 80px;
+  max-height: 112px;
+}

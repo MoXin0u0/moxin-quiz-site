@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+const dialogs = readFileSync('src/ui/dialogs.js', 'utf8');
+const batch = readFileSync('src/ui/studio-batch-import.js', 'utf8');
+const studio = readFileSync('src/ui/studio-r1.js', 'utf8');
+const appCss = readFileSync('styles/v5-dialogs.css', 'utf8');
+const batchCss = readFileSync('styles/v4-studio-batch.css', 'utf8');
+const studioCss = readFileSync('styles/v4-studio-r1.css', 'utf8');
+const worker = readFileSync('service-worker.js', 'utf8');
+const workflow = readFileSync('.github/workflows/v3-regression.yml', 'utf8');
+const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+
+assert.ok(dialogs.includes('activeDialog?.finish?.(activeDialog.dismissValue)'));
+assert.ok(dialogs.includes('activeDialog = { finish, dismissValue }'));
+assert.ok(dialogs.includes('export function watchNativeDialogViewport'));
+assert.ok(dialogs.includes("viewport?.addEventListener('resize', sync)"));
+assert.ok(dialogs.includes("viewport?.removeEventListener('resize', sync)"));
+assert.ok(dialogs.includes("window.removeEventListener('resize', sync)"));
+assert.ok(dialogs.includes('overlay.dataset.compactHeight'));
+assert.ok(batch.includes('releaseViewport = watchNativeDialogViewport(dialog, { expanded: true })'));
+assert.ok(studio.includes('releaseViewport = watchNativeDialogViewport(dialog)'));
+assert.ok(batchCss.includes('data-compact-height="true"'));
+assert.ok(studioCss.includes('overscroll-behavior: contain'));
+assert.ok(appCss.includes('data-compact-height="true"'));
+assert.ok(worker.includes('moxin-quiz-v5-5.0.0-prod-8'));
+assert.ok(pkg.scripts.test.includes('b04-dialog-resilience-run.mjs'));
+assert.ok(pkg.scripts['audit:b04-resilience'].includes('b04-dialog-resilience-browser-run.mjs'));
+assert.ok(workflow.includes('npm run audit:b04-resilience'));
+console.log('B04-03 viewport / dismissal / PWA contracts PASS');
