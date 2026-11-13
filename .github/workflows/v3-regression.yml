@@ -107,6 +107,9 @@ jobs:
       - name: B05-02 actual scene DPR coverage and visual review snapshots
         run: npm run audit:b05-quality
 
+      - name: B05-03A Epic hero text safety and image-tier fallback
+        run: npm run audit:b05-hero
+
       - name: Upload B05-02 scene comparison snapshots (PR only)
         if: ${{ always() && github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4
