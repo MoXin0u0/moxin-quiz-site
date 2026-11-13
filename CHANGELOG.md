@@ -2,7 +2,7 @@
 
 > 這是**唯一持續維護的版本更新紀錄檔**。產品版本、已正式合併的功能批次、安全性修正與重要相容性變更，都集中追加於此。
 > 最後核對：2026-11-13（臺灣時間）；資料依據為 GitHub `main`、已合併 PR 與 GitHub Actions。
-> **網站對外應用程式版本仍為 v5.0.0**；B00～B09 是「V5 上線後改善批次」，並不是 v5.1／v5.2 等正式版本號。Service Worker 的 `prod-4`～`prod-10` 是快取版本，不等於產品主版本。
+> **網站對外應用程式版本仍為 v5.0.0**；B00～B09 是「V5 上線後改善批次」，並不是 v5.1／v5.2 等正式版本號。Service Worker 的 `prod-4`～`prod-11` 是快取版本，不等於產品主版本。
 
 ## 維護方式（自本次整理起適用）
 
@@ -15,13 +15,20 @@
 ## 目前正式站摘要（2026-11-13）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級），以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`c1ce0ba3`](https://github.com/MoXin0u0/moxin-quiz-site/commit/c1ce0ba3975f178bac832ee12d71378c0d077204)，PWA App Shell `prod-10`。
-- **最新主分支自動化驗證**：[GitHub Pages（B05-03A）SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43375726316)；[V5 完整 Regression（B05-03A）SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43375727094)。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新正式主分支基準**：[`5c41edc7`](https://github.com/MoXin0u0/moxin-quiz-site/commit/5c41edc7978171e8b2703cabe4eab71023af12ba)，PWA App Shell `prod-11`。
+- **最新主分支自動化驗證**：[GitHub Pages（B05-03B）SUCCESS](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43377373406)；[V5 完整 Regression（B05-03B）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43377374531)（以最終 Actions 結論為準）。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-13｜B05-03B：依真實像素覆蓋率決定高 DPI 場景載入
+
+- **已合併** [PR #35](https://github.com/MoXin0u0/moxin-quiz-site/pull/35)，提交 `5c41edc7`：使用真正的 Hero 場景顯示尺寸、已核准原圖（桌機 2560×1440／手機 1080×1440）、CSS cover 裁切與裝置 DPR 計算每實體顯示像素所能取得的來源像素。
+- 在 **Full** 模式、裝置 DPR≥1.5、來源覆蓋率 **低於 0.90** 且 2x 原圖實際存在時才選用大圖；1366px 桌機 DPR2（約 1.21）與 390px 手機 DPR3（約 0.94）維持輕量來源，1920px／2560px 高 DPI 螢幕可在日後有高解析原圖時選用。減弱／省流量／隱藏畫面或缺少 2x 檔案均不額外請求大圖。
+- 增加同一桌機 breakpoint 內視窗尺寸改變與隱藏場景重新顯示時的重算；新增真實 Chromium 390／430／1366／1920／2560px 模擬圖像來源切換與資料節流測試，全部既有 V5 回歸保留。測試中使用「原本 1x 檔案附 query」作**選圖情境模擬**，不代表實際存在更高原始細節。
+- App Shell `prod-10 → prod-11`，Scene Cache 與全部 32 張既有 WebP 保持不變；後續真正高解析原生場景、美術驗收與預載消除雙重下載仍追蹤 [Issue #32](https://github.com/MoXin0u0/moxin-quiz-site/issues/32)。本批**沒有修改 IndexedDB、題庫、Google 同步或使用者學習資料**。
 
 ### 2026-11-13｜B05-03A：史詩幻想桌機標題安全區、預備 2x 來源節流
 
@@ -101,7 +108,7 @@
 ## 待處理（不是已發布更新）
 
 - B04-03 剩餘**實機**驗收：手機橫向、真實系統鍵盤與 ZIP／JSON 檔案下載；程式修補已併入 main，追蹤 [Issue #23](https://github.com/MoXin0u0/moxin-quiz-site/issues/23)。
-- B05-03B：由 B05-02 的實測覆蓋率決定 2x 是否值得載入，候選 [PR #35](https://github.com/MoXin0u0/moxin-quiz-site/pull/35) 尚未正式合併；真正增加畫面細節的高解析來源與美術驗收仍待 [Issue #32](https://github.com/MoXin0u0/moxin-quiz-site/issues/32)。B05-03A 的文字安全區已發布。
+- B05-03C：B05-03A／03B 已部署；真正增加細節的 2x 原圖與美術驗收、對應 HTML 預載去重、Scene Cache 升版仍待 [Issue #32](https://github.com/MoXin0u0/moxin-quiz-site/issues/32)。
 - B06：作者題庫 443 題的來源、答案／詳解審查；CERPS 再利用權利須另案處理。
 - B07：程式架構、效能與長時間壓力測試。
 - B08：可能採用的「墨境」品牌／Logo／更名相容性（尚非正式更名）。
