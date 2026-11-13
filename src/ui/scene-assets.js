@@ -109,7 +109,12 @@ const SCENE_ASSETS = Object.freeze({
 });
 
 const loadedAssets = new Set();
+const watchedNodes = new WeakSet();
 let scheduled = false;
+// Observe size changes so a scene promoted from a hidden tab is re-evaluated.
+const sceneResizeObserver = typeof ResizeObserver === 'function'
+  ? new ResizeObserver(scheduleSync)
+  : null;
 
 function currentContext() {
   const root = document.documentElement;
@@ -119,6 +124,7 @@ function currentContext() {
     intensity: root.dataset.sceneIntensity || 'full',
     mobile: sceneMedia.matches,
     highDpi: (window.devicePixelRatio || 1) >= 1.5,
+    dpr: window.devicePixelRatio || 1,
     saveData: connection?.saveData === true || reducedDataMedia.matches,
   };
 }
@@ -126,9 +132,9 @@ function currentContext() {
 function pickAssetVariant(entry, context) {
   if (!entry) return null;
 
-  // Full may use optional genuinely high-detail files. Reduced deliberately
-  // reuses the regular art: dimming a 4K image is not worth its bandwidth.
-  const allow2x = context.highDpi && context.intensity === 'full';
+  // B05-03B: only pay for optional 2x when actual cover pixels fall short.
+  // A 1366px / DPR2 desktop already has enough 2560px source detail.
+  const allow2x = shouldRequestHiRes(entry, context);
   const candidates = context.mobile
     ? [
         allow2x && entry.mobile2x,
@@ -159,13 +165,38 @@ function pickAssetVariant(entry, context) {
   };
 }
 
-function resolveAsset(scene, context = currentContext()) {
+// Most approved desktop artwork is 2560x1440; portrait artwork 1080x1440.
+// These are SOURCE pixels, not nominal viewport sizes. Use the same cover math
+// as our B05-02 browser audit. We choose a conservative 0.90 threshold to
+// avoid loading multi-megabyte images for negligible shortfalls (e.g. 0.94).
+function shouldRequestHiRes(entry, context) {
+  if (!context.highDpi || context.intensity !== 'full' || context.saveData) return false;
+  const box = context.artBox;
+  if (!box) return true; // Preserve the pure selector's documented API.
+  if (!Number.isFinite(box.width) || !Number.isFinite(box.height) ||
+      box.width <= 0 || box.height <= 0) return false;
+
+  const mobileArt = context.mobile && Boolean(entry.mobile);
+  const sourceWidth = mobileArt ? 1080 : 2560;
+  const sourceHeight = 1440;
+  const physicalScale = Math.max(box.width / sourceWidth, box.height / sourceHeight) *
+    (context.dpr || 1);
+  if (physicalScale <= 0) return false;
+  return 1 / physicalScale < 0.90;
+}
+
+function resolveAsset(scene, context = currentContext(), node = null) {
   if (context.intensity === 'off') return { href: null, reason: 'off' };
   if (context.style === 'focus') return { href: null, reason: 'focus' };
   if (context.saveData) return { href: null, reason: 'data-saver' };
 
   const entry = SCENE_ASSETS[context.style]?.[scene]?.[context.theme] || null;
-  return pickAssetVariant(entry, context) || { href: null, reason: 'missing' };
+  if (!entry) return { href: null, reason: 'missing' };
+
+  const rect = node?.getBoundingClientRect();
+  const artBox = rect ? { width: rect.width, height: rect.height } : null;
+  return pickAssetVariant(entry, { ...context, artBox }) ||
+    { href: null, reason: 'missing' };
 }
 
 function clearSceneAsset(node, reason = 'off') {
@@ -221,7 +252,7 @@ function setSceneAsset(node, asset) {
       // A successfully loaded image can still fail decode() in some browsers.
     }
 
-    const latest = resolveAsset(node.dataset.sceneArt);
+    const latest = resolveAsset(node.dataset.sceneArt, currentContext(), node);
     if (!latest?.href || latest.href !== asset.href) return;
 
     loadedAssets.add(asset.href);
@@ -236,7 +267,7 @@ function setSceneAsset(node, asset) {
   else {
     image.addEventListener('load', ready, { once: true });
     image.addEventListener('error', () => {
-      const latest = resolveAsset(node.dataset.sceneArt);
+      const latest = resolveAsset(node.dataset.sceneArt, currentContext(), node);
       if (latest?.href !== asset.href) return;
 
       if (hasVisibleScene) {
@@ -251,8 +282,12 @@ function setSceneAsset(node, asset) {
 export function syncLearningScenes() {
   const context = currentContext();
   document.querySelectorAll('[data-scene-art]').forEach(node => {
+    if (sceneResizeObserver && !watchedNodes.has(node)) {
+      watchedNodes.add(node);
+      sceneResizeObserver.observe(node);
+    }
     const scene = node.dataset.sceneArt;
-    setSceneAsset(node, resolveAsset(scene, context));
+    setSceneAsset(node, resolveAsset(scene, context, node));
   });
 }
 
@@ -275,6 +310,8 @@ function listenMediaQuery(query) {
 
 listenMediaQuery(sceneMedia);
 listenMediaQuery(reducedDataMedia);
+// The same breakpoint can contain many different actual hero sizes.
+window.addEventListener('resize', scheduleSync, { passive: true });
 
 if (connection && typeof connection.addEventListener === 'function') {
   connection.addEventListener('change', scheduleSync);

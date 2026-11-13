@@ -34,7 +34,7 @@ for (const style of ['academy', 'epic']) {
     }
   }
 }
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-10'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-11'/);
 assert.match(pkg.scripts.test, /b05-scene-full-run/);
 assert.match(pkg.scripts['audit:b05-scene'], /b05-scene-full-browser-run/);
 assert.match(workflow, /npm run audit:b05-scene/);

@@ -38,7 +38,7 @@ assert.equal(choose({ desktop: './base.webp' }, config).href, './base.webp',
 assert.equal(choose({ desktop: './base.webp', mobile: './mobile.webp' }, config).href, './mobile.webp',
   'missing optional 2x source must not cause a request to a nonexistent file');
 assert.equal(choose(null, config), null);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-10'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-11'/);
 assert.match(pkg.scripts.test, /b05-hero-safe-area-run\.mjs/);
 assert.match(pkg.scripts['audit:b05-hero'], /b05-hero-safe-area-browser-run\.mjs/);
 assert.match(wf, /npm run audit:b05-hero/);
