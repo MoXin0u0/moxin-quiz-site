@@ -122,10 +122,25 @@ assert.equal(files.size, refs.size,
 // A 2x library image changes early-load behavior: do not preload 1x then
 // request 2x again. This contract deliberately blocks 2x promotion until
 // app.html/v3.html are updated with a matching resolution-aware preload.
-if (manifest.assets.some(x => /\/library-/.test(x.path))) {
-  assert.match(app, /hiResLibraryPreloadPolicy/,
-    '2x library art requires matching early-preload policy; avoid double fetch');
-}
+// Keep head preload policy synchronized with the exact approved 2x tier
+// registrations. A missing or extra key would silently waste initial bandwidth.
+const registration = app.match(
+  /const hiResLibraryPreloadPolicy = new Set\((\[[^\]]*\])\);/);
+assert.ok(registration, 'library 2x preload registry is required');
+const enabled = JSON.parse(registration[1]);
+assert.ok(Array.isArray(enabled), 'library 2x registry must be a JSON array');
+const expectedLibraryTiers = manifest.assets
+  .filter(item => /\/library-/.test(item.path))
+  .map(item => {
+    const match = item.path.match(
+      /styles\/(academy|epic)\/library-(light|dark)(?:-mobile)?-2x\.webp$/);
+    assert.ok(match, 'unrecognized library high-res slot: ' + item.path);
+    const tier = item.variant === 'mobile2x' ? 'mobile' : 'desktop';
+    return match[1] + '/' + match[2] + '/' + tier;
+  });
+assert.equal(new Set(enabled).size, enabled.length, 'duplicate preload registry tier');
+assert.deepEqual([...enabled].sort(), expectedLibraryTiers.sort(),
+  'HTML high-res preload suppression must match ALL and ONLY approved 2x library files');
 
 assert.equal(1672 < 3840, true,
   'B05-03C concept renders (1672x941) are not native 4K assets');

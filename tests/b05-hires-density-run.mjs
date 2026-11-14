@@ -56,7 +56,7 @@ assert.equal(choose({ desktop: entry.desktop }, context({
 assert.match(loader, /const artBox = rect \? \{ width: rect\.width, height: rect\.height \} : null/);
 assert.match(loader, /resolveAsset\(node\.dataset\.sceneArt, currentContext\(\), node\)/);
 assert.match(loader, /new ResizeObserver\(scheduleSync\)/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-11'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-12'/);
 assert.match(pkg.scripts.test, /b05-hires-density-run\.mjs/);
 assert.match(pkg.scripts['audit:b05-density'], /b05-hires-density-browser-run\.mjs/);
 assert.match(workflow, /npm run audit:b05-density/);
