@@ -39,16 +39,27 @@
         matchMedia('(prefers-reduced-data: reduce)').matches;
       if (!saveDataRequested && document.documentElement.dataset.sceneIntensity === 'full' &&
           ['academy', 'epic'].includes(document.documentElement.dataset.learningStyle)) {
-        // Match the runtime scene variant. Preloading desktop AND mobile art
-        // wastes bandwidth and defeats the light mobile page experience.
+        const style = document.documentElement.dataset.learningStyle;
+        // B05-03C: enable a tier ONLY after approving a genuine 2x source.
+        // Entries use 'academy/light/desktop' or 'epic/dark/mobile'.
+        // Current approved 2x source count is zero: keep this list empty.
+        const hiResLibraryPreloadPolicy = new Set([]);
+        const highDpi = (window.devicePixelRatio || 1) >= 1.5;
         const isMobile = matchMedia('(max-width: 760px)').matches;
-        const mobileSuffix = isMobile ? '-mobile' : '';
-        const preload = document.createElement('link');
-        preload.rel = 'preload';
-        preload.as = 'image';
-        preload.fetchPriority = 'high';
-        preload.href = `assets/learning/styles/${document.documentElement.dataset.learningStyle}/library-${theme}${mobileSuffix}.webp`;
-        document.head.append(preload);
+        const tier = isMobile ? 'mobile' : 'desktop';
+        // Let the scene runtime choose the correct file from actual hero size.
+        // Never preload 1x when an approved 2x tier might be selected.
+        const skipUncertainPreload = highDpi &&
+          hiResLibraryPreloadPolicy.has(`${style}/${theme}/${tier}`);
+        if (!skipUncertainPreload) {
+          const mobileSuffix = isMobile ? '-mobile' : '';
+          const preload = document.createElement('link');
+          preload.rel = 'preload';
+          preload.as = 'image';
+          preload.fetchPriority = 'high';
+          preload.href = `assets/learning/styles/${style}/library-${theme}${mobileSuffix}.webp`;
+          document.head.append(preload);
+        }
       }
     } catch {}
   </script>
