@@ -303,3 +303,8 @@
 html[data-theme="dark"] #libraryView > .library-priority-head .learning-kicker {
   color: var(--learn-text);
 }
+
+/* Keep the now-default local import tiles readable across light/dark themes. */
+#libraryView .import-icon {
+  color: var(--learn-text);
+}
