@@ -15,13 +15,20 @@
 ## 目前正式站摘要（2026-11-15）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點）、B06-02 第一、二批（原始 PDF 重複題分類與 Q296／Q427 詳解改善）、B06-03（原創四題型示範題）、B03 題庫入口調整（我的題庫優先）、B07-01（場景監聽縮限）、B09-01（PWA 離線冷啟動與本機作答 CI 驗證），以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`1eb873b5`](https://github.com/MoXin0u0/moxin-quiz-site/commit/1eb873b502c759002ce6c6ea22ba32039b12bbfa)，PWA App Shell 仍為 `prod-16`（B09-01 只補驗收、未修改 Service Worker 內容或快取命名空間）。
-- **最新主分支自動化驗證**：[GitHub Pages（PR #53）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43689841468)；[V5 完整 Regression（PR #53）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43689841947)（以 Actions 最終結論為準；Chromium CI 不能替代手機實機、Firefox／Safari、跨裝置雲端驗收）。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點）、B06-02 第一、二批（原始 PDF 重複題分類與 Q296／Q427 詳解改善）、B06-03（原創四題型示範題）、B03 題庫入口調整（我的題庫優先）、B07-01（場景監聽縮限）、B09-01（PWA 離線冷啟動與本機作答 CI 驗證）、B09-02 第一階段（Firefox／WebKit 跨引擎操作驗證），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新功能驗證基準**：[`58c6a43f`](https://github.com/MoXin0u0/moxin-quiz-site/commit/58c6a43f38a935245a85886b95082a5f786d1e0d)，PWA App Shell 仍為 `prod-16`（B09-02 只補 Firefox／WebKit 測試，未改動網站執行程式、Service Worker 及快取命名空間）。
+- **最新功能提交自動化驗證**：[GitHub Pages（PR #55）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43692169103)；[V5 完整 Regression（PR #55）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43692169294)（以 Actions 最終結論為準；Firefox／WebKit Playwright CI 不能替代實體 Android／iOS 或兩台裝置雲端驗收）。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-15｜B09-02 第一階段：Firefox／WebKit 跨瀏覽器核心流程測試（AUD-014／G4）
+
+- [PR #55](https://github.com/MoXin0u0/moxin-quiz-site/pull/55) 已合併 `58c6a43f`：在既有 V5 browser CI 加入 Firefox／WebKit 引擎的四組隔離瀏覽器情境（Firefox 桌面與窄螢幕；WebKit 桌面與行動裝置模擬）。測試原本的「我的題庫」預設、從「探索題庫」加入四題型示範題庫、題庫詳情、單選作答判分、IndexedDB 作答寫入與重新整理保留；桌面 Firefox／WebKit 另驗證 ZIP 題庫下載成功。
+- 合併前 [V5 Regression](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43691747280) 完整 SUCCESS：CI log 明確顯示四組 B09-02 PASS；原有 Chromium B09-01 離線啟動也再次 PASS。正式 [Pages](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43692169103) 與 [主分支回歸](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43692169294) 以 Actions 最終結果為準。
+- **驗收邊界**：Playwright WebKit 模擬不能當成實體 iPhone Safari；窄螢幕 Firefox 也不是 Android Firefox。Android／iOS 實機安裝 PWA、軟體鍵盤、真實手機 ZIP／JSON 下載、跨裝置 Google Drive 同步與真正的跨版本 SW 升級仍待手動驗收。B09 未整體完成。
+- 本批僅新增 `tests/b09-cross-engine-browser-run.mjs`、既有 `package.json` 指令與 CI 工作步驟；不修改正式站功能、題庫／答案、IndexedDB schema、Google OAuth／Drive／備份協定及 PWA `prod-16` 快取。
 
 ### 2026-11-15｜B09-01：PWA 離線冷啟動與資料保留自動化驗收（AUD-021／G5）
 
