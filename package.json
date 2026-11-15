@@ -46,7 +46,8 @@
     "audit:b05-quality": "node tests/b05-scene-quality-browser-run.mjs",
     "audit:b05-hero": "node tests/b05-hero-safe-area-browser-run.mjs",
     "audit:b05-density": "node tests/b05-hires-density-browser-run.mjs",
-    "audit:b09-pwa": "node tests/b09-pwa-offline-browser-run.mjs"
+    "audit:b09-pwa": "node tests/b09-pwa-offline-browser-run.mjs",
+    "audit:b09-engines": "node tests/b09-cross-engine-browser-run.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",

@@ -128,6 +128,12 @@ jobs:
       - name: B09-01 Service Worker offline boot and local learning retention
         run: npm run audit:b09-pwa
 
+      - name: Install Firefox and WebKit for B09-02
+        run: npx playwright install --with-deps firefox webkit
+
+      - name: B09-02 Firefox/WebKit learning and ZIP smoke tests
+        run: npm run audit:b09-engines
+
       - name: Run landing browser audit
         run: npm run audit:landing
 
