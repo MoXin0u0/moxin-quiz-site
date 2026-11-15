@@ -2,7 +2,7 @@
 
 > 這是**唯一持續維護的版本更新紀錄檔**。產品版本、已正式合併的功能批次、安全性修正與重要相容性變更，都集中追加於此。
 > 最後核對：2026-11-15（臺灣時間）；資料依據為 GitHub `main`、已合併 PR 與 GitHub Actions。
-> **網站對外應用程式版本仍為 v5.0.0**；B00～B09 是「V5 上線後改善批次」，並不是 v5.1／v5.2 等正式版本號。Service Worker 的 `prod-4`～`prod-14` 是快取版本，不等於產品主版本。
+> **網站對外應用程式版本仍為 v5.0.0**；B00～B09 是「V5 上線後改善批次」，並不是 v5.1／v5.2 等正式版本號。Service Worker 的 `prod-4`～`prod-15` 是快取版本，不等於產品主版本。
 
 ## 維護方式（自本次整理起適用）
 
@@ -15,13 +15,21 @@
 ## 目前正式站摘要（2026-11-15）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點）、B06-02 第一批（完整重複題分類及原始 PDF 核對）、B06-03（原創四題型示範題）、B03 題庫入口調整（我的題庫優先），以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`1e2f7442`](https://github.com/MoXin0u0/moxin-quiz-site/commit/1e2f74424e4e2f8d6c04c64726831fbb1e95fc7a)，PWA App Shell `prod-14`（題庫入口調整；Service Worker 快取版本不等於產品版本）。
-- **最新主分支自動化驗證**：[GitHub Pages（PR #47）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43682193831)；[V5 完整 Regression（PR #47）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43682194275)（以 Actions 最終結論為準；CI 綠燈不能替代實機驗收）。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點）、B06-02 第一、二批（原始 PDF 重複題分類與 Q296／Q427 詳解改善）、B06-03（原創四題型示範題）、B03 題庫入口調整（我的題庫優先），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新正式主分支基準**：[`81095583`](https://github.com/MoXin0u0/moxin-quiz-site/commit/810955839a0bbe6b6ae69865ebfe2e35ffef5b45)，PWA App Shell `prod-15`（ERP 題庫詳解小幅更新；Service Worker 快取版本不等於產品版本）。
+- **最新主分支自動化驗證**：[GitHub Pages（PR #49）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43685206295)；[V5 完整 Regression（PR #49）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43685206605)（以 Actions 最終結論為準；CI 綠燈不能替代實機驗收）。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-15｜B06-02 第二批：Q296 導入順序疑義與 Q427 ABC 概念詳解
+
+- [PR #49](https://github.com/MoXin0u0/moxin-quiz-site/pull/49) 已合併 `81095583`：只修改 ERP 規劃師原始 443 題中 Q296、Q427 的**網站詳解**，官方標答維持 B／D，所有題目文字、選項、ID、題數不變。
+- **Q296**：官方參考 PDF 第 44 頁標答 B；但選項 A 使用「財務會計模組必是第一階段」等絕對用語，依 [SAP 分階段導入實務](https://help.sap.com/docs/erp-transformation-with-itc/buildable-map/step-by-step-guide-for-erp-transformation-with-sap-s-integrated-toolchain)可能引發合理質疑。新詳解明確提醒 A 不應視為普遍必然正確，原始標答 B 暫保留，待出題單位釐清。
+- **Q427**：官方參考 PDF 第 63 頁標答 D；新詳解區分「ABC 存貨分類」與「ABC 作業成本制」的管理目的、分析對象及方法，參考 [Oracle 存貨分類](https://docs.oracle.com/en/cloud/saas/supply-chain-and-manufacturing/26b/faims/overview-of-abc-analysis.html)與 [SAP Activity-Based Costing](https://help.sap.com/docs/SAP_ERP_SPV/bd635fb8b3664454b7e632e57d55786f/83b8bb536b13b44ce10000000a174cb4.html)。
+- ERP 作者題庫版本 `1.2.0 → 1.2.1`，可透過「探索題庫 → 更新題庫」取得修正，不自動覆蓋已加入的本機內容；PWA `prod-14 → prod-15`，同步／資料庫／備份格式不變。[正式 Pages](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43685206295) SUCCESS，[V5 Regression](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43685206605) 以最終 Actions 結論為準。
+- 這不是全部 443 題專業審查或再利用授權完成；後續內容疑義保留 [Issue #41](https://github.com/MoXin0u0/moxin-quiz-site/issues/41)，CERPS 公開再利用權利仍追蹤 [Issue #21](https://github.com/MoXin0u0/moxin-quiz-site/issues/21)。
 
 ### 2026-11-15｜B03 後續 UX：我的題庫優先、作者推薦改為探索題庫
 
