@@ -112,7 +112,9 @@ try {
   await page.locator('#bankDetailView [data-start-practice]').click();
   await page.locator('#practiceView:not([hidden]) .question-title')
     .getByText('一本筆記本', { exact: false }).waitFor();
-  await page.locator('#practiceView [data-answer-form] input[value="B"]').check();
+  await page.locator('#practiceView [data-option-id="B"]').click();
+  assert.equal(await page.locator('#practiceView [data-answer-form] input[value="B"]').isChecked(), true,
+    'Clicking the visible answer option must select its radio input');
   await page.locator('#practiceView [data-submit-answer]').click();
   await page.locator('#practiceView .feedback-panel.correct').waitFor();
   assert.deepEqual(await readAttempts(page),
