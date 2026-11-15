@@ -15,13 +15,20 @@
 ## 目前正式站摘要（2026-11-15）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點），以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`e7dc64c0`](https://github.com/MoXin0u0/moxin-quiz-site/commit/e7dc64c04a6a9965707f87ab40544b491943fcfb)，PWA App Shell 維持 `prod-12`（本批僅測試）。
-- **最新主分支自動化驗證**：[GitHub Pages（B06-01）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43616857131)；[V5 完整 Regression（B06-01）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43616857662)（以最終 Actions 結論為準）。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點）、B06-02 第一批（完整重複題分類及原始 PDF 核對），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新正式主分支基準**：[`6c7b8ac1`](https://github.com/MoXin0u0/moxin-quiz-site/commit/6c7b8ac1871c01db5d7de8f869608d484764de93)，PWA App Shell 維持 `prod-12`（僅題庫 QA 測試）。
+- **最新主分支自動化驗證**：[GitHub Pages（B06-02）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43675913800)；[V5 完整 Regression（B06-02）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43675914290)（以最終 Actions 結論為準）。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-15｜B06-02 第一批：原始題庫的完全重複與泛用題幹區分
+
+- [PR #44](https://github.com/MoXin0u0/moxin-quiz-site/pull/44) 已合併 `6c7b8ac1`：擴充原有 `tests/b06-author-bank-quality-run.mjs`，對比**完整題目內容（排除穩定 ID）**，避免因共用「何者錯誤」等泛用題幹，就把不同題目或不同答案誤標為相互矛盾。
+- 已與 [CERPS 2025.09 V06 公開參考題 PDF](https://www.cerps.org.tw/files/system/files/ERP%E8%A6%8F%E5%8A%83%E5%B8%AB_%E5%8F%83%E8%80%83%E9%A1%8C%E5%9E%8B202509_V06.pdf) 第 30、43、44、61、63 頁核對：`Q206/Q206_2`、`Q411/Q411_2` 是**上游原始 PDF 即存在的兩組完整重複**；`Q291/Q293`、`Q296/Q427` 則是**兩組共用題幹、選項與知識內容不同**的試題。網站全部 443 題及 ID 維持原狀。
+- 已對照 IFRS Foundation IFRS 13 及 NIST SP 800-145 的專業脈絡；但這僅支持相關概念的背景，**不等於 443 題正確性、每題詳解或公開轉載權利已獲核定**。`Q296` 選項的絕對性用語仍列待人工深入查核，詳 [Issue #41](https://github.com/MoXin0u0/moxin-quiz-site/issues/41)。原題授權風險追蹤 [Issue #21](https://github.com/MoXin0u0/moxin-quiz-site/issues/21)。
+- 本批只增強既有 QA 測試，**未刪題、改答案、改題庫 ID 或修改 IndexedDB／Google 同步／PWA 快取**。後續 B06-02 的詳解與出處仍待分批專業複核，B06-03 的原創新手示範題亦尚未開始。
 
 ### 2026-11-15｜B06-01：443 題作者題庫品質／來源缺口盤點（未更動答案）
 
