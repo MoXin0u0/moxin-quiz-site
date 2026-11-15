@@ -15,13 +15,20 @@
 ## 目前正式站摘要（2026-11-15）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點）、B06-02 第一、二批（原始 PDF 重複題分類與 Q296／Q427 詳解改善）、B06-03（原創四題型示範題）、B03 題庫入口調整（我的題庫優先）、B07-01（場景監聽縮限），以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`60f0b1de`](https://github.com/MoXin0u0/moxin-quiz-site/commit/60f0b1de556c4458cfcb3f9316af22315cbe8222)，PWA App Shell `prod-16`（B07-01 場景 DOM 監聽範圍縮小；Service Worker 快取版本不等於產品版本）。
-- **最新主分支自動化驗證**：[GitHub Pages（PR #51）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43686768679)；[V5 完整 Regression（PR #51）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43686768943)（以 Actions 最終結論為準；CI 綠燈不能替代真實裝置與正式網站效能量測）。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點）、B06-02 第一、二批（原始 PDF 重複題分類與 Q296／Q427 詳解改善）、B06-03（原創四題型示範題）、B03 題庫入口調整（我的題庫優先）、B07-01（場景監聽縮限）、B09-01（PWA 離線冷啟動與本機作答 CI 驗證），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新正式主分支基準**：[`1eb873b5`](https://github.com/MoXin0u0/moxin-quiz-site/commit/1eb873b502c759002ce6c6ea22ba32039b12bbfa)，PWA App Shell 仍為 `prod-16`（B09-01 只補驗收、未修改 Service Worker 內容或快取命名空間）。
+- **最新主分支自動化驗證**：[GitHub Pages（PR #53）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43689841468)；[V5 完整 Regression（PR #53）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43689841947)（以 Actions 最終結論為準；Chromium CI 不能替代手機實機、Firefox／Safari、跨裝置雲端驗收）。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-15｜B09-01：PWA 離線冷啟動與資料保留自動化驗收（AUD-021／G5）
+
+- [PR #53](https://github.com/MoXin0u0/moxin-quiz-site/pull/53) 已合併 `1eb873b5`：補足既有 RC1 一次離線刷新以外的驗收案例。新增 Playwright Chromium 測試：Service Worker 啟用與控制頁面、舊 App Shell／Scene Cache 清理；經原有「探索題庫 → 加入」流程建立 4 題示範題庫；斷網、**關閉分頁後重新開啟**，確認 IndexedDB 題庫可離線讀取。
+- 在離線狀態操作正式練習畫面提交 DEMO001 答案、確認 Attempt 寫入，第二次關閉分頁／離線冷啟動後再次確認題庫與作答紀錄；恢復連線後檢查 Service Worker `registration.update()`，本機資料未流失。
+- 沿用 V5 CI 既有 Chromium browser job，新增 `npm run audit:b09-pwa`；合併前 [Unit + 完整 V5 瀏覽器回歸](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43689425763) SUCCESS。正式部署與主分支回歸分別見 [Pages](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43689841468)、[V5 Regression](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43689841947)（以最終 Actions 結論為準）。
+- **限制**：這是 Chromium 模擬離線的可重現驗收，並非實體 Android／iOS 已安裝 PWA、實際跨版本 SW 替換、Safari／Firefox 或真正兩台裝置的 Google Drive 同步驗證。B09 尚未整體結案；待實機操作與跨瀏覽器驗收。未修改網站 runtime、SW 快取版本（維持 `prod-16`）、題庫 ID、答案、DB schema、備份、同步／OAuth 協定。
 
 ### 2026-11-15｜B07-01：縮小場景 DOM 監聽範圍（AUD-022）
 
