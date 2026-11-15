@@ -37,7 +37,7 @@ assert.equal(checkAnswer(boolean, true), true);
 assert.equal(checkAnswer(boolean, false), false);
 assert.equal(checkAnswer(blank, '12'), true);
 assert.equal(checkAnswer(blank, '13'), false);
-assert.match(sw, /moxin-quiz-v5-5\.0\.0-prod-14/);
+assert.match(sw, /moxin-quiz-v5-5\.0\.0-prod-15/);
 assert.ok(sw.includes("'./" + path + "'"),
   'demo JSON should be small enough to include in offline App Shell');
 
