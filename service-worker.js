@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'moxin-quiz-v5-5.0.0-prod-12';
+const CACHE_VERSION = 'moxin-quiz-v5-5.0.0-prod-13';
 const SCENE_CACHE_VERSION = 'moxin-quiz-scenes-r2k.5-5';
 const APP_SHELL = [
   './index.html',
@@ -10,6 +10,7 @@ const APP_SHELL = [
   './src/app/landing.js',
   './manifest.webmanifest',
   './author-banks.json',
+  './author-banks/MoXin_QuickStart_Demo.json',
   './styles/v3.css',
   './styles/v3-p3.css',
   './styles/v3-p4.css',

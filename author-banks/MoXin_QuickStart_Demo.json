@@ -1,0 +1,130 @@
+{
+  "manifest": {
+    "schemaVersion": "2.0",
+    "id": "MoXin_QuickStart_Demo",
+    "name": "新手試玩｜四種題型",
+    "description": "4 題全新編寫的日常基礎題，體驗單選、複選、是非與填空；非證照考題。",
+    "version": "1.0.0",
+    "author": "墨忻",
+    "language": "zh-TW",
+    "questionCount": 4,
+    "createdAt": "2026-11-15T00:00:00.000Z",
+    "updatedAt": "2026-11-15T00:00:00.000Z",
+    "metadata": {
+      "category": "新手體驗",
+      "sourceType": "author",
+      "purpose": "demo",
+      "notCertificationExam": true
+    }
+  },
+  "questions": [
+    {
+      "id": "DEMO001",
+      "type": "single-choice",
+      "question": "一本筆記本 20 元，買 3 本總共多少元？",
+      "options": [
+        {
+          "id": "A",
+          "text": "40 元"
+        },
+        {
+          "id": "B",
+          "text": "60 元"
+        },
+        {
+          "id": "C",
+          "text": "80 元"
+        },
+        {
+          "id": "D",
+          "text": "100 元"
+        }
+      ],
+      "answer": [
+        "B"
+      ],
+      "explanation": "每本 20 元，3 本是 20 × 3 = 60 元，因此選 B。40 元只算到 2 本。",
+      "images": [],
+      "explanationImages": [],
+      "chapter": "新手試玩",
+      "tags": [
+        "示範題",
+        "新手體驗"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "DEMO002",
+      "type": "multiple-choice",
+      "question": "下列哪些數字是偶數？（可複選）",
+      "options": [
+        {
+          "id": "A",
+          "text": "8"
+        },
+        {
+          "id": "B",
+          "text": "11"
+        },
+        {
+          "id": "C",
+          "text": "14"
+        },
+        {
+          "id": "D",
+          "text": "17"
+        }
+      ],
+      "answer": [
+        "A",
+        "C"
+      ],
+      "explanation": "偶數可以被 2 整除。8 和 14 都是偶數；11 和 17 除以 2 都會有餘數。",
+      "images": [],
+      "explanationImages": [],
+      "chapter": "新手試玩",
+      "tags": [
+        "示範題",
+        "新手體驗"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "DEMO003",
+      "type": "true-false",
+      "question": "1 公尺等於 100 公分。",
+      "options": [],
+      "answer": [
+        true
+      ],
+      "explanation": "這個敘述正確。公尺與公分的換算關係是 1 公尺 = 100 公分。",
+      "images": [],
+      "explanationImages": [],
+      "chapter": "新手試玩",
+      "tags": [
+        "示範題",
+        "新手體驗"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "DEMO004",
+      "type": "fill-in",
+      "question": "5 + 7 = 多少？（請輸入阿拉伯數字）",
+      "options": [],
+      "answer": [
+        "12"
+      ],
+      "explanation": "先把 5 和 7 相加得到 12。這是填空題，輸入 12 就能作答。",
+      "images": [],
+      "explanationImages": [],
+      "chapter": "新手試玩",
+      "tags": [
+        "示範題",
+        "新手體驗"
+      ],
+      "difficulty": 1,
+      "caseSensitive": false
+    }
+  ]
+}

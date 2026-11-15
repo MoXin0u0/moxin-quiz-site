@@ -7,12 +7,14 @@ import {
 } from '../src/question-bank/author-catalog.js';
 
 const catalog = JSON.parse(fs.readFileSync('author-banks.json', 'utf8'));
-assert.equal(catalog.length, 1);
-assert.equal(catalog[0].id, 'ERP_Planner_202509_V06');
-assert.equal(catalog[0].questionCount, 443);
+assert.equal(catalog.length, 2, 'the original ERP and new quickstart demo must coexist');
+assert.equal(catalog[0].id, 'MoXin_QuickStart_Demo');
+const erpEntry = catalog.find(entry => entry.id === 'ERP_Planner_202509_V06');
+assert.ok(erpEntry, 'existing ERP author bank must remain available');
+assert.equal(erpEntry.questionCount, 443);
 assert.ok(
-  ['legacy-json', 'v2-package'].includes(catalog[0].source.kind),
-  `unexpected author source kind: ${catalog[0].source.kind}`,
+  ['legacy-json', 'v2-package'].includes(erpEntry.source.kind),
+  `unexpected ERP source kind: ${erpEntry.source.kind}`,
 );
 
 assert.equal(compareVersions('1.2.0', '1.1.9'), 1);
@@ -29,7 +31,7 @@ assert.equal(loaded[0].author, '墨忻');
 
 let fakeBankFetch;
 
-if (catalog[0].source.kind === 'legacy-json') {
+if (erpEntry.source.kind === 'legacy-json') {
   const legacy = {
     bankId: 'ERP_Planner_202509_V06',
     title: 'Legacy ERP',
@@ -92,7 +94,7 @@ if (catalog[0].source.kind === 'legacy-json') {
   };
 }
 
-const inspected = await inspectAuthorBank(catalog[0], { fetchImpl: fakeBankFetch });
+const inspected = await inspectAuthorBank(erpEntry, { fetchImpl: fakeBankFetch });
 assert.equal(inspected.manifest.schemaVersion, '2.0');
 assert.equal(inspected.manifest.id, 'ERP_Planner_202509_V06');
 assert.equal(inspected.manifest.author, '墨忻');
