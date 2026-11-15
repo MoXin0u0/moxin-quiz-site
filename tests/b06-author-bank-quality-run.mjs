@@ -63,6 +63,19 @@ for (const item of questions) {
   }
 }
 
+// B06-02 follow-up: preserve the original answer keys while improving
+// explanations for two identified content issues.
+const q296 = questions.find(item => item.id === 'Q296');
+const q427 = questions.find(item => item.id === 'Q427');
+assert.deepEqual(q296.answer, ['B'], 'CERPS Q296 answer key must remain B');
+assert.deepEqual(q427.answer, ['D'], 'CERPS Q427 answer key must remain D');
+assert.match(q296.explanation, /第一階段/);
+assert.match(q296.explanation, /用語爭議/);
+assert.match(q427.explanation, /存貨分析/);
+assert.match(q427.explanation, /作業成本制/);
+assert.equal(manifest.version, '1.2.1');
+assert.equal(record.version, manifest.version);
+
 // B06-02: repeated prompts do NOT necessarily mean repeated questions.
 // Generic prompts may apply to entirely different knowledge points.
 // Never remove or renumber imported questions from this classification.

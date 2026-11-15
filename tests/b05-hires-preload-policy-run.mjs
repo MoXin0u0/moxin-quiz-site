@@ -11,7 +11,7 @@ assert.equal(app, legacy, 'legacy app entry must remain byte-identical');
 assert.match(app, /hiResLibraryPreloadPolicy/);
 assert.match(app, /skipUncertainPreload/);
 assert.match(app, /library-\$\{theme\}\$\{mobileSuffix\}\.webp/);
-assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-14'/);
+assert.match(sw, /CACHE_VERSION = 'moxin-quiz-v5-5\.0\.0-prod-15'/);
 
 const match = app.match(/<script>\s*([\s\S]*?)<\/script>/);
 assert.ok(match, 'head inline preload script required');
