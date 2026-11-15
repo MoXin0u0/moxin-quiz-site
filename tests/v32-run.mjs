@@ -7,7 +7,7 @@ const catalog = JSON.parse(fs.readFileSync('author-banks.json', 'utf8'));
 const entry = catalog.find(item => item.id === 'ERP_Planner_202509_V06');
 
 assert.ok(entry);
-assert.equal(entry.version, '1.2.0');
+assert.equal(entry.version, '1.2.1');
 assert.equal(entry.source.kind, 'v2-package');
 
 const manifestPath = 'author-banks/ERP_Planner_202509_V06/manifest.json';
@@ -21,7 +21,7 @@ const questions = JSON.parse(fs.readFileSync(questionsPath, 'utf8'));
 
 assert.equal(manifest.schemaVersion, '2.0');
 assert.equal(manifest.id, 'ERP_Planner_202509_V06');
-assert.equal(manifest.version, '1.2.0');
+assert.equal(manifest.version, '1.2.1');
 assert.equal(manifest.questionCount, 443);
 assert.equal(questions.length, 443);
 
@@ -41,7 +41,7 @@ const fetchImpl = async url => ({
 const inspected = await inspectAuthorBank(entry, { fetchImpl });
 assert.equal(inspected.report.valid, true);
 assert.equal(inspected.questions.length, 443);
-assert.equal(inspected.manifest.version, '1.2.0');
+assert.equal(inspected.manifest.version, '1.2.1');
 
 const sw = fs.readFileSync('service-worker.js', 'utf8');
 assert.match(sw, /const CACHE_VERSION = 'moxin-quiz-v(?:3|5)-[^']+';/);
