@@ -18,6 +18,9 @@ assert.match(loader, /sceneState = hasVisibleScene \? 'swapping' : 'loading'/);
 assert.match(loader, /connection\.addEventListener\('change', scheduleSync\)/);
 assert.match(loader, /listenMediaQuery\(sceneMedia\)/);
 assert.match(loader, /listenMediaQuery\(reducedDataMedia\)/);
+assert.doesNotMatch(loader, /bodyObserver\.observe\(document\.body/);
+assert.match(loader, /sceneDomObserver\.observe\(host, \{ childList: true \}\)/);
+assert.match(loader, /sceneResizeObserver\?\.unobserve\(node\)/);
 
 for (const scene of ['library', 'review', 'exam', 'stats']) {
   assert.match(loader, new RegExp(`${scene}:[\\s\\S]*focal:`));

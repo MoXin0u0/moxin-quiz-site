@@ -142,6 +142,61 @@ try {
   } finally {
     await saver.close();
   }
+
+  // B07: dynamic pages must still load their art without observing the entire body.
+  const navigation = await browser.newContext({
+    viewport: { width: 1366, height: 768 }, serviceWorkers: 'block',
+    reducedMotion: 'reduce',
+  });
+  try {
+    const page = await navigation.newPage();
+    await page.addInitScript(() => {
+      window.__b07SceneHosts = [];
+      window.__b07ResizeUnobserves = 0;
+      const BaseMutationObserver = window.MutationObserver;
+      window.MutationObserver = class extends BaseMutationObserver {
+        observe(target, options) {
+          if (options.childList && ['reviewArea', 'examCenterArea', 'statsArea'].includes(target.id)) {
+            window.__b07SceneHosts.push({ id: target.id, subtree: options.subtree === true });
+          }
+          return super.observe(target, options);
+        }
+      };
+      const BaseResizeObserver = window.ResizeObserver;
+      if (typeof BaseResizeObserver === 'function') {
+        window.ResizeObserver = class extends BaseResizeObserver {
+          unobserve(target) {
+            if (target.hasAttribute('data-scene-art')) window.__b07ResizeUnobserves++;
+            return super.unobserve(target);
+          }
+        };
+      }
+    });
+    await page.goto(URL, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => (document.querySelector('#storageStatus')?.textContent || '').includes('IndexedDB 已就緒'));
+    const observerHosts = await page.evaluate(() => window.__b07SceneHosts);
+    assert.deepEqual(observerHosts.map(row => row.id), ['reviewArea', 'examCenterArea', 'statsArea']);
+    assert.ok(observerHosts.every(row => row.subtree === false), 'Do not watch deep learning-view mutations');
+
+    const openAndAssert = async (nav, view, scene) => {
+      await page.locator(nav).click();
+      await page.waitForFunction(({ view, scene }) => {
+        const root = document.querySelector(view);
+        const node = root?.querySelector('[data-scene-art="' + scene + '"]');
+        return root?.hidden === false && node?.dataset.sceneState === 'ready';
+      }, { view, scene }, { timeout: 20000 });
+    };
+    await openAndAssert('[data-nav-review]', '#reviewView', 'review');
+    await openAndAssert('[data-nav-exam]', '#examCenterView', 'exam');
+    await openAndAssert('[data-nav-stats]', '#statsView', 'stats');
+    await openAndAssert('[data-nav-review]', '#reviewView', 'review');
+
+    assert.ok(await page.evaluate(() => window.__b07ResizeUnobserves) >= 1,
+      'Re-rendered scene nodes should be removed from ResizeObserver');
+    console.log('B07 SCOPED SCENE OBSERVER PASS: dynamic views and detached node cleanup');
+  } finally {
+    await navigation.close();
+  }
 } finally {
   await browser.close();
 }
