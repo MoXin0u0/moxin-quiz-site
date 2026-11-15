@@ -21,7 +21,7 @@ const user = pos('id="userLibraryPanel"');
 const hero = pos('learning-hero learning-hero-library learning-hero-whole');
 const dashboard = pos('id="homeDashboardArea"');
 assert.ok([title, author, user, hero, dashboard].every(n => n >= 0));
-assert.ok(title < author && author < user && user < hero && hero < dashboard,
+assert.ok(title < user && user < author && author < hero && hero < dashboard,
   'Actionable bank tabs and panels must precede artwork and learning summary.');
 
 for (const fragment of [
@@ -30,6 +30,8 @@ for (const fragment of [
   'class="learning-section-head library-priority-head"',
   'class="learning-storage-row library-storage-inline"',
   'href="#homeDashboardArea"',
+  'aria-selected="true" aria-controls="userLibraryPanel"',
+  'aria-selected="false" aria-controls="authorLibraryPanel"',
 ]) assert.ok(library.includes(fragment), 'Missing B03 library contract: ' + fragment);
 
 for (const id of [
@@ -41,7 +43,12 @@ assert.match(css, /#libraryView > \.library-priority-head/);
 assert.match(css, /\.source-tab\s*\{[^}]*min-height:\s*44px/s);
 assert.match(css, /@media \(max-width:\s*760px\)/);
 assert.match(css, /min-height:\s*48px/);
-assert.match(sw, /moxin-quiz-v5-5\.0\.0-prod-13/);
+const main = readFileSync('src/app/main.js', 'utf8');
+assert.match(main, /librarySourceTab:\s*'user'/);
+assert.match(main, /renderBankLibrary\(elements\.bankList, state\.banks\)/);
+assert.match(app, /<h2 id="libraryTitle">已加入的題庫<\/h2>/);
+assert.match(app, /<h2 id="authorLibraryTitle">探索題庫<\/h2>/);
+assert.match(sw, /moxin-quiz-v5-5\.0\.0-prod-14/);
 assert.match(sw, /'\.\/app\.html'/);
 assert.match(sw, /'\.\/v3\.html'/);
 assert.match(sw, /'\.\/styles\/v4-home\.css'/);
