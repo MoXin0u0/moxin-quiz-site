@@ -63,18 +63,38 @@ for (const item of questions) {
   }
 }
 
+// B06-02: repeated prompts do NOT necessarily mean repeated questions.
+// Generic prompts may apply to entirely different knowledge points.
+// Never remove or renumber imported questions from this classification.
+const fullContentKey = item => JSON.stringify(
+  Object.entries(item).filter(([key]) => key !== 'id')
+    .sort(([a], [b]) => a.localeCompare(b)));
+// Sanity fixtures: only ID differs -> same content; a different choice -> distinct.
+const synthetic = questions[0];
+assert.equal(fullContentKey(synthetic),
+  fullContentKey({ ...synthetic, id: synthetic.id + '_copy' }));
+assert.notEqual(fullContentKey(synthetic),
+  fullContentKey({ ...synthetic, options: [
+    ...synthetic.options.slice(0, -1),
+    { ...synthetic.options.at(-1), text: 'Different option text for QA test' },
+  ] }));
 const duplicateGroups = [...questionGroups.values()].filter(group => group.length > 1);
 const duplicates = duplicateGroups.map(group => {
   const answerTexts = group.map(x => x.options.find(o => o.id === x.answer[0])?.text || '');
-  const optionLists = group.map(x => x.options.map(o => o.text).join('|'));
+  const optionLists = group.map(x => JSON.stringify(x.options));
   return {
     ids: group.map(x => x.id),
-    answerTextConflict: new Set(answerTexts).size > 1,
+    identicalExceptId: new Set(group.map(fullContentKey)).size === 1,
+    answerTextDiffers: new Set(answerTexts).size > 1,
     differentOptionSets: new Set(optionLists).size > 1,
     chapters: [...new Set(group.map(x => x.chapter))],
   };
 });
 const extraDuplicateCount = duplicateGroups.reduce((sum, g) => sum + g.length - 1, 0);
+const identicalContentCandidates = duplicates.filter(x => x.identicalExceptId);
+const sameStemDifferentQuestions = duplicates.filter(x => !x.identicalExceptId);
+assert.equal(identicalContentCandidates.length + sameStemDifferentQuestions.length,
+  duplicateGroups.length, 'all repeated stems must be classified');
 const report = {
   bankId: manifest.id,
   structural: {
@@ -85,6 +105,9 @@ const report = {
   humanReview: {
     duplicateStemGroups: duplicates,
     extraDuplicateStems: extraDuplicateCount,
+    identicalContentExceptIdCandidates: identicalContentCandidates.map(x => x.ids),
+    sameStemDifferentContent: sameStemDifferentQuestions.map(x => x.ids),
+    identicalDoesNotAuthorizeDeletion: true,
     genericDistractorExplanations,
     genericCorrectExplanations,
     dedicatedSourceFields: dedicatedSourceCount,
@@ -103,5 +126,9 @@ console.log('B06-01 CONTENT REVIEW REQUIRED:', extraDuplicateCount, 'extra repea
   genericDistractorExplanations, 'generic distractor explanations;',
   genericCorrectExplanations, 'generic correct-answer explanations;',
   dedicatedSourceCount, 'dedicated source fields.');
+console.log('B06-02 CLASSIFICATION:', identicalContentCandidates.length,
+  'identical-content groups (except IDs);', sameStemDifferentQuestions.length,
+  'groups sharing prompts but differing in choices or content.');
+console.log('B06-02 LIMITATION: different answer letters on different questions do not establish conflict.');
 console.log('B06-01 DETAIL:', JSON.stringify(report));
 console.log('B06-01 LIMITATION: structural pass is NOT an independent key, subject-matter, source-rights or expert review.');
