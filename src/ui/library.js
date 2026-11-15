@@ -9,8 +9,8 @@ export function renderBankLibrary(container, banks) {
   if (!Array.isArray(banks) || banks.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <strong>目前還沒有本機題庫</strong>
-        <p>從上方匯入 ZIP、JSON，或選擇完整題庫資料夾。</p>
+        <strong>目前還沒有已加入的題庫</strong>
+        <p>可以切換上方的「探索題庫」加入示範題，也可以在下方匯入 ZIP／JSON 題庫。</p>
       </div>
     `;
     return;
@@ -20,7 +20,7 @@ export function renderBankLibrary(container, banks) {
     <article class="bank-card">
       <div class="bank-card-topline">
         <span class="bank-id">${escapeHtml(bank.id)}</span>
-        <span class="schema-chip">自行新增</span>
+        <span class="schema-chip">${bank.sourceType === 'author' ? '作者來源' : '自行管理'}</span>
       </div>
       <h3>${escapeHtml(bank.name || bank.title || bank.id)}</h3>
       <p>${escapeHtml(bank.description || '沒有題庫說明。')}</p>
@@ -32,7 +32,7 @@ export function renderBankLibrary(container, banks) {
       </dl>
       <div class="card-actions">
         <button class="button primary" type="button" data-open-bank="${escapeAttr(bank.id)}">查看題庫 / 開始練習</button>
-        <button class="button danger-ghost" type="button" data-delete-bank="${escapeAttr(bank.id)}">刪除本機題庫</button>
+        <button class="button danger-ghost" type="button" data-delete-bank="${escapeAttr(bank.id)}">移除本機題庫</button>
       </div>
     </article>
   `).join('');

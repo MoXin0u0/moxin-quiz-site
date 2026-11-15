@@ -108,9 +108,9 @@
     <section id="libraryView" data-view="library">
       <section class="learning-section-head library-priority-head" aria-labelledby="librarySourceTitle">
         <div>
-          <span class="learning-kicker">題庫收藏</span>
-          <h2 id="librarySourceTitle">選擇今天要學的內容</h2>
-          <p>作者提供的題庫可以直接加入；自己整理的題庫則保存在「自行新增」。</p>
+          <span class="learning-kicker">題庫管理</span>
+          <h2 id="librarySourceTitle">我的題庫</h2>
+          <p>已加入的題庫都在這裡；需要新內容時，再到「探索題庫」挑選。</p>
           <div class="learning-storage-row library-storage-inline">
             <span class="learning-storage-dot" aria-hidden="true"></span>
             <div class="storage-status" id="storageStatus" aria-live="polite">正在初始化本機資料庫…</div>
@@ -118,30 +118,27 @@
         </div>
 
         <div class="library-source-tabs learning-source-tabs" role="tablist" aria-label="題庫來源">
-          <button id="authorLibraryTab" class="source-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="authorLibraryPanel" data-library-source-tab="author">作者題庫</button>
-          <button id="userLibraryTab" class="source-tab" type="button" role="tab" aria-selected="false" aria-controls="userLibraryPanel" data-library-source-tab="user">自行新增</button>
+          <button id="userLibraryTab" class="source-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="userLibraryPanel" data-library-source-tab="user">我的題庫</button>
+          <button id="authorLibraryTab" class="source-tab" type="button" role="tab" aria-selected="false" aria-controls="authorLibraryPanel" data-library-source-tab="author">探索題庫</button>
         </div>
       </section>
 
-      <div id="authorLibraryPanel" data-library-source-panel="author" role="tabpanel" aria-labelledby="authorLibraryTab">
-        <section class="learning-content-card learning-bank-section" aria-labelledby="authorLibraryTitle">
+      <div id="userLibraryPanel" data-library-source-panel="user" role="tabpanel" aria-labelledby="userLibraryTab">
+        <section class="learning-content-card learning-bank-section" aria-labelledby="libraryTitle">
           <div class="section-heading learning-card-heading">
             <div>
-              <span class="learning-kicker">推薦題庫</span>
-              <h2 id="authorLibraryTitle">作者題庫</h2>
-              <p class="section-note source-description">由網站維護者整理。加入後會保存在本機，即使離線也能繼續練習。</p>
+              <span class="learning-kicker">我的收藏</span>
+              <h2 id="libraryTitle">已加入的題庫</h2>
+              <p class="section-note">包含自行匯入與從探索題庫加入的內容。</p>
             </div>
-            <button id="refreshAuthorBanksButton" type="button" class="button secondary">重新整理</button>
+            <button id="refreshBanksButton" type="button" class="button secondary">重新整理</button>
           </div>
-          <div id="authorBankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
+          <div id="bankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
         </section>
-      </div>
-
-      <div id="userLibraryPanel" data-library-source-panel="user" role="tabpanel" aria-labelledby="userLibraryTab" hidden>
         <section class="panel import-panel" aria-labelledby="importTitle">
           <div class="section-heading">
             <div>
-              <h2 id="importTitle">加入自己的題庫</h2>
+              <h2 id="importTitle">從檔案匯入題庫</h2>
               <p class="section-note">匯入前會先驗證格式；有問題的題庫不會寫入資料庫。</p>
             </div>
           </div>
@@ -165,15 +162,19 @@
           <div id="inspectionArea" class="inspection-area" aria-live="polite"></div>
         </section>
 
-        <section class="learning-content-card learning-bank-section" aria-labelledby="libraryTitle">
+      </div>
+
+      <div id="authorLibraryPanel" data-library-source-panel="author" role="tabpanel" aria-labelledby="authorLibraryTab" hidden>
+        <section class="learning-content-card learning-bank-section" aria-labelledby="authorLibraryTitle">
           <div class="section-heading learning-card-heading">
             <div>
-              <span class="learning-kicker">我的收藏</span>
-              <h2 id="libraryTitle">自行新增的題庫</h2>
+              <span class="learning-kicker">更多學習內容</span>
+              <h2 id="authorLibraryTitle">探索題庫</h2>
+              <p class="section-note source-description">可選擇網站提供的題庫；主動加入後，才會出現在「我的題庫」中。</p>
             </div>
-            <button id="refreshBanksButton" type="button" class="button secondary">重新整理</button>
+            <button id="refreshAuthorBanksButton" type="button" class="button secondary">重新整理</button>
           </div>
-          <div id="bankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
+          <div id="authorBankList" class="bank-grid learning-bank-grid" aria-live="polite"></div>
         </section>
       </div>
 

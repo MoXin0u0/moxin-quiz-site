@@ -141,7 +141,7 @@ const state = {
   currentView: null,
   banks: [],
   authorCatalog: [],
-  librarySourceTab: 'author',
+  librarySourceTab: 'user',
   currentBank: null,
   allQuestions: [],
   filteredQuestions: [],
@@ -349,7 +349,10 @@ function bindEvents() {
     const bankId = deleteButton.dataset.deleteBank;
     const bank = state.banks.find(item => item.id === bankId);
     const label = bank?.name || bankId;
-    if (!confirm(`確定要從這個瀏覽器刪除題庫「${label}」？\n\n目前只會刪除題庫內容與題庫內圖片。`)) return;
+    const removalNote = bank?.sourceType === 'author'
+      ? '這會移除已加入的題庫內容；既有學習紀錄會保留。'
+      : '這會刪除本機題庫內容與題庫內圖片；請先確認是否需要備份。';
+    if (!confirm(`確定要從這個瀏覽器移除題庫「${label}」？\n\n${removalNote}`)) return;
     await deleteBank(bankId);
     showToast(elements.toastRegion, `已刪除題庫：${label}`, 'success');
     await refreshBanks();
@@ -692,7 +695,7 @@ function bindEvents() {
 
 
 function setLibrarySourceTab(tab) {
-  const normalized = tab === 'user' ? 'user' : 'author';
+  const normalized = tab === 'author' ? 'author' : 'user';
   state.librarySourceTab = normalized;
 
   document.querySelectorAll('[data-library-source-tab]').forEach(button => {
@@ -728,7 +731,7 @@ async function installAuthorBank(bankId) {
 
   const existing = state.banks.find(bank => bank.id === bankId);
   if (existing) {
-    const sourceLabel = existing.sourceType === 'author' ? '作者題庫' : '自行新增題庫';
+    const sourceLabel = existing.sourceType === 'author' ? '作者題庫' : '本機題庫';
     const versionLabel = existing.version || '未標示';
     const updateAvailable = existing.sourceType === 'author' &&
       compareVersions(entry.version, existing.version) > 0;
@@ -759,7 +762,7 @@ async function installAuthorBank(bankId) {
       'success',
     );
     await refreshBanks();
-    renderAuthorCatalog();
+    setLibrarySourceTab('user');
   } catch (error) {
     showToast(elements.toastRegion, `作者題庫加入失敗：${error.message}`, 'error');
   } finally {
@@ -893,10 +896,7 @@ async function refreshBanks() {
     ...bank,
     sourceType: bank.sourceType === 'author' ? 'author' : 'user',
   }));
-  renderBankLibrary(
-    elements.bankList,
-    state.banks.filter(bank => bank.sourceType !== 'author'),
-  );
+  renderBankLibrary(elements.bankList, state.banks);
   renderAuthorCatalog();
 }
 
