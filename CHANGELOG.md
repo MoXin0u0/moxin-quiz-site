@@ -15,13 +15,20 @@
 ## 目前正式站摘要（2026-11-15）
 
 - **產品版本**：v5.0.0（Local-first / Offline-ready / Google Drive 選用同步）。
-- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線），以及僅測試層的 IndexedDB 清理競態修補。
-- **最新正式主分支基準**：[`d6c20fbb`](https://github.com/MoXin0u0/moxin-quiz-site/commit/d6c20fbbcaa24ddc99665abbbf39e1c796546b93)，PWA App Shell `prod-12`。
-- **最新主分支自動化驗證**：[GitHub Pages（B05-03C2）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43615484860)；[V5 完整 Regression（B05-03C2）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43615485848)（以 Actions 的最終結論為準）。
+- **已正式部署**：B00、B01、B02-Lite、B03、B04-01、B04-02、B04-03（程式修補）、B05-01（手機場景畫質與預載）、B05-02（場景畫質量測與測試）、B05-03A（史詩文字安全區與 2x 載入分級）、B05-03B（來源像素覆蓋率節流）、B05-03C（原生高解析素材驗收關卡）、B05-03C2（高 DPI 首屏預載去重；圖片尚未上線）、B06-01（443 題結構與來源缺口盤點），以及僅測試層的 IndexedDB 清理競態修補。
+- **最新正式主分支基準**：[`e7dc64c0`](https://github.com/MoXin0u0/moxin-quiz-site/commit/e7dc64c04a6a9965707f87ab40544b491943fcfb)，PWA App Shell 維持 `prod-12`（本批僅測試）。
+- **最新主分支自動化驗證**：[GitHub Pages（B06-01）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43616857131)；[V5 完整 Regression（B06-01）](https://github.com/MoXin0u0/moxin-quiz-site/actions/runs/43616857662)（以最終 Actions 結論為準）。
 - **尚未宣稱完成的事項**：Android/iOS 真實軟體鍵盤、下載與不同裝置的實機驗收；CERPS 題庫再利用權利及個資蒐集者識別充分性仍獨立追蹤。自動化 CI 綠燈不能替代這些查核。
 - V5 原始開發分支的 B00～B13 與**上線後** B00～B09 是**兩套不同的階段編碼**；不要混同。完整技術歷史參考 [V5 實作紀錄](docs/v5-implementation-status.md)，下一批工作看 [V5 後續索引](docs/roadmap/README.md)。
 
 ## v5.0.0｜正式發布後更新（同一產品版本，依日期倒序）
+
+### 2026-11-15｜B06-01：443 題作者題庫品質／來源缺口盤點（未更動答案）
+
+- **已合併** [PR #42](https://github.com/MoXin0u0/moxin-quiz-site/pull/42)，主分支 `e7dc64c0`，新增 `tests/b06-author-bank-quality-run.mjs` 到 `npm test`。自動檢查作者題庫與 catalog／manifest 題數、ID 唯一性、單選選項及答案鍵對應、非空題目／詳解；如結構破壞，CI 直接失敗。
+- **初次盤點結果**：ERP 規劃師題庫共 443 題（全單選），題目與鍵值結構通過；**4 組完全相同題幹**（Q206/Q206_2、Q291/Q293、Q296/Q427、Q411/Q411_2），其中 Q296/Q427 的答案選項文字存在差異，應先人工複核，**不擅自去重或更正**。
+- **詳解與出處風險**：209 題包含制式干擾選項說明，207 題包含制式正解結語；443 題均無專用 `source/references/citation/explanationSources` 欄位。歷史檔案來源不等於第三方發布權利，著作權另依 [Issue #21](https://github.com/MoXin0u0/moxin-quiz-site/issues/21) 追蹤。
+- **界線**：自動化結構檢查不表示 443 題答案正確、專業詳解及著作權已完成審核；後續人工複核與原創新手示範題集中於 [Issue #41](https://github.com/MoXin0u0/moxin-quiz-site/issues/41)。本批僅新增測試，不修改題庫、使用者資料、IndexedDB、Google Drive 同步、快取版本或正式 UI。
 
 ### 2026-11-15｜B05-03C2：未來高 DPI 原圖的首屏預載去重
 
