@@ -1,5 +1,19 @@
 [
   {
+    "id": "MoXin_QuickStart_Demo",
+    "name": "新手試玩｜四種題型",
+    "description": "不必登入或上傳題庫檔案。加入後即可練習 4 種題型，非正式證照題。",
+    "version": "1.0.0",
+    "author": "墨忻",
+    "category": "新手體驗",
+    "questionCount": 4,
+    "language": "zh-TW",
+    "source": {
+      "kind": "v2-json",
+      "url": "./author-banks/MoXin_QuickStart_Demo.json"
+    }
+  },
+  {
     "id": "ERP_Planner_202509_V06",
     "name": "ERP 規劃師題庫 2025.09 V06",
     "description": "原生 Schema v2 ERP 規劃師作者題庫。",
