@@ -48,7 +48,7 @@ assert.match(main, /librarySourceTab:\s*'user'/);
 assert.match(main, /renderBankLibrary\(elements\.bankList, state\.banks\)/);
 assert.match(app, /<h2 id="libraryTitle">已加入的題庫<\/h2>/);
 assert.match(app, /<h2 id="authorLibraryTitle">探索題庫<\/h2>/);
-assert.match(sw, /moxin-quiz-v5-5\.0\.0-prod-15/);
+assert.match(sw, /moxin-quiz-v5-5\.0\.0-prod-16/);
 assert.match(sw, /'\.\/app\.html'/);
 assert.match(sw, /'\.\/v3\.html'/);
 assert.match(sw, /'\.\/styles\/v4-home\.css'/);
