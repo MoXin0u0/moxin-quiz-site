@@ -109,7 +109,7 @@ const SCENE_ASSETS = Object.freeze({
 });
 
 const loadedAssets = new Set();
-const watchedNodes = new WeakSet();
+const watchedNodes = new Set();
 let scheduled = false;
 // Observe size changes so a scene promoted from a hidden tab is re-evaluated.
 const sceneResizeObserver = typeof ResizeObserver === 'function'
@@ -280,6 +280,14 @@ function setSceneAsset(node, asset) {
 }
 
 export function syncLearningScenes() {
+  // Rerendered learning views replace their hero nodes. Unobserve detached
+  // nodes so repeated navigation does not retain obsolete ResizeObserver targets.
+  for (const node of watchedNodes) {
+    if (node.isConnected) continue;
+    sceneResizeObserver?.unobserve(node);
+    watchedNodes.delete(node);
+  }
+
   const context = currentContext();
   document.querySelectorAll('[data-scene-art]').forEach(node => {
     if (sceneResizeObserver && !watchedNodes.has(node)) {
@@ -323,8 +331,14 @@ rootObserver.observe(document.documentElement, {
   attributeFilter: ['data-theme', 'data-learning-style', 'data-scene-intensity'],
 });
 
-const bodyObserver = new MutationObserver(scheduleSync);
-bodyObserver.observe(document.body, { childList: true, subtree: true });
+// Dynamic scene art is created directly inside these three stable containers.
+// Watching only their immediate child replacements avoids scans after unrelated
+// question-list, settings, toast and Studio DOM updates.
+const sceneDomObserver = new MutationObserver(scheduleSync);
+for (const hostId of ['reviewArea', 'examCenterArea', 'statsArea']) {
+  const host = document.getElementById(hostId);
+  if (host) sceneDomObserver.observe(host, { childList: true });
+}
 
 document.addEventListener('DOMContentLoaded', scheduleSync, { once: true });
 scheduleSync();
