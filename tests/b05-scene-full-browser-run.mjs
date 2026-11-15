@@ -186,10 +186,10 @@ try {
         return root?.hidden === false && node?.dataset.sceneState === 'ready';
       }, { view, scene }, { timeout: 20000 });
     };
-    await openAndAssert('[data-nav-review]', '#reviewView', 'review');
-    await openAndAssert('[data-nav-exam]', '#examCenterView', 'exam');
-    await openAndAssert('[data-nav-stats]', '#statsView', 'stats');
-    await openAndAssert('[data-nav-review]', '#reviewView', 'review');
+    await openAndAssert('.main-nav [data-nav-review]', '#reviewView', 'review');
+    await openAndAssert('.main-nav [data-nav-exam]', '#examCenterView', 'exam');
+    await openAndAssert('.main-nav [data-nav-stats]', '#statsView', 'stats');
+    await openAndAssert('.main-nav [data-nav-review]', '#reviewView', 'review');
 
     assert.ok(await page.evaluate(() => window.__b07ResizeUnobserves) >= 1,
       'Re-rendered scene nodes should be removed from ResizeObserver');
