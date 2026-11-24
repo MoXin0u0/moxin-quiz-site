@@ -161,11 +161,11 @@ function makePackage(overrides = {}) {
 // 6. Repeated collisions get a deterministic unique suffix.
 {
   const plan = inspectStudioPackagePlan(makePackage(), {
-    existingBankIds: [
+    existingBankIds: new Set([
       'erp-demo',
       'erp-demo-copy',
       'erp-demo-copy-2',
-    ],
+    ]),
   });
 
   assert.equal(plan.targetBankId, 'erp-demo-copy-3');
