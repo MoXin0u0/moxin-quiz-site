@@ -23,7 +23,7 @@ export function inspectStudioPackagePlan(pkg, {
   });
 
   const originalBankId = String(pkg?.manifest?.id || '');
-  const existing = new Set((existingBankIds || []).map(value => String(value)));
+  const existing = new Set(Array.from(existingBankIds || [], value => String(value)));
   const hasCollision = Boolean(originalBankId && existing.has(originalBankId));
 
   let targetBankId = '';
